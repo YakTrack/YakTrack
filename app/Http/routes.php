@@ -18,3 +18,5 @@ Route::get('/', [
     'uses' => 'HomeController@index'
 ]);
 
+Route::resource('client', 'ClientController');
+
