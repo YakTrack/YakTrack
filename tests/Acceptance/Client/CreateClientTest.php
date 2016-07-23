@@ -1,0 +1,37 @@
+<?php
+
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+
+class CreateClientTest extends TestCase
+{
+    use DatabaseTransactions;
+
+    /** @test */
+    public function a_logged_in_user_can_create_a_client()
+    {
+        // Login first user
+        \Auth::login(App\User::first());
+
+        // Visit page
+        $this->visit(route('client.create'));
+
+        // Verify collect page loads
+        $this->seePageIs(route('client.create'));
+
+        // Fill in form an submit
+        $this->type('Test Client', 'name')
+            ->type('client@domain.com', 'email')
+            ->press('Add');
+
+        // Verify redirected to correct page
+        $this->seePageIs(route('client.index'));
+
+        // Verify client added to database
+        $this->seeInDatabase('clients', [
+            'name' => 'Test Client',
+            'email' => 'client@domain.com'
+        ]);
+    }
+}

@@ -5,7 +5,9 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <span class="h1"> Clients </span>
-            <a href="" class="btn btn-default pull-right"> Add Button </a>
+            <a href="{{ route('client.create') }}" class="btn btn-default pull-right">
+                Add Client
+            </a>
         </div>
         <br/>
         <div class="col-md-10 col-md-offset-1">

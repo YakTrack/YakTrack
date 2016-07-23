@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Client;
 use App\Http\Requests;
 
 class ClientController extends Controller
@@ -21,24 +22,33 @@ class ClientController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new client.
      *
      * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        //
+        return view('client.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created form in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name'  => 'required',
+            'email' => 'email'
+        ]);
+
+        Client::create($request->except('_token'));
+
+        return redirect()
+            ->route('client.index')
+            ->with(['messages' => ['success' => 'You have created new client "' . $request->name]]);
     }
 
     /**
