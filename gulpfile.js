@@ -19,14 +19,15 @@ elixir(function(mix) {
     // CSS
     mix.styles([
         'bootstrap.css',
-        'sb-admin-2.css',
-        'timeline.css',
+        'AdminLTE.css',
+        'skin-blue.css',
         'app.css',
     ]);
 
     // Javascript
     mix.scripts([
-        'bootstrap.js'
+        'bootstrap.js',
+        'AdminLTE.js'
     ]);
 
 });

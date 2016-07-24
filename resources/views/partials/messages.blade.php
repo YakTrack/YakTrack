@@ -1,14 +1,14 @@
 <div id="notificaton">
 @if (count($errors) > 0)
     <div class="alert alert-danger">
+        <button tytpe="button" class="close" data-dismiss="alert" aria-hidden="true">
+            &times;
+        </button>
         <ul>
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
             @endforeach
         </ul>
-        <div class="button-container">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-        </div>
     </div>
 @endif
 
