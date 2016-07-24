@@ -23,10 +23,16 @@
             <tr>
                 <th> Name </th>
                 <th> Email </th>
-            @foreach($clients as $client)
+                <th> Actions </th>
+                @foreach($clients as $client)
                 <tr>
                     <td> {{ $client->name }} </td>
                     <td> {{ $client->email }} </td>
+                    <td>
+                        <a href="{{ route('client.edit', ['client' => $client]) }}" class="btn btn-default">
+                            <i class="fa fa-edit"></i>
+                        </a>
+                    </td>
                 </tr>
             @endforeach
         </table>

@@ -11,6 +11,7 @@ Track is currently under development and may change drastically before the first
 Here is a list of features intended for inclusion in the first tagged release.
 
 * Clients
+  * ~~Create~~
   * Edit
   * Delete
 * Projects
@@ -29,7 +30,11 @@ Here is a list of features intended for inclusion in the first tagged release.
   * Start / Stop
   * Edit
   * Delete
+* Invoices
+  * Create
+  * Edit
+  * Delete
 
 ## License
 
-Track is available under the MIT license. See the LICENSE file for more details.
+Track is open-sourced software licensed under the MIT license. See the LICENSE file for more details.

@@ -57,20 +57,22 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Client $client)
     {
         //
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified client.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Client $client)
     {
-        //
+        return view('client.edit', [
+            'client' => $client
+        ]);
     }
 
     /**
@@ -80,9 +82,22 @@ class ClientController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Client $client)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required',
+            'email' => 'email',
+        ]);
+
+        $client->name = $request->name;
+        $client->email = $request->email;
+        $client->save();
+
+        return redirect()
+            ->route('client.index')
+            ->with(['messages' => [
+                'success' => 'You have updated client "' . $client->name . '"'
+            ]]);
     }
 
     /**
