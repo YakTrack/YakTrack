@@ -12,18 +12,22 @@ Here is a list of features intended for inclusion in the first tagged release.
 
 * Clients
   * ~~Create~~
-  * Edit
+  * Show
+  * ~~Edit~~
   * Delete
 * Projects
   * Create
+  * Show
   * Edit
   * Delete
 * Sprints
   * Create
+  * Show
   * Edit
   * Delete
 * Tasks
   * Create
+  * Show
   * Edit
   * Delete
 * Sessions
@@ -32,6 +36,7 @@ Here is a list of features intended for inclusion in the first tagged release.
   * Delete
 * Invoices
   * Create
+  * Show
   * Edit
   * Delete
 
