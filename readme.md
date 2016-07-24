@@ -11,24 +11,24 @@ Track is currently under development and may change drastically before the first
 Here is a list of features intended for inclusion in the first tagged release.
 
 * Clients
-** Edit
-** Delete
+  * Edit
+  * Delete
 * Projects
-** Create
-** Edit
-** Delete
+  * Create
+  * Edit
+  * Delete
 * Sprints
-** Create
-** Edit
-** Delete
-*Tasks
-** Create
-** Edit
-** Delete
+  * Create
+  * Edit
+  * Delete
+* Tasks
+  * Create
+  * Edit
+  * Delete
 * Sessions
-** Start / Stop
-** Edit
-** Delete
+  * Start / Stop
+  * Edit
+  * Delete
 
 ## License
 
