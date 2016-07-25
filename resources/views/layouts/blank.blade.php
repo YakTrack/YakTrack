@@ -14,25 +14,11 @@
     <link href="/css/all.css" rel="stylesheet">
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
+<body class="hold-transition login-page">
+<body>
 
-    <div class="wrapper"><!-- Site wrapper -->
-
-        @include('partials.header')
-        @include('partials.sidebar')
-
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            @include('partials.content_header')
-            <!-- Main content -->
-            <section class="content">
-                @include('partials.messages')
-                @yield('content')
-            </section>
-        </div>
-
-        @include('partials.footer')
-        @include('partials.control_sidebar')
+    @include('partials.messages')
+    @yield('content')
 
     <!-- JavaScripts -->
     <script   src="https://code.jquery.com/jquery-2.2.4.js"   integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="   crossorigin="anonymous"></script>
