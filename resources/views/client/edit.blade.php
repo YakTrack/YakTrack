@@ -8,6 +8,7 @@
 @endsection
 
 @section('breadcrumbs')
+    {!! Breadcrumbs::render('client.edit', $client) !!}
 @endsection
 
 @section('content')

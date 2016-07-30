@@ -8,6 +8,7 @@
 @endsection
 
 @section('breadcrumbs')
+    {!! Breadcrumbs::render('client.index') !!}
 @endsection
 
 @section('content')
