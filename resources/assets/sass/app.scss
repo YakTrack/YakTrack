@@ -1,2 +1,14 @@
-// @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+/**
+ |
+ |------------------------------------------------------------------
+ |                  resources/assets/sass/app.scss
+ |------------------------------------------------------------------
+ |
+ **/
 
+/**
+ * Text formatting
+ */
+.capitalize {
+    text-transform: capitalize;
+}

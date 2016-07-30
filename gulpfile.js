@@ -27,7 +27,8 @@ elixir(function(mix) {
     // Javascript
     mix.scripts([
         'bootstrap.js',
-        'AdminLTE.js'
+        'AdminLTE.js',
+        'scripts.js'
     ]);
 
 });

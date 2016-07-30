@@ -11825,6 +11825,18 @@ table.text-center th {
   background-color: #3b8ab8;
 }
 
+/**
+ |
+ |------------------------------------------------------------------
+ |                  resources/assets/sass/app.scss
+ |------------------------------------------------------------------
+ |
+ **/
+/**
+ * Text formatting
+ */
+.capitalize {
+  text-transform: capitalize; }
 
 /*# sourceMappingURL=app.css.map */
 

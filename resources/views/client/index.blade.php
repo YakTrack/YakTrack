@@ -11,8 +11,10 @@
 @endsection
 
 @section('content')
-    
-<div class="box">
+
+@include('partials.modals.delete_item_modal')
+
+<div class="box item-type-container" data-item-type="client">
     <div class="box-header with-border">
         <a href="{{ route('client.create') }}" class="btn btn-default btn-sm">
             Add Client
@@ -25,13 +27,25 @@
                 <th> Email </th>
                 <th> Actions </th>
                 @foreach($clients as $client)
-                <tr>
+                <tr
+                    class="item-container"
+                    data-item-name="{{ $client->name }}"
+                    data-item-destroy-route="{{ route('client.destroy', ['client' => $client]) }}"
+                >
                     <td> {{ $client->name }} </td>
                     <td> {{ $client->email }} </td>
                     <td>
-                        <a href="{{ route('client.edit', ['client' => $client]) }}" class="btn btn-default">
-                            <i class="fa fa-edit"></i>
-                        </a>
+                        <div class="btn-group">
+                            <a 
+                                href="{{ route('client.edit', ['client' => $client]) }}" 
+                                class="btn btn-default"
+                            >
+                                <i class="fa fa-edit"></i>
+                            </a>
+                            <button class="btn btn-default delete-item-button">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             @endforeach

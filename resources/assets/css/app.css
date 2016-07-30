@@ -1,2 +1,14 @@
+/**
+ |
+ |------------------------------------------------------------------
+ |                  resources/assets/sass/app.scss
+ |------------------------------------------------------------------
+ |
+ **/
+/**
+ * Text formatting
+ */
+.capitalize {
+  text-transform: capitalize; }
 
 /*# sourceMappingURL=app.css.map */
