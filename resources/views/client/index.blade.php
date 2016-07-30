@@ -16,7 +16,8 @@
 
 <div class="box item-type-container" data-item-type="client">
     <div class="box-header with-border">
-        <a href="{{ route('client.create') }}" class="btn btn-default btn-sm">
+        <a href="{{ route('client.create') }}" class="btn btn-primary btn-sm pull-right">
+            <i class="fa fa-plus"></i>
             Add Client
         </a>
     </div>
@@ -25,7 +26,7 @@
             <tr>
                 <th> Name </th>
                 <th> Email </th>
-                <th> Actions </th>
+                <th> <span class="pull-right"> Actions </span> </th>
                 @foreach($clients as $client)
                 <tr
                     class="item-container"
@@ -35,7 +36,7 @@
                     <td> {{ $client->name }} </td>
                     <td> {{ $client->email }} </td>
                     <td>
-                        <div class="btn-group">
+                        <div class="btn-group pull-right">
                             <a 
                                 href="{{ route('client.edit', ['client' => $client]) }}" 
                                 class="btn btn-default"
