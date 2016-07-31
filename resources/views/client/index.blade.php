@@ -34,7 +34,11 @@
                     data-item-name="{{ $client->name }}"
                     data-item-destroy-route="{{ route('client.destroy', ['client' => $client]) }}"
                 >
-                    <td> {{ $client->name }} </td>
+                <td>
+                    <a href="{{ route('client.show', ['client' => $client]) }}">
+                        {{ $client->name }}
+                    </a>
+                </td>
                     <td> {{ $client->email }} </td>
                     <td>
                         <div class="btn-group pull-right">

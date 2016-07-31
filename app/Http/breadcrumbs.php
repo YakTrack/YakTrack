@@ -17,8 +17,14 @@ Breadcrumbs::register('client.create', function($breadcrumbs) {
     $breadcrumbs->push('Add Client', route('client.create'));
 });
 
+// Home > Clients > [Show]
+Breadcrumbs::register('client.show', function($breadcrumbs, $client) {
+    $breadcrumbs->parent('client.index');
+    $breadcrumbs->push($client->name, route('client.show', ['client' => $client]));
+});
+
 // Home > Clients > [Edit]
 Breadcrumbs::register('client.edit', function($breadcrumbs, $client) {
     $breadcrumbs->parent('client.index');
-    $breadcrumbs->push('Edit ' . $client->name, route('client.edit'));
+    $breadcrumbs->push('Edit ' . $client->name, route('client.edit', ['client' => $client]));
 });
