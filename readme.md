@@ -12,7 +12,7 @@ Here is a list of features intended for inclusion in the first tagged release.
 
 * Clients
   * ~~Create~~
-  * Show
+  * ~~Show~~
   * ~~Edit~~
   * ~~Delete~~
 * Projects
