@@ -5,10 +5,22 @@
         <!-- sidebar menu: : style can be found in sidebar.less -->
         <ul class="sidebar-menu">
             <li class="header">MAIN NAVIGATION</li>
-            <li>
-                <a href="{{ URL::route('client.index') }}" class="active">
-                    <i class="fa fa-users fa-fw"></i> 
+            <li class="{{ active()->route('home') }}">
+                <a href="{{ route('home') }}" >
+                    <i class="fa fa-dashboard fa-fw"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li class="{{ active()->route('client.*') }}">
+                <a href="{{ route('client.index') }}">
+                    <i class="fa fa-users fa-fw"></i>
                     <span>Clients</span>
+                </a>
+            </li>
+            <li class="{{ active()->route('project.*') }}">
+                <a href="{{ route('project.index') }}">
+                    <i class="fa fa-briefcase fa-fw"></i>
+                    <span>Projects</span>
                 </a>
             </li>
         </ul>

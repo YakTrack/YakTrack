@@ -11,30 +11,36 @@ Track is currently under development and may change drastically before the first
 Here is a list of features intended for inclusion in the first tagged release.
 
 * Clients
+  * ~~Index~~
   * ~~Create~~
   * ~~Show~~
   * ~~Edit~~
   * ~~Delete~~
 * Projects
+  * ~~Index~~
   * Create
   * Show
   * Edit
   * Delete
 * Sprints
+  * Index
   * Create
   * Show
   * Edit
   * Delete
 * Tasks
+  * Index
   * Create
   * Show
   * Edit
   * Delete
 * Sessions
+  * Index
   * Start / Stop
   * Edit
   * Delete
 * Invoices
+  * Index
   * Create
   * Show
   * Edit

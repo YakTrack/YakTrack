@@ -28,3 +28,9 @@ Breadcrumbs::register('client.edit', function($breadcrumbs, $client) {
     $breadcrumbs->parent('client.index');
     $breadcrumbs->push('Edit ' . $client->name, route('client.edit', ['client' => $client]));
 });
+
+// Home > Projects
+Breadcrumbs::register('project.index', function($breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Projects', route('project.index'));
+});
