@@ -8,6 +8,12 @@ use App\Client;
 
 class Project extends Model
 {
+    protected $fillable = [
+        'name',
+        'description',
+        'client_id'
+    ];
+
     /**
      * The client that the project belongs to
      **/

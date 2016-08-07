@@ -34,3 +34,9 @@ Breadcrumbs::register('project.index', function($breadcrumbs) {
     $breadcrumbs->parent('home');
     $breadcrumbs->push('Projects', route('project.index'));
 });
+
+// Home > Projects > Create
+Breadcrumbs::register('project.create', function($breadcrumbs) {
+    $breadcrumbs->parent('project.index');
+    $breadcrumbs->push('Create Project', route('project.create'));
+});

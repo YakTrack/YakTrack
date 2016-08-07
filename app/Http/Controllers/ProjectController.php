@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
+use App\Client;
 use App\Project;
 
 class ProjectController extends Controller
@@ -26,18 +27,27 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+        return view('project.create', ['clients' => Client::all()]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store a newly created project in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required',
+            'client_id' => 'exists:clients,id'
+        ]);
+
+        $project = Project::create($request->all());
+
+        return redirect()
+            ->route('project.index')
+            ->with(['messages' => ['success' => 'You have created a new project called ' . $project->name]]);
     }
 
     /**
