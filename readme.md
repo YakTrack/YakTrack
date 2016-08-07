@@ -18,7 +18,7 @@ Here is a list of features intended for inclusion in the first tagged release.
   * ~~Delete~~
 * Projects
   * ~~Index~~
-  * Create
+  * ~~Create~~
   * Show
   * Edit
   * Delete
