@@ -22,7 +22,7 @@
         </div>
         <div class="form-group">
             {!! Form::label('description,', 'Description') !!}
-            {!! Form::text('description', null, ['class' => 'form-control', 'placeholder' => 'Describe this project']) !!}
+            {!! Form::textarea('description', null, ['class' => 'form-control', 'placeholder' => 'Describe this project']) !!}
         </div>
         <div class="form-group">
             {!! Form::label('client_id', 'Client') !!}
