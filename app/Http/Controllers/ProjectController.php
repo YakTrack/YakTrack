@@ -67,28 +67,40 @@ class ProjectController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing the specified project.
      *
-     * @param int $id
+     * @param Project $project
      *
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Project $project)
     {
-        //
+        return view('project.edit', [
+            'project' => $project,
+            'clients' => Client::all() 
+        ]);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified project in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param int                      $id
+     * @param Project $project
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Project $project)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required',
+            'client_id' => 'exists:clients,id'
+        ]);
+
+        $project->update($request->all());
+
+        return redirect()
+            ->route('project.index')
+            ->with(['messages' => ['success' => 'Project ' . $project->name . ' updated.']]);
     }
 
     /**

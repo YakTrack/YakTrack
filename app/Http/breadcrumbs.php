@@ -49,8 +49,14 @@ Breadcrumbs::register('project.create', function($breadcrumbs) {
     $breadcrumbs->push('Create Project', route('project.create'));
 });
 
-// Home > Projects > Show
+// Home > Projects > [Show]
 Breadcrumbs::register('project.show', function($breadcrumbs, $project) {
     $breadcrumbs->parent('project.index');
     $breadcrumbs->push($project->name, route('project.show', ['project' => $project]));
+});
+
+// Home > Projects > [Edit]
+Breadcrumbs::register('project.edit', function($breadcrumbs, $project) {
+    $breadcrumbs->parent('project.index');
+    $breadcrumbs->push('Edit ' . $project->name, route('project.edit', ['project' => $project]));
 });
