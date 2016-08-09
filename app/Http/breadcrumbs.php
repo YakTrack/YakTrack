@@ -5,6 +5,10 @@ Breadcrumbs::register('home', function($breadcrumbs) {
     $breadcrumbs->push('Home', route('home'));
 });
 
+/**
+ * CLIENTS
+ **/
+
 // Home > Clients
 Breadcrumbs::register('client.index', function($breadcrumbs) {
     $breadcrumbs->parent('home');
@@ -29,6 +33,10 @@ Breadcrumbs::register('client.edit', function($breadcrumbs, $client) {
     $breadcrumbs->push('Edit ' . $client->name, route('client.edit', ['client' => $client]));
 });
 
+/**
+ * Projects
+ **/
+
 // Home > Projects
 Breadcrumbs::register('project.index', function($breadcrumbs) {
     $breadcrumbs->parent('home');
@@ -39,4 +47,10 @@ Breadcrumbs::register('project.index', function($breadcrumbs) {
 Breadcrumbs::register('project.create', function($breadcrumbs) {
     $breadcrumbs->parent('project.index');
     $breadcrumbs->push('Create Project', route('project.create'));
+});
+
+// Home > Projects > Show
+Breadcrumbs::register('project.show', function($breadcrumbs, $project) {
+    $breadcrumbs->parent('project.index');
+    $breadcrumbs->push($project->name, route('project.show', ['project' => $project]));
 });

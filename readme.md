@@ -19,7 +19,7 @@ Here is a list of features intended for inclusion in the first tagged release.
 * Projects
   * ~~Index~~
   * ~~Create~~
-  * Show
+  * ~~Show~~
   * Edit
   * ~~Delete~~
 * Sprints

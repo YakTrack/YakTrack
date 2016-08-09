@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use App\Client;
 use App\Project;
 
@@ -33,38 +31,46 @@ class ProjectController extends Controller
     /**
      * Store a newly created project in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $this->validate($request, [
             'name' => 'required',
-            'client_id' => 'exists:clients,id'
+            'client_id' => 'exists:clients,id',
         ]);
 
         $project = Project::create($request->all());
 
         return redirect()
             ->route('project.index')
-            ->with(['messages' => ['success' => 'You have created a new project called ' . $project->name]]);
+            ->with(['messages' => [
+                        'success' => 'You have created a new project called '.
+                        $project->name,
+                    ],
+                ]
+            );
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param Project $project \\ The project to be shown
+     *
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Project $project)
     {
-        //
+        return view('project.show', ['project' => $project]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -75,8 +81,9 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -87,7 +94,8 @@ class ProjectController extends Controller
     /**
      * Remove the specified project from storage.
      *
-     * @param  Project $project
+     * @param Project $project
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Project $project)
@@ -96,6 +104,6 @@ class ProjectController extends Controller
 
         return redirect()
             ->route('project.index')
-            ->with(['messages' => ['success' => 'You have deleted Project ' . $project->name . '.']]);
+            ->with(['messages' => ['success' => 'You have deleted Project '.$project->name.'.']]);
     }
 }

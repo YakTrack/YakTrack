@@ -28,3 +28,11 @@ $factory->define(App\Client::class, function (Faker\Generator $faker) {
         'email' => $faker->safeEmail,
     ];
 });
+
+// Project factory
+$factory->define(App\Project::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->word(),
+        'description' => $faker->sentence,
+    ];
+});

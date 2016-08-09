@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Client;
-use App\Http\Requests;
 
 class ClientController extends Controller
 {
@@ -17,7 +15,7 @@ class ClientController extends Controller
     public function index()
     {
         return view('client.index', [
-            'clients' => \App\Client::all()
+            'clients' => \App\Client::all(),
         ]);
     }
 
@@ -34,27 +32,29 @@ class ClientController extends Controller
     /**
      * Store a newly created form in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name'  => 'required',
-            'email' => 'email'
+            'name' => 'required',
+            'email' => 'email',
         ]);
 
         Client::create($request->except('_token'));
 
         return redirect()
             ->route('client.index')
-            ->with(['messages' => ['success' => 'You have created new client "' . $request->name]]);
+            ->with(['messages' => ['success' => 'You have created new client "'.$request->name]]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Client $client)
@@ -65,21 +65,23 @@ class ClientController extends Controller
     /**
      * Show the form for editing the specified client.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Client $client)
     {
         return view('client.edit', [
-            'client' => $client
+            'client' => $client,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Client $client)
@@ -96,7 +98,7 @@ class ClientController extends Controller
         return redirect()
             ->route('client.index')
             ->with(['messages' => [
-                'success' => 'You have updated client "' . $client->name . '"'
+                'success' => 'You have updated client "'.$client->name.'"',
             ]]);
     }
 
@@ -104,16 +106,17 @@ class ClientController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Client $client
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Client $client)
     {
         $client->delete();
-        
+
         return redirect()
             ->route('client.index')
             ->with(['messages' => [
-                'success' => 'You have deleted client "' . $client->name . '"'
+                'success' => 'You have deleted client "'.$client->name.'"',
             ]]);
     }
 }
