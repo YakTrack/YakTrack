@@ -70,7 +70,10 @@ class SprintController extends Controller
      */
     public function edit(Sprint $sprint)
     {
-        //
+        return view('sprint.edit', [
+            'projects' => Project::all(),
+            'sprint' => $sprint
+        ]);
     }
 
     /**
@@ -82,7 +85,16 @@ class SprintController extends Controller
      */
     public function update(Request $request, Sprint $sprint)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|unique:sprints,name,' . $sprint->id,
+            'project_id' => 'exists:projects,id'
+        ]);
+
+        $sprint->update($request->all());
+
+        return redirect()
+            ->route('sprint.index')
+            ->with(['messages' => ['success' => 'You have updated sprint ' . $sprint->name . '.']]);
     }
 
     /**

@@ -26,7 +26,7 @@ Here is a list of features intended for inclusion in the first tagged release.
   * ~~Index~~
   * ~~Create~~
   * Show
-  * Edit
+  * ~~Edit~~
   * Delete
 * Tasks
   * Index
