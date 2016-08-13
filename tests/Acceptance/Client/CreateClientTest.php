@@ -17,7 +17,7 @@ class CreateClientTest extends TestCase
         // Visit page
         $this->visit(route('client.create'));
 
-        // Verify collect page loads
+        // Verify correct page loads
         $this->seePageIs(route('client.create'));
 
         // Fill in form an submit

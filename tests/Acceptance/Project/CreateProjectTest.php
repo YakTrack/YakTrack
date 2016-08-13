@@ -20,7 +20,7 @@ class CreateProjectTest extends TestCase
         // Visit page
         $this->visit(route('project.create'));
 
-        // Verify collect page loads
+        // Verify correct page loads
         $this->seePageIs(route('project.create'));
 
         // Fill in form an submit
