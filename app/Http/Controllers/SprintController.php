@@ -105,6 +105,10 @@ class SprintController extends Controller
      */
     public function destroy(Sprint $sprint)
     {
-        //
+        $sprint->delete();
+
+        return redirect()
+            ->route('sprint.index')
+            ->with(['messages' => ['success' => 'You have deleted sprint ' . $sprint->name . '.']]);
     }
 }
