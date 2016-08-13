@@ -19,8 +19,8 @@ class DeleteClientTest extends TestCase
             'email' => 'client@domain.com',
             'name'  => 'Test Client'
         ]);
-            
-        // Visit route 
+
+        // Visit route
         $this->delete(route('client.destroy', [
             'client' => $client
         ]));
