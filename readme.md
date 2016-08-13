@@ -23,7 +23,7 @@ Here is a list of features intended for inclusion in the first tagged release.
   * ~~Edit~~
   * ~~Delete~~
 * Sprints
-  * Index
+  * ~~Index~~
   * Create
   * Show
   * Edit
