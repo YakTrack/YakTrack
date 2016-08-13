@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sprint extends Model
 {
-    protected $fillable = [
-        'project_id'
-    ];
+    protected $fillable = ['name', 'project_id'];
 
     /**
      * Returns true if sprint is linked to project

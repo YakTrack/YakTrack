@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
+use App\Project;
 use App\Sprint;
 
 class SprintController extends Controller
@@ -27,7 +28,7 @@ class SprintController extends Controller
      */
     public function create()
     {
-        //
+        return view('sprint.create', ['projects' => Project::all()]);
     }
 
     /**
@@ -38,7 +39,16 @@ class SprintController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|unique:sprints,name',
+            'project_id' => 'exists:projects,id'
+        ]);
+
+        $sprint = Sprint::create($request->all());
+
+        return redirect()
+            ->route('sprint.index')
+            ->with(['messages' => ['success' => 'You have added sprint ' . $sprint->name . '.']]);
     }
 
     /**
