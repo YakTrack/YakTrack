@@ -13,11 +13,15 @@
 
 Route::auth();
 
-Route::get('/', [
-    'as' => 'home',
-    'uses' => 'HomeController@index'
-]);
+Route::group(['middleware' => 'auth'], function() {
+    
+    Route::get('/', [
+        'as' => 'home',
+        'uses' => 'HomeController@index'
+    ]);
 
-Route::resource('client', 'ClientController');
-Route::resource('project', 'ProjectController');
+    Route::resource('client', 'ClientController');
+    Route::resource('project', 'ProjectController');
+    Route::resource('sprint', 'SprintController');
 
+});

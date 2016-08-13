@@ -23,6 +23,12 @@
                     <span>Projects</span>
                 </a>
             </li>
+            <li class="{{ active()->route('sprint.*') }}">
+                <a href="{{ route('sprint.index') }}">
+                    <i class="fa fa-briefcase fa-fw"></i>
+                    <span>Sprints</span>
+                </a>
+            </li>
         </ul>
     </section>
 <!-- /.sidebar -->

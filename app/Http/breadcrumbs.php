@@ -60,3 +60,31 @@ Breadcrumbs::register('project.edit', function($breadcrumbs, $project) {
     $breadcrumbs->parent('project.index');
     $breadcrumbs->push('Edit ' . $project->name, route('project.edit', ['project' => $project]));
 });
+
+/**
+ * Sprints
+ **/
+
+// Home > Sprints
+Breadcrumbs::register('sprint.index', function($breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Sprints', route('sprint.index'));
+});
+
+// Home > Sprints > Create
+Breadcrumbs::register('sprint.create', function($breadcrumbs) {
+    $breadcrumbs->parent('sprint.index');
+    $breadcrumbs->push('Create Sprint', route('sprint.create'));
+});
+
+// Home > Sprints > [Show]
+Breadcrumbs::register('sprint.show', function($breadcrumbs, $sprint) {
+    $breadcrumbs->parent('sprint.index');
+    $breadcrumbs->push($sprint->name, route('sprint.show', ['sprint' => $sprint]));
+});
+
+// Home > Sprints > [Edit]
+Breadcrumbs::register('sprint.edit', function($breadcrumbs, $sprint) {
+    $breadcrumbs->parent('sprint.index');
+    $breadcrumbs->push('Edit ' . $sprint->name, route('sprint.edit', ['sprint' => $sprint]));
+});
