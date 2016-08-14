@@ -59,7 +59,7 @@ class SprintController extends Controller
      */
     public function show(Sprint $sprint)
     {
-        //
+        return view('sprint.show', ['sprint' => $sprint]);
     }
 
     /**

@@ -13,7 +13,7 @@ class EditProjectTest extends TestCase
     {
         // Create clients
         $clients = factory(App\Client::class, 2)->create();
-        
+
         // Create project
         $project = factory(App\Project::class)->create(['client_id' => $clients[0]->id]);
 
@@ -31,7 +31,7 @@ class EditProjectTest extends TestCase
             ->type('Updated project description.', 'description')
             ->select($clients[1]->id, 'client_id')
             ->press('Update');
-        
+
         // Verify redirected to correct page
         $this->seePageIs(route('project.index'));
 

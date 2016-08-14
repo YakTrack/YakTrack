@@ -9,12 +9,10 @@ class Sprint extends Model
     protected $fillable = ['name', 'project_id'];
 
     /**
-     * Returns true if sprint is linked to project
-     *
-     * @return bool
+     * The relationship to the project which this sprint belongs to
      **/
-    public function hasProject()
+    public function project()
     {
-        return !is_null($this->project);
+        return $this->belongsTo('App\Project');
     }
 }

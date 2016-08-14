@@ -28,8 +28,12 @@ class CreateSprintTest extends TestCase
             ->select($project->id, 'project_id')
             ->press('Add');
 
+        // Verify success alert shown
+        $this->see('alert-success');
+
         // Verify redirected to correct page
         $this->seePageIs(route('sprint.index'));
+
 
         // Verify sprint added to database
         $this->seeInDatabase('sprints', [

@@ -40,11 +40,9 @@
                         </a>
                     </td>
                     <td>
-                        @if($sprint->hasProject());
-                            <a href="{{ route('project.show', ['client' => $sprint->project]) }}">
-                                {{ $sprint->project->name }}
-                            </a>
-                        @endif
+                        <a href="{{ route('project.show', ['client' => $sprint->project]) }}">
+                            {{ $sprint->project->name }}
+                        </a>
                     </td>
                     <td>
                         <div class="btn-group pull-right">
