@@ -24,11 +24,16 @@ elixir(function(mix) {
         'app.css',
     ]);
 
+    mix.browserify([
+        'app.js'
+    ], 'resources/assets/js/all.js');
+
     // Javascript
     mix.scripts([
         'bootstrap.js',
         'AdminLTE.js',
-        'scripts.js'
+        'scripts.js',
+        'all.js',
     ]);
 
 });

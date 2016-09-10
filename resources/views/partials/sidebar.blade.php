@@ -29,6 +29,12 @@
                     <span>Sprints</span>
                 </a>
             </li>
+            <li class="{{ active()->route('task.*') }}">
+                <a href="{{ route('task.index') }}">
+                    <i class="fa fa-check-square-o fa-fw"></i>
+                    <span>Tasks</span>
+                </a>
+            </li>
         </ul>
     </section>
 <!-- /.sidebar -->
