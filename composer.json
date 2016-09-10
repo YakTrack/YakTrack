@@ -9,7 +9,8 @@
         "laravel/framework": "5.2.*",
         "davejamesmiller/laravel-breadcrumbs": "^3.0",
         "laravelcollective/html": "5.2.*",
-        "stevebauman/active": "1.0.*"
+        "stevebauman/active": "1.0.*",
+        "spatie/laravel-blade-javascript": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

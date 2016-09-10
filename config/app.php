@@ -164,6 +164,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
         Stevebauman\Active\ActiveServiceProvider::class,
+        Spatie\BladeJavaScript\BladeJavaScriptServiceProvider::class,
     ],
     /*
     |--------------------------------------------------------------------------
