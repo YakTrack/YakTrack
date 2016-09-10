@@ -36,4 +36,20 @@ class Project extends Model
 
         return $this->client;
     }
+
+    /**
+     * The sprints that belong to the project
+     **/
+    public function sprints()
+    {
+        return $this->hasMany('App\Sprint');
+    }
+
+    /**
+     * The tasks that belong to the project
+     **/
+    public function tasks()
+    {
+        return $this->hasMany('App\Task');
+    }
 }
