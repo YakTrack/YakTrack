@@ -20,12 +20,15 @@ class CreateTasksTable extends Migration
             $table->text('description');
             $table->string('status');
             $table->integer('sprint_id')->unsigned()->nullable();
+            $table->integer('project_id')->unsigned()->nullable();
             $table->integer('parent_id')->unsigned()->nullable();
             $table->string('parent_type');
             $table->timestamps();
 
             // Foreign key relationships
             $table->foreign('sprint_id')->references('id')->on('sprints');
+            $table->foreign('project_id')->references('id')->on('projects');
+            $table->foreign('parent_id')->references('id')->on('tasks');
         });
     }
 
