@@ -88,3 +88,19 @@ Breadcrumbs::register('sprint.edit', function($breadcrumbs, $sprint) {
     $breadcrumbs->parent('sprint.index');
     $breadcrumbs->push('Edit ' . $sprint->name, route('sprint.edit', ['sprint' => $sprint]));
 });
+
+/**
+ * Tasks
+ **/
+
+// Home > Tasks
+Breadcrumbs::register('task.index', function($breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Tasks', route('task.index'));
+});
+
+// Home > Sprints > Create
+Breadcrumbs::register('task.create', function($breadcrumbs) {
+    $breadcrumbs->parent('task.index');
+    $breadcrumbs->push('Create Task', route('task.create'));
+});
