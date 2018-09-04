@@ -30,7 +30,7 @@ Here is a list of features intended for inclusion in the first tagged release.
   * ~~Delete~~
 * Tasks
   * Index
-  * Create
+  * ~~Create~~
   * Show
   * Edit
   * Delete
