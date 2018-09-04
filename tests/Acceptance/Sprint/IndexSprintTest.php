@@ -12,7 +12,7 @@ class IndexSprintTest extends TestCase
     public function a_logged_in_user_can_view_their_sprints()
     {
         // Create project
-        $project = App\Project::create();
+        $project = factory(App\Project::class)->create();
 
         // Create sprints
         $sprints = factory(App\Sprint::class)->create(['project_id' => $project->id]);

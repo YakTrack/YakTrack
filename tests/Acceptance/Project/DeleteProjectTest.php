@@ -17,7 +17,7 @@ class DeleteProjectTest extends TestCase
         $user = $this->actingAsUser();
 
         // Generate project
-        $project = Project::create(['name' => 'Test Project']);
+        $project = factory(Project::class)->create(['name' => 'Test Project']);
 
         // Visit route 
         $this->delete(route('project.destroy', [

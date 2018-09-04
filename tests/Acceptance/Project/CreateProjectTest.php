@@ -12,7 +12,7 @@ class CreateProjectTest extends TestCase
     public function a_logged_in_user_can_create_a_project()
     {
         // Create client
-        $client = App\Client::create();
+        $client = factory(App\Client::class)->create();
 
         // Login first user
         $user = $this->actingAsUser();
