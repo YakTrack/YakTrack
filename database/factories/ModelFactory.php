@@ -43,3 +43,12 @@ $factory->define(App\Sprint::class, function (Faker\Generator $faker) {
         'name' => $faker->word(),
     ];
 });
+
+// Task factory
+$factory->define(App\Task::class, function (Faker\Generator $faker) {
+    return [
+        'name' => $faker->sentence,
+        'description' => $faker->sentence,
+        'status' => $faker->word,
+    ];
+});

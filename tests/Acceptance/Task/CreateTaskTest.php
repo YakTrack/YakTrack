@@ -4,6 +4,10 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
+use App\Task;
+use App\Project;
+use App\Sprint;
+
 class CreateTaskTest extends TestCase
 {
     use DatabaseMigrations;
@@ -11,21 +15,19 @@ class CreateTaskTest extends TestCase
     /** @test */
     public function a_logged_in_user_can_create_a_task()
     {
+        $this->actingAsUser();
+
         // Create project
-        $project = App\Project::create();
+        $project = factory(Project::class)->create();
         
         // Create sprint
-        $sprint = App\Project::create(['project_id' => $project->id]);
+        $sprint = factory(Sprint::class)->create(['project_id' => $project->id]);
 
         // Create parent task
-        $parentTask = App\Task::create([
+        $parentTask = factory(Task::class)->create([
             'parent_id' => $project->id,
-            'parent_type' => 'App\\Project',
             'sprint_id' => $sprint->id,
         ]);
-
-        // Login first user
-        \Auth::login(App\User::first());
 
         // Visit page
         $this->visit(route('task.create'));
@@ -33,12 +35,14 @@ class CreateTaskTest extends TestCase
         // Verify correct page loads
         $this->seePageIs(route('task.create'));
 
-        // Fill in form an submit
-        $this->type('Test Task', 'name')
-            ->type('Test task description.', 'description')
-            ->select($sprint->id, 'sprint_id')
-            ->select($parentTask->id, 'task_id')
-            ->press('Create');
+        // Simulate form submission
+        $response = $this->post(route('task.store'), [
+            'name' => 'Test Task',
+            'description' => 'Test task description.',
+            'project_id' => $project->id,
+            'sprint_id' => $sprint->id,
+            'parent_id' => $parentTask->id,
+        ]);
 
         // Verify redirected to correct page
         $this->seePageIs(route('task.index'));
@@ -47,8 +51,8 @@ class CreateTaskTest extends TestCase
         $this->seeInDatabase('tasks', [
             'name' => 'Test Task',
             'description' => 'Test task description.',
+            'project_id' => $project->id,
             'parent_id' => $parentTask->id,
-            'parent_type' => 'App\\Task',
             'sprint_id' => $sprint->id
         ]);
     }

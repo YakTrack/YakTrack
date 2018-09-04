@@ -22,7 +22,6 @@ class CreateTasksTable extends Migration
             $table->integer('sprint_id')->unsigned()->nullable();
             $table->integer('project_id')->unsigned()->nullable();
             $table->integer('parent_id')->unsigned()->nullable();
-            $table->string('parent_type');
             $table->timestamps();
 
             // Foreign key relationships

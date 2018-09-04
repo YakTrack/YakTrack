@@ -38,8 +38,8 @@
             <v-select :value.sync="selectedSprint" :options="sprints" label="name" name="sprint_id">
         </div>
         <div class="form-group">
-            {!! Form::label('parent_task_id', 'Parent Task') !!}
-            <v-select :value.sync="selectedParentTask" :options="[]" label="name" name="parent_task_id">
+            {!! Form::label('parent_id', 'Parent Task') !!}
+            <v-select :value.sync="selectedParentTask" :options="[]" label="name" name="parent_id">
         </div>
         <div class="form-group">
             {!! Form::submit('Create', ['class' => 'btn btn-default']) !!}

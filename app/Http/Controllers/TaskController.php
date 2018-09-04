@@ -43,7 +43,18 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $task = Task::create(array_merge(
+            $request->only([
+                'name',
+                'description',
+                'project_id',
+                'sprint_id',
+                'parent_id',
+            ]),
+            [
+                'status' => 'incomplete'
+            ]
+        ));
     }
 
     /**
