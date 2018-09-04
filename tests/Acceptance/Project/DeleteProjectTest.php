@@ -8,13 +8,13 @@ use App\Project;
 
 class DeleteProjectTest extends TestCase
 {
-    use DatabaseTransactions;
+    use DatabaseMigrations;
 
     /** @test */
     public function a_logged_in_user_can_delete_a_project()
     {
         // Login first user
-        \Auth::login(App\User::first());
+        $user = $this->actingAsUser();
 
         // Generate project
         $project = Project::create(['name' => 'Test Project']);

@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class CreateSprintTest extends TestCase
 {
-    use DatabaseTransactions;
+    use DatabaseMigrations;
 
     /** @test */
     public function a_logged_in_user_can_create_a_sprint()
@@ -15,7 +15,7 @@ class CreateSprintTest extends TestCase
         $project = factory(App\Project::class)->create();
 
         // Login first user
-        \Auth::login(App\User::first());
+        $user = $this->actingAsUser();
 
         // Visit page
         $this->visit(route('sprint.create'));

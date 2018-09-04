@@ -6,13 +6,13 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class DeleteSprintTest extends TestCase
 {
-    use DatabaseTransactions;
+    use DatabaseMigrations;
 
     /** @test */
     public function a_logged_in_user_can_delete_a_sprint()
     {
         // Login first user
-        \Auth::login(App\User::first());
+        $user = $this->actingAsUser();
 
         // Generate project and sprint
         $project = factory(App\Project::class)->create();

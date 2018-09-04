@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ShowSprintTest extends TestCase
 {
-    use DatabaseTransactions;
+    use DatabaseMigrations;
 
     /** @test */
     public function a_logged_in_user_can_view_details_of_a_sprint()
@@ -16,7 +16,7 @@ class ShowSprintTest extends TestCase
         $sprint = factory(App\Sprint::class)->create(['project_id' => $project->id]);
 
         // Login user
-        \Auth::login(App\User::first());
+        $user = $this->actingAsUser();
 
         // Visit show sprint page
         $this->visit(route('sprint.show', ['sprint' => $sprint]));

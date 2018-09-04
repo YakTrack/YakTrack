@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class IndexSprintTest extends TestCase
 {
-    use DatabaseTransactions;
+    use DatabaseMigrations;
     
     /** @test */
     public function a_logged_in_user_can_view_their_sprints()
@@ -18,7 +18,7 @@ class IndexSprintTest extends TestCase
         $sprints = factory(App\Sprint::class)->create(['project_id' => $project->id]);
 
         // Login first user
-        \Auth::login(App\User::first());
+        $user = $this->actingAsUser();
 
         // Navigate to sprints index page from home page
         $this->visit(route('home'))
