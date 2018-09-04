@@ -18,7 +18,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return view('task.index', ['tasks' => Task::where('user_id', \Auth::id())]);
+        return view('task.index', ['tasks' => Task::all()]);
     }
 
     /**
