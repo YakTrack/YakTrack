@@ -104,6 +104,7 @@ Breadcrumbs::register('task.create', function($breadcrumbs) {
     $breadcrumbs->parent('task.index');
     $breadcrumbs->push('Create Task', route('task.create'));
 });
+
 // Home > Tasks > Show Task
 Breadcrumbs::register('task.show', function($breadcrumbs, $task) {
     $breadcrumbs->parent('task.index');
