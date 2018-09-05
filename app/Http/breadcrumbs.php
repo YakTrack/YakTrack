@@ -99,8 +99,13 @@ Breadcrumbs::register('task.index', function($breadcrumbs) {
     $breadcrumbs->push('Tasks', route('task.index'));
 });
 
-// Home > Sprints > Create
+// Home > Tasks > Create
 Breadcrumbs::register('task.create', function($breadcrumbs) {
     $breadcrumbs->parent('task.index');
     $breadcrumbs->push('Create Task', route('task.create'));
+});
+// Home > Tasks > Show Task
+Breadcrumbs::register('task.show', function($breadcrumbs, $task) {
+    $breadcrumbs->parent('task.index');
+    $breadcrumbs->push($task->name, route('task.show', ['task' => $task]));
 });
