@@ -110,3 +110,9 @@ Breadcrumbs::register('task.show', function($breadcrumbs, $task) {
     $breadcrumbs->parent('task.index');
     $breadcrumbs->push($task->name, route('task.show', ['task' => $task]));
 });
+
+// Home > Tasks > Edit Task
+Breadcrumbs::register('task.edit', function($breadcrumbs, $task) {
+    $breadcrumbs->parent('task.index');
+    $breadcrumbs->push('Edit'.$task->name, route('task.edit', ['task' => $task]));
+});
