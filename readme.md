@@ -31,9 +31,9 @@ Here is a list of features intended for inclusion in the first tagged release.
 * Tasks
   * ~~Index~~
   * ~~Create~~
-  * Show
+  * ~~Show~~
   * Edit
-  * Delete
+  * ~~Delete~~
 * Sessions
   * Index
   * Start / Stop
