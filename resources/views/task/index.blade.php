@@ -26,7 +26,10 @@
         <table class="table box-body">
             <tr>
                 <th> Name </th>
-                <th> Email </th>
+                <th> Parent </th>
+                <th> Sprint </th>
+                <th> Project </th>
+                <th> Client </th>
                 <th> <span class="pull-right"> Actions </span> </th>
                 @foreach($tasks as $task)
                 <tr
@@ -36,7 +39,22 @@
                 >
                 <td>
                     <a href="{{ route('task.show', ['task' => $task]) }}">
-                        {{ $task->name }}
+                        {{ $task->shortName }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ route('task.show', ['task' => $task->getParent()]) }}">
+                        {{ $task->getParent()->shortName }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ route('sprint.show', ['sprint' => $task->getSprint()]) }}">
+                        {{ $task->getSprint()->name }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ route('project.show', ['project' => $task->getProject()]) }}">
+                        {{ $task->getProject()->name }}
                     </a>
                 </td>
                 <td>

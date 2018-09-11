@@ -53,6 +53,8 @@ class TaskController extends Controller
                 'status' => 'incomplete'
             ]
         ));
+
+        return redirect()->route('task.index');
     }
 
     /**

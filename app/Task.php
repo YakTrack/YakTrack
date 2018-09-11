@@ -3,23 +3,41 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Concerns\BelongstoProject;
 
 class Task extends Model
 {
+    use BelongsToProject;
+
     protected $guarded = [];
 
-    /**
-     * Returns the client object that the project belongs to if one exists or
-     * a blank client object if none exists.
-     *
-     * @return \App\Client
-     **/
     public function getClient()
     {
-        if (is_null($this->client)) {
-            return new Client;
-        }
+        return $this->getRelation(Client::class);
+    }
 
-        return $this->client;
+    public function getProject()
+    {
+        return $this->getRelation(Project::class);
+    }
+
+    public function getSprint()
+    {
+        return $this->getRelation(Sprint::class);
+    }
+
+    public function getParent()
+    {
+        return $this->parent ?? new Task;
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Task::class, 'parent_id');
+    }
+
+    public function getShortNameAttribute()
+    {
+        return substr($this->name, 0, $shortNameLength = 50).(strlen($this->name) > $shortNameLength ? '...' : '');
     }
 }

@@ -1,9 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-
 use App\Task;
 use App\Project;
 use App\Sprint;
@@ -19,7 +16,7 @@ class CreateTaskTest extends TestCase
 
         // Create project
         $project = factory(Project::class)->create();
-        
+
         // Create sprint
         $sprint = factory(Sprint::class)->create(['project_id' => $project->id]);
 
@@ -45,7 +42,12 @@ class CreateTaskTest extends TestCase
         ]);
 
         // Verify redirected to correct page
+        $this->followRedirects();
         $this->seePageIs(route('task.index'));
+
+        // Verify that we see what we expect on the page
+        $this->see('Test Task');
+        $this->see($project->name);
 
         // Verify task added to database
         $this->seeInDatabase('tasks', [
