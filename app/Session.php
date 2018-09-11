@@ -2,8 +2,9 @@
 
 namespace App;
 
-use App\Support\DateTimeFormatter;
 use App\Models\Collections\SessionCollection;
+use App\Support\DateIntervalFormatter;
+use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -32,22 +33,14 @@ class Session extends Model
         return Carbon::parse($this->attributes['ended_at']);
     }
 
-    public function getTotalTimeAttribute()
+    public function getDurationForHumansAttribute()
     {
-        if (!$this->duration) {
-            return null;
-        }
-
-        return $this->duration->format('%H:%I:%S');
+        return app(DateIntervalFormatter::class)->forHumans($this->duration);
     }
 
     public function getDurationAttribute()
     {
-        if (!$this->ended_at) {
-            return null;
-        }
-
-        return Carbon::parse($this->ended_at)->diff(Carbon::parse($this->started_at));
+        return ($this->ended_at ?? Carbon::now())->diff(Carbon::parse($this->started_at));
     }
 
     public function getDurationInSecondsAttribute()

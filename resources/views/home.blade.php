@@ -16,23 +16,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td colspan=2> TOTAL </td>
-                            <td> {{ $todaysTotal }} </td>
-                        </tr>
                         @foreach($todaysWorkSessions as $workSession)
                             <tr>
                                 <td> {{ $workSession->startedAtTimeForHumans }} </td>
                                 <td> {{ $workSession->endedAtTimeForHumans }} </td>
-                                <td> 1 </td>
+                                <td> {{ $workSession->durationForHumans }} </td>
                             </tr>
                         @endforeach
-                        <tr><td colspan={{ $totalColumns }}></td></tr>
+                        <tr class="active">
+                            <th colspan="{{ $totalColumns - 1}}"> TOTAL </th>
+                            <th> {{ $todaysTotal }} </th>
+                        </tr>
+                        <tr><td colspan="{{ $totalColumns }}"></td></tr>
                     </tbody>
                     <thead>
                         <tr>
-                            <th> THIS WEEK </th>
-                            <th> </th>
+                            <th colspan="{{ $totalColumns - 1 }}"> THIS WEEK </th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,6 +42,10 @@
                                 <td> {{ $totalTime }} </td>
                             </tr>
                         @endforeach
+                        <tr class="active">
+                            <th colspan="{{ $totalColumns - 1}}"> TOTAL </th>
+                            <th> {{ $thisWeeksTotal }} </th>
+                        </tr>
                     </tbody>
                 </table>
             </div>

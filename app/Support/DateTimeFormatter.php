@@ -32,7 +32,7 @@ class DateTimeFormatter
         return $this->format($dateTime, self::TIME_FOR_HUMANS_FORMAT);
     }
 
-    public function format($dateTime, $format = null)
+    public function format($dateTime, $format = null, $applyTimezone = false)
     {
         if (is_null($format)) {
             $format = self::DATETIME_FOR_MYSQL_FORMAT;
@@ -40,7 +40,15 @@ class DateTimeFormatter
 
         $dateTime = Carbon::parse($dateTime);
 
-        return $dateTime ? $dateTime->timezone($this->timezone())->format($format) : null;
+        if (!$dateTime) {
+            return null;
+        }
+
+        if ($applyTimezone) {
+            $dateTime->timezone($this->timezone());
+        }
+
+        return $dateTime->format($format);
     }
 
     public function timezone()
@@ -65,7 +73,7 @@ class DateTimeFormatter
 
     public function tomorrow($format = null)
     {
-        return $this->format(Carbon::tomorrow()->setTimezone($this->timezone()), $format);
+        return $this->format(Carbon::tomorrow()->setTimezone($this->timezone()), $ormat);
     }
 
     public function daysOfWeek()
@@ -76,11 +84,17 @@ class DateTimeFormatter
     public function daysThisWeek()
     {
         return $this->daysOfWeek()->map(function ($day) {
-            return Carbon::parse('last '.$day);
+            if (Carbon::today()->format('l') == $day) {
+                return Carbon::today()->setTimezone($this->timezone());
+            }
+
+            return Carbon::parse('last '.$day)->setTimezone($this->timezone());
         })->keyBy(function ($day) {
             return $day->format('l');
-        })->filter(function ($day) {
-            return $day->startOfDay()->timestamp >= Carbon::parse('last monday')->startOfDay()->timestamp;
-        });
+        })->filter(
+            function ($day, $key) {
+                return $day->startOfDay()->timestamp >= Carbon::parse('last monday')->setTimezone($this->timezone())->startOfDay()->timestamp;
+            }
+        );
     }
 }
