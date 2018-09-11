@@ -9,7 +9,7 @@ class IndexTaskTest extends TestCase
     use DatabaseMigrations;
 
     /** @test */
-    public function testExample()
+    public function a_user_can_see_a_list_of_tasks()
     {
         // Create project
         $project = factory(App\Project::class)->create();

@@ -116,3 +116,9 @@ Breadcrumbs::register('task.edit', function($breadcrumbs, $task) {
     $breadcrumbs->parent('task.index');
     $breadcrumbs->push('Edit'.$task->name, route('task.edit', ['task' => $task]));
 });
+
+// Home > Sessions
+Breadcrumbs::register('session.index', function ($breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Sessions', route('session.index'));
+});

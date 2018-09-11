@@ -15,9 +15,9 @@ class CreateSessionsTable extends Migration
         Schema::create('sessions', function (Blueprint $table) {
             // Add tables
             $table->increments('id');
-            $table->timestamp('start');
-            $table->timestamp('end')->nullable();
-            $table->text('comment');
+            $table->timestamp('started_at')->nullable();
+            $table->timestamp('ended_at')->nullable();
+            $table->text('comment')->nullable();
             $table->integer('task_id')->unsigned()->nullable();
             $table->timestamps();
 
