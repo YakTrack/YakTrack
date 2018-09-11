@@ -10,7 +10,13 @@ class SessionController extends Controller
 {
     public function index()
     {
-        return view('session.index', ['sessions' => Session::all()]);
+        return view('session.index', [
+            'days' => Session::orderBy('started_at', 'desc')
+                ->get()
+                ->groupBy(function ($session) {
+                    return $session->startedAt->format('Y-m-d');
+                })
+        ]);
     }
 
     public function store()

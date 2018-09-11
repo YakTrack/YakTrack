@@ -28,57 +28,70 @@
             </a>
         </div>
     </div>
-    @if($sessions->count())
+    @if($days->count())
         <table class="table box-body">
             <thead>
                 <tr>
                     <th> Start Time </th>
                     <th> End Time </th>
                     <th> Total Time </th>
+                    <th> Task </th>
+                    <th> Comment </th>
                     <th> <span class="pull-right"> Actions </span> </th>
                 </tr>
             </thead>
             <tbody>
-                @foreach($sessions as $session)
-                <tr
-                    class="item-container"
-                    data-item-name="{{ $session->name }}"
-                    data-item-destroy-route="{{ route('session.destroy', ['session' => $session]) }}"
-                >
-                    <td>
-                        {{ $session->startedAtTimeForHumans }}
-                    </td>
-                    <td>
-                        @if ($session->isRunning())
-                            <a class="btn btn-danger" href="{{ route('session.stop', ['session' => $session]) }}"> Stop Now </a>
-                        @else
-                            {{ $session->endedAtTimeForHumans }}
-                        @endif
-                    </td>
-                    <td>
-                        {{ $session->totalTime }}
-                    </td>
-                    <td>
-                        <div class="btn-group pull-right">
-                            <a
-                                href="{{ route('session.edit', ['session' => $session]) }}"
-                                class="btn btn-default"
-                            >
-                                <i class="fa fa-edit"></i>
-                            </a>
-                            <button class="btn btn-default delete-item-button">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+                @foreach($days as $sessionsInDay)
+                    <tr class="active">
+                        <td colspan="6"><small class="text-uppercase"> {{ $sessionsInDay->first()->startedAt->format('l jS F Y') }} </small></td>
+                    </tr>
+                    @foreach($sessionsInDay as $session)
+                        <tr
+                            class="item-container"
+                            data-item-name="{{ $session->name }}"
+                            data-item-destroy-route="{{ route('session.destroy', ['session' => $session]) }}"
+                        >
+                            <td>
+                                {{ $session->startedAtTimeForHumans }}
+                            </td>
+                            <td>
+                                @if ($session->isRunning())
+                                    <a class="btn btn-danger" href="{{ route('session.stop', ['session' => $session]) }}"> Stop Now </a>
+                                @else
+                                    {{ $session->endedAtTimeForHumans }}
+                                @endif
+                            </td>
+                            <td>
+                                {{ $session->totalTime }}
+                            </td>
+                            <td>
+                                {{ $session->task ? $session->task->name : '' }}
+                            </td>
+                            <td>
+                                {{ $session->comment }}
+                            </td>
+                            <td>
+                                <div class="btn-group pull-right">
+                                    <a
+                                        href="{{ route('session.edit', ['session' => $session]) }}"
+                                        class="btn btn-default"
+                                    >
+                                        <i class="fa fa-edit"></i>
+                                    </a>
+                                    <button class="btn btn-default delete-item-button">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                @endforeach
+            </tbody>
+        </table>
     @else
-    <div class="box-body">
-        You have not created any sessions yet.
-    </div>
+        <div class="box-body">
+            You have not created any sessions yet.
+        </div>
     @endif
 </div>
 

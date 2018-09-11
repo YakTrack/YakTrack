@@ -13,6 +13,11 @@ class Session extends Model
 
     // protected $dates = ['started_at', 'ended_at'];
 
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
+    }
+
     public function getStartedAtAttribute()
     {
         return Carbon::parse($this->attributes['started_at']);
