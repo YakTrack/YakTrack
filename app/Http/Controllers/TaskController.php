@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
 use App\Project;
 use App\Sprint;
 use App\Task;
@@ -29,9 +27,9 @@ class TaskController extends Controller
     public function create()
     {
         return view('task.create', [
-            'projects'  => Project::with(['sprints', 'tasks'])->get(),
-            'sprints'   => Sprint::with(['project'])->get(),
-            'tasks'     => Task::all(),
+            'projects' => Project::with(['sprints', 'tasks'])->get(),
+            'sprints' => Sprint::with(['project'])->get(),
+            'tasks' => Task::all(),
         ]);
     }
 
@@ -79,7 +77,7 @@ class TaskController extends Controller
         return view('task.edit', [
             'task' => $task,
             'projects' => Project::all(),
-        ]);   
+        ]);
     }
 
     /**
