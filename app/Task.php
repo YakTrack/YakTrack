@@ -3,7 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Concerns\BelongstoProject;
+use App\Models\Concerns\BelongsToProject;
 
 class Task extends Model
 {
