@@ -73,7 +73,7 @@ class DateTimeFormatter
 
     public function tomorrow($format = null)
     {
-        return $this->format(Carbon::tomorrow()->setTimezone($this->timezone()), $ormat);
+        return $this->format(Carbon::tomorrow()->setTimezone($this->timezone()), $format);
     }
 
     public function daysOfWeek()
