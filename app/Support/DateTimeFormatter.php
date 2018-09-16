@@ -22,14 +22,14 @@ class DateTimeFormatter
         'Sunday'
     ];
 
-    public function dateTimeForHumans($dateTime)
+    public function dateTimeForHumans($dateTime, $applyTimeZone = true)
     {
-        return $this->format($dateTime, self::DATETIME_FOR_HUMANS_FORMAT);
+        return $this->format($dateTime, self::DATETIME_FOR_HUMANS_FORMAT, $applyTimeZone);
     }
 
-    public function timeForHumans($dateTime)
+    public function timeForHumans($dateTime, $applyTimeZone = true)
     {
-        return $this->format($dateTime, self::TIME_FOR_HUMANS_FORMAT);
+        return $this->format($dateTime, self::TIME_FOR_HUMANS_FORMAT, $applyTimeZone);
     }
 
     public function format($dateTime, $format = null, $applyTimezone = false)

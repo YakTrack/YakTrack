@@ -7,11 +7,11 @@ use DateTime;
 
 class DateIntervalFormatter
 {
-    const FOR_HUMANS_FORMAT = '%H:%I:%S';
+    const FOR_HUMANS_FORMAT = ':%I:%S';
 
-    public function forHumans($interval)
+    public function forHumans(DateInterval $interval)
     {
-        return $interval->format(self::FOR_HUMANS_FORMAT);
+        return $interval->format($this->numberOfHours($interval).self::FOR_HUMANS_FORMAT);
     }
 
     public function createFromSeconds($seconds)
