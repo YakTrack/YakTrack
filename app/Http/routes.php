@@ -11,10 +11,9 @@
 |
 */
 
-Route::auth();
+Auth::routes();
 
-Route::group(['middleware' => 'auth'], function() {
-    
+Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [
         'as' => 'home',
         'uses' => 'HomeController@index'
@@ -29,5 +28,4 @@ Route::group(['middleware' => 'auth'], function() {
     Route::get('session/{session}/stop', 'SessionController@stop')->name('session.stop');
 
     Route::resource('session', 'SessionController');
-
 });

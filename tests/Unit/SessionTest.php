@@ -66,7 +66,7 @@ class SessionTest extends TestCase
                 $testCase[1],
                 Session::onDate(Carbon::parse('2018-01-01'))
                     ->get()
-                    ->contains(function ($key, $session) use ($testCase) {
+                    ->contains(function ($session) use ($testCase) {
                         return $session->id === $testCase[0]->id;
                     })
             );
