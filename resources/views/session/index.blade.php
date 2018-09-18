@@ -62,9 +62,10 @@
                                 @endif
                             </td>
                             <td>
-                                {{ $session->totalTime }}
+                                {{ $session->durationForHumans }}
                             </td>
                             <td>
+                                <v-select :options="['task', 'asdf']"></v-select>
                                 {{ $session->task ? $session->task->name : '' }}
                             </td>
                             <td>

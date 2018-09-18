@@ -4,9 +4,9 @@ var app = new Vue({
     el: 'body',
     components: {vSelect},
     data: {
-        projects: projects,
+        projects: projects || [],
         selectedProject: null,
-        allSprints: sprints,
+        allSprints: sprints || [],
         selectedSprint: null,
         parentTask: null,
     },
