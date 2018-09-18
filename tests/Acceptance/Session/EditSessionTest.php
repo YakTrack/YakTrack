@@ -4,7 +4,7 @@ use App\Session;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class EditSessionTest extends TestCase
+class EditSessionTest extends BrowserKitTestCase
 {
     use DatabaseMigrations;
 

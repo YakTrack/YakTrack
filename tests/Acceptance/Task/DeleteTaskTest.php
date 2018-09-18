@@ -5,7 +5,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class DeleteTaskTest extends TestCase
+class DeleteTaskTest extends BrowserKitTestCase
 {
     use DatabaseMigrations;
 
