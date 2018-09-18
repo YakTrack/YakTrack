@@ -6,7 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Project;
 
-class DeleteProjectTest extends TestCase
+class DeleteProjectTest extends BrowserKitTestCase
 {
     use DatabaseMigrations;
 

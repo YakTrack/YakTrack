@@ -5,7 +5,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class IndexSessionTest extends TestCase
+class IndexSessionTest extends BrowserKitTestCase
 {
     use DatabaseMigrations;
 

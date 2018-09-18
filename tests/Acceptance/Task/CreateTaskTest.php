@@ -5,7 +5,7 @@ use App\Task;
 use App\Project;
 use App\Sprint;
 
-class CreateTaskTest extends TestCase
+class CreateTaskTest extends BrowserKitTestCase
 {
     use DatabaseMigrations;
 

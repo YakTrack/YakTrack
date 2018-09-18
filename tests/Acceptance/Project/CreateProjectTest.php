@@ -4,7 +4,7 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class CreateProjectTest extends TestCase
+class CreateProjectTest extends BrowserKitTestCase
 {
     use DatabaseMigrations;
 
