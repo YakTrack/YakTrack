@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateExternalTaskManagersTable extends Migration
+class CreateThirdPartyApplicationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateExternalTaskManagersTable extends Migration
      */
     public function up()
     {
-        Schema::create('external_task_managers', function (Blueprint $table) {
+        Schema::create('third_party_applications', function (Blueprint $table) {
             $table->increments('id');
             $table->string('type');
             $table->string('name');
@@ -28,6 +28,6 @@ class CreateExternalTaskManagersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('external_task_managers');
+        Schema::dropIfExists('third_party_applications');
     }
 }

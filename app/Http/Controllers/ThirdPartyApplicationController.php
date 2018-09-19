@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ExternalTaskManager;
+use App\Models\ThirdPartyApplication;
 
-class ExternalTaskManagerController extends Controller
+class ThirdPartyApplicationController extends Controller
 {
     public function store()
     {
-        ExternalTaskManager::create([
+        ThirdPartyApplication::create([
             'type' => request('type'),
             'name' => request('name'),
         ]);

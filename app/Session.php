@@ -5,8 +5,8 @@ namespace App;
 use App\Models\Collections\SessionCollection;
 use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
-use App\Models\ExternalTaskManager;
-use App\Models\ExternalTaskManagerSession;
+use App\Models\ThirdPartyApplication;
+use App\Models\ThirdPartyApplicationSession;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,9 +21,9 @@ class Session extends Model
         return $this->belongsTo(Task::class);
     }
 
-    public function externalTaskManagerSessions()
+    public function thirdPartyApplicationSessions()
     {
-        return $this->hasMany(ExternalTaskManagerSession::class);
+        return $this->hasMany(ThirdPartyApplicationSession::class);
     }
 
     public function getStartedAtAttribute()
@@ -124,11 +124,11 @@ class Session extends Model
         return new SessionCollection($models);
     }
 
-    public function exportToExternalTaskManager(ExternalTaskManager $taskManager)
+    public function exportToThirdPartyApplication(ThirdPartyApplication $taskManager)
     {
-        return ExternalTaskManagerSession::create([
+        return ThirdPartyApplicationSession::create([
             'session_id' => $this->id,
-            'external_task_manager_id' => $taskManager->id,
+            'third_party_application_id' => $taskManager->id,
         ]);
     }
 }

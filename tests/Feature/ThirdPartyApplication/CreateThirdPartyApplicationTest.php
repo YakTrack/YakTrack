@@ -1,16 +1,16 @@
 <?php
 
-namespace Tests\Feature\ExternalTaskManager;
+namespace Tests\Feature\ThirdPartyApplication;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class CreateExternalTaskManagerTest extends TestCase
+class CreateThirdPartyApplicationTest extends TestCase
 {
     use RefreshDatabase;
 
     /** @test */
-    public function a_user_can_create_an_external_task_manager()
+    public function a_user_can_create_an_third_party_application()
     {
         $this->withoutExceptionHandling();
 
@@ -23,7 +23,7 @@ class CreateExternalTaskManagerTest extends TestCase
 
         $response->assertRedirect(route('external-task-manager.index'));
 
-        $this->assertDatabaseHas('external_task_managers', [
+        $this->assertDatabaseHas('third_party_applications', [
             'type' => 'wrike',
             'name' => 'Test Wrike Account'
         ]);

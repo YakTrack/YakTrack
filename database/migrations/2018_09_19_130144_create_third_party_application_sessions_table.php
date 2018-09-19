@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateExternalTaskManagerSessionsTable extends Migration
+class CreateThirdPartyApplicationSessionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateExternalTaskManagerSessionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('external_task_manager_sessions', function (Blueprint $table) {
+        Schema::create('third_party_application_sessions', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('session_id')->nullable();
             $table->foreign('session_id')->references('id')->on('sessions');
-            $table->unsignedInteger('external_task_manager_id');
-            $table->foreign('external_task_manager_id')->references('id')->on('external_task_managers');
+            $table->unsignedInteger('third_party_application_id');
+            $table->foreign('third_party_application_id')->references('id')->on('third_party_applications');
             $table->timestamps();
         });
     }
@@ -30,6 +30,6 @@ class CreateExternalTaskManagerSessionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('external_task_manager_sessions');
+        Schema::dropIfExists('third_party_application_sessions');
     }
 }

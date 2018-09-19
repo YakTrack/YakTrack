@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ExternalTaskManager extends Model
+class ThirdPartyApplication extends Model
 {
     protected $guarded = [];
 }
