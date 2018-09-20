@@ -13,6 +13,6 @@ class ThirdPartyApplicationController extends Controller
             'name' => request('name'),
         ]);
 
-        return redirect()->route('external-task-manager.index');
+        return redirect()->route('third-party-application.index');
     }
 }

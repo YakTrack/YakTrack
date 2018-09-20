@@ -124,11 +124,20 @@ class Session extends Model
         return new SessionCollection($models);
     }
 
-    public function exportToThirdPartyApplication(ThirdPartyApplication $taskManager)
+    public function exportToThirdPartyApplication(ThirdPartyApplication $thirdPartyApplication)
     {
         return ThirdPartyApplicationSession::create([
             'session_id' => $this->id,
-            'third_party_application_id' => $taskManager->id,
+            'third_party_application_id' => $thirdPartyApplication->id,
         ]);
+    }
+
+    public function isLinkedTo(ThirdPartyApplication $app)
+    {
+        return $this->thirdPartyApplicationSessions()
+            ->get()
+            ->filter(function ($thirdPartyApplicationSession) use ($app) {
+                return $thirdPartyApplicationSession->isForThirdPartyApplication($app);
+            })->count() > 0;
     }
 }

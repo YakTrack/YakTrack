@@ -37,13 +37,16 @@
                     <th> Total Time </th>
                     <th> Task </th>
                     <th> Comment </th>
+                    @foreach($thirdPartyApplications as $app)
+                        <th> Linked to {{ $app->name }} </th>
+                    @endforeach
                     <th> <span class="pull-right"> Actions </span> </th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($days as $sessionsInDay)
                     <tr class="active">
-                        <td colspan="6"><small class="text-uppercase"> {{ $sessionsInDay->first()->startedAt->format('l jS F Y') }} </small></td>
+                        <td colspan="10"><small class="text-uppercase"> {{ $sessionsInDay->first()->startedAt->format('l jS F Y') }} </small></td>
                     </tr>
                     @foreach($sessionsInDay as $session)
                         <tr
@@ -71,6 +74,20 @@
                             <td>
                                 {{ $session->comment }}
                             </td>
+                            @foreach($thirdPartyApplications as $app)
+                                <th>
+                                    @if($session->isLinkedTo($app))
+                                        <i class="fas fa-check text-success"></i>
+                                    @else
+                                        <form action="{{ route('third-party-application-session.store') }}" method="post">
+                                            {{ csrf_field() }}
+                                            <input type="hidden" name="session_id" value="{{ $session->id }}">
+                                            <input type="hidden" name="third_party_application_id" value="{{ $app->id }}">
+                                            <button class="btn btn-default"> Link </button>
+                                        </form>
+                                    @endif
+                                </th>
+                            @endforeach
                             <td>
                                 <div class="btn-group pull-right">
                                     <a

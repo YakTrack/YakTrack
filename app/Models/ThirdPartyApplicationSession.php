@@ -13,4 +13,9 @@ class ThirdPartyApplicationSession extends Model
     {
         return $this->belongsTo(Session::class);
     }
+
+    public function isForThirdPartyApplication(ThirdPartyApplication $app)
+    {
+        return $this->third_party_application_id === $app->id;
+    }
 }

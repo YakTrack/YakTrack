@@ -16,12 +16,12 @@ class CreateThirdPartyApplicationTest extends TestCase
 
         $this->actingAsUser();
 
-        $response = $this->post(route('external-task-manager.store'), [
+        $response = $this->post(route('third-party-application.store'), [
             'type' => 'wrike',
             'name' => 'Test Wrike Account',
         ]);
 
-        $response->assertRedirect(route('external-task-manager.index'));
+        $response->assertRedirect(route('third-party-application.index'));
 
         $this->assertDatabaseHas('third_party_applications', [
             'type' => 'wrike',

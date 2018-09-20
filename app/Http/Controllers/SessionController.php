@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Session;
+use App\Models\ThirdPartyApplication;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,8 @@ class SessionController extends Controller
                 ->get()
                 ->groupBy(function ($session) {
                     return $session->startedAt->format('Y-m-d');
-                })
+                }),
+            'thirdPartyApplications' => ThirdPartyApplication::all(),
         ]);
     }
 
