@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Session;
+use App\Task;
 use App\Models\ThirdPartyApplication;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -34,11 +35,23 @@ class SessionController extends Controller
         return response()->json($session);
     }
 
+    public function edit(Session $session)
+    {
+        return view('session.edit', [
+            'session' => $session,
+            'tasks' => Task::all(),
+        ]);
+    }
+
     public function update(Session $session)
     {
-        $session->update(request()->all());
+        $session->update([
+            'started_at' => request('started_at') ?: null,
+            'ended_at' => request('ended_at') ?: null,
+            'task_id' => request('task_id'),
+        ]);
 
-        return response()->json($session);
+        return request()->expectsJson() ? response()->json($session) : redirect()->route('session.edit', ['session' => $session]);
     }
 
     public function start()

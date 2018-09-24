@@ -37,7 +37,7 @@ Here is a list of features intended for inclusion in the first tagged release.
 * Sessions
   * ~~Index~~
   * ~~Start / Stop~~
-  * Edit
+  * ~~Edit~~
   * Delete
 * Invoices
   * Index
