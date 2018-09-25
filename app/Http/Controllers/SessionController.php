@@ -5,18 +5,24 @@ namespace App\Http\Controllers;
 use App\Session;
 use App\Task;
 use App\Models\ThirdPartyApplication;
+use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class SessionController extends Controller
 {
+    public function __construct(DateTimeFormatter $dateTimeFormatter)
+    {
+        $this->dateTimeFormatter = $dateTimeFormatter;
+    }
+
     public function index()
     {
         return view('session.index', [
             'days' => Session::orderBy('started_at', 'desc')
                 ->get()
                 ->groupBy(function ($session) {
-                    return $session->startedAt->format('Y-m-d');
+                    return $session->localStartedAt->format('Y-m-d');
                 }),
             'thirdPartyApplications' => ThirdPartyApplication::all(),
         ]);

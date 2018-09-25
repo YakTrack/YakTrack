@@ -46,7 +46,7 @@
             <tbody>
                 @foreach($days as $sessionsInDay)
                     <tr class="active">
-                        <td colspan="10"><small class="text-uppercase"> {{ $sessionsInDay->first()->startedAt->format('l jS F Y') }} </small></td>
+                        <td colspan="10"><small class="text-uppercase"> {{ $sessionsInDay->first()->localStartedAt->format('l jS F Y') }} </small></td>
                     </tr>
                     @foreach($sessionsInDay as $session)
                         <tr
