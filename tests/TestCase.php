@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Config;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
@@ -34,5 +35,10 @@ abstract class TestCase extends BaseTestCase
         $this->actingAs($user);
 
         return $user;
+    }
+
+    protected function usingTestDisplayTimeZone($timezone = null)
+    {
+        Config::set('app.display_timezone', $timezone ?? 'Australia/Sydney');
     }
 }

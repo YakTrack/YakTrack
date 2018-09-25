@@ -27,6 +27,7 @@ class EditSessionTest extends TestCase
         Carbon::setTestNow(Carbon::parse('2018-01-01 12:34:56'));
 
         $response = $this->json('patch', route('session.update', ['session' => $session]), [
+            'started_at' => '2018-01-01 00:00:00',
             'ended_at' => '2018-01-01 12:34:56',
         ]);
 

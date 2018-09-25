@@ -63,12 +63,12 @@ class DateTimeFormatter
 
     public function startOfWeek($format = null)
     {
-        return $this->format(Carbon::today()->startOfweek()->setTimezone($this->timezone()), $format);
+        return $this->format(Carbon::now()->setTimezone($this->timezone())->startOfWeek()->timezone('UTC'), $format);
     }
 
     public function endOfWeek($format = null)
     {
-        return $this->format(Carbon::today()->startOfweek()->addWeek()->setTimezone($this->timezone()), $format);
+        return $this->format(Carbon::now()->setTimeZone($this->timezone())->startOfweek()->addWeek()->setTimezone('UTC'), $format);
     }
 
     public function tomorrow($format = null)
