@@ -10,6 +10,8 @@ class DateTimeFormatter
 
     const DATETIME_FOR_MYSQL_FORMAT = 'Y-m-d H:i:s';
 
+    const DATE_FOR_HUMANS_FORMAT = 'l d m Y';
+
     const TIME_FOR_HUMANS_FORMAT = 'g:i:s a';
 
     const DAYS_OF_WEEK = [
@@ -30,6 +32,11 @@ class DateTimeFormatter
     public function timeForHumans($dateTime, $applyTimeZone = true)
     {
         return $this->format($dateTime, self::TIME_FOR_HUMANS_FORMAT, $applyTimeZone);
+    }
+
+    public function utcFormat($dateTime, $format = null)
+    {
+        return $this->format($this->toUTC($dateTime), $format, false);
     }
 
     public function format($dateTime, $format = null, $applyTimezone = false)
@@ -61,6 +68,11 @@ class DateTimeFormatter
         return $this->format(Carbon::today()->setTimezone($this->timezone()), $format);
     }
 
+    public function toUTC(Carbon $date)
+    {
+        return $date->timezone('UTC');
+    }
+
     public function startOfWeek($format = null)
     {
         return $this->format(Carbon::now()->setTimezone($this->timezone())->startOfWeek()->timezone('UTC'), $format);
@@ -83,18 +95,20 @@ class DateTimeFormatter
 
     public function daysThisWeek()
     {
-        return $this->daysOfWeek()->map(function ($day) {
-            if (Carbon::today()->format('l') == $day) {
-                return Carbon::today()->setTimezone($this->timezone());
+        return $this->daysOfWeek()->map(function ($dayOfWeek) {
+            $day = Carbon::parse($dayOfWeek)->timezone($this->timezone());
+
+            if ($day->lt(Carbon::parse('last monday')->timezone($this->timezone()))) {
+                return $day->addWeek();
             }
 
-            return Carbon::parse('last '.$day)->setTimezone($this->timezone());
-        })->keyBy(function ($day) {
-            return $day->format('l');
-        })->filter(
-            function ($day, $key) {
-                return $day->startOfDay()->timestamp >= Carbon::parse('last monday')->setTimezone($this->timezone())->startOfDay()->timestamp;
+            if ($day->gte(Carbon::parse('next monday')->timezone($this->timezone()))) {
+                return $day->subWeek();
             }
-        );
+
+            return $day;
+        })->keyBy(function ($day) {
+            return $day->format(self::DATE_FOR_HUMANS_FORMAT);
+        });
     }
 }

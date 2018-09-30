@@ -34,26 +34,28 @@ class SessionTest extends BrowserKitTestCase
     }
 
     /** @test */
-    public function on_date_scope_returns_sessions_which_start_on_given_date()
+    public function on_date_scope_returns_sessions_which_start_on_given_date_according_to_display_timezone()
     {
+        $this->usingTestDisplayTimeZone();
+
         $startsAndEndsOnDate = factory(Session::class)->create([
             'started_at' => '2018-01-01 12:00:00',
             'ended_at' => '2018-01-01 13:00:00',
         ]);
 
         $startsOnDateOnly = factory(Session::class)->create([
-            'started_at' => '2018-01-01 23:55:00',
-            'ended_at' => '2018-01-02 00:30:00',
+            'started_at' => '2018-01-01 12:00:00',
+            'ended_at' => '2018-01-02 12:30:00',
         ]);
 
         $endsOnDateOnly = factory(Session::class)->create([
             'started_at' => '2017-12-12 23:55:00',
-            'ended_at' => '2018-01-01 00:30:00',
+            'ended_at' => '2018-01-01 12:30:00',
         ]);
 
         $neitherStartsNorEndsOnDate = factory(Session::class)->create([
-            'started_at' => '2017-01-01 12:00:00',
-            'ended_at' => '2017-01-01 13:00:00',
+            'started_at' => '2017-01-01 11:00:00',
+            'ended_at' => '2017-01-01 11:30:00',
         ]);
 
         foreach ([
@@ -68,7 +70,8 @@ class SessionTest extends BrowserKitTestCase
                     ->get()
                     ->contains(function ($session) use ($testCase) {
                         return $session->id === $testCase[0]->id;
-                    })
+                    }),
+                'Session '.$testCase[0]->id.' not found in dates on 2018-01-01'
             );
         }
     }

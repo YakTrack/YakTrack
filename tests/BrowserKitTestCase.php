@@ -54,4 +54,9 @@ abstract class BrowserKitTestCase extends Laravel\BrowserKitTesting\TestCase
             }
         });
     }
+
+    protected function usingTestDisplayTimeZone($timezone = null)
+    {
+        Config::set('app.display_timezone', $timezone ?? 'Australia/Sydney');
+    }
 }

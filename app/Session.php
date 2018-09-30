@@ -97,8 +97,8 @@ class Session extends Model
 
     public function scopeOnDate($query, $date)
     {
-        return $query->where('started_at', '>=', (new DateTimeFormatter)->format($date))
-            ->where('started_at', '<', (new DateTimeFormatter)->format($date->addDays(1)));
+        return $query->where('started_at', '>=', (new DateTimeFormatter)->utcFormat($date))
+            ->where('started_at', '<', (new DateTimeFormatter)->utcFormat($date->addDays(1)));
     }
 
     public function scopeThisWeek($query)
