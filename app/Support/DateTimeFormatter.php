@@ -24,27 +24,27 @@ class DateTimeFormatter
         'Sunday'
     ];
 
-    public function dateTimeForHumans($dateTime, $applyTimeZone = true)
+    public function dateTimeForHumans($dateTime)
     {
-        return $this->format($dateTime, self::DATETIME_FOR_HUMANS_FORMAT, $applyTimeZone);
+        return $this->format($dateTime, self::DATETIME_FOR_HUMANS_FORMAT);
     }
 
-    public function dateForHumans($dateTime, $applyTimeZone = true)
+    public function dateForHumans($dateTime)
     {
-        return $this->format($dateTime, self::DATE_FOR_HUMANS_FORMAT, $applyTimeZone);
+        return $this->format($dateTime, self::DATE_FOR_HUMANS_FORMAT);
     }
 
-    public function timeForHumans($dateTime, $applyTimeZone = true)
+    public function timeForHumans($dateTime)
     {
-        return $this->format($dateTime, self::TIME_FOR_HUMANS_FORMAT, $applyTimeZone);
+        return $this->format($dateTime, self::TIME_FOR_HUMANS_FORMAT);
     }
 
     public function utcFormat($dateTime, $format = null)
     {
-        return $this->format($this->toUTC($dateTime), $format, false);
+        return $this->format($this->toUTC($dateTime), $format);
     }
 
-    public function format($dateTime, $format = null, $applyTimezone = false)
+    public function format($dateTime, $format = null)
     {
         if (is_null($format)) {
             $format = self::DATETIME_FOR_MYSQL_FORMAT;
@@ -54,10 +54,6 @@ class DateTimeFormatter
 
         if (!$dateTime) {
             return null;
-        }
-
-        if ($applyTimezone) {
-            $dateTime->timezone($this->timezone());
         }
 
         return $dateTime->format($format);
