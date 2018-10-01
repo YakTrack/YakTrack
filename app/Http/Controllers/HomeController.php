@@ -31,9 +31,7 @@ class HomeController extends Controller
         return view('home', [
             'todaysWorkSessions' => $todaysWorkSessions = Session::today()->get(),
             'todaysTotal' => $todaysWorkSessions->totalDurationForHumans(),
-            'thisWeeksWorkSessions' => $thisWeeksWorkSessions = $this->dateTimeFormatter->daysThisWeek()->map(function ($day) {
-                return $this->dateIntervalFormatter->forHumans($this->sessions->totalTimeOnDate($day));
-            }),
+            'thisWeeksWorkSessions' => $this->sessions->thisWeeksWorkSessions(),
             'thisWeeksTotal' => Session::thisWeek()->get()->totalDurationForHumans(),
         ]);
     }

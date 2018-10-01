@@ -37,27 +37,26 @@ class DateTimeFormatterTest extends TestCase
         $this->usingTestDisplayTimezone();
 
         foreach ([
-            '2018-01-01 00:00:00 Australia/Sydney',
-            '2018-01-04 12:32:00 Australia/Sydney',
-            '2018-01-07 00:00:00 Australia/Sydney',
+            '2018-01-01 00:00:00 GMT+11',
+            '2018-01-04 12:32:00 GMT+11',
+            '2018-01-07 00:00:00 GMT+11',
         ] as $testNow) {
             Carbon::setTestNow($testNow);
 
             $daysThisWeek = (new DateTimeFormatter)->daysThisWeek();
-
             foreach ([
-                '2018-01-01',
-                '2018-01-02',
-                '2018-01-03',
-                '2018-01-04',
-                '2018-01-05',
-                '2018-01-06',
-                '2018-01-07',
-            ] as $date) {
-                $this->assertTrue($daysThisWeek->contains(function ($day) use ($date) {
-                    return $day->format('Y-m-d') === $date;
-                }), $date.' not found in days this week for '.$testNow.'. Dates found were: '.$daysThisWeek->map(function ($day) {
-                    return $day->format('Y-m-d');
+                '2017-12-31 13:00:00',
+                '2018-01-01 13:00:00',
+                '2018-01-02 13:00:00',
+                '2018-01-03 13:00:00',
+                '2018-01-04 13:00:00',
+                '2018-01-05 13:00:00',
+                '2018-01-06 13:00:00',
+            ] as $expectedDate) {
+                $this->assertTrue($daysThisWeek->contains(function ($day) use ($expectedDate) {
+                    return $day->timezone('UTC')->format('Y-m-d H:i:s') === $expectedDate;
+                }), $expectedDate.' not found in days this week for '.$testNow.'. Dates found were: '.$daysThisWeek->map(function ($day) {
+                    return $day->format('Y-m-d H:i:s');
                 })->implode(', '));
             }
         }
@@ -74,5 +73,16 @@ class DateTimeFormatterTest extends TestCase
 
         $this->assertEquals('2018-01-01 00:00:00', $formatter->toUTC(Carbon::parse('2018-01-01 00:00:00')));
         $this->assertEquals('2018-01-01 00:00:00', $formatter->toUTC(Carbon::parse('2018-01-01 00:00:00')->timezone('Australia/Sydney')));
+    }
+
+    /** @test */
+    public function utc_format_method_returns_expected_value()
+    {
+        $this->usingTestDisplayTimezone();
+
+        $formatter = app(DateTimeFormatter::class);
+
+        $this->assertEquals('2017-12-31 23:00:00', $formatter->utcFormat(Carbon::parse('2018-01-01T09:00:00+10:00')));
+        $this->assertEquals('2018-01-01 00:00:00', $formatter->utcFormat(Carbon::parse('2018-01-01 00:00:00')->timezone('Australia/Sydney')));
     }
 }

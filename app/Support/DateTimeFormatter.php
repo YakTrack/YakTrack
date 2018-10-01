@@ -10,7 +10,7 @@ class DateTimeFormatter
 
     const DATETIME_FOR_MYSQL_FORMAT = 'Y-m-d H:i:s';
 
-    const DATE_FOR_HUMANS_FORMAT = 'l d m Y';
+    const DATE_FOR_HUMANS_FORMAT = 'l jS M Y';
 
     const TIME_FOR_HUMANS_FORMAT = 'g:i:s a';
 
@@ -27,6 +27,11 @@ class DateTimeFormatter
     public function dateTimeForHumans($dateTime, $applyTimeZone = true)
     {
         return $this->format($dateTime, self::DATETIME_FOR_HUMANS_FORMAT, $applyTimeZone);
+    }
+
+    public function dateForHumans($dateTime, $applyTimeZone = true)
+    {
+        return $this->format($dateTime, self::DATE_FOR_HUMANS_FORMAT, $applyTimeZone);
     }
 
     public function timeForHumans($dateTime, $applyTimeZone = true)
@@ -96,7 +101,7 @@ class DateTimeFormatter
     public function daysThisWeek()
     {
         return $this->daysOfWeek()->map(function ($dayOfWeek) {
-            $day = Carbon::parse($dayOfWeek)->timezone($this->timezone());
+            $day = Carbon::parse($dayOfWeek)->timezone($this->timezone())->hour(0);
 
             if ($day->lt(Carbon::parse('last monday')->timezone($this->timezone()))) {
                 return $day->addWeek();
@@ -107,8 +112,6 @@ class DateTimeFormatter
             }
 
             return $day;
-        })->keyBy(function ($day) {
-            return $day->format(self::DATE_FOR_HUMANS_FORMAT);
         });
     }
 }

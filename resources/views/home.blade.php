@@ -36,10 +36,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($thisWeeksWorkSessions as $dayOfWeek => $totalTime)
+                        @foreach($thisWeeksWorkSessions as $dayOfWeek)
                             <tr>
-                                <td colspan="{{ $totalColumns - 1 }}"> {{ $dayOfWeek }} </td>
-                                <td> {{ $totalTime }} </td>
+                                <td colspan="{{ $totalColumns - 1 }}"> {{ $dayOfWeek['dateForHumans'] }} </td>
+                                <td> {{ $dayOfWeek['totalTimeWorked'] }} </td>
                             </tr>
                         @endforeach
                         <tr class="active">

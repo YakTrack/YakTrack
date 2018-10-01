@@ -77,6 +77,20 @@ class SessionTest extends BrowserKitTestCase
     }
 
     /** @test */
+    public function the_on_date_scope_does_not_return_dates_which_are_on_the_date_in_utc_but_not_display_timezone()
+    {
+        $session = Session::create(['started_at' => '2018-09-25 22:32:56']);
+
+        $this->assertFalse(
+            Session::onDate(Carbon::parse('2018-09-25 Australia/Sydney'))
+                ->get()
+                ->contains(function ($foundSession) use ($session) {
+                    return $foundSession->id === $session->id;
+                })
+        );
+    }
+
+    /** @test */
     public function duration_in_seconds_attribute_returns_expected_value()
     {
         $session = factory(Session::class)->create([
