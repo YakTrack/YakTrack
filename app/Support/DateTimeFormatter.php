@@ -29,14 +29,29 @@ class DateTimeFormatter
         return $this->format($dateTime, self::DATETIME_FOR_HUMANS_FORMAT);
     }
 
+    public function localDateTimeForHumans($dateTime)
+    {
+        return $this->localFormat($dateTime, self::DATETIME_FOR_HUMANS_FORMAT);
+    }
+
     public function dateForHumans($dateTime)
     {
         return $this->format($dateTime, self::DATE_FOR_HUMANS_FORMAT);
     }
 
+    public function localDateForHumans($dateTime)
+    {
+        return $this->localFormat($dateTime, self::DATE_FOR_HUMANS_FORMAT);
+    }
+
     public function timeForHumans($dateTime)
     {
         return $this->format($dateTime, self::TIME_FOR_HUMANS_FORMAT);
+    }
+
+    public function localTimeForHumans($dateTime)
+    {
+        return $this->localFormat($dateTime, self::TIME_FOR_HUMANS_FORMAT);
     }
 
     public function utcFormat($dateTime, $format = null)
@@ -57,6 +72,15 @@ class DateTimeFormatter
         }
 
         return $dateTime->format($format);
+    }
+
+    public function localFormat($dateTime, $format = null)
+    {
+        if (is_null($dateTime)) {
+            $dateTime = Carbon::now();
+        }
+
+        return $this->format($dateTime->timezone($this->timezone()), $format);
     }
 
     public function timezone()

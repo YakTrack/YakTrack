@@ -65,14 +65,29 @@ class Session extends Model
         return (new DateTimeFormatter)->timeForHumans($this->ended_at);
     }
 
+    public function getLocalEndedAtTimeForHumansAttribute()
+    {
+        return (new DateTimeFormatter)->localTimeForHumans($this->ended_at);
+    }
+
     public function getStartedAtTimeForHumansAttribute()
     {
         return (new DateTimeFormatter)->timeForHumans($this->started_at);
     }
 
+    public function getLocalStartedAtTimeForHumansAttribute()
+    {
+        return (new DateTimeFormatter)->localTimeForHumans($this->started_at);
+    }
+
     public function getEndedAtDateTimeForHumansAttribute()
     {
         return (new DateTimeFormatter)->dateTimeForHumans($this->ended_at);
+    }
+
+    public function getLocalEndedAtDateTimeForHumansAttribute()
+    {
+        return (new DateTimeFormatter)->localDateTimeForHumans($this->ended_at);
     }
 
     public function getStartedAtDateTimeForHumansAttribute()
