@@ -55,13 +55,13 @@
                             data-item-destroy-route="{{ route('session.destroy', ['session' => $session]) }}"
                         >
                             <td>
-                                {{ $session->startedAtTimeForHumans }}
+                                {{ $session->localStartedAtTimeForHumans }}
                             </td>
                             <td>
                                 @if ($session->isRunning())
                                     <a class="btn btn-danger" href="{{ route('session.stop', ['session' => $session]) }}"> Stop Now </a>
                                 @else
-                                    {{ $session->endedAtTimeForHumans }}
+                                    {{ $session->localEndedAtTimeForHumans }}
                                 @endif
                             </td>
                             <td>

@@ -18,8 +18,8 @@
                     <tbody>
                         @foreach($todaysWorkSessions as $workSession)
                             <tr>
-                                <td> {{ $workSession->startedAtTimeForHumans }} </td>
-                                <td> {{ $workSession->endedAtTimeForHumans }} </td>
+                                <td> {{ $workSession->localStartedAtTimeForHumans }} </td>
+                                <td> {{ $workSession->localEndedAtTimeForHumans }} </td>
                                 <td> {{ $workSession->durationForHumans }} </td>
                             </tr>
                         @endforeach
