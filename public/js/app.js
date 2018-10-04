@@ -46980,19 +46980,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['tasks'],
+    props: ['tasks', 'task'],
     components: {
         multiSelect: __WEBPACK_IMPORTED_MODULE_0_vue_multiselect___default.a
     },
     data: function data() {
+        var _this = this;
+
         return {
-            task: null
+            selectedTask: this.tasks.find(function (task) {
+                return task.id == _this.task;
+            })
         };
+    },
+
+    computed: {
+        taskId: function taskId() {
+            if (this.selectedTask == null) {
+                return null;
+            }
+
+            return this.selectedTask.id;
+        }
     }
 });
 
@@ -47016,12 +47031,17 @@ var render = function() {
       _c("multi-select", {
         attrs: { label: "name", options: _vm.tasks },
         model: {
-          value: _vm.task,
+          value: _vm.selectedTask,
           callback: function($$v) {
-            _vm.task = $$v
+            _vm.selectedTask = $$v
           },
-          expression: "task"
+          expression: "selectedTask"
         }
+      }),
+      _vm._v(" "),
+      _c("input", {
+        attrs: { type: "hidden", name: "task_id" },
+        domProps: { value: _vm.taskId }
       })
     ],
     1
