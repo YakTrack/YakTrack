@@ -14,10 +14,10 @@
 Auth::routes(['verify' => true]);
 
 if (!config('app.allow_registration')) {
-        Route::any('/register', function() {
-            abort(403);
-        });
-    }
+    Route::any('/register', function() {
+        abort(403);
+    });
+}
     
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [
