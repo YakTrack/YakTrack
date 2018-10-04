@@ -99,6 +99,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Allow Registration
+    |--------------------------------------------------------------------------
+    |
+    | This determines if users are able to register to the application.
+    | If it is set to false, the /register route will return a 403.
+    |
+    */
+
+    'allow_registration' => env('ALLOW_REGISTRATION', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | Logging Configuration
     |--------------------------------------------------------------------------
     |
