@@ -11,6 +11,11 @@ class Task extends Model
 
     protected $guarded = [];
 
+    public function sessions()
+    {
+        return $this->hasMany(Session::class);
+    }
+
     public function getClient()
     {
         return $this->getRelation(Client::class);
