@@ -137,7 +137,7 @@ class Session extends Model
 
     public function scopeToday($query)
     {
-        return $query->onDate(Carbon::today());
+        return $query->onDate(app(DateTimeFormatter::class)->today());
     }
 
     public function scopeOnDate($query, $date)

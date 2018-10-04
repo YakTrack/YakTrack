@@ -90,7 +90,7 @@ class DateTimeFormatter
 
     public function today($format = null)
     {
-        return $this->format(Carbon::today()->setTimezone($this->timezone()), $format);
+        return Carbon::parse('Midnight '.$this->timezone());
     }
 
     public function toUTC(Carbon $date)
