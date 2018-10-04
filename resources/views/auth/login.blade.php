@@ -3,7 +3,9 @@
 @section('content')
 <div class="login-box">
     <div class="login-logo">
-        <a href="{{ URL::route('home') }}"><b>T</b>rack</a>
+        <a href="{{ URL::route('home') }}">
+            <b>Y</b>ak<b>T</b>rack
+        </a>
     </div>
     <!-- /.login-logo -->
     <div class="login-box-body">
