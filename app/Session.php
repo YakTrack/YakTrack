@@ -45,6 +45,36 @@ class Session extends Model
         return Carbon::parse($this->attributes['ended_at']);
     }
 
+    public function getStartedAtDateAttribute()
+    {
+        return app(DateTimeFormatter::class)->date($this->startedAt);
+    }
+
+    public function getLocalStartedAtDateAttribute()
+    {
+        return app(DateTimeFormatter::class)->localDate($this->startedAt);
+    }
+
+    public function getLocalStartedAtDateForHumansAttribute()
+    {
+        return app(DateTimeFormatter::class)->localDateForHumans($this->startedAt);
+    }
+
+    public function getEndedAtDateAttribute()
+    {
+        return app(DateTimeFormatter::class)->date($this->endedAt);
+    }
+
+    public function getLocalEndedAtDateAttribute()
+    {
+        return app(DateTimeFormatter::class)->localDate($this->endedAt);
+    }
+
+    public function getLocalEndedAtDateForHumansAttribute()
+    {
+        return app(DateTimeFormatter::class)->localDateForHumans($this->endedAt);
+    }
+
     public function getDurationForHumansAttribute()
     {
         return app(DateIntervalFormatter::class)->forHumans($this->duration);
