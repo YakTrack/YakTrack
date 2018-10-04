@@ -108,7 +108,7 @@ class EditSessionTest extends TestCase
             'ended_at' => '',
         ]);
 
-        $response->assertRedirect(route('session.edit', ['session' => $session]));
+        $response->assertRedirect(route('session.index'));
 
         $this->assertDatabaseHas('sessions', [
             'id' => $session->id,

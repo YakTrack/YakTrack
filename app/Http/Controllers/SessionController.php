@@ -57,7 +57,7 @@ class SessionController extends Controller
             'task_id' => request('task_id'),
         ]);
 
-        return request()->expectsJson() ? response()->json($session) : redirect()->route('session.edit', ['session' => $session]);
+        return request()->expectsJson() ? response()->json($session) : redirect()->route('session.index');
     }
 
     public function start()
