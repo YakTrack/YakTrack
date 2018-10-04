@@ -26,7 +26,7 @@
         </div>
         <div class="form-group">
             {!! Form::label('task_id', 'Task') !!}
-            <task-select :tasks="{{ $tasks->toJson() }}"></task-select>
+            <task-select :tasks="{{ $tasks->toJson() }}" task="{{ $session->task_id }}"></task-select>
         </div>
         <div class="form-group">
             {!! Form::submit('Update', ['class' => 'btn btn-default']) !!}
