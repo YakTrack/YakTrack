@@ -102,8 +102,8 @@ return [
     | Allow Registration
     |--------------------------------------------------------------------------
     |
-    | This decides if users are able to register to the application.
-    | If it is set to false, the /register route will return a 503.
+    | This determines if users are able to register to the application.
+    | If it is set to false, the /register route will return a 403.
     |
     */
 
