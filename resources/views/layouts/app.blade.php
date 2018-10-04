@@ -11,12 +11,12 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
 
     <!-- Styles -->
-    <link href="/css/all.css" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
 </head>
 
 <body class="hold-transition skin-blue sidebar-mini">
 
-    <div class="wrapper"><!-- Site wrapper -->
+    <div class="wrapper" id="app"><!-- Site wrapper -->
 
         @include('partials.header')
         @include('partials.sidebar')
@@ -37,7 +37,7 @@
     <!-- JavaScripts -->
     <script   src="https://code.jquery.com/jquery-2.2.4.js"   integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="   crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/1.0.26/vue.js"></script>
-    <script src="/js/all.js"></script>
+    <script src="/js/app.js"></script>
 </body>
 
 </html>

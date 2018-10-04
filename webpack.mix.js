@@ -11,24 +11,8 @@ const mix = require('laravel-mix');
  |
  */
 
-// CSS
-mix.sass('resources/sass/app.scss', 'resources/css/app.css');
-
-mix.styles([
-    'resources/css/bootstrap.css',
-    'resources/css/AdminLTE.css',
-    'resources/css/skin-blue.css',
-    'resources/css/app.css',
-], 'public/css/all.css');
-
 // Javascript
-mix.babel([
-    'app.js'
-], 'resources/js/app.js');
+mix.js('resources/js/app.js', 'public/js');
 
-mix.scripts([
-    'resources/js/bootstrap.js',
-    'resources/js/AdminLTE.js',
-    'resources/js/scripts.js',
-    'resources/js/app.js'
-], 'public/js/all.js');
+// CSS
+mix.sass('resources/sass/app.scss', 'public/css/app.css');
