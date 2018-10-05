@@ -71,9 +71,11 @@ class SessionController extends Controller
         return redirect(route('session.index'));
     }
 
-    public function stop(Session $session)
+    public function stop()
     {
-        $session->stop();
+        Session::running()->get()->each(function ($session) {
+            $session->stop();
+        });
 
         return redirect(route('session.index'));
     }
