@@ -20,7 +20,7 @@ class EndSessionTest extends TestCase
 
         $session = factory(Session::class)->create([
             'started_at' => '2018-01-01 00:00:00',
-            'ended_at' => null,
+            'ended_at'   => null,
         ]);
 
         $this->actingAsUser();
@@ -31,7 +31,7 @@ class EndSessionTest extends TestCase
 
         $this->assertDatabaseHas('sessions', [
             'started_at' => '2018-01-01 00:00:00',
-            'ended_at' => '2018-01-01 00:10:00',
+            'ended_at'   => '2018-01-01 00:10:00',
         ]);
 
         Carbon::setTestNow();
