@@ -21,7 +21,7 @@ class DateTimeFormatter
         'Thursday',
         'Friday',
         'Saturday',
-        'Sunday'
+        'Sunday',
     ];
 
     public function dateTimeForHumans($dateTime)
@@ -68,7 +68,7 @@ class DateTimeFormatter
         $dateTime = Carbon::parse($dateTime);
 
         if (!$dateTime) {
-            return null;
+            return;
         }
 
         return $dateTime->format($format);

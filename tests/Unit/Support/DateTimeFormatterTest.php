@@ -4,8 +4,8 @@ namespace Tests\Unit\Support;
 
 use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class DateTimeFormatterTest extends TestCase
 {
@@ -18,7 +18,7 @@ class DateTimeFormatterTest extends TestCase
 
         Carbon::setTestNow('2018-01-01 00:00:00');
 
-        $this->assertEquals('2017-12-31 13:00:00', (new DateTimeFormatter)->startOfWeek());
+        $this->assertEquals('2017-12-31 13:00:00', (new DateTimeFormatter())->startOfWeek());
     }
 
     /** @test */
@@ -28,7 +28,7 @@ class DateTimeFormatterTest extends TestCase
 
         Carbon::setTestNow('2018-01-01 00:00:00');
 
-        $this->assertEquals('2018-01-07 13:00:00', (new DateTimeFormatter)->endOfWeek());
+        $this->assertEquals('2018-01-07 13:00:00', (new DateTimeFormatter())->endOfWeek());
     }
 
     /** @test */
@@ -43,7 +43,7 @@ class DateTimeFormatterTest extends TestCase
         ] as $testNow) {
             Carbon::setTestNow($testNow);
 
-            $daysThisWeek = (new DateTimeFormatter)->daysThisWeek();
+            $daysThisWeek = (new DateTimeFormatter())->daysThisWeek();
             foreach ([
                 '2017-12-31 13:00:00',
                 '2018-01-01 13:00:00',

@@ -13,7 +13,7 @@ class DashboardTest extends BrowserKitTestCase
     {
         $session = factory(Session::class)->create([
             'started_at' => '2018-01-01 12:00:00',
-            'ended_at' => '2018-01-01 13:00:00',
+            'ended_at'   => '2018-01-01 13:00:00',
         ]);
 
         Carbon::setTestNow(Carbon::parse('2018-01-02'));

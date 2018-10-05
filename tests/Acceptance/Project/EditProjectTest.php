@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class EditProjectTest extends BrowserKitTestCase
 {
@@ -37,9 +35,9 @@ class EditProjectTest extends BrowserKitTestCase
 
         // Verify databse updated
         $this->seeInDatabase('projects', [
-            'name' => 'Updated Project',
+            'name'        => 'Updated Project',
             'description' => 'Updated project description.',
-            'client_id' => $clients[1]->id,
+            'client_id'   => $clients[1]->id,
         ]);
     }
 }

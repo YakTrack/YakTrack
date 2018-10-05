@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\ThirdPartyApplication;
 
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class CreateThirdPartyApplicationTest extends TestCase
 {
@@ -25,7 +25,7 @@ class CreateThirdPartyApplicationTest extends TestCase
 
         $this->assertDatabaseHas('third_party_applications', [
             'type' => 'wrike',
-            'name' => 'Test Wrike Account'
+            'name' => 'Test Wrike Account',
         ]);
     }
 }

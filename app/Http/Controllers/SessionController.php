@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Session;
-use App\Task;
 use App\Models\ThirdPartyApplication;
+use App\Session;
 use App\Support\DateTimeFormatter;
+use App\Task;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -45,7 +45,7 @@ class SessionController extends Controller
     {
         return view('session.edit', [
             'session' => $session,
-            'tasks' => Task::all(),
+            'tasks'   => Task::all(),
         ]);
     }
 
@@ -53,8 +53,8 @@ class SessionController extends Controller
     {
         $session->update([
             'started_at' => request('started_at') ?: null,
-            'ended_at' => request('ended_at') ?: null,
-            'task_id' => request('task_id') ?: null,
+            'ended_at'   => request('ended_at') ?: null,
+            'task_id'    => request('task_id') ?: null,
         ]);
 
         return request()->expectsJson() ? response()->json($session) : redirect()->route('session.index');

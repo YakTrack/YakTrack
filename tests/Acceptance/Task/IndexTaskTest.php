@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class IndexTaskTest extends BrowserKitTestCase
 {
@@ -28,7 +26,7 @@ class IndexTaskTest extends BrowserKitTestCase
         $this->seePageIs(route('task.index'));
 
         // Verify tasks are visible
-        $tasks->each( function($task) {
+        $tasks->each(function ($task) {
             $this->see($task->name);
         });
     }

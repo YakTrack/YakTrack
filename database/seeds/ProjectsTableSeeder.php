@@ -1,9 +1,8 @@
 <?php
 
-use Illuminate\Database\Seeder;
-
 use App\Client;
 use App\Project;
+use Illuminate\Database\Seeder;
 
 class ProjectsTableSeeder extends Seeder
 {
@@ -14,7 +13,7 @@ class ProjectsTableSeeder extends Seeder
      */
     public function run()
     {
-        Client::all()->each( function($client) {
+        Client::all()->each(function ($client) {
             factory(Project::class, 3)->create(['client_id' => $client->id]);
         });
     }

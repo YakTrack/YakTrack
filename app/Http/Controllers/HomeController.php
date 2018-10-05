@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Session;
-use App\Support\DateTimeFormatter;
-use App\Support\DateIntervalFormatter;
 use App\Statistics\Sessions;
+use App\Support\DateIntervalFormatter;
+use App\Support\DateTimeFormatter;
 
 class HomeController extends Controller
 {
@@ -29,10 +29,10 @@ class HomeController extends Controller
     public function index()
     {
         return view('home', [
-            'todaysWorkSessions' => $todaysWorkSessions = Session::today()->get(),
-            'todaysTotal' => $todaysWorkSessions->totalDurationForHumans(),
+            'todaysWorkSessions'    => $todaysWorkSessions = Session::today()->get(),
+            'todaysTotal'           => $todaysWorkSessions->totalDurationForHumans(),
             'thisWeeksWorkSessions' => $this->sessions->thisWeeksWorkSessions(),
-            'thisWeeksTotal' => Session::thisWeek()->get()->totalDurationForHumans(),
+            'thisWeeksTotal'        => Session::thisWeek()->get()->totalDurationForHumans(),
         ]);
     }
 }

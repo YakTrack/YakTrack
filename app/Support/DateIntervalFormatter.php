@@ -16,8 +16,8 @@ class DateIntervalFormatter
 
     public function createFromSeconds($seconds)
     {
-        $now = new DateTime;
-        $afterNumberOfSeconds = new DateTime;
+        $now = new DateTime();
+        $afterNumberOfSeconds = new DateTime();
         $afterNumberOfSeconds->add(new DateInterval('PT'.$seconds.'S'));
 
         return $afterNumberOfSeconds->diff($now);

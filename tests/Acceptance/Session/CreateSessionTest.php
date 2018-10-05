@@ -22,11 +22,11 @@ class CreateSessionTest extends BrowserKitTestCase
         $this->shouldReturnJson();
 
         $this->seeJson([
-            'id' => 1,
+            'id'         => 1,
             'started_at' => [
-                'date' => '2018-01-01 12:34:56.000000',
-                'timezone' => 'UTC',
-                'timezone_type' => 3
+                'date'          => '2018-01-01 12:34:56.000000',
+                'timezone'      => 'UTC',
+                'timezone_type' => 3,
             ],
         ]);
 
@@ -47,7 +47,7 @@ class CreateSessionTest extends BrowserKitTestCase
         $this->seePageIs(route('session.index'));
 
         $this->seeInDatabase('sessions', [
-            'id' => 1,
+            'id'         => 1,
             'started_at' => '2018-01-01 12:34:56',
         ]);
 
@@ -61,7 +61,7 @@ class CreateSessionTest extends BrowserKitTestCase
 
         $runningSession = factory(Session::class)->create([
             'started_at' => Carbon::parse('2018-01-01 00:00:00'),
-            'ended_at' => null
+            'ended_at'   => null,
         ]);
 
         $this->assertTrue($runningSession->isRunning());
@@ -75,15 +75,15 @@ class CreateSessionTest extends BrowserKitTestCase
         $this->seePageIs(route('session.index'));
 
         $this->seeInDatabase('sessions', [
-            'id' => 1,
+            'id'         => 1,
             'started_at' => '2018-01-01 00:00:00',
-            'ended_at' => '2018-01-01 00:10:00',
+            'ended_at'   => '2018-01-01 00:10:00',
         ]);
 
         $this->seeInDatabase('sessions', [
-            'id' => 2,
+            'id'         => 2,
             'started_at' => '2018-01-01 00:10:00',
-            'ended_at' => null,
+            'ended_at'   => null,
         ]);
 
         $this->assertFalse($runningSession->fresh()->isRunning());

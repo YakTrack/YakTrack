@@ -4,18 +4,16 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-use App\Client;
-
 class Project extends Model
 {
     protected $fillable = [
         'name',
         'description',
-        'client_id'
+        'client_id',
     ];
 
     /**
-     * The client that the project belongs to
+     * The client that the project belongs to.
      **/
     public function client()
     {
@@ -31,14 +29,14 @@ class Project extends Model
     public function getClient()
     {
         if (is_null($this->client)) {
-            return new Client;
+            return new Client();
         }
 
         return $this->client;
     }
 
     /**
-     * The sprints that belong to the project
+     * The sprints that belong to the project.
      **/
     public function sprints()
     {
@@ -46,7 +44,7 @@ class Project extends Model
     }
 
     /**
-     * The tasks that belong to the project
+     * The tasks that belong to the project.
      **/
     public function tasks()
     {

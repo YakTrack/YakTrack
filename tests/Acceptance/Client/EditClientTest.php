@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class EditClientTest extends BrowserKitTestCase
 {
@@ -14,7 +12,7 @@ class EditClientTest extends BrowserKitTestCase
         // Create client
         $client = App\Client::create([
             'email' => 'client@domain.com',
-            'name'  => 'Test Client'
+            'name'  => 'Test Client',
         ]);
 
         // Login user
@@ -30,14 +28,14 @@ class EditClientTest extends BrowserKitTestCase
         $this->type('updatedclient@domain.com', 'email')
             ->type('Updated Client', 'name')
             ->press('Update');
-        
+
         // Verify redirected to correct page
         $this->seePageIs(route('client.index'));
 
         // Verify databse updated
         $this->seeInDatabase('clients', [
-            'name' => 'Updated Client',
-            'email' => 'updatedclient@domain.com'
+            'name'  => 'Updated Client',
+            'email' => 'updatedclient@domain.com',
         ]);
     }
 }

@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class EditSprintTest extends BrowserKitTestCase
 {
@@ -39,9 +37,9 @@ class EditSprintTest extends BrowserKitTestCase
 
         // Verify sprint update in database
         $this->seeInDatabase('sprints', [
-            'id' => $sprint->id,
-            'name' => $newSprint->name,
-            'project_id' => $projects[1]->id
+            'id'         => $sprint->id,
+            'name'       => $newSprint->name,
+            'project_id' => $projects[1]->id,
         ]);
     }
 }

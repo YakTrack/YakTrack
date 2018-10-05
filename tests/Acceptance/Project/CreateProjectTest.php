@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class CreateProjectTest extends BrowserKitTestCase
 {
@@ -34,9 +32,9 @@ class CreateProjectTest extends BrowserKitTestCase
 
         // Verify client added to database
         $this->seeInDatabase('projects', [
-            'name' => 'Test Project',
+            'name'        => 'Test Project',
             'description' => 'Test project description.',
-            'client_id' => $client->id
+            'client_id'   => $client->id,
         ]);
     }
 }

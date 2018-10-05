@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Database\Seeder;
-
 use App\Sprint;
+use Illuminate\Database\Seeder;
 
 class TasksTableSeeder extends Seeder
 {
@@ -13,10 +12,10 @@ class TasksTableSeeder extends Seeder
      */
     public function run()
     {
-        Sprint::all()->each( function($sprint) {
+        Sprint::all()->each(function ($sprint) {
             factory(App\Task::class, 3)->create([
                 'project_id' => $sprint->project->id,
-                'sprint_id' => $sprint->id
+                'sprint_id'  => $sprint->id,
             ]);
         });
     }

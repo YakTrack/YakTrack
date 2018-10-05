@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ShowProjectTest extends BrowserKitTestCase
 {
@@ -27,5 +25,4 @@ class ShowProjectTest extends BrowserKitTestCase
         $this->see($project->name);
         $this->see($project->description);
     }
-
 }

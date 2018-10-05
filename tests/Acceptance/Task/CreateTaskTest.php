@@ -1,9 +1,9 @@
 <?php
 
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use App\Task;
 use App\Project;
 use App\Sprint;
+use App\Task;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class CreateTaskTest extends BrowserKitTestCase
 {
@@ -34,11 +34,11 @@ class CreateTaskTest extends BrowserKitTestCase
 
         // Simulate form submission
         $response = $this->post(route('task.store'), [
-            'name' => 'Test Task',
+            'name'        => 'Test Task',
             'description' => 'Test task description.',
-            'project_id' => $project->id,
-            'sprint_id' => $sprint->id,
-            'parent_id' => $parentTask->id,
+            'project_id'  => $project->id,
+            'sprint_id'   => $sprint->id,
+            'parent_id'   => $parentTask->id,
         ]);
 
         // Verify redirected to correct page
@@ -51,11 +51,11 @@ class CreateTaskTest extends BrowserKitTestCase
 
         // Verify task added to database
         $this->seeInDatabase('tasks', [
-            'name' => 'Test Task',
+            'name'        => 'Test Task',
             'description' => 'Test task description.',
-            'project_id' => $project->id,
-            'parent_id' => $parentTask->id,
-            'sprint_id' => $sprint->id
+            'project_id'  => $project->id,
+            'parent_id'   => $parentTask->id,
+            'sprint_id'   => $sprint->id,
         ]);
     }
 }

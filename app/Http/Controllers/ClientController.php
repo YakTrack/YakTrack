@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Client;
+use Illuminate\Http\Request;
 
 class ClientController extends Controller
 {
@@ -39,7 +39,7 @@ class ClientController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'name'  => 'required',
             'email' => 'email',
         ]);
 
@@ -87,7 +87,7 @@ class ClientController extends Controller
     public function update(Request $request, Client $client)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'name'  => 'required',
             'email' => 'email',
         ]);
 

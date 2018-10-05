@@ -4,8 +4,8 @@ namespace Tests\Feature\ThirdPartyApplicationSession;
 
 use App\Models\ThirdPartyApplication;
 use App\Session;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class CreateThirdPartyApplicationSessionTest extends TestCase
 {
@@ -29,7 +29,7 @@ class CreateThirdPartyApplicationSessionTest extends TestCase
     public function a_session_can_be_created_with_a_post_request()
     {
         $this->withoutExceptionHandling();
-    
+
         $thirdPartyApplication = factory(ThirdPartyApplication::class)->states(['wrike'])->create();
 
         $session = factory(Session::class)->create();
@@ -37,8 +37,8 @@ class CreateThirdPartyApplicationSessionTest extends TestCase
         $this->actingAsUser();
 
         $response = $this->post(route('third-party-application-session.store'), [
-            'session_id' => $session->id,
-            'third_party_application_id' => $thirdPartyApplication->id
+            'session_id'                 => $session->id,
+            'third_party_application_id' => $thirdPartyApplication->id,
         ]);
 
         $response->assertRedirect('/');

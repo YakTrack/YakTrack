@@ -28,9 +28,9 @@ class Sessions
     {
         return $this->dateTimeFormatter->daysThisWeek()->map(function ($date) {
             return [
-                'date' => $date,
-                'dateForHumans' => $this->dateTimeFormatter->dateForHumans($date),
-                'totalTimeWorked' => $this->dateIntervalFormatter->forHumans($this->totalTimeOnDate($date))
+                'date'            => $date,
+                'dateForHumans'   => $this->dateTimeFormatter->dateForHumans($date),
+                'totalTimeWorked' => $this->dateIntervalFormatter->forHumans($this->totalTimeOnDate($date)),
             ];
         });
     }

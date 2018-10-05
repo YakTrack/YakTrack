@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Client;
 use App\Project;
+use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
@@ -38,7 +38,7 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'name'      => 'required',
             'client_id' => 'exists:clients,id',
         ]);
 
@@ -77,7 +77,7 @@ class ProjectController extends Controller
     {
         return view('project.edit', [
             'project' => $project,
-            'clients' => Client::all() 
+            'clients' => Client::all(),
         ]);
     }
 
@@ -85,22 +85,22 @@ class ProjectController extends Controller
      * Update the specified project in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param Project $project
+     * @param Project                  $project
      *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Project $project)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'client_id' => 'exists:clients,id'
+            'name'      => 'required',
+            'client_id' => 'exists:clients,id',
         ]);
 
         $project->update($request->all());
 
         return redirect()
             ->route('project.index')
-            ->with(['messages' => ['success' => 'Project ' . $project->name . ' updated.']]);
+            ->with(['messages' => ['success' => 'Project '.$project->name.' updated.']]);
     }
 
     /**

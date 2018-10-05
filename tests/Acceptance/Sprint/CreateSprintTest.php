@@ -34,8 +34,8 @@ class CreateSprintTest extends BrowserKitTestCase
 
         // Verify sprint added to database
         $this->seeInDatabase('sprints', [
-            'name' => 'Test sprint',
-            'project_id' => $project->id
+            'name'       => 'Test sprint',
+            'project_id' => $project->id,
         ]);
     }
 }
