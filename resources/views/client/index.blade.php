@@ -15,15 +15,15 @@
 
 @include('partials.modals.delete_item_modal')
 
-<div class="box item-type-container" data-item-type="client">
-    <div class="box-header with-border">
+<div class="card item-type-container" data-item-type="client">
+    <div class="card-header with-border">
         <a href="{{ route('client.create') }}" class="btn btn-primary btn-sm pull-right">
             <i class="fa fa-plus"></i>
             Add Client
         </a>
     </div>
     @if($clients->count())
-        <table class="table box-body">
+        <table class="table card-body">
             <tr>
                 <th> Name </th>
                 <th> Email </th>
@@ -57,7 +57,7 @@
             @endforeach
         </table>
     @else
-        <div class="box-body">
+        <div class="card-body">
             You have not created any clients yet.
         </div>
     @endif

@@ -1561,7 +1561,7 @@ a:focus {
 .box.box-default {
   border-top-color: #d2d6de;
 }
-.box.collapsed-box .box-body,
+.box.collapsed-box .card-body,
 .box.collapsed-box .box-footer {
   display: none;
 }
@@ -1572,7 +1572,7 @@ a:focus {
 .box .nav-stacked > li:last-of-type {
   border-bottom: none;
 }
-.box.height-control .box-body {
+.box.height-control .card-body {
   max-height: 300px;
   overflow: auto;
 }
@@ -1712,16 +1712,16 @@ a:focus {
   background: rgba(0, 0, 0, 0.5);
 }
 .box-header:before,
-.box-body:before,
+.card-body:before,
 .box-footer:before,
 .box-header:after,
-.box-body:after,
+.card-body:after,
 .box-footer:after {
   content: " ";
   display: table;
 }
 .box-header:after,
-.box-body:after,
+.card-body:after,
 .box-footer:after {
   clear: both;
 }
@@ -1776,36 +1776,36 @@ a:focus {
 .btn-box-tool.btn:active {
   box-shadow: none;
 }
-.box-body {
+.card-body {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border-bottom-right-radius: 3px;
   border-bottom-left-radius: 3px;
   padding: 10px;
 }
-.no-header .box-body {
+.no-header .card-body {
   border-top-right-radius: 3px;
   border-top-left-radius: 3px;
 }
-.box-body > .table {
+.card-body > .table {
   margin-bottom: 0;
 }
-.box-body .fc {
+.card-body .fc {
   margin-top: 5px;
 }
-.box-body .full-width-chart {
+.card-body .full-width-chart {
   margin: -19px;
 }
-.box-body.no-padding .full-width-chart {
+.card-body.no-padding .full-width-chart {
   margin: -9px;
 }
-.box-body .box-pane {
+.card-body .box-pane {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 3px;
 }
-.box-body .box-pane-right {
+.card-body .box-pane-right {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   border-bottom-right-radius: 3px;
@@ -2700,7 +2700,7 @@ table.text-center th {
  * Component: Direct Chat
  * ----------------------
  */
-.direct-chat .box-body {
+.direct-chat .card-body {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
   position: relative;
@@ -3233,15 +3233,15 @@ table.text-center th {
     margin-top: 20px;
   }
 }
-.login-box-body,
-.register-box-body {
+.login-card-body,
+.register-card-body {
   background: #fff;
   padding: 20px;
   border-top: 0;
   color: #666;
 }
-.login-box-body .form-control-feedback,
-.register-box-body .form-control-feedback {
+.login-card-body .form-control-feedback,
+.register-card-body .form-control-feedback {
   color: #777;
 }
 .login-box-msg,

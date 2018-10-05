@@ -15,15 +15,15 @@
 
 @include('partials.modals.delete_item_modal')
 
-<div class="box item-type-container" data-item-type="sprint">
-    <div class="box-header with-border">
+<div class="card item-type-container" data-item-type="sprint">
+    <div class="card-header with-border">
         <a href="{{ route('sprint.create') }}" class="btn btn-primary btn-sm pull-right">
             <i class="fa fa-plus"></i>
             Add Sprint
         </a>
     </div>
     @if($sprints->count())
-        <table class="table box-body">
+        <table class="table card-body">
             <tr>
                 <th> Name </th>
                 <th> Project </th>
@@ -61,7 +61,7 @@
             @endforeach
         </table>
     @else
-        <div class="box-body">
+        <div class="card-body">
             You have not created any sprints yet.
         </div>
     @endif

@@ -13,8 +13,8 @@
 
 @section('content')
 
-<div class="box box-default">
-    <div class="box-body">
+<div class="card box-default">
+    <div class="card-body">
         {!! Form::open(['method' => 'put', 'url' => route('project.update', ['project' => $project])]) !!}
         <div class="form-group">
             {!! Form::label('name', 'Name') !!}

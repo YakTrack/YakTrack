@@ -13,8 +13,8 @@
 
 @section('content')
 
-<div class="box box-default">
-    <div class="box-body">
+<div class="card box-default">
+    <div class="card-body">
         <div class="row">
             <div class="col-xs-3">
                 <h4> Name: </h4>
@@ -34,12 +34,12 @@
     </div>
 </div>
 
-<div class="box box-default">
-    <div class="box-header">
-        <div class="box-title"> Sessions </div>
-        <div class="box-tools"> Total Time Spent: {{ ($task->sessions->totalDurationForHumans()) }} </div>
+<div class="card box-default">
+    <div class="card-header">
+        <div class="card-title"> Sessions </div>
+        <div class="card-tools"> Total Time Spent: {{ ($task->sessions->totalDurationForHumans()) }} </div>
     </div>
-    <table class="table box-body">
+    <table class="table card-body">
             <tr>
                 <th> Id </th>
                 <th colspan="2"> Started At </th>

@@ -8,7 +8,7 @@
         </a>
     </div>
     <!-- /.login-logo -->
-    <div class="login-box-body">
+    <div class="login-card-body">
         <p class="login-box-msg">Sign in to start your session</p>
 
             <form role="form" method="POST" action="{{ url('/login') }}">
@@ -42,7 +42,7 @@
             </form>
         <a class="" href="{{ url('/password/reset') }}">Forgot Your Password?</a><br>
     </div>
-    <!-- /.login-box-body -->
+    <!-- /.login-card-body -->
 </div>
 <!-- /.login-box -->
 @endsection

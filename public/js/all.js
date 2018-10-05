@@ -2823,7 +2823,7 @@ function _init() {
       //Find the box parent
       var box = element.parents(".box").first();
       //Find the body and the footer
-      var box_content = box.find("> .box-body, > .box-footer, > form  >.box-body, > form > .box-footer");
+      var box_content = box.find("> .card-body, > .box-footer, > form  >.card-body, > form > .box-footer");
       if (!box.hasClass("collapsed-box")) {
         //Convert minus into plus
         element.children(":first").removeClass(_this.icons.collapse).addClass(_this.icons.open);
@@ -2908,7 +2908,7 @@ function _init() {
         start(box);
 
         //Perform ajax call
-        box.find(".box-body").load(settings.source, function () {
+        box.find(".card-body").load(settings.source, function () {
           done(box);
         });
       });

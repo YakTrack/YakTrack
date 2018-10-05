@@ -13,8 +13,8 @@
 
 @section('content')
 
-<div class="box box-default">
-    <div class="box-body">
+<div class="card box-default">
+    <div class="card-body">
     {!! Form::open(['method' => 'post', 'url' => route('sprint.store')]) !!}
         <div class="form-group">
             {!! Form::label('name', 'Name') !!}

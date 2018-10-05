@@ -17,25 +17,24 @@
     <link href="/css/app.css" rel="stylesheet">
 </head>
 
-<body class="hold-transition skin-blue sidebar-mini">
-
-    <div class="wrapper" id="app"><!-- Site wrapper -->
-
-        @include('partials.header')
-        @include('partials.sidebar')
-
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper">
-            @include('partials.content_header')
-            <!-- Main content -->
-            <section class="content">
-                @include('partials.messages')
-                @yield('content')
-            </section>
+<body>
+    <div class="wrapper" id="app">
+        @include('layouts.header-nav')
+        <div class="container-fluid">
+            <div class="row">
+                @include('layouts.sidebar')
+                <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2"> @yield('title') </h1>
+                        <div class="btn-toolbar mb-2 mb-md-0">
+                            @yield('top-right-toolbar')
+                        </div>
+                    </div>
+                    @yield('content')
+                </main>
+            </div>
         </div>
-
-        @include('partials.footer')
-        @include('partials.control_sidebar')
+    </div>
 
     <!-- JavaScripts -->
     <script   src="https://code.jquery.com/jquery-2.2.4.js"   integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="   crossorigin="anonymous"></script>

@@ -15,15 +15,15 @@
 
 @include('partials.modals.delete_item_modal')
 
-<div class="box item-type-container" data-item-type="task">
-    <div class="box-header with-border">
+<div class="card item-type-container" data-item-type="task">
+    <div class="card-header with-border">
         <a href="{{ route('task.create') }}" class="btn btn-primary btn-sm pull-right">
             <i class="fa fa-plus"></i>
             Add Task
         </a>
     </div>
     @if($tasks->count())
-        <table class="table box-body">
+        <table class="table card-body">
             <tr>
                 <th> Name </th>
                 <th> Parent </th>
@@ -79,7 +79,7 @@
             @endforeach
         </table>
     @else
-        <div class="box-body">
+        <div class="card-body">
             You have not created any tasks yet.
         </div>
     @endif

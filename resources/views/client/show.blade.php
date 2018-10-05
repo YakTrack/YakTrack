@@ -13,8 +13,8 @@
 
 @section('content')
 
-<div class="box box-default">
-    <div class="box-body">
+<div class="card box-default">
+    <div class="card-body">
         <div class="row">
             <div class="col-xs-3">
                 <h4> Name: </h4>

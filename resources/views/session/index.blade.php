@@ -15,8 +15,8 @@
 
 @include('partials.modals.delete_item_modal')
 
-<div class="box item-type-container" data-item-type="session">
-    <div class="box-header with-border">
+<div class="card item-type-container" data-item-type="session">
+    <div class="card-header with-border">
         <div class="pull-right">
             <a href="{{ route('session.start') }}" class="btn btn-success btn-sm">
                 <i class="fa fa-clock"></i>
@@ -29,7 +29,7 @@
         </div>
     </div>
     @if($days->count())
-        <table class="table box-body">
+        <table class="table card-body">
             <thead>
                 <tr>
                     <th> Start Time </th>
@@ -107,7 +107,7 @@
             </tbody>
         </table>
     @else
-        <div class="box-body">
+        <div class="card-body">
             You have not created any sessions yet.
         </div>
     @endif
