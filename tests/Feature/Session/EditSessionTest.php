@@ -103,7 +103,7 @@ class EditSessionTest extends TestCase
         $this->actingAsUser();
 
         $response = $this->patch(route('session.update', ['session' => $session]), [
-            'task_id' => '',
+            'task_id' => $newTask->id,
             'started_at' => '2018-01-01 00:00:00',
             'ended_at' => '',
         ]);
