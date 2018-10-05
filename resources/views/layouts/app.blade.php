@@ -30,6 +30,7 @@
                             @yield('top-right-toolbar')
                         </div>
                     </div>
+                    @include('layouts.messages')
                     @yield('content')
                 </main>
             </div>
