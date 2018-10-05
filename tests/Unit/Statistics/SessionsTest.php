@@ -21,7 +21,7 @@ class SessionsTest extends TestCase
 
         $session = factory(Session::class)->create([
             'started_at' => '2018-09-25 22:32:56',
-            'ended_at' => '2018-09-25 23:32:56',
+            'ended_at'   => '2018-09-25 23:32:56',
         ]);
 
         $this->assertEquals('1:00:00', app(Sessions::class)->thisWeeksWorkSessions()[2]['totalTimeWorked']);

@@ -2,12 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
-
 use App\Project;
 use App\Sprint;
+use Illuminate\Http\Request;
 
 class SprintController extends Controller
 {
@@ -34,27 +31,29 @@ class SprintController extends Controller
     /**
      * Store a newly created sprint in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required|unique:sprints,name',
-            'project_id' => 'exists:projects,id'
+            'name'       => 'required|unique:sprints,name',
+            'project_id' => 'exists:projects,id',
         ]);
 
         $sprint = Sprint::create($request->all());
 
         return redirect()
             ->route('sprint.index')
-            ->with(['messages' => ['success' => 'You have added sprint ' . $sprint->name . '.']]);
+            ->with(['messages' => ['success' => 'You have added sprint '.$sprint->name.'.']]);
     }
 
     /**
      * Display the specified sprint.
      *
-     * @param   Sprint $sprint
+     * @param Sprint $sprint
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(Sprint $sprint)
@@ -65,42 +64,45 @@ class SprintController extends Controller
     /**
      * Show the form for editing the specified sprint.
      *
-     * @param   Sprint $sprint
+     * @param Sprint $sprint
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(Sprint $sprint)
     {
         return view('sprint.edit', [
             'projects' => Project::all(),
-            'sprint' => $sprint
+            'sprint'   => $sprint,
         ]);
     }
 
     /**
      * Update the specified sprint in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param   Sprint $sprint
+     * @param \Illuminate\Http\Request $request
+     * @param Sprint                   $sprint
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Sprint $sprint)
     {
         $this->validate($request, [
-            'name' => 'required|unique:sprints,name,' . $sprint->id,
-            'project_id' => 'exists:projects,id'
+            'name'       => 'required|unique:sprints,name,'.$sprint->id,
+            'project_id' => 'exists:projects,id',
         ]);
 
         $sprint->update($request->all());
 
         return redirect()
             ->route('sprint.index')
-            ->with(['messages' => ['success' => 'You have updated sprint ' . $sprint->name . '.']]);
+            ->with(['messages' => ['success' => 'You have updated sprint '.$sprint->name.'.']]);
     }
 
     /**
      * Remove the specified sprint from storage.
      *
-     * @param   Sprint $sprint
+     * @param Sprint $sprint
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Sprint $sprint)
@@ -109,6 +111,6 @@ class SprintController extends Controller
 
         return redirect()
             ->route('sprint.index')
-            ->with(['messages' => ['success' => 'You have deleted sprint ' . $sprint->name . '.']]);
+            ->with(['messages' => ['success' => 'You have deleted sprint '.$sprint->name.'.']]);
     }
 }

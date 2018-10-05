@@ -3,10 +3,10 @@
 namespace App;
 
 use App\Models\Collections\SessionCollection;
-use App\Support\DateIntervalFormatter;
-use App\Support\DateTimeFormatter;
 use App\Models\ThirdPartyApplication;
 use App\Models\ThirdPartyApplicationSession;
+use App\Support\DateIntervalFormatter;
+use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,7 +39,7 @@ class Session extends Model
     public function getEndedAtAttribute()
     {
         if (is_null($this->attributes['ended_at'])) {
-            return null;
+            return;
         }
 
         return Carbon::parse($this->attributes['ended_at']);
@@ -92,37 +92,37 @@ class Session extends Model
 
     public function getEndedAtTimeForHumansAttribute()
     {
-        return (new DateTimeFormatter)->timeForHumans($this->ended_at);
+        return (new DateTimeFormatter())->timeForHumans($this->ended_at);
     }
 
     public function getLocalEndedAtTimeForHumansAttribute()
     {
-        return (new DateTimeFormatter)->localTimeForHumans($this->ended_at);
+        return (new DateTimeFormatter())->localTimeForHumans($this->ended_at);
     }
 
     public function getStartedAtTimeForHumansAttribute()
     {
-        return (new DateTimeFormatter)->timeForHumans($this->started_at);
+        return (new DateTimeFormatter())->timeForHumans($this->started_at);
     }
 
     public function getLocalStartedAtTimeForHumansAttribute()
     {
-        return (new DateTimeFormatter)->localTimeForHumans($this->started_at);
+        return (new DateTimeFormatter())->localTimeForHumans($this->started_at);
     }
 
     public function getEndedAtDateTimeForHumansAttribute()
     {
-        return (new DateTimeFormatter)->dateTimeForHumans($this->ended_at);
+        return (new DateTimeFormatter())->dateTimeForHumans($this->ended_at);
     }
 
     public function getLocalEndedAtDateTimeForHumansAttribute()
     {
-        return (new DateTimeFormatter)->localDateTimeForHumans($this->ended_at);
+        return (new DateTimeFormatter())->localDateTimeForHumans($this->ended_at);
     }
 
     public function getStartedAtDateTimeForHumansAttribute()
     {
-        return (new DateTimeFormatter)->dateTimeForHumans($this->started_at);
+        return (new DateTimeFormatter())->dateTimeForHumans($this->started_at);
     }
 
     public function isRunning()
@@ -142,14 +142,14 @@ class Session extends Model
 
     public function scopeOnDate($query, $date)
     {
-        return $query->where('started_at', '>=', (new DateTimeFormatter)->utcFormat($date))
-            ->where('started_at', '<', (new DateTimeFormatter)->utcFormat($date->addDays(1)));
+        return $query->where('started_at', '>=', (new DateTimeFormatter())->utcFormat($date))
+            ->where('started_at', '<', (new DateTimeFormatter())->utcFormat($date->addDays(1)));
     }
 
     public function scopeThisWeek($query)
     {
-        return $query->where('started_at', '>=', (new DateTimeFormatter)->startOfWeek())
-            ->where('started_at', '<', (new DateTimeFormatter)->endOfWeek());
+        return $query->where('started_at', '>=', (new DateTimeFormatter())->startOfWeek())
+            ->where('started_at', '<', (new DateTimeFormatter())->endOfWeek());
     }
 
     public function scopeFinished($query)
@@ -166,7 +166,8 @@ class Session extends Model
     /**
      * Create a new Eloquent Collection instance.
      *
-     * @param  array  $models
+     * @param array $models
+     *
      * @return \Illuminate\Database\Eloquent\Collection
      */
     public function newCollection(array $models = [])
@@ -177,7 +178,7 @@ class Session extends Model
     public function exportToThirdPartyApplication(ThirdPartyApplication $thirdPartyApplication)
     {
         return ThirdPartyApplicationSession::create([
-            'session_id' => $this->id,
+            'session_id'                 => $this->id,
             'third_party_application_id' => $thirdPartyApplication->id,
         ]);
     }

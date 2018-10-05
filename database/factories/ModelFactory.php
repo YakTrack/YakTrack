@@ -16,9 +16,9 @@ use Carbon\Carbon;
 // User factory
 $factory->define(App\User::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->name,
-        'email' => $faker->safeEmail,
-        'password' => bcrypt(str_random(10)),
+        'name'           => $faker->name,
+        'email'          => $faker->safeEmail,
+        'password'       => bcrypt(str_random(10)),
         'remember_token' => str_random(10),
     ];
 });
@@ -26,7 +26,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 // Client factory
 $factory->define(App\Client::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->name,
+        'name'  => $faker->name,
         'email' => $faker->safeEmail,
     ];
 });
@@ -34,7 +34,7 @@ $factory->define(App\Client::class, function (Faker\Generator $faker) {
 // Project factory
 $factory->define(App\Project::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->word(),
+        'name'        => $faker->word(),
         'description' => $faker->sentence,
     ];
 });
@@ -49,9 +49,9 @@ $factory->define(App\Sprint::class, function (Faker\Generator $faker) {
 // Task factory
 $factory->define(App\Task::class, function (Faker\Generator $faker) {
     return [
-        'name' => $faker->sentence,
+        'name'        => $faker->sentence,
         'description' => $faker->sentence,
-        'status' => $faker->word,
+        'status'      => $faker->word,
     ];
 });
 
@@ -59,6 +59,6 @@ $factory->define(App\Task::class, function (Faker\Generator $faker) {
 $factory->define(App\Session::class, function (Faker\Generator $faker) {
     return [
         'started_at' => Carbon::now()->format('Y-m-d H:i:s'),
-        'ended_at' => Carbon::now()->format('Y-m-d H:i:s'), 
+        'ended_at'   => Carbon::now()->format('Y-m-d H:i:s'),
     ];
 });

@@ -1,10 +1,7 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
-
 use App\Project;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class DeleteProjectTest extends BrowserKitTestCase
 {
@@ -19,9 +16,9 @@ class DeleteProjectTest extends BrowserKitTestCase
         // Generate project
         $project = factory(Project::class)->create(['name' => 'Test Project']);
 
-        // Visit route 
+        // Visit route
         $this->delete(route('project.destroy', [
-            'project' => $project
+            'project' => $project,
         ]));
 
         // Verify redirected to correct page
@@ -30,7 +27,7 @@ class DeleteProjectTest extends BrowserKitTestCase
 
         // Verify project removed from database
         $this->dontSeeInDatabase('projects', [
-            'id' => $project->id
+            'id' => $project->id,
         ]);
     }
 }

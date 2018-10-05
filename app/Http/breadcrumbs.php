@@ -5,7 +5,7 @@ Breadcrumbs::register('home', function ($breadcrumbs) {
     $breadcrumbs->push('Home', route('home'));
 });
 
-/**
+/*
  * CLIENTS
  **/
 
@@ -33,7 +33,7 @@ Breadcrumbs::register('client.edit', function ($breadcrumbs, $client) {
     $breadcrumbs->push('Edit '.$client->name, route('client.edit', ['client' => $client]));
 });
 
-/**
+/*
  * Projects
  **/
 
@@ -61,7 +61,7 @@ Breadcrumbs::register('project.edit', function ($breadcrumbs, $project) {
     $breadcrumbs->push('Edit '.$project->name, route('project.edit', ['project' => $project]));
 });
 
-/**
+/*
  * Sprints
  **/
 
@@ -89,7 +89,7 @@ Breadcrumbs::register('sprint.edit', function ($breadcrumbs, $sprint) {
     $breadcrumbs->push('Edit '.$sprint->name, route('sprint.edit', ['sprint' => $sprint]));
 });
 
-/**
+/*
  * Tasks
  **/
 

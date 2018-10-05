@@ -4,9 +4,9 @@ namespace Tests\Feature\Session;
 
 use App\Session;
 use App\Task;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Carbon\Carbon;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class EditSessionTest extends TestCase
 {
@@ -19,7 +19,7 @@ class EditSessionTest extends TestCase
 
         $session = factory(Session::class)->create([
             'started_at' => '2018-01-01 00:00:00',
-            'ended_at' => null,
+            'ended_at'   => null,
         ]);
 
         $this->actingAsUser();
@@ -28,19 +28,19 @@ class EditSessionTest extends TestCase
 
         $response = $this->json('patch', route('session.update', ['session' => $session]), [
             'started_at' => '2018-01-01 00:00:00',
-            'ended_at' => '2018-01-01 12:34:56',
+            'ended_at'   => '2018-01-01 12:34:56',
         ]);
 
         $response->assertJson([
-            'id' => $session->id,
+            'id'         => $session->id,
             'started_at' => [
-                'date' => '2018-01-01 00:00:00.000000',
-                'timezone' => 'UTC',
+                'date'          => '2018-01-01 00:00:00.000000',
+                'timezone'      => 'UTC',
                 'timezone_type' => 3,
             ],
             'ended_at' => [
-                'date' => '2018-01-01 12:34:56.000000',
-                'timezone' => 'UTC',
+                'date'          => '2018-01-01 12:34:56.000000',
+                'timezone'      => 'UTC',
                 'timezone_type' => 3,
             ],
         ]);
@@ -57,7 +57,7 @@ class EditSessionTest extends TestCase
 
         $session = factory(Session::class)->create([
             'started_at' => '2018-01-01 00:00:00',
-            'ended_at' => null,
+            'ended_at'   => null,
         ]);
 
         $this->actingAsUser();
@@ -68,7 +68,7 @@ class EditSessionTest extends TestCase
 
         $this->assertDatabaseHas('sessions', [
             'started_at' => '2018-01-01 00:00:00',
-            'ended_at' => '2018-01-01 00:10:00',
+            'ended_at'   => '2018-01-01 00:10:00',
         ]);
 
         Carbon::setTestNow();
@@ -95,7 +95,7 @@ class EditSessionTest extends TestCase
 
         $session = factory(Session::class)->create([
             'started_at' => '2018-01-01 00:00:00',
-            'ended_at' => null,
+            'ended_at'   => null,
         ]);
 
         $newTask = factory(Task::class)->create();
@@ -103,18 +103,18 @@ class EditSessionTest extends TestCase
         $this->actingAsUser();
 
         $response = $this->patch(route('session.update', ['session' => $session]), [
-            'task_id' => '',
+            'task_id'    => '',
             'started_at' => '2018-01-01 00:00:00',
-            'ended_at' => '',
+            'ended_at'   => '',
         ]);
 
         $response->assertRedirect(route('session.index'));
 
         $this->assertDatabaseHas('sessions', [
-            'id' => $session->id,
-            'task_id' => $newTask->id,
+            'id'         => $session->id,
+            'task_id'    => $newTask->id,
             'started_at' => '2018-01-01 00:00:00',
-            'ended_at' => null,
+            'ended_at'   => null,
         ]);
     }
 
@@ -125,7 +125,7 @@ class EditSessionTest extends TestCase
 
         $session = factory(Session::class)->create([
             'started_at' => '2018-01-01 00:00:00',
-            'ended_at' => null,
+            'ended_at'   => null,
         ]);
 
         $newTask = factory(Task::class)->create();
@@ -133,18 +133,18 @@ class EditSessionTest extends TestCase
         $this->actingAsUser();
 
         $response = $this->patch(route('session.update', ['session' => $session]), [
-            'task_id' => '',
+            'task_id'    => '',
             'started_at' => '2018-01-01 00:00:00',
-            'ended_at' => '',
+            'ended_at'   => '',
         ]);
 
         $response->assertRedirect(route('session.index'));
 
         $this->assertDatabaseHas('sessions', [
-            'id' => $session->id,
-            'task_id' => null,
+            'id'         => $session->id,
+            'task_id'    => null,
             'started_at' => '2018-01-01 00:00:00',
-            'ended_at' => null,
+            'ended_at'   => null,
         ]);
     }
 }

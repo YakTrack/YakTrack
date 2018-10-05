@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ShowClientTest extends BrowserKitTestCase
 {
@@ -10,7 +8,7 @@ class ShowClientTest extends BrowserKitTestCase
 
     /** @test */
     public function a_logged_in_user_can_view_details_of_a_client()
-    { 
+    {
         // Create client
         $client = factory(App\Client::class)->create();
 

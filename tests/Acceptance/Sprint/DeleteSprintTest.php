@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class DeleteSprintTest extends BrowserKitTestCase
 {
@@ -20,7 +18,7 @@ class DeleteSprintTest extends BrowserKitTestCase
 
         // Visit route
         $this->delete(route('sprint.destroy', [
-            'sprint' => $sprint
+            'sprint' => $sprint,
         ]));
 
         // Verify redirected to correct page
@@ -29,7 +27,7 @@ class DeleteSprintTest extends BrowserKitTestCase
 
         // Verify sprint added to database
         $this->dontSeeInDatabase('sprints', [
-            'id' => $sprint->id
+            'id' => $sprint->id,
         ]);
     }
 }

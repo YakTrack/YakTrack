@@ -15,7 +15,7 @@ class SessionTest extends BrowserKitTestCase
 
         $session = factory(Session::class)->create([
             'started_at' => '2018-01-01 00:00:00',
-            'ended_at' => null,
+            'ended_at'   => null,
         ]);
 
         $this->assertTrue($session->isRunning());
@@ -25,9 +25,9 @@ class SessionTest extends BrowserKitTestCase
         $this->assertFalse($session->isRunning());
 
         $this->seeInDatabase('sessions', [
-            'id' => $session->id,
+            'id'         => $session->id,
             'started_at' => '2018-01-01 00:00:00',
-            'ended_at' => '2018-01-01 00:10:00',
+            'ended_at'   => '2018-01-01 00:10:00',
         ]);
 
         Carbon::setTestNow();
@@ -40,22 +40,22 @@ class SessionTest extends BrowserKitTestCase
 
         $startsAndEndsOnDate = factory(Session::class)->create([
             'started_at' => '2018-01-01 12:00:00',
-            'ended_at' => '2018-01-01 13:00:00',
+            'ended_at'   => '2018-01-01 13:00:00',
         ]);
 
         $startsOnDateOnly = factory(Session::class)->create([
             'started_at' => '2018-01-01 12:00:00',
-            'ended_at' => '2018-01-02 12:30:00',
+            'ended_at'   => '2018-01-02 12:30:00',
         ]);
 
         $endsOnDateOnly = factory(Session::class)->create([
             'started_at' => '2017-12-12 23:55:00',
-            'ended_at' => '2018-01-01 12:30:00',
+            'ended_at'   => '2018-01-01 12:30:00',
         ]);
 
         $neitherStartsNorEndsOnDate = factory(Session::class)->create([
             'started_at' => '2017-01-01 11:00:00',
-            'ended_at' => '2017-01-01 11:30:00',
+            'ended_at'   => '2017-01-01 11:30:00',
         ]);
 
         foreach ([
@@ -95,7 +95,7 @@ class SessionTest extends BrowserKitTestCase
     {
         $session = factory(Session::class)->create([
             'started_at' => '2018-01-01 12:00:00',
-            'ended_at' => '2018-01-01 13:00:00',
+            'ended_at'   => '2018-01-01 13:00:00',
         ]);
 
         $this->assertEquals(3600, $session->durationInSeconds);

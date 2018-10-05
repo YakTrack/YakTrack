@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class DeleteClientTest extends BrowserKitTestCase
 {
@@ -17,12 +15,12 @@ class DeleteClientTest extends BrowserKitTestCase
         // Generate client
         $client = App\Client::create([
             'email' => 'client@domain.com',
-            'name'  => 'Test Client'
+            'name'  => 'Test Client',
         ]);
 
         // Visit route
         $this->delete(route('client.destroy', [
-            'client' => $client
+            'client' => $client,
         ]));
 
         // Verify redirected to correct page
@@ -31,7 +29,7 @@ class DeleteClientTest extends BrowserKitTestCase
 
         // Verify client added to database
         $this->dontSeeInDatabase('clients', [
-            'id' => $client->id
+            'id' => $client->id,
         ]);
     }
 }

@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class EditTaskTest extends BrowserKitTestCase
 {
@@ -37,9 +35,9 @@ class EditTaskTest extends BrowserKitTestCase
 
         // Verify databse updated
         $this->seeInDatabase('tasks', [
-            'name' => 'Updated Task',
+            'name'        => 'Updated Task',
             'description' => 'Updated task description.',
-            'project_id' => $projects[1]->id,
+            'project_id'  => $projects[1]->id,
         ]);
     }
 }

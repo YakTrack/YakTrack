@@ -1,9 +1,7 @@
 <?php
 
 use App\Task;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class DeleteTaskTest extends BrowserKitTestCase
 {
@@ -18,9 +16,9 @@ class DeleteTaskTest extends BrowserKitTestCase
         // Generate task
         $task = factory(Task::class)->create(['name' => 'Test Task']);
 
-        // Visit route 
+        // Visit route
         $this->delete(route('task.destroy', [
-            'task' => $task
+            'task' => $task,
         ]));
 
         // Verify redirected to correct page
@@ -29,7 +27,7 @@ class DeleteTaskTest extends BrowserKitTestCase
 
         // Verify task removed from database
         $this->dontSeeInDatabase('tasks', [
-            'id' => $task->id
+            'id' => $task->id,
         ]);
     }
 }

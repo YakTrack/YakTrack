@@ -7,12 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 class Client extends Model
 {
     /**
-     * The fields that may be mass assigned
+     * The fields that may be mass assigned.
      *
-     * @var array $fillable
+     * @var array
      **/
     protected $fillable = [
         'name',
-        'email'
+        'email',
     ];
 }

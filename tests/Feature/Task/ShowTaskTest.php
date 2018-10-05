@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Task;
 
-use App\Task;
 use App\Session;
-use Tests\TestCase;
+use App\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class ShowTaskTest extends TestCase
 {

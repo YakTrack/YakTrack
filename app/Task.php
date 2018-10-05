@@ -2,8 +2,8 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Concerns\BelongsToProject;
+use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
@@ -33,12 +33,12 @@ class Task extends Model
 
     public function getParent()
     {
-        return $this->parent ?? new Task;
+        return $this->parent ?? new self();
     }
 
     public function parent()
     {
-        return $this->belongsTo(Task::class, 'parent_id');
+        return $this->belongsTo(self::class, 'parent_id');
     }
 
     public function getShortNameAttribute()
