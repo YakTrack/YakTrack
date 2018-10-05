@@ -54,7 +54,7 @@ class SessionController extends Controller
         $session->update([
             'started_at' => request('started_at') ?: null,
             'ended_at' => request('ended_at') ?: null,
-            'task_id' => request('task_id'),
+            'task_id' => request('task_id') ?: null,
         ]);
 
         return request()->expectsJson() ? response()->json($session) : redirect()->route('session.index');

@@ -103,7 +103,7 @@ class EditSessionTest extends TestCase
         $this->actingAsUser();
 
         $response = $this->patch(route('session.update', ['session' => $session]), [
-            'task_id' => $newTask->id,
+            'task_id' => '',
             'started_at' => '2018-01-01 00:00:00',
             'ended_at' => '',
         ]);
@@ -113,6 +113,36 @@ class EditSessionTest extends TestCase
         $this->assertDatabaseHas('sessions', [
             'id' => $session->id,
             'task_id' => $newTask->id,
+            'started_at' => '2018-01-01 00:00:00',
+            'ended_at' => null,
+        ]);
+    }
+
+    /** @test */
+    public function a_user_can_send_a_patch_request_to_edit_a_session_for_a_session_with_no_task()
+    {
+        $this->withoutExceptionHandling();
+
+        $session = factory(Session::class)->create([
+            'started_at' => '2018-01-01 00:00:00',
+            'ended_at' => null,
+        ]);
+
+        $newTask = factory(Task::class)->create();
+
+        $this->actingAsUser();
+
+        $response = $this->patch(route('session.update', ['session' => $session]), [
+            'task_id' => '',
+            'started_at' => '2018-01-01 00:00:00',
+            'ended_at' => '',
+        ]);
+
+        $response->assertRedirect(route('session.index'));
+
+        $this->assertDatabaseHas('sessions', [
+            'id' => $session->id,
+            'task_id' => null,
             'started_at' => '2018-01-01 00:00:00',
             'ended_at' => null,
         ]);
