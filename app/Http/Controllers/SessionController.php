@@ -45,7 +45,7 @@ class SessionController extends Controller
     {
         return view('session.edit', [
             'session' => $session,
-            'tasks'   => Task::all(),
+            'tasks' => Task::all(),
         ]);
     }
 
@@ -53,8 +53,8 @@ class SessionController extends Controller
     {
         $session->update([
             'started_at' => request('started_at') ?: null,
-            'ended_at'   => request('ended_at') ?: null,
-            'task_id'    => request('task_id') ?: null,
+            'ended_at' => request('ended_at') ?: null,
+            'task_id' => request('task_id') ?: null,
         ]);
 
         return request()->expectsJson() ? response()->json($session) : redirect()->route('session.index');
@@ -71,9 +71,11 @@ class SessionController extends Controller
         return redirect(route('session.index'));
     }
 
-    public function stop(Session $session)
+    public function stop()
     {
-        $session->stop();
+        Session::running()->get()->each(function ($session) {
+            $session->stop();
+        });
 
         return redirect(route('session.index'));
     }
