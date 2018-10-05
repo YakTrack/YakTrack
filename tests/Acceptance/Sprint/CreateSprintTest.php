@@ -1,8 +1,6 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class CreateSprintTest extends BrowserKitTestCase
 {
@@ -33,7 +31,6 @@ class CreateSprintTest extends BrowserKitTestCase
 
         // Verify redirected to correct page
         $this->seePageIs(route('sprint.index'));
-
 
         // Verify sprint added to database
         $this->seeInDatabase('sprints', [
