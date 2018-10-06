@@ -10,10 +10,10 @@ class IndexTaskTest extends BrowserKitTestCase
     public function a_user_can_see_a_list_of_tasks()
     {
         // Create project
-        $project = factory(App\Project::class)->create();
+        $project = factory(App\Models\Project::class)->create();
 
         // Create tasks
-        $tasks = factory(App\Task::class)->create(['project_id' => $project->id]);
+        $tasks = factory(App\Models\Task::class)->create(['project_id' => $project->id]);
 
         // Login first user
         $user = $this->actingAsUser();

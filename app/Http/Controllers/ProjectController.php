@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Client;
-use App\Project;
+use App\Models\Client;
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -46,10 +46,11 @@ class ProjectController extends Controller
 
         return redirect()
             ->route('project.index')
-            ->with(['messages' => [
-                        'success' => 'You have created a new project called '.
-                        $project->name,
-                    ],
+            ->with(
+                ['messages' => [
+                    'success' => 'You have created a new project called '.
+                    $project->name,
+                ],
                 ]
             );
     }

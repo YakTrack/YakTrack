@@ -28,7 +28,7 @@ abstract class BrowserKitTestCase extends Laravel\BrowserKitTesting\TestCase
 
     protected function actingAsUser()
     {
-        $user = factory(App\User::class)->create();
+        $user = factory(App\Models\User::class)->create();
 
         $this->actingAs($user);
 

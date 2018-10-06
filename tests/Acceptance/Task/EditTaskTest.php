@@ -10,10 +10,10 @@ class EditTaskTest extends BrowserKitTestCase
     public function a_user_can_edit_a_task()
     {
         // Create projects
-        $projects = factory(App\Project::class, 2)->create();
+        $projects = factory(App\Models\Project::class, 2)->create();
 
         // Create task
-        $task = factory(App\Task::class)->create(['project_id' => $projects[0]->id]);
+        $task = factory(App\Models\Task::class)->create(['project_id' => $projects[0]->id]);
 
         // Login user
         $user = $this->actingAsUser();

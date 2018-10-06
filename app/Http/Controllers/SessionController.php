@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Session;
+use App\Models\Task;
 use App\Models\ThirdPartyApplication;
-use App\Session;
 use App\Support\DateTimeFormatter;
-use App\Task;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 

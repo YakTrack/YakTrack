@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Session;
+use App\Models\Session;
 use App\Statistics\Sessions;
 use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;

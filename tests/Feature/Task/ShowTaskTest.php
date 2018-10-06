@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Task;
 
-use App\Session;
-use App\Task;
+use App\Models\Session;
+use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

@@ -30,7 +30,7 @@ abstract class TestCase extends BaseTestCase
 
     protected function actingAsUser()
     {
-        $user = factory(\App\User::class)->create();
+        $user = factory(\App\Models\User::class)->create();
 
         $this->actingAs($user);
 

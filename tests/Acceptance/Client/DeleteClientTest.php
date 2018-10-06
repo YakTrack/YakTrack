@@ -13,7 +13,7 @@ class DeleteClientTest extends BrowserKitTestCase
         $user = $this->actingAsUser();
 
         // Generate client
-        $client = App\Client::create([
+        $client = App\Models\Client::create([
             'email' => 'client@domain.com',
             'name'  => 'Test Client',
         ]);

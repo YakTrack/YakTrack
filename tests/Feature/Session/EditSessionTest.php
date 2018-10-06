@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Session;
 
-use App\Session;
-use App\Task;
+use App\Models\Session;
+use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

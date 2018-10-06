@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Project;
-use App\Sprint;
+use App\Models\Project;
+use App\Models\Sprint;
 use Illuminate\Http\Request;
 
 class SprintController extends Controller

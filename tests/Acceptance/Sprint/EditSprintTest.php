@@ -10,13 +10,13 @@ class EditSprintTest extends BrowserKitTestCase
     public function a_logged_in_user_can_edit_a_sprint()
     {
         // Generate projects
-        $projects = factory(App\Project::class, 2)->create();
+        $projects = factory(App\Models\Project::class, 2)->create();
 
         // Generate sprint
-        $sprint = factory(App\Sprint::class)->create(['project_id' => $projects[0]->id]);
+        $sprint = factory(App\Models\Sprint::class)->create(['project_id' => $projects[0]->id]);
 
         // Generate new sprint data
-        $newSprint = factory(App\Sprint::class)->make();
+        $newSprint = factory(App\Models\Sprint::class)->make();
 
         // Login first user
         $user = $this->actingAsUser();

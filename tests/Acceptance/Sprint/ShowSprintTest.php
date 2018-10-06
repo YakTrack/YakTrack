@@ -10,8 +10,8 @@ class ShowSprintTest extends BrowserKitTestCase
     public function a_logged_in_user_can_view_details_of_a_sprint()
     {
         // Create project and sprint
-        $project = factory(App\Project::class)->create();
-        $sprint = factory(App\Sprint::class)->create(['project_id' => $project->id]);
+        $project = factory(App\Models\Project::class)->create();
+        $sprint = factory(App\Models\Sprint::class)->create(['project_id' => $project->id]);
 
         // Login user
         $user = $this->actingAsUser();

@@ -1,6 +1,6 @@
 <?php
 
-use App\Project;
+use App\Models\Project;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class DeleteProjectTest extends BrowserKitTestCase

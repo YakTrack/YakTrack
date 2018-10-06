@@ -1,10 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use App\Models\Collections\SessionCollection;
-use App\Models\ThirdPartyApplication;
-use App\Models\ThirdPartyApplicationSession;
 use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
 use Carbon\Carbon;

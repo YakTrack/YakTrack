@@ -2,7 +2,7 @@
 
 namespace App\Statistics;
 
-use App\Session;
+use App\Models\Session;
 use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
 

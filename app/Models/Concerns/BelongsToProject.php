@@ -2,7 +2,7 @@
 
 namespace App\Models\Concerns;
 
-use App\Project;
+use App\Models\Project;
 
 trait BelongsToProject
 {

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\ThirdPartyApplicationSession;
 
+use App\Models\Session;
 use App\Models\ThirdPartyApplication;
-use App\Session;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 

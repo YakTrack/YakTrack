@@ -10,7 +10,7 @@ class ShowProjectTest extends BrowserKitTestCase
     public function a_logged_in_user_can_view_details_of_a_project()
     {
         // Create project
-        $project = factory(App\Project::class)->create();
+        $project = factory(App\Models\Project::class)->create();
 
         // Login user
         $user = $this->actingAsUser();

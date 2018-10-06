@@ -10,10 +10,10 @@ class IndexSprintTest extends BrowserKitTestCase
     public function a_logged_in_user_can_view_their_sprints()
     {
         // Create project
-        $project = factory(App\Project::class)->create();
+        $project = factory(App\Models\Project::class)->create();
 
         // Create sprints
-        $sprints = factory(App\Sprint::class)->create(['project_id' => $project->id]);
+        $sprints = factory(App\Models\Sprint::class)->create(['project_id' => $project->id]);
 
         // Login first user
         $user = $this->actingAsUser();
