@@ -48,7 +48,7 @@ class ProjectController extends Controller
             ->route('project.index')
             ->with(
                 ['messages' => [
-                    'success' => 'You have created a new project called ' .
+                    'success' => 'You have created a new project called '.
                     $project->name,
                 ],
                 ]
@@ -101,7 +101,7 @@ class ProjectController extends Controller
 
         return redirect()
             ->route('project.index')
-            ->with(['messages' => ['success' => 'Project ' . $project->name . ' updated.']]);
+            ->with(['messages' => ['success' => 'Project '.$project->name.' updated.']]);
     }
 
     /**
@@ -117,6 +117,6 @@ class ProjectController extends Controller
 
         return redirect()
             ->route('project.index')
-            ->with(['messages' => ['success' => 'You have deleted Project ' . $project->name . '.']]);
+            ->with(['messages' => ['success' => 'You have deleted Project '.$project->name.'.']]);
     }
 }

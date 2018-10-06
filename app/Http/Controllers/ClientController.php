@@ -47,7 +47,7 @@ class ClientController extends Controller
 
         return redirect()
             ->route('client.index')
-            ->with(['messages' => ['success' => 'You have created new client "' . $request->name]]);
+            ->with(['messages' => ['success' => 'You have created new client "'.$request->name]]);
     }
 
     /**
@@ -91,14 +91,14 @@ class ClientController extends Controller
             'email' => 'email',
         ]);
 
-        $client->name  = $request->name;
+        $client->name = $request->name;
         $client->email = $request->email;
         $client->save();
 
         return redirect()
             ->route('client.index')
             ->with(['messages' => [
-                'success' => 'You have updated client "' . $client->name . '"',
+                'success' => 'You have updated client "'.$client->name.'"',
             ]]);
     }
 
@@ -116,7 +116,7 @@ class ClientController extends Controller
         return redirect()
             ->route('client.index')
             ->with(['messages' => [
-                'success' => 'You have deleted client "' . $client->name . '"',
+                'success' => 'You have deleted client "'.$client->name.'"',
             ]]);
     }
 }

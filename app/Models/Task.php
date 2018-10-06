@@ -43,6 +43,6 @@ class Task extends Model
 
     public function getShortNameAttribute()
     {
-        return substr($this->name, 0, $shortNameLength = 50) . (strlen($this->name) > $shortNameLength ? '...' : '');
+        return substr($this->name, 0, $shortNameLength = 50).(strlen($this->name) > $shortNameLength ? '...' : '');
     }
 }

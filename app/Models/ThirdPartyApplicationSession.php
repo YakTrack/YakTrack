@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\Session;
 use Illuminate\Database\Eloquent\Model;
 
 class ThirdPartyApplicationSession extends Model

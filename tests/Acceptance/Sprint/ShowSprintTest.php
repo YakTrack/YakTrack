@@ -11,7 +11,7 @@ class ShowSprintTest extends BrowserKitTestCase
     {
         // Create project and sprint
         $project = factory(App\Models\Project::class)->create();
-        $sprint  = factory(App\Models\Sprint::class)->create(['project_id' => $project->id]);
+        $sprint = factory(App\Models\Sprint::class)->create(['project_id' => $project->id]);
 
         // Login user
         $user = $this->actingAsUser();

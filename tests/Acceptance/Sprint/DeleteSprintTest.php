@@ -14,7 +14,7 @@ class DeleteSprintTest extends BrowserKitTestCase
 
         // Generate project and sprint
         $project = factory(App\Models\Project::class)->create();
-        $sprint  = factory(App\Models\Sprint::class)->create(['project_id' => $project->id]);
+        $sprint = factory(App\Models\Sprint::class)->create(['project_id' => $project->id]);
 
         // Visit route
         $this->delete(route('sprint.destroy', [

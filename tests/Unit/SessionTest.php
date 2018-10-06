@@ -71,7 +71,7 @@ class SessionTest extends BrowserKitTestCase
                     ->contains(function ($session) use ($testCase) {
                         return $session->id === $testCase[0]->id;
                     }),
-                'Session ' . $testCase[0]->id . ' not found in dates on 2018-01-01'
+                'Session '.$testCase[0]->id.' not found in dates on 2018-01-01'
             );
         }
     }
