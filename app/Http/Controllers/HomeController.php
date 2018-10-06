@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Session;
+use App\Models\Session;
 use App\Statistics\Sessions;
 use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
@@ -16,9 +16,9 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
 
-        $this->dateTimeFormatter = $dateTimeFormatter;
+        $this->dateTimeFormatter     = $dateTimeFormatter;
         $this->dateIntervalFormatter = $dateIntervalFormatter;
-        $this->sessions = $sessions;
+        $this->sessions              = $sessions;
     }
 
     /**

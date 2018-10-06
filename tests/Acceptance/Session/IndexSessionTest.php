@@ -1,6 +1,6 @@
 <?php
 
-use App\Session;
+use App\Models\Session;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class IndexSessionTest extends BrowserKitTestCase

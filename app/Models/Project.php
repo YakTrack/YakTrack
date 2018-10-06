@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,14 +17,14 @@ class Project extends Model
      **/
     public function client()
     {
-        return $this->belongsTo('App\Client');
+        return $this->belongsTo('App\Models\Client');
     }
 
     /**
      * Returns the client object that the project belongs to if one exists or
      * a blank client object if none exists.
      *
-     * @return \App\Client
+     * @return \App\Models\Client
      **/
     public function getClient()
     {
@@ -40,7 +40,7 @@ class Project extends Model
      **/
     public function sprints()
     {
-        return $this->hasMany('App\Sprint');
+        return $this->hasMany('App\Models\Sprint');
     }
 
     /**
@@ -48,6 +48,6 @@ class Project extends Model
      **/
     public function tasks()
     {
-        return $this->hasMany('App\Task');
+        return $this->hasMany('App\Models\Task');
     }
 }

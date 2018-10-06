@@ -1,8 +1,8 @@
 <?php
 
-use App\Project;
-use App\Sprint;
-use App\Task;
+use App\Models\Project;
+use App\Models\Sprint;
+use App\Models\Task;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class CreateTaskTest extends BrowserKitTestCase

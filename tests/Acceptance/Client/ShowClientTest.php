@@ -10,7 +10,7 @@ class ShowClientTest extends BrowserKitTestCase
     public function a_logged_in_user_can_view_details_of_a_client()
     {
         // Create client
-        $client = factory(App\Client::class)->create();
+        $client = factory(App\Models\Client::class)->create();
 
         // Login user
         $user = $this->actingAsUser();

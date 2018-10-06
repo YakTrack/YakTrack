@@ -1,6 +1,6 @@
 <?php
 
-use App\Task;
+use App\Models\Task;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class DeleteTaskTest extends BrowserKitTestCase

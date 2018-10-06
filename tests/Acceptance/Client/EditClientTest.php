@@ -10,7 +10,7 @@ class EditClientTest extends BrowserKitTestCase
     public function a_logged_in_user_can_edit_a_client()
     {
         // Create client
-        $client = App\Client::create([
+        $client = App\Models\Client::create([
             'email' => 'client@domain.com',
             'name'  => 'Test Client',
         ]);

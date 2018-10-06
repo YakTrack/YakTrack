@@ -10,10 +10,10 @@ class EditProjectTest extends BrowserKitTestCase
     public function a_logged_in_user_can_edit_a_project()
     {
         // Create clients
-        $clients = factory(App\Client::class, 2)->create();
+        $clients = factory(App\Models\Client::class, 2)->create();
 
         // Create project
-        $project = factory(App\Project::class)->create(['client_id' => $clients[0]->id]);
+        $project = factory(App\Models\Project::class)->create(['client_id' => $clients[0]->id]);
 
         // Login user
         $user = $this->actingAsUser();

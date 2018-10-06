@@ -2,7 +2,7 @@
 
 namespace App\Statistics;
 
-use App\Session;
+use App\Models\Session;
 use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
 
@@ -14,7 +14,7 @@ class Sessions
     public function __construct(DateTimeFormatter $dateTimeFormatter, DateIntervalFormatter $dateIntervalFormatter)
     {
         $this->dateIntervalFormatter = $dateIntervalFormatter;
-        $this->dateTimeFormatter = $dateTimeFormatter;
+        $this->dateTimeFormatter     = $dateTimeFormatter;
     }
 
     public function totalTimeOnDate($date)

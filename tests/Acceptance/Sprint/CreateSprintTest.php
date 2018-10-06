@@ -10,7 +10,7 @@ class CreateSprintTest extends BrowserKitTestCase
     public function a_logged_in_user_can_create_a_sprint()
     {
         // Generate project
-        $project = factory(App\Project::class)->create();
+        $project = factory(App\Models\Project::class)->create();
 
         // Login first user
         $user = $this->actingAsUser();

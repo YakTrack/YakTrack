@@ -14,7 +14,7 @@
 use Carbon\Carbon;
 
 // User factory
-$factory->define(App\User::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     return [
         'name'           => $faker->name,
         'email'          => $faker->safeEmail,
@@ -24,7 +24,7 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
 });
 
 // Client factory
-$factory->define(App\Client::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Client::class, function (Faker\Generator $faker) {
     return [
         'name'  => $faker->name,
         'email' => $faker->safeEmail,
@@ -32,7 +32,7 @@ $factory->define(App\Client::class, function (Faker\Generator $faker) {
 });
 
 // Project factory
-$factory->define(App\Project::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Project::class, function (Faker\Generator $faker) {
     return [
         'name'        => $faker->word(),
         'description' => $faker->sentence,
@@ -40,14 +40,14 @@ $factory->define(App\Project::class, function (Faker\Generator $faker) {
 });
 
 // Sprint factory
-$factory->define(App\Sprint::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Sprint::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->word(),
     ];
 });
 
 // Task factory
-$factory->define(App\Task::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Task::class, function (Faker\Generator $faker) {
     return [
         'name'        => $faker->sentence,
         'description' => $faker->sentence,
@@ -56,7 +56,7 @@ $factory->define(App\Task::class, function (Faker\Generator $faker) {
 });
 
 // Session factory
-$factory->define(App\Session::class, function (Faker\Generator $faker) {
+$factory->define(App\Models\Session::class, function (Faker\Generator $faker) {
     return [
         'started_at' => Carbon::now()->format('Y-m-d H:i:s'),
         'ended_at'   => Carbon::now()->format('Y-m-d H:i:s'),

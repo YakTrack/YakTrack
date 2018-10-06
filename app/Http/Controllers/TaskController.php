@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Project;
-use App\Sprint;
-use App\Task;
+use App\Models\Project;
+use App\Models\Sprint;
+use App\Models\Task;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller

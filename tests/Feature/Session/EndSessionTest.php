@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Session;
 
-use App\Session;
+use App\Models\Session;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

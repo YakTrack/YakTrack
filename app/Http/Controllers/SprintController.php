@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Project;
-use App\Sprint;
+use App\Models\Project;
+use App\Models\Sprint;
 use Illuminate\Http\Request;
 
 class SprintController extends Controller
@@ -46,7 +46,7 @@ class SprintController extends Controller
 
         return redirect()
             ->route('sprint.index')
-            ->with(['messages' => ['success' => 'You have added sprint '.$sprint->name.'.']]);
+            ->with(['messages' => ['success' => 'You have added sprint ' . $sprint->name . '.']]);
     }
 
     /**
@@ -87,7 +87,7 @@ class SprintController extends Controller
     public function update(Request $request, Sprint $sprint)
     {
         $this->validate($request, [
-            'name'       => 'required|unique:sprints,name,'.$sprint->id,
+            'name'       => 'required|unique:sprints,name,' . $sprint->id,
             'project_id' => 'exists:projects,id',
         ]);
 
@@ -95,7 +95,7 @@ class SprintController extends Controller
 
         return redirect()
             ->route('sprint.index')
-            ->with(['messages' => ['success' => 'You have updated sprint '.$sprint->name.'.']]);
+            ->with(['messages' => ['success' => 'You have updated sprint ' . $sprint->name . '.']]);
     }
 
     /**
@@ -111,6 +111,6 @@ class SprintController extends Controller
 
         return redirect()
             ->route('sprint.index')
-            ->with(['messages' => ['success' => 'You have deleted sprint '.$sprint->name.'.']]);
+            ->with(['messages' => ['success' => 'You have deleted sprint ' . $sprint->name . '.']]);
     }
 }

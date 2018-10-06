@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Statistics;
 
-use App\Session;
+use App\Models\Session;
 use App\Statistics\Sessions;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;

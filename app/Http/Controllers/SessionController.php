@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\ThirdPartyApplication;
-use App\Session;
+use App\Models\Session;
 use App\Support\DateTimeFormatter;
-use App\Task;
+use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 

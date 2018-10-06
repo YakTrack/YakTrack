@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use App\Models\Concerns\BelongsToProject;
 use Illuminate\Database\Eloquent\Model;
@@ -43,6 +43,6 @@ class Task extends Model
 
     public function getShortNameAttribute()
     {
-        return substr($this->name, 0, $shortNameLength = 50).(strlen($this->name) > $shortNameLength ? '...' : '');
+        return substr($this->name, 0, $shortNameLength = 50) . (strlen($this->name) > $shortNameLength ? '...' : '');
     }
 }

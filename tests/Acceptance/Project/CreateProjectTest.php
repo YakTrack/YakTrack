@@ -10,7 +10,7 @@ class CreateProjectTest extends BrowserKitTestCase
     public function a_logged_in_user_can_create_a_project()
     {
         // Create client
-        $client = factory(App\Client::class)->create();
+        $client = factory(App\Models\Client::class)->create();
 
         // Login first user
         $user = $this->actingAsUser();
