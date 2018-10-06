@@ -17,7 +17,7 @@
 <body class="hold-transition login-page">
 <body>
 
-    @include('partials.messages')
+    @include('layouts.messages')
     @yield('content')
 
     <!-- JavaScripts -->
