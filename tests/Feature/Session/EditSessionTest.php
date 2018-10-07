@@ -24,6 +24,9 @@ class EditSessionTest extends TestCase
         $response = $this->get(route('session.edit', ['session' => $session]));
 
         $response->assertViewIs('session.edit');
+
+        $response->assertSee($session->localStartedAt);
+        $response->assertSee($session->localEndedAt);
     }
 
     /** @test */
