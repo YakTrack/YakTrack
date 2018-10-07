@@ -30,6 +30,24 @@ class EditSessionTest extends TestCase
     }
 
     /** @test */
+    public function a_user_can_load_the_page_to_edit_a_session_in_pogress()
+    {
+        $this->withoutExceptionHandling();
+
+        $session = factory(Session::class)->create([
+            'ended_at' => null
+        ]);
+
+        $this->actingAsUser();
+
+        $response = $this->get(route('session.edit', ['session' => $session]));
+
+        $response->assertViewIs('session.edit');
+
+        $response->assertSee($session->localStartedAt);
+    }
+
+    /** @test */
     public function a_user_can_send_a_patch_request_to_edit_a_session()
     {
         $this->withoutExceptionHandling();
