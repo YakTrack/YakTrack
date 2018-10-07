@@ -3,7 +3,10 @@
     <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
     <ul class="navbar-nav px-3">
         <li class="nav-item text-nowrap">
-            <a class="nav-link" href="#" id="logout-button">Sign out</a>
+            <form action="{{ url('logout') }}" method="post">
+                {{ csrf_field()  }}
+                <button class="btn btn-link nav-link" id="logout-button">Sign out</button>
+            </form>
         </li>
     </ul>
 </nav>
