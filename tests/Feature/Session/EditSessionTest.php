@@ -50,11 +50,15 @@ class EditSessionTest extends TestCase
     /** @test */
     public function a_user_can_send_a_patch_request_to_edit_a_session()
     {
+        // Default test display timezone is Asutralia/Sydney which corresponds to UTC+11 during
+        // daylight savings in January
+        $this->usingTestDisplayTimeZone();
+
         $this->withoutExceptionHandling();
 
         $session = factory(Session::class)->create([
             'started_at' => '2018-01-01 00:00:00',
-            'ended_at'   => null,
+            'ended_at'   => '2018-01-01 01:00:00',
         ]);
 
         $newTask = factory(Task::class)->create();
@@ -63,8 +67,10 @@ class EditSessionTest extends TestCase
 
         $response = $this->patch(route('session.update', ['session' => $session]), [
             'task_id'    => $newTask->id,
-            'started_at' => '2018-01-01 00:00:00',
-            'ended_at'   => '',
+            // Started at and ended at times are submitted in display timezone
+            'started_at' => '2018-01-01 12:00:00',
+            // Started at and ended at times are submitted in display timezone
+            'ended_at' => '2018-01-01 13:00:00',
         ]);
 
         $response->assertRedirect(route('session.index'));
@@ -72,8 +78,12 @@ class EditSessionTest extends TestCase
         $this->assertDatabaseHas('sessions', [
             'id'         => $session->id,
             'task_id'    => $newTask->id,
-            'started_at' => '2018-01-01 00:00:00',
-            'ended_at'   => null,
+            // Australia/Sydney offset is UTC+11 in January, meaning that the corresponding UTC time for 12:00pm in display timezone
+            // will be 1:00am on the same date
+            'started_at' => '2018-01-01 01:00:00',
+            // Australia/Sydney offset is UTC+11 in January, meaning that the corresponding UTC time for 1:00pm in display timezone
+            // will be 2:00am on the same date
+            'ended_at'   => '2018-01-01 02:00:00',
         ]);
     }
 
