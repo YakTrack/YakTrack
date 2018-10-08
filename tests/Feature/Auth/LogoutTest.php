@@ -2,9 +2,7 @@
 
 namespace Tests\Feature\Auth;
 
-use App\Models\User;
 use Auth;
-use Hash;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
