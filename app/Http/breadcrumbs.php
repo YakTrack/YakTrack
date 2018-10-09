@@ -30,7 +30,7 @@ Breadcrumbs::register('client.show', function ($breadcrumbs, $client) {
 // Home > Clients > [Edit]
 Breadcrumbs::register('client.edit', function ($breadcrumbs, $client) {
     $breadcrumbs->parent('client.index');
-    $breadcrumbs->push('Edit '.$client->name, route('client.edit', ['client' => $client]));
+    $breadcrumbs->push('Edit ' . $client->name, route('client.edit', ['client' => $client]));
 });
 
 /*
@@ -58,7 +58,7 @@ Breadcrumbs::register('project.show', function ($breadcrumbs, $project) {
 // Home > Projects > [Edit]
 Breadcrumbs::register('project.edit', function ($breadcrumbs, $project) {
     $breadcrumbs->parent('project.index');
-    $breadcrumbs->push('Edit '.$project->name, route('project.edit', ['project' => $project]));
+    $breadcrumbs->push('Edit ' . $project->name, route('project.edit', ['project' => $project]));
 });
 
 /*
@@ -86,7 +86,7 @@ Breadcrumbs::register('sprint.show', function ($breadcrumbs, $sprint) {
 // Home > Sprints > [Edit]
 Breadcrumbs::register('sprint.edit', function ($breadcrumbs, $sprint) {
     $breadcrumbs->parent('sprint.index');
-    $breadcrumbs->push('Edit '.$sprint->name, route('sprint.edit', ['sprint' => $sprint]));
+    $breadcrumbs->push('Edit ' . $sprint->name, route('sprint.edit', ['sprint' => $sprint]));
 });
 
 /*
@@ -114,7 +114,7 @@ Breadcrumbs::register('task.show', function ($breadcrumbs, $task) {
 // Home > Tasks > Edit Task
 Breadcrumbs::register('task.edit', function ($breadcrumbs, $task) {
     $breadcrumbs->parent('task.index');
-    $breadcrumbs->push('Edit'.$task->name, route('task.edit', ['task' => $task]));
+    $breadcrumbs->push('Edit' . $task->name, route('task.edit', ['task' => $task]));
 });
 
 // Home > Sessions
@@ -126,5 +126,17 @@ Breadcrumbs::register('session.index', function ($breadcrumbs) {
 // Home > Sessions > Edit Session
 Breadcrumbs::register('session.edit', function ($breadcrumbs, $session) {
     $breadcrumbs->parent('session.index');
-    $breadcrumbs->push('Edit'.$session->name, route('session.edit', ['session' => $session]));
+    $breadcrumbs->push('Edit' . $session->name, route('session.edit', ['session' => $session]));
+});
+
+// Home > Invoices
+Breadcrumbs::register('invoice.index', function ($breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Invoices', route('invoice.index'));
+});
+
+// Home > Invoices > Create Invoice
+Breadcrumbs::register('invoice.create', function ($breadcrumbs) {
+    $breadcrumbs->parent('invoice.index');
+    $breadcrumbs->push('Create Invoice', route('invoice.create'));
 });
