@@ -2,9 +2,8 @@
 
 namespace Tests\Feature\Invoice;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class CreateInvoiceTest extends TestCase
 {
