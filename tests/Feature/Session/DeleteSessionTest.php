@@ -3,9 +3,8 @@
 namespace Tests\Feature\Session;
 
 use App\Models\Session;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class DeleteSessionTest extends TestCase
 {
