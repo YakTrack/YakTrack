@@ -45,6 +45,10 @@ class Session extends Model
 
     public function getLocalEndedAtAttribute()
     {
+        if (is_null($this->endedAt)) {
+            return;
+        }
+
         return $this->endedAt->timezone(app(DateTimeFormatter::class)->timezone());
     }
 

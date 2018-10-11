@@ -67,7 +67,7 @@ class EditSessionTest extends TestCase
 
         $response = $this->patch(route('session.update', ['session' => $session]), [
             'task_id'    => $newTask->id,
-            // Started at and ended at times are submitted in display timezone
+            // Started at and ended at times ae submitted in display timezone
             'started_at' => '2018-01-01 12:00:00',
             // Started at and ended at times are submitted in display timezone
             'ended_at' => '2018-01-01 13:00:00',
@@ -90,6 +90,7 @@ class EditSessionTest extends TestCase
     /** @test */
     public function a_user_can_send_a_patch_request_to_edit_a_session_for_a_session_with_no_task()
     {
+        $this->usingTestDisplayTimezone('UTC');
         $this->withoutExceptionHandling();
 
         $session = factory(Session::class)->create([
@@ -120,6 +121,7 @@ class EditSessionTest extends TestCase
     /** @test */
     public function a_user_can_edit_a_session_with_a_json_patch_request()
     {
+        $this->usingTestDisplayTimeZone('UTC');
         $this->withoutExceptionHandling();
 
         $session = factory(Session::class)->create([
@@ -128,8 +130,6 @@ class EditSessionTest extends TestCase
         ]);
 
         $this->actingAsUser();
-
-        Carbon::setTestNow(Carbon::parse('2018-01-01 12:34:56'));
 
         $response = $this->json('patch', route('session.update', ['session' => $session]), [
             'started_at' => '2018-01-01 00:00:00',
