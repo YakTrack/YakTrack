@@ -35,7 +35,7 @@ class EditSessionTest extends TestCase
         $this->withoutExceptionHandling();
 
         $session = factory(Session::class)->create([
-            'ended_at' => null
+            'ended_at' => null,
         ]);
 
         $this->actingAsUser();
