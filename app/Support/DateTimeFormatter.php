@@ -56,6 +56,10 @@ class DateTimeFormatter
 
     public function utcFormat($dateTime, $format = null)
     {
+        if (!$dateTime instanceof Carbon) {
+            $dateTime = new Carbon($dateTime, $this->timezone());
+        }
+
         return $this->format($this->toUTC($dateTime), $format);
     }
 

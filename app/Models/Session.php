@@ -43,6 +43,15 @@ class Session extends Model
         return Carbon::parse($this->attributes['ended_at']);
     }
 
+    public function getLocalEndedAtAttribute()
+    {
+        if (is_null($this->endedAt)) {
+            return;
+        }
+
+        return $this->endedAt->timezone(app(DateTimeFormatter::class)->timezone());
+    }
+
     public function getStartedAtDateAttribute()
     {
         return app(DateTimeFormatter::class)->date($this->startedAt);

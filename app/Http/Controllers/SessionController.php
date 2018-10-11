@@ -52,8 +52,8 @@ class SessionController extends Controller
     public function update(Session $session)
     {
         $session->update([
-            'started_at' => request('started_at') ?: null,
-            'ended_at'   => request('ended_at') ?: null,
+            'started_at' => request('started_at') ? $this->dateTimeFormatter->utcFormat(request('started_at')) : null,
+            'ended_at'   => request('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
             'task_id'    => request('task_id') ?: null,
         ]);
 
