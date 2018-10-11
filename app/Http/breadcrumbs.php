@@ -128,3 +128,15 @@ Breadcrumbs::register('session.edit', function ($breadcrumbs, $session) {
     $breadcrumbs->parent('session.index');
     $breadcrumbs->push('Edit'.$session->name, route('session.edit', ['session' => $session]));
 });
+
+// Home > Invoices
+Breadcrumbs::register('invoice.index', function ($breadcrumbs) {
+    $breadcrumbs->parent('home');
+    $breadcrumbs->push('Invoices', route('invoice.index'));
+});
+
+// Home > Invoices > Create Invoice
+Breadcrumbs::register('invoice.create', function ($breadcrumbs) {
+    $breadcrumbs->parent('invoice.index');
+    $breadcrumbs->push('Create Invoice', route('invoice.create'));
+});

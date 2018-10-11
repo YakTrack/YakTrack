@@ -31,6 +31,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('task', 'TaskController');
     Route::resource('third-party-application', 'ThirdPartyApplicationController');
     Route::resource('third-party-application-session', 'ThirdPartyApplicationSessionController');
+    Route::resource('invoice', 'InvoiceController');
 
     Route::get('session/start', 'SessionController@start')->name('session.start');
     Route::get('session/stop', 'SessionController@stop')->name('session.stop');

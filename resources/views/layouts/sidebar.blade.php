@@ -32,6 +32,12 @@
                 </a>
             </li>
             <li class="nav-item">
+                <a class="nav-link {{ active()->route('invoice.*') }}" href="{{ route('invoice.index') }}">
+                    <i class="fa fa-file-invoice-dollar fa-fw"></i>
+                    <span>Invoices</span>
+                </a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link {{ active()->route('client.*') }}" href="{{ route('client.index') }}">
                     <i class="fa fa-users fa-fw"></i>
                     <span>Clients</span>
