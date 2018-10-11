@@ -68,8 +68,7 @@
                                 {{ $session->durationForHumans }}
                             </td>
                             <td>
-                                <v-select :options="['task', 'asdf']"></v-select>
-                                {{ $session->task ? $session->task->name : '' }}
+                                @include('partials.session.session-task', ['session' => $session])
                             </td>
                             <td>
                                 {{ $session->comment }}
