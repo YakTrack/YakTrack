@@ -14,11 +14,15 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+Vue.component('csrf-input', require('./components/CsrfInput.vue'));
+
+import createTaskForm from './components/CreateTaskForm.vue';
 import taskSelect from './components/TaskSelect.vue';
 
 const app = new Vue({
     el: '#app',
     components: {
         taskSelect: taskSelect,
+        createTaskForm: createTaskForm,
     },
 });
