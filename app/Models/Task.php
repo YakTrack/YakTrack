@@ -16,9 +16,19 @@ class Task extends Model
         return $this->hasMany(Session::class);
     }
 
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function sprint()
+    {
+        return $this->belongsTo(Sprint::class);
+    }
+
     public function getClient()
     {
-        return $this->getRelation(Client::class);
+        return $this->getProject()->getClient();
     }
 
     public function getProject()
@@ -36,13 +46,8 @@ class Task extends Model
         return $this->parent ?? new self();
     }
 
-    public function parent()
-    {
-        return $this->belongsTo(self::class, 'parent_id');
-    }
-
     public function getShortNameAttribute()
     {
-        return substr($this->name, 0, $shortNameLength = 50).(strlen($this->name) > $shortNameLength ? '...' : '');
+        return substr($this->name, 0, $shortNameLength = 50) . (strlen($this->name) > $shortNameLength ? '...' : '');
     }
 }
