@@ -21,7 +21,7 @@ return PhpCsFixer\Config::create()
         ),
         // 'cast_spaces' => true,
         // 'class_definition' => array('singleLine' => true),
-        'concat_space' => array('spacing' => 'one'),
+        'concat_space' => array('spacing' => 'none'),
         'declare_equal_normalize' => true,
         'function_typehint_space' => true,
         'hash_to_slash_comment' => true,
