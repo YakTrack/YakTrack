@@ -42,18 +42,14 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $task = Task::create(array_merge(
-            $request->only([
-                'name',
-                'description',
-                'project_id',
-                'sprint_id',
-                'parent_id',
-            ]),
-            [
-                'status' => 'incomplete',
-            ]
-        ));
+        $task = Task::create([
+            'name'        => request('name'),
+            'description' => request('description'),
+            'project_id'  => request('project_id') ?: null,
+            'sprint_id'   => request('project_id') ?: null,
+            'parent_id'   => request('parent_id') ?: null,
+            'status'      => 'incomplete',
+        ]);
 
         return redirect()->route('task.index');
     }
