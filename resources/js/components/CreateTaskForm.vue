@@ -30,7 +30,7 @@
                 <multi-select :options="selectableParentTasks" label="name" v-model="selectedParentTask"></multi-select>
             </div>
             <csrf-input></csrf-input>
-            <button class="btn btn-default"> Submit </button>
+            <button class="btn btn-primary"> Create </button>
         </form>
 
     </div>

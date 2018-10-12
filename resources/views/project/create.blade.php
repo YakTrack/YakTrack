@@ -13,26 +13,22 @@
 
 @section('content')
 
-<div class="card box-default">
-    <div class="card-body">
-    {!! Form::open(['method' => 'post', 'url' => route('project.store')]) !!}
-        <div class="form-group">
-            {!! Form::label('name', 'Name') !!}
-            {!! Form::text('name', null, ['class' => 'form-control', 'placeholder' => 'Project name']) !!}
-        </div>
-        <div class="form-group">
-            {!! Form::label('description,', 'Description') !!}
-            {!! Form::textarea('description', null, ['class' => 'form-control', 'placeholder' => 'Describe this project']) !!}
-        </div>
-        <div class="form-group">
-            {!! Form::label('client_id', 'Client') !!}
-            {!! Form::select('client_id', $clients->pluck('name', 'id'), null, ['class' => 'form-control']) !!}
-        </div>
-        <div class="form-group">
-            {!! Form::submit('Create', ['class' => 'btn btn-default']) !!}
-        </div>
-    {!! Form::close() !!}
+{!! Form::open(['method' => 'post', 'url' => route('project.store')]) !!}
+    <div class="form-group">
+        {!! Form::label('name', 'Name') !!}
+        {!! Form::text('name', null, ['class' => 'form-control', 'placeholder' => 'Project name']) !!}
     </div>
-</div>
+    <div class="form-group">
+        {!! Form::label('description,', 'Description') !!}
+        {!! Form::textarea('description', null, ['class' => 'form-control', 'placeholder' => 'Describe this project']) !!}
+    </div>
+    <div class="form-group">
+        {!! Form::label('client_id', 'Client') !!}
+        {!! Form::select('client_id', $clients->pluck('name', 'id'), null, ['class' => 'form-control']) !!}
+    </div>
+    <div class="form-group">
+        {!! Form::submit('Create', ['class' => 'btn btn-primary']) !!}
+    </div>
+{!! Form::close() !!}
 
 @endsection
