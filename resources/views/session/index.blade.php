@@ -74,18 +74,9 @@
                                 {{ $session->comment }}
                             </td>
                             @foreach($thirdPartyApplications as $app)
-                                <th>
-                                    @if($session->isLinkedTo($app))
-                                        <i class="fas fa-check text-success"></i>
-                                    @else
-                                        <form action="{{ route('third-party-application-session.store') }}" method="post">
-                                            {{ csrf_field() }}
-                                            <input type="hidden" name="session_id" value="{{ $session->id }}">
-                                            <input type="hidden" name="third_party_application_id" value="{{ $app->id }}">
-                                            <button class="btn btn-default"> Link </button>
-                                        </form>
-                                    @endif
-                                </th>
+                                <td>
+                                    @include('partials.session.third-party-application')
+                                <td>
                             @endforeach
                             <td>
                                 <div class="btn-group pull-right">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\Sprint;
 use App\Models\Task;
+use App\Models\ThirdPartyApplication;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -63,7 +64,10 @@ class TaskController extends Controller
      */
     public function show(Task $task)
     {
-        return view('task.show', ['task' => $task->load('sessions')]);
+        return view('task.show', [
+            'task'                   => $task->load('sessions'),
+            'thirdPartyApplications' => ThirdPartyApplication::all(),
+        ]);
     }
 
     /**
