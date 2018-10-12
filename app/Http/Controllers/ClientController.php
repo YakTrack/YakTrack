@@ -91,7 +91,7 @@ class ClientController extends Controller
             'email' => 'email',
         ]);
 
-        $client->name = $request->name;
+        $client->name  = $request->name;
         $client->email = $request->email;
         $client->save();
 
