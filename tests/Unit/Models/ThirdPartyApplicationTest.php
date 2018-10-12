@@ -3,11 +3,10 @@
 namespace Tests\Unit\Models;
 
 use App\Models\Session;
-use App\Models\ThirdPartyApplication;
 use App\Models\Task;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\ThirdPartyApplication;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class ThirdPartyApplicationTest extends TestCase
 {
