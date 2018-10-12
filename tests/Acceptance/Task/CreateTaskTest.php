@@ -1,11 +1,14 @@
 <?php
 
+namespace Tests\Task;
+
+use Tests\TestCase;
 use App\Models\Project;
 use App\Models\Sprint;
 use App\Models\Task;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class CreateTaskTest extends BrowserKitTestCase
+class CreateTaskTest extends TestCase
 {
     use DatabaseMigrations;
 
@@ -27,10 +30,10 @@ class CreateTaskTest extends BrowserKitTestCase
         ]);
 
         // Visit page
-        $this->visit(route('task.create'));
+        $response = $this->get(route('task.create'));
 
         // Verify correct page loads
-        $this->seePageIs(route('task.create'));
+        $response->assertViewIs('task.create');
 
         // Simulate form submission
         $response = $this->post(route('task.store'), [
@@ -42,15 +45,10 @@ class CreateTaskTest extends BrowserKitTestCase
         ]);
 
         // Verify redirected to correct page
-        $this->followRedirects();
-        $this->seePageIs(route('task.index'));
-
-        // Verify that we see what we expect on the page
-        $this->see('Test Task');
-        $this->see($project->name);
+        $response->assertRedirect(route('task.index'));
 
         // Verify task added to database
-        $this->seeInDatabase('tasks', [
+        $this->assertDatabaseHas('tasks', [
             'name'        => 'Test Task',
             'description' => 'Test task description.',
             'project_id'  => $project->id,
