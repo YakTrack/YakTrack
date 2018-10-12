@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    Add Sprint
+    Create Sprint
 @endsection
 
 @section('subtitle')

@@ -19,7 +19,7 @@
     <div class="card-header with-border">
         <a href="{{ route('client.create') }}" class="btn btn-primary btn-sm pull-right">
             <i class="fa fa-plus"></i>
-            Add Client
+            Create Client
         </a>
     </div>
     @if($clients->count())

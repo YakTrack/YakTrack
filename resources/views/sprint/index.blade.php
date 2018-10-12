@@ -19,7 +19,7 @@
     <div class="card-header with-border">
         <a href="{{ route('sprint.create') }}" class="btn btn-primary btn-sm pull-right">
             <i class="fa fa-plus"></i>
-            Add Sprint
+            Create Sprint
         </a>
     </div>
     @if($sprints->count())

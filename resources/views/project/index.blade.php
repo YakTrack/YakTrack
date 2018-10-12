@@ -19,7 +19,7 @@
     <div class="card-header with-border">
         <a href="{{ route('project.create') }}" class="btn btn-primary btn-sm pull-right">
             <i class="fa fa-plus"></i>
-            Add Project
+            Create Project
         </a>
     </div>
     @if($projects->count())

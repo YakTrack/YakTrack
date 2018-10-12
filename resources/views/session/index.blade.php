@@ -24,7 +24,7 @@
             </a>
             <a href="{{ route('session.create') }}" class="btn btn-primary btn-sm">
                 <i class="fa fa-plus"></i>
-                Add Session
+                Create Session
             </a>
         </div>
     </div>

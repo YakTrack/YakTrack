@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    Add Project
+    Create Project
 @endsection
 
 @section('subtitle')

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    Add Client
+    Create Client
 @endsection
 
 @section('subtitle')
