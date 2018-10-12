@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Session;
+use App\Models\ThirdPartyApplication;
 use App\Models\ThirdPartyApplicationSession;
 use Illuminate\Http\Request;
 

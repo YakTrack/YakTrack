@@ -21,7 +21,7 @@ class CreateClientTest extends BrowserKitTestCase
         // Fill in form an submit
         $this->type('Test Client', 'name')
             ->type('client@domain.com', 'email')
-            ->press('Add');
+            ->press('Create');
 
         // Verify redirected to correct page
         $this->seePageIs(route('client.index'));
