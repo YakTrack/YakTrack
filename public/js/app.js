@@ -47536,7 +47536,7 @@ var render = function() {
         _vm._v(" "),
         _c("csrf-input"),
         _vm._v(" "),
-        _c("button", { staticClass: "btn btn-default" }, [_vm._v(" Submit ")])
+        _c("button", { staticClass: "btn btn-primary" }, [_vm._v(" Create ")])
       ],
       1
     )
