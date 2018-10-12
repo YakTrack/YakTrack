@@ -17,11 +17,13 @@ window.Vue = require('vue');
 Vue.component('csrf-input', require('./components/CsrfInput.vue'));
 
 import createTaskForm from './components/CreateTaskForm.vue';
+import clientSelect from './components/ClientSelect.vue';
 import taskSelect from './components/TaskSelect.vue';
 
 const app = new Vue({
     el: '#app',
     components: {
+        clientSelect: clientSelect,
         taskSelect: taskSelect,
         createTaskForm: createTaskForm,
     },

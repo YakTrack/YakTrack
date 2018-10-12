@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Invoice;
 
+use App\Models\Client;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -26,20 +27,32 @@ class CreateInvoiceTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
+        $client = factory(Client::class)->create();
+
         $this->actingAsUser();
 
         $response = $this->post(route('invoice.store'), [
-            'number'   => 'INV-001',
-            'date'     => '2018-01-01',
-            'amount'   => '123.45',
+            'date'          => '2018-01-01',
+            'due_date'      => '2018-01-08',
+            'number'        => 'INV-001',
+            'amount'        => '123.45',
+            'client_id'     => $client->id,
+            'description'   => 'Test description',
+            'total_hours'   => 10,
         ]);
 
         $response->assertRedirect(route('invoice.index'));
 
         $this->assertDatabaseHas('invoices', [
-            'number'   => 'INV-001',
-            'date'     => '2018-01-01',
-            'amount'   => '12345',
+            'date'          => '2018-01-01',
+            'due_date'      => '2018-01-08',
+            'number'        => 'INV-001',
+            'amount'        => '12345',
+            'client_id'     => $client->id,
+            'description'   => 'Test description',
+            'total_hours'   => 10,
+            'is_sent'       => false,
+            'is_paid'       => false,
         ]);
     }
 }
