@@ -24,7 +24,7 @@ class CreateSprintTest extends BrowserKitTestCase
         // Fill in form an submit
         $this->type('Test sprint', 'name')
             ->select($project->id, 'project_id')
-            ->press('Add');
+            ->press('Create');
 
         // Verify success alert shown
         $this->see('alert-success');

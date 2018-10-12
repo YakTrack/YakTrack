@@ -190,6 +190,13 @@ class Session extends Model
         ]);
     }
 
+    public function scopeLinkedTo($sessions, ThirdPartyApplication $app)
+    {
+        return $sessions->whereHas('thirdPartyApplicationSessions', function ($thirdPartyApplicationSession) use ($app) {
+            return $thirdPartyApplicationSession->whereThirdPartyApplicationId($app->id);
+        });
+    }
+
     public function isLinkedTo(ThirdPartyApplication $app)
     {
         return $this->thirdPartyApplicationSessions()
@@ -197,5 +204,13 @@ class Session extends Model
             ->filter(function ($thirdPartyApplicationSession) use ($app) {
                 return $thirdPartyApplicationSession->isForThirdPartyApplication($app);
             })->count() > 0;
+    }
+
+    public function linkTo(ThirdPartyApplication $app)
+    {
+        return ThirdPartyApplicationSession::create([
+            'session_id'                 => $this->id,
+            'third_party_application_id' => $app->id,
+        ]);
     }
 }
