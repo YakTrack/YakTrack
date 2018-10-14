@@ -38,4 +38,9 @@ class InvoiceController extends Controller
 
         return redirect(route('invoice.index'));
     }
+
+    public function show(Invoice $invoice)
+    {
+        return view('invoice.show', ['invoice' => $invoice]);
+    }
 }
