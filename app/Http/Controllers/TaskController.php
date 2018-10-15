@@ -47,7 +47,7 @@ class TaskController extends Controller
             'name'        => request('name'),
             'description' => request('description'),
             'project_id'  => request('project_id') ?: null,
-            'sprint_id'   => request('project_id') ?: null,
+            'sprint_id'   => request('sprint_id') ?: null,
             'parent_id'   => request('parent_id') ?: null,
             'status'      => 'incomplete',
         ]);
