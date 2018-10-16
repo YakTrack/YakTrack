@@ -18,7 +18,7 @@
                 @foreach($thisWeeksWorkSessions as $dayOfWeek)
                     <tr class="@if($dayOfWeek['date']->isToday()) table-primary @endif">
                         <td colspan="{{ $totalColumns - 1 }}"> {{ $dayOfWeek['dateForHumans'] }} </td>
-                        <td> {{ $dayOfWeek['totalTimeWorked'] }} </td>
+                        <td> {{ $dayOfWeek['totalTimeWorked'] != '0:00:00' ? $dayOfWeek['totalTimeWorked']: '-' }} </td>
                     </tr>
                 @endforeach
                 <tr class="active">
