@@ -2,7 +2,6 @@
 
 namespace App\Models\Collections;
 
-use App\Support\DateIntervalFormatter;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class ProjectCollection extends EloquentCollection
