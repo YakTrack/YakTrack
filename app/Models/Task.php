@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Collections\TaskCollection;
 use App\Models\Concerns\BelongsToProject;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +11,18 @@ class Task extends Model
     use BelongsToProject;
 
     protected $guarded = [];
+
+    /**
+     * Create a new Eloquent Collection instance.
+     *
+     * @param array $models
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function newCollection(array $models = [])
+    {
+        return new TaskCollection($models);
+    }
 
     public function sessions()
     {

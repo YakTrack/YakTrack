@@ -24,4 +24,11 @@ class SessionCollection extends EloquentCollection
             )
         );
     }
+
+    public function thisWeek()
+    {
+        return $this->filter(function ($session) {
+            return $session->isThisWeek();
+        });
+    }
 }

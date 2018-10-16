@@ -4,44 +4,50 @@
 
 @section('content')
 
-<h5> Time Tracking Summary </h5>
-<table class="table table-hover table-borderless">
-    <thead>
-        <tr>
-            <th colspan={{ $totalColumns = 3 }}> TODAY </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($todaysWorkSessions as $workSession)
-            <tr>
-                <td> {{ $workSession->localStartedAtTimeForHumans }} </td>
-                <td> {{ $workSession->localEndedAtTimeForHumans }} </td>
-                <td> {{ $workSession->durationForHumans }} </td>
-            </tr>
-        @endforeach
-        <tr class="active">
-            <th colspan="{{ $totalColumns - 1}}"> TOTAL </th>
-            <th> {{ $todaysTotal }} </th>
-        </tr>
-        <tr><td colspan="{{ $totalColumns }}"></td></tr>
-    </tbody>
-    <thead>
-        <tr>
-            <th colspan="{{ $totalColumns - 1 }}"> THIS WEEK </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($thisWeeksWorkSessions as $dayOfWeek)
-            <tr>
-                <td colspan="{{ $totalColumns - 1 }}"> {{ $dayOfWeek['dateForHumans'] }} </td>
-                <td> {{ $dayOfWeek['totalTimeWorked'] }} </td>
-            </tr>
-        @endforeach
-        <tr class="active">
-            <th colspan="{{ $totalColumns - 1}}"> TOTAL </th>
-            <th> {{ $thisWeeksTotal }} </th>
-        </tr>
-    </tbody>
-</table>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title"> Time Tracking Summary </h5>
+        <table class="table table-hover table-borderless">
+            <thead>
+                <tr>
+                    <th colspan="{{ $totalColumns = 2 - 1 }}"> THIS WEEK </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($thisWeeksWorkSessions as $dayOfWeek)
+                    <tr class="@if($dayOfWeek['date']->isToday()) table-primary @endif">
+                        <td colspan="{{ $totalColumns - 1 }}"> {{ $dayOfWeek['dateForHumans'] }} </td>
+                        <td> {{ $dayOfWeek['totalTimeWorked'] }} </td>
+                    </tr>
+                @endforeach
+                <tr class="active">
+                    <th colspan="{{ $totalColumns - 1}}"> TOTAL </th>
+                    <th> {{ $thisWeeksTotal }} </th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<br>
+
+<div class="row">
+    @foreach($clients as $client)
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ $client->name }}
+                    </h5>
+                    <div class="row">
+                        <div class="col"> Total Time This Week </div>
+                        <div class="col"> {{ $client->sessionsThisWeek->totalDurationForHumans() }} </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+</div>
+
 @endsection
