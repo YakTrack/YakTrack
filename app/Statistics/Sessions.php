@@ -14,7 +14,7 @@ class Sessions
     public function __construct(DateTimeFormatter $dateTimeFormatter, DateIntervalFormatter $dateIntervalFormatter)
     {
         $this->dateIntervalFormatter = $dateIntervalFormatter;
-        $this->dateTimeFormatter = $dateTimeFormatter;
+        $this->dateTimeFormatter     = $dateTimeFormatter;
     }
 
     public function totalTimeOnDate($date)

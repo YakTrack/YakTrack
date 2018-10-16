@@ -6,13 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Client extends Model
 {
-    /**
-     * The fields that may be mass assigned.
-     *
-     * @var array
-     **/
-    protected $fillable = [
-        'name',
-        'email',
-    ];
+    protected $guarded = [];
+
+    public function getSessionsThisWeekAttribute()
+    {
+        return $this->projects->sessionsThisWeek();
+    }
+
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
 }

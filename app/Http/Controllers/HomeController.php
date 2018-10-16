@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Client;
 use App\Models\Session;
 use App\Statistics\Sessions;
 use App\Support\DateIntervalFormatter;
@@ -16,9 +17,9 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
 
-        $this->dateTimeFormatter = $dateTimeFormatter;
+        $this->dateTimeFormatter     = $dateTimeFormatter;
         $this->dateIntervalFormatter = $dateIntervalFormatter;
-        $this->sessions = $sessions;
+        $this->sessions              = $sessions;
     }
 
     /**
@@ -28,11 +29,16 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $clients = Client::with('projects.tasks.sessions')
+            ->get()
+            ->filter(function ($client) {
+                return $client->sessionsThisWeek->count() > 0;
+            });
+
         return view('home', [
-            'todaysWorkSessions'    => $todaysWorkSessions = Session::today()->get(),
-            'todaysTotal'           => $todaysWorkSessions->totalDurationForHumans(),
             'thisWeeksWorkSessions' => $this->sessions->thisWeeksWorkSessions(),
             'thisWeeksTotal'        => Session::thisWeek()->get()->totalDurationForHumans(),
+            'clients'               => $clients,
         ]);
     }
 }

@@ -150,7 +150,7 @@ class Session extends Model
     public function scopeOnDate($query, $date)
     {
         return $query->where('started_at', '>=', (new DateTimeFormatter())->utcFormat($date))
-            ->where('started_at', '<', (new DateTimeFormatter())->utcFormat($date->addDays(1)));
+            ->where('started_at', '<', (new DateTimeFormatter())->utcFormat((clone $date)->addDays(1)));
     }
 
     public function scopeThisWeek($query)
@@ -212,5 +212,11 @@ class Session extends Model
             'session_id'                 => $this->id,
             'third_party_application_id' => $app->id,
         ]);
+    }
+
+    public function isThisWeek()
+    {
+        return $this->startedAt >= (new DateTimeFormatter())->startOfWeek()
+            && $this->startedAt < (new DateTimeFormatter())->endOfWeek();
     }
 }

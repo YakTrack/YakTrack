@@ -32,39 +32,6 @@ class DateTimeFormatterTest extends TestCase
     }
 
     /** @test */
-    public function the_days_this_week_method_returns_the_expected_results()
-    {
-        $this->usingTestDisplayTimezone();
-
-        foreach ([
-            '2018-01-01 00:00:00 GMT+11',
-            '2018-01-04 12:32:00 GMT+11',
-            '2018-01-07 00:00:00 GMT+11',
-        ] as $testNow) {
-            Carbon::setTestNow($testNow);
-
-            $daysThisWeek = (new DateTimeFormatter())->daysThisWeek();
-            foreach ([
-                '2017-12-31 13:00:00',
-                '2018-01-01 13:00:00',
-                '2018-01-02 13:00:00',
-                '2018-01-03 13:00:00',
-                '2018-01-04 13:00:00',
-                '2018-01-05 13:00:00',
-                '2018-01-06 13:00:00',
-            ] as $expectedDate) {
-                $this->assertTrue($daysThisWeek->contains(function ($day) use ($expectedDate) {
-                    return $day->timezone('UTC')->format('Y-m-d H:i:s') === $expectedDate;
-                }), $expectedDate.' not found in days this week for '.$testNow.'. Dates found were: '.$daysThisWeek->map(function ($day) {
-                    return $day->format('Y-m-d H:i:s');
-                })->implode(', '));
-            }
-        }
-
-        Carbon::setTestNow();
-    }
-
-    /** @test */
     public function to_utc_method_returns_expected_value()
     {
         $this->usingTestDisplayTimezone();
@@ -84,5 +51,57 @@ class DateTimeFormatterTest extends TestCase
 
         $this->assertEquals('2017-12-31 23:00:00', $formatter->utcFormat(Carbon::parse('2018-01-01T09:00:00+10:00')));
         $this->assertEquals('2018-01-01 00:00:00', $formatter->utcFormat(Carbon::parse('2018-01-01 00:00:00')->timezone('Australia/Sydney')));
+    }
+
+    /** @test */
+    public function the_days_this_week_method_returns_the_expected_results()
+    {
+        $this->usingTestDisplayTimezone();
+
+        Carbon::setTestNow(Carbon::parse('2018-10-16 21:12:14.757632 UTC'));
+
+        $daysThisWeek = (new DateTimeFormatter())->daysThisWeek();
+
+        $this->assertEquals(collect([
+            0 => Carbon::__set_state([
+                'date'          => '2018-10-15 00:00:00.000000',
+                'timezone_type' => 3,
+                'timezone'      => 'Australia/Sydney',
+            ]),
+            1 => Carbon::__set_state([
+                'date'          => '2018-10-16 00:00:00.000000',
+                'timezone_type' => 3,
+                'timezone'      => 'Australia/Sydney',
+            ]),
+            2 => Carbon::__set_state([
+                'date'          => '2018-10-17 00:00:00.000000',
+                'timezone_type' => 3,
+                'timezone'      => 'Australia/Sydney',
+            ]),
+            3 => Carbon::__set_state([
+                'date'          => '2018-10-18 00:00:00.000000',
+                'timezone_type' => 3,
+                'timezone'      => 'Australia/Sydney',
+            ]),
+            4 => Carbon::__set_state([
+                'date'          => '2018-10-19 00:00:00.000000',
+                'timezone_type' => 3,
+                'timezone'      => 'Australia/Sydney',
+            ]),
+            5 => Carbon::__set_state([
+                'date'          => '2018-10-20 00:00:00.000000',
+                'timezone_type' => 3,
+                'timezone'      => 'Australia/Sydney',
+            ]),
+            6 => Carbon::__set_state([
+                'date'          => '2018-10-21 00:00:00.000000',
+                'timezone_type' => 3,
+                'timezone'      => 'Australia/Sydney',
+            ]),
+        ]), $daysThisWeek);
+
+        $this->assertTrue($daysThisWeek[2]->isToday());
+
+        Carbon::setTestNow();
     }
 }
