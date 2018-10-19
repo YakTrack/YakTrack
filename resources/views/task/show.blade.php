@@ -17,7 +17,7 @@
 @include('layouts.show-resource-table', [
         'resource' => [
             'Name' => $task->name,
-            'Description' => $task->description
+            'Description' => $task->description,
             'Total Time Spent' => $task->sessions->totalDurationForHumans()
         ]])
 
