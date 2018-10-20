@@ -13,25 +13,13 @@
 
 @section('content')
 
-<div class="row">
-    <div class="col">
-        <h4> Name: </h4>
-    </div>
-    <div class="col">
-        <h4> {{ $task->name }} </h4>
-    </div>
-</div>
-<div class="row">
-    <div class="col">
-        <h4> Description: </h4>
-    </div>
-    <div class="col">
-        <h4> {{ $task->description }} </h4>
-    </div>
-</div>
-<br>
-<h4> Task Sessions </h4>
-Total Time Spent: {{ ($task->sessions->totalDurationForHumans()) }}
+
+@include('layouts.show-resource-table', [
+        'resource' => [
+            'Name' => $task->name,
+            'Description' => $task->description,
+            'Total Time Spent' => $task->sessions->totalDurationForHumans()
+        ]])
 
 <table class="table table-hover">
     <tbody>
