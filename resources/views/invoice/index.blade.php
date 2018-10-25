@@ -61,9 +61,13 @@
                                 >
                                     <i class="fa fa-edit"></i>
                                 </a>
-                                <button class="btn btn-default delete-item-button">
-                                    <i class="fa fa-trash"></i>
-                                </button>
+                                <form action="{{ route('invoice.destroy', $invoice->id) }}" method="post">
+                                    {{ csrf_field() }}
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button class="btn btn-default delete-item-button">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>
