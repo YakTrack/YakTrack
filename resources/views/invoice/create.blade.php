@@ -36,11 +36,11 @@
         {!! Form::text('amount', null, ['class' => 'form-control', 'placeholder' => '123.45']) !!}
     </div>
     <div class="form-group">
-        {!! Form::submit('Create', ['class' => 'btn btn-primary']) !!}
-    </div>
-    <div class="form-group">
         {!! Form::label('description', 'Description') !!}
         {!! Form::textarea('description', null, ['class' => 'form-control', 'placeholder' => 'Enter a description for this invoice (optional)']) !!}
+    </div>
+    <div class="form-group float-right">
+        {!! Form::submit('Create', ['class' => 'btn btn-blue']) !!}
     </div>
 {!! Form::close() !!}
 

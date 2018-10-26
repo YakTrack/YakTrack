@@ -17943,8 +17943,7 @@ module.exports = Cancel;
 /* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(15);
-module.exports = __webpack_require__(53);
+module.exports = __webpack_require__(15);
 
 
 /***/ }),
@@ -47493,6 +47492,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 
@@ -47635,7 +47636,7 @@ var render = function() {
         _vm._v(" "),
         _c("csrf-input"),
         _vm._v(" "),
-        _c("button", { staticClass: "btn btn-primary" }, [_vm._v(" Create ")])
+        _vm._m(2)
       ],
       1
     )
@@ -47666,6 +47667,14 @@ var staticRenderFns = [
         staticClass: "form-control",
         attrs: { name: "description", placeholder: "Describe this task" }
       })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "form-group float-right" }, [
+      _c("button", { staticClass: "btn btn-blue" }, [_vm._v(" Create ")])
     ])
   }
 ]
@@ -47941,12 +47950,6 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-0848b30c", module.exports)
   }
 }
-
-/***/ }),
-/* 53 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);
