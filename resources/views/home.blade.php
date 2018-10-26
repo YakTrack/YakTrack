@@ -1,42 +1,33 @@
 @extends('layouts.app')
 
-@section('title') Home @endsection
+@section('breadcrumbs')
+    {!! Breadcrumbs::render('project.index') !!}
+@endsection
+@section('title')
+    Home
+@endsection
 
 @section('content')
 
-<div class="card">
-    <div class="card-body">
-        <h5 class="card-title"> Time Tracking Summary </h5>
-        <table class="table table-hover table-borderless">
-            <thead>
-                <tr>
-                    <th colspan="{{ $totalColumns = 2 - 1 }}"> THIS WEEK </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($thisWeeksWorkSessions as $dayOfWeek)
-                    <tr class="@if($dayOfWeek['date']->isToday()) table-primary @endif">
-                        <td colspan="{{ $totalColumns - 1 }}"> {{ $dayOfWeek['dateForHumans'] }} </td>
-                        <td> {{ $dayOfWeek['totalTimeWorked'] != '0:00:00' ? $dayOfWeek['totalTimeWorked']: '-' }} </td>
-                    </tr>
-                @endforeach
-                <tr class="active">
-                    <th colspan="{{ $totalColumns - 1}}"> TOTAL </th>
-                    <th> {{ $thisWeeksTotal }} </th>
-                </tr>
-            </tbody>
-        </table>
+    <div class="bg-white rounded shadow p-4">
+        <h2 class="pb-4"> Time Tracking Summary </h2>
+        <h5 class="pt-4 pb-2 text-grey-darker"> THIS WEEK </h5>
+        @foreach($thisWeeksWorkSessions as $dayOfWeek)
+            <div class="flex pt-2 pb-2 @if($dayOfWeek['date']->isToday()) -ml-4 pl-4 -mr-4 pr-4 bg-blue-lightest @endif">
+                <div class="flex-1 text-grey-dark"> {{ $dayOfWeek['dateForHumans'] }} </div>
+                <div class="flex-1 {{ $dayOfWeek['totalTimeWorked'] != '0:00:00' ? 'text-grey-dark' : '' }}"> {{ $dayOfWeek['totalTimeWorked'] != '0:00:00' ? $dayOfWeek['totalTimeWorked']: '-' }} </div>
+            </div>
+        @endforeach
+        <div class="active">
+            <div colspan="" class=""> TOTAL </div>
+            <div class=""> {{ $thisWeeksTotal }} </div>
+        </div>
     </div>
-</div>
 
-<br>
-
-<div class="row">
-    @foreach($clients as $client)
-        <div class="col">
-            <div class="card">
-                <div class="card-body">
+    <div class="pt-6 -ml-2 -mr-2 flex">
+        @foreach($clients as $client)
+            <div class="rounded shadow ml-2 mr-2 flex-1 bg-white">
+                <div class="p-4">
                     <h5 class="card-title">
                         {{ $client->name }}
                     </h5>
@@ -46,8 +37,7 @@
                     </div>
                 </div>
             </div>
-        </div>
-    @endforeach
-</div>
+        @endforeach
+    </div>
 
 @endsection

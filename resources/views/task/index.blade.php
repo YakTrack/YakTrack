@@ -11,17 +11,16 @@
     {!! Breadcrumbs::render('task.index') !!}
 @endsection
 
+@section('top-right-toolbar')
+    <a href="{{ route('task.create') }}" class="btn btn-blue">
+        <i class="fa fa-plus"></i>
+        Create Task
+    </a>
+@endsection
+
 @section('content')
 
-@include('partials.modals.delete_item_modal')
-
-<div class="card item-type-container" data-item-type="task">
-    <div class="card-header with-border">
-        <a href="{{ route('task.create') }}" class="btn btn-primary btn-sm pull-right">
-            <i class="fa fa-plus"></i>
-            Create Task
-        </a>
-    </div>
+<div class="card">
     @if($tasks->count())
         <table class="table card-body">
             <tr>

@@ -22,8 +22,8 @@
         {!! Form::label('email,', 'Email') !!}
         {!! Form::text('email', null, ['class' => 'form-control', 'placeholder' => 'email']) !!}
     </div>
-    <div class="form-group">
-        {!! Form::submit('Create', ['class' => 'btn btn-primary']) !!}
+    <div class="form-group float-right">
+        {!! Form::submit('Create', ['class' => 'btn btn-blue']) !!}
     </div>
 {!! Form::close() !!}
 
