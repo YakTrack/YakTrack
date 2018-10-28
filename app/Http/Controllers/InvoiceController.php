@@ -44,6 +44,13 @@ class InvoiceController extends Controller
         return view('invoice.show', ['invoice' => $invoice]);
     }
 
+    public function destroy(Invoice $invoice)
+    {
+        $invoice->delete();
+
+        return redirect(route('invoice.index'));
+    }
+
     public function edit(Invoice $invoice)
     {
         return view('invoice.edit', [
