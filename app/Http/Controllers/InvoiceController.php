@@ -48,7 +48,7 @@ class InvoiceController extends Controller
     {
         return view('invoice.edit', [
             'invoices' => $invoice,
-            'clients' => Client::all(),
+            'clients'  => Client::all(),
         ]);
     }
 
@@ -56,7 +56,7 @@ class InvoiceController extends Controller
     {
         $this->validate($request, [
             'number'      => 'required',
-            'client_id' => 'exists:clients,id',
+            'client_id'   => 'exists:clients,id',
         ]);
 
         $invoice->update($request->all());
