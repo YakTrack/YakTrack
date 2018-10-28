@@ -1,48 +1,44 @@
-@extends('layouts.blank')
+@extends('layouts.blank') 
+@section('page')
+    <div class="w-full max-w-md mt-10 mx-auto px-6">
+        <div class="max-w-xl">
+            <div class="text-center">
+                <a href="{{ URL::route('home') }}" class="text-4xl no-underline text-grey-darkest">
+                    <b>Y</b>ak<b>T</b>rack
+                </a>
+            </div>
+            <div class="text-center mt-4 text-grey-darker">Sign in to start your session</div>
+            <div class="card mt-8 bg-grey-lightest">
+                <div class="card-body">
 
-@section('content')
-<div class="login-box">
-    <div class="login-logo">
-        <a href="{{ URL::route('home') }}">
-            <b>Y</b>ak<b>T</b>rack
-        </a>
-    </div>
-    <!-- /.login-logo -->
-    <div class="login-card-body">
-        <p class="login-box-msg">Sign in to start your session</p>
-
-            <form role="form" method="POST" action="{{ url('/login') }}">
-                {{ csrf_field() }}
-                <div class="form-group has-feedback">
-                    <input type="email" class="form-control" placeholder="Email" name="email">
-                    <span class="fa fa-envelope form-control-feedback"></span>
-                </div>
-                <div class="form-group has-feedback">
-                    <input type="password" class="form-control" placeholder="Password" name="password">
-                    <span class="fa fa-lock form-control-feedback"></span>
-                </div>
-                <div class="row">
-                    <div class="col-xs-8">
-                        <div class="checkbox icheck">
-                            <label>
-                                <div class="checkbox">
-                                    <label>
-                                        <input type="checkbox" name="remember"> Remember Me
-                                    </label>
-                                </div>
+                    <form role="form" method="POST" action="{{ url('/login') }}">
+                        {{ csrf_field() }}
+                        <div class="form-group">
+                            <label for="email"> Email </label> 
+                            <input type="email" class="form-control" placeholder="Email" name="email">
+                        </div>
+                        <div class="form-group">
+                            <label for="password"> Password </label>
+                            <input type="password" class="form-control" placeholder="Password" name="password">
+                        </div>
+                        <div class="form-group">
+                            <label class="">
+                                <input type="checkbox" name="remember"> Remember Me
                             </label>
                         </div>
-                    </div>
-                    <!-- /.col -->
-                    <div class="col-xs-4">
-                        <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
-                    </div>
-                    <!-- /.col -->
+                        <div class="flex">
+                            <div class="flex-1 pt-3">
+                                <a class="text-grey-light" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
+                            </div>
+                            <div class="flex-1 text-right">
+                                <button type="submit" class="btn btn-primary flex-1">Sign In</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-            </form>
-        <a class="" href="{{ url('/password/reset') }}">Forgot Your Password?</a><br>
+            </div>
+            <!-- /.login-card-body -->
+        </div>
+        <!-- /.login-box -->
     </div>
-    <!-- /.login-card-body -->
-</div>
-<!-- /.login-box -->
 @endsection
