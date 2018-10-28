@@ -26,8 +26,8 @@
         {!! Form::label('client_id', 'Client') !!}
         {!! Form::select('client_id', $clients->pluck('name', 'id'), null, ['class' => 'form-control']) !!}
     </div>
-    <div class="form-group">
-        {!! Form::submit('Create', ['class' => 'btn btn-primary']) !!}
+    <div class="form-group float-right">
+        {!! Form::submit('Create', ['class' => 'btn btn-blue']) !!}
     </div>
 {!! Form::close() !!}
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Collections\ProjectCollection;
 use Illuminate\Database\Eloquent\Model;
 
 class Project extends Model
@@ -11,6 +12,18 @@ class Project extends Model
         'description',
         'client_id',
     ];
+
+    /**
+     * Create a new Eloquent Collection instance.
+     *
+     * @param array $models
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function newCollection(array $models = [])
+    {
+        return new ProjectCollection($models);
+    }
 
     /**
      * The client that the project belongs to.
@@ -48,6 +61,6 @@ class Project extends Model
      **/
     public function tasks()
     {
-        return $this->hasMany('App\Models\Task');
+        return $this->hasMany(Task::class);
     }
 }

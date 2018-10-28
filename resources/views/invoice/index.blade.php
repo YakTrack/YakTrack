@@ -11,18 +11,18 @@
     {!! Breadcrumbs::render('invoice.index') !!}
 @endsection
 
+@section('top-right-toolbar')
+    <a href="{{ route('invoice.create') }}" class="btn btn-blue">
+        <i class="fa fa-plus"></i>
+        Create Invoice
+    </a>
+@endsection
+
 @section('content')
 
-    <div>
-        <a href="{{ route('invoice.create') }}" class="btn btn-primary btn-sm pull-right">
-            <i class="fa fa-plus"></i>
-            Create Invoice
-        </a>
-    </div>
-    <br>
-
+<div class="card">
     @if($invoices->count())
-        <table class="table table-hover">
+        <table class="table card-body table-hover">
             <thead>
                 <tr>
                     <th> Number </th>
@@ -79,5 +79,5 @@
             You have not created any invoices yet.
         </div>
     @endif
-
+</div>
 @endsection

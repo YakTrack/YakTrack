@@ -11,17 +11,16 @@
     {!! Breadcrumbs::render('client.index') !!}
 @endsection
 
+@section('top-right-toolbar')
+    <a href="{{ route('client.create') }}" class="btn btn-blue">
+        <i class="fa fa-plus"></i>
+        Create Client
+    </a>
+@endsection
+
 @section('content')
 
-@include('partials.modals.delete_item_modal')
-
-<div class="card item-type-container" data-item-type="client">
-    <div class="card-header with-border">
-        <a href="{{ route('client.create') }}" class="btn btn-primary btn-sm pull-right">
-            <i class="fa fa-plus"></i>
-            Create Client
-        </a>
-    </div>
+<div class="card">
     @if($clients->count())
         <table class="table card-body">
             <tr>

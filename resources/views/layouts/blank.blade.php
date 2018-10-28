@@ -4,25 +4,25 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>YakTrack</title>
 
     <!-- Fonts -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="/css/fontawesome.css">
     <!-- Styles -->
-    <link href="/css/all.css" rel="stylesheet">
+    <link href="/css/app.css" rel="stylesheet">
 </head>
 
-<body class="hold-transition login-page">
-<body>
-
-    @include('layouts.messages')
-    @yield('content')
+<body class="font-source-sans font-normal leading-normal bg-grey-lighter text-grey-darkest">
+    <div class="wrapper" id="app">
+        @yield('page')
+    </div>
 
     <!-- JavaScripts -->
-    <script   src="https://code.jquery.com/jquery-2.2.4.js"   integrity="sha256-iT6Q9iMJYuQiMWNd9lDyBUStIq/8PuOW33aOqmvFpqI="   crossorigin="anonymous"></script>
-    <script src="/js/all.js"></script>
+    <script src="/js/app.js" async></script>
 </body>
 
 </html>

@@ -56,9 +56,7 @@ class DateTimeFormatter
 
     public function utcFormat($dateTime, $format = null)
     {
-        if (!$dateTime instanceof Carbon) {
-            $dateTime = new Carbon($dateTime, $this->timezone());
-        }
+        $dateTime = $dateTime instanceof Carbon ? clone $dateTime : new Carbon($dateTime, $this->timezone());
 
         return $this->format($this->toUTC($dateTime), $format);
     }
@@ -80,9 +78,7 @@ class DateTimeFormatter
 
     public function localFormat($dateTime, $format = null)
     {
-        if (is_null($dateTime)) {
-            $dateTime = Carbon::now();
-        }
+        $dateTime = is_null($dateTime) ? Carbon::now() : $dateTime->copy();
 
         return $this->format($dateTime->timezone($this->timezone()), $format);
     }
@@ -99,7 +95,7 @@ class DateTimeFormatter
 
     public function toUTC(Carbon $date)
     {
-        return $date->timezone('UTC');
+        return (clone $date)->timezone('UTC');
     }
 
     public function startOfWeek($format = null)
@@ -127,11 +123,13 @@ class DateTimeFormatter
         return $this->daysOfWeek()->map(function ($dayOfWeek) {
             $day = Carbon::parse($dayOfWeek)->timezone($this->timezone())->hour(0);
 
-            if ($day->lt(Carbon::parse('last monday')->timezone($this->timezone()))) {
+            if ($day->lt(
+                $lastMonday = Carbon::parse('last monday')->timezone($this->timezone())->hour(0)->minute(0)->second(0)
+            )) {
                 return $day->addWeek();
             }
 
-            if ($day->gte(Carbon::parse('next monday')->timezone($this->timezone()))) {
+            if ($day->gte($lastMonday->addWeek())) {
                 return $day->subWeek();
             }
 
