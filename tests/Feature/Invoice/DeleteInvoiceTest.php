@@ -3,9 +3,8 @@
 namespace Tests\Feature\Invoice;
 
 use App\Models\Invoice;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class DeleteInvoiceTest extends TestCase
 {
