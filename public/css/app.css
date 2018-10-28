@@ -6405,7 +6405,13 @@ select.form-control,
 .card .card-body {
   width: 100%;
   padding: 1rem;
+}
+
+.card .card-body:not(table) {
   display: block;
+}
+
+.card table.card-body.table {
 }
 
 .card table.card-body,

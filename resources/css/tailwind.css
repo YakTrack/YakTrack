@@ -142,7 +142,14 @@ input.form-control, textarea.form-control, select.form-control, .form-group text
 }
 
 .card .card-body {
-    @apply w-full p-4 block
+    @apply w-full p-4
+}
+.card .card-body:not(table) {
+    @apply block
+}
+
+.card table.card-body.table {
+    
 }
 
 .card table.card-body, .card table.card-body tbody, .card table.card-body tr, .card table.card-body thead {
