@@ -43,4 +43,26 @@ class InvoiceController extends Controller
     {
         return view('invoice.show', ['invoice' => $invoice]);
     }
+
+    public function edit(Invoice $invoice)
+    {
+        return view('invoice.edit', [
+            'invoices' => $invoice,
+            'clients' => Client::all(),
+        ]);
+    }
+
+    public function update(Request $request, Invoice $invoice)
+    {
+        $this->validate($request, [
+            'number'      => 'required',
+            'client_id' => 'exists:clients,id',
+        ]);
+
+        $invoice->update($request->all());
+
+        return redirect()
+            ->route('invoice.index')
+            ->with(['messages' => ['success' => 'Invoice '.$invoice->number.' updated.']]);
+    }
 }

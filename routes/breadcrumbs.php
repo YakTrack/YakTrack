@@ -146,3 +146,9 @@ Breadcrumbs::for('invoice.show', function ($breadcrumbs, $invoice) {
     $breadcrumbs->parent('invoice.index');
     $breadcrumbs->push('#'.$invoice->id, route('invoice.show', ['invoice' => $invoice]));
 });
+
+// Home > Invoices > Edit Invoice
+Breadcrumbs::for('invoice.edit', function ($breadcrumbs, $invoice) {
+    $breadcrumbs->parent('invoice.index');
+    $breadcrumbs->push('Edit '.$invoice->number, route('invoice.edit', ['invoice' => $invoice]));
+});
