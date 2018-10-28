@@ -43,17 +43,17 @@ class InvoiceController extends Controller
     {
         return view('invoice.show', ['invoice' => $invoice]);
     }
+
     public function edit(Invoice $invoice)
     {
-        //dd($invoice);
         return view('invoice.edit', [
             'invoices' => $invoice,
             'clients' => Client::all(),
         ]);
     }
+
     public function update(Request $request, Invoice $invoice)
     {
-       // dd($request);
         $this->validate($request, [
             'number'      => 'required',
             'client_id' => 'exists:clients,id',
