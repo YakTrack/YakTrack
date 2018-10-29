@@ -4,9 +4,8 @@ namespace Tests\Feature\Invoice\Session;
 
 use App\Models\Invoice;
 use App\Models\Session;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AttachSessionToInvoiceTest extends TestCase
 {
