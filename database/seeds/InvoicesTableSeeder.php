@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\Models\Invoice;
+use Illuminate\Database\Seeder;
 
 class InvoicesTableSeeder extends Seeder
 {

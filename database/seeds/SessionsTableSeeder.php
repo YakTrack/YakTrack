@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\Models\Session;
+use Illuminate\Database\Seeder;
 
 class SessionsTableSeeder extends Seeder
 {
