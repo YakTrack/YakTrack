@@ -19,13 +19,13 @@ class ClientTest extends TestCase
     {
         Carbon::setTestNow('2018-01-02 12:00:00');
 
-        $client  = factory(Client::class)->create();
+        $client = factory(Client::class)->create();
         $project = factory(Project::class)->create(['client_id' => $client->id]);
-        $task    = factory(Task::class)->create(['project_id' => $project->id]);
+        $task = factory(Task::class)->create(['project_id' => $project->id]);
         $session = factory(Session::class)->create([
             'started_at' => Carbon::now(),
             'ended_at'   => Carbon::now(),
-            'task_id'    => $task->id
+            'task_id'    => $task->id,
         ]);
 
         $this->assertTrue($client->sessionsThisWeek->contains(function ($clientSession) use ($session) {
