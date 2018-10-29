@@ -10,10 +10,6 @@ trait BelongsToProject
 
     public function project()
     {
-        if ($this->parent) {
-            return $this->parent->project();
-        }
-
         return $this->belongsTo(Project::class);
     }
 
