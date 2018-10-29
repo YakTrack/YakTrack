@@ -11,8 +11,6 @@
 |
 */
 
-use Carbon\Carbon;
-
 // User factory
 $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     return [
@@ -52,13 +50,5 @@ $factory->define(App\Models\Task::class, function (Faker\Generator $faker) {
         'name'        => $faker->sentence,
         'description' => $faker->sentence,
         'status'      => $faker->word,
-    ];
-});
-
-// Session factory
-$factory->define(App\Models\Session::class, function (Faker\Generator $faker) {
-    return [
-        'started_at' => Carbon::now()->format('Y-m-d H:i:s'),
-        'ended_at'   => Carbon::now()->format('Y-m-d H:i:s'),
     ];
 });

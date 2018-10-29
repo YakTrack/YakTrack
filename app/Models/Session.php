@@ -14,6 +14,11 @@ class Session extends Model
 
     // protected $dates = ['started_at', 'ended_at'];
 
+    public function invoice()
+    {
+        return $this->belongsTo(Invoice::class);
+    }
+
     public function task()
     {
         return $this->belongsTo(Task::class);
@@ -218,5 +223,12 @@ class Session extends Model
     {
         return $this->startedAt >= (new DateTimeFormatter())->startOfWeek()
             && $this->startedAt < (new DateTimeFormatter())->endOfWeek();
+    }
+
+    public function attachToInvoice(Invoice $invoice)
+    {
+        return $this->update([
+            'invoice_id' => $invoice->id,
+        ]);
     }
 }

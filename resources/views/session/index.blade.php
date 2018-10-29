@@ -29,6 +29,7 @@
     <table class="table table-hover bg-white">
         <thead>
             <tr>
+                <th class="pl-0"> <input type="checkbox"/> </th>
                 <th> Start Time </th>
                 <th> End Time </th>
                 <th> Total Time </th>
@@ -36,20 +37,34 @@
                 @foreach($thirdPartyApplications as $app)
                     <th> Linked to {{ $app->name }} </th>
                 @endforeach
-                <th class="text-right"> Actions </th>
+                <th> Invoice </th>
+                <th class="text-right pr-0">
+                    <div class="">
+                        <div class="relative">
+                            <button class="btn">
+                                <span>Actions</span>
+                                <i class="fas fa-caret-down"></i>
+                                <div class="rounded shadow-md mt-2 absolute mt-12 pin-t pin-l min-w-full bg-white dropdown">
+                                    <ul class="list-reset">
+                                        <li><a href="#" class="px-4 py-2 block text-black hover:bg-grey-light no-underline"> Link to invoice </a></li>
+                                    </ul>
+                                </div>
+                            </button>
+
+                        </div>
+                    </div>
+                </th>
             </tr>
         </thead>
         <tbody>
             @foreach($days as $sessionsInDay)
-                <tr class="active">
-                    <td colspan="10"><small class="text-uppercase"> {{ $sessionsInDay->first()->localStartedAt->format('l jS F Y') }} </small></td>
+                <tr class="bg-blue-lightest text-grey-dark font-light text-xs uppercase">
+                    <td class="px-3 py-1 rounded" colspan="10"> {{ $sessionsInDay->first()->localStartedAt->format('l jS F Y') }} </td>
                 </tr>
-                @foreach($sessionsInDay as $session)
+                @foreach($sessionsInDay as $key => $session)
                     <tr
-                        class="item-container"
-                        data-item-name="{{ $session->name }}"
-                        data-item-destroy-route="{{ route('session.destroy', ['session' => $session]) }}"
                     >
+                        <td class=""> <input type="checkbox"/></td>
                         <td class="min-w-1">
                             {{ $session->localStartedAtTimeForHumans }}
                         </td>
@@ -72,6 +87,11 @@
                             <td>
                         @endforeach
                         <td>
+                            @if($session->invoice)
+                                <a class="no-underline text-xs" href="{{ route('invoice.show', ['invoice' => $session->invoice] )}}"> {{ $session->invoice->number }} </a>
+                            @endif
+                        </td>
+                        <td class="text-right inline-flex pb-2 @if($key == 0) pt-2 @endif float-right">
                             <form action="{{ route('session.destroy', $session->id) }}" method="post">
                                 <div class="btn-group pull-right">
                                     <a
