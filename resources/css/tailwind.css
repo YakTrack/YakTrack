@@ -129,7 +129,8 @@ input.form-control, textarea.form-control, select.form-control, .form-group text
     @apply w-full
 }
 
-.table td, .table th {
+.table td:not(.text-right):not(.text-center),
+.table th:not(.text-right):not(.text-center) {
     @apply text-left
 }
 
@@ -624,4 +625,8 @@ fieldset[disabled] .multiselect {
     to {
         transform: rotate(2turn)
     }
+}
+
+.btn:not(:focus) .dropdown {
+    display: none;
 }

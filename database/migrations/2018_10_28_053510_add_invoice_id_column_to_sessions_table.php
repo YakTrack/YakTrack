@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddInvoiceIdToSessionsTable extends Migration
+class AddInvoiceIdColumnToSessionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,7 +14,7 @@ class AddInvoiceIdToSessionsTable extends Migration
     public function up()
     {
         Schema::table('sessions', function (Blueprint $table) {
-            $table->unsignedInteger('invoice_id')->nullable();
+            $table->unsignedInteger('invoice_id')->nullable()->after('task_id');
             $table->foreign('invoice_id')->references('id')->on('invoices');
         });
     }
