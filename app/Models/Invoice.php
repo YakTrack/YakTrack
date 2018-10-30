@@ -15,4 +15,9 @@ class Invoice extends Model
     {
         return number_format($this->amount / 100, 2);
     }
+
+    public function sessions()
+    {
+        return $this->hasMany(Session::class);
+    }
 }

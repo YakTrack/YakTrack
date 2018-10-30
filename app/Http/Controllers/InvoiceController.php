@@ -11,7 +11,7 @@ class InvoiceController extends Controller
     public function index()
     {
         return view('invoice.index', [
-            'invoices' => Invoice::all(),
+            'invoices' => Invoice::with(['client', 'sessions'])->get(),
         ]);
     }
 
