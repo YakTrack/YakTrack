@@ -62,7 +62,7 @@ class EditSessionTest extends TestCase
             'ended_at'   => '2018-01-01 01:00:00',
         ]);
 
-        $newTask    = factory(Task::class)->create();
+        $newTask = factory(Task::class)->create();
         $newInvoice = factory(Invoice::class)->create();
 
         $this->actingAsUser();
