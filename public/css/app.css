@@ -6958,6 +6958,10 @@ fieldset[disabled] .multiselect {
   display: none;
 }
 
+li:hover .parent-hover\:text-white {
+  color: #fff;
+}
+
 @media (min-width: 576px) {
   .sm\:list-reset {
     list-style: none;
