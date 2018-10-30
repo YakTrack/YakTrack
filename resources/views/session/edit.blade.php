@@ -27,6 +27,10 @@
         <task-select :tasks="{{ $tasks->toJson() }}" task="{{ $session->task_id }}"></task-select>
     </div>
     <div class="form-group">
+        {!! Form::label('invoice_id', 'Invoice') !!}
+        <invoice-select :invoices="{{ $invoices->toJson() }}" invoice="{{ $session->invoice_id }}"></invoice-select>
+    </div>
+    <div class="form-group">
         {!! Form::submit('Update', ['class' => 'btn btn-default']) !!}
     </div>
 {!! Form::close() !!}

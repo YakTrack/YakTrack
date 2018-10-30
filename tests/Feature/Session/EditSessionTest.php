@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Session;
 
+use App\Models\Invoice;
 use App\Models\Session;
 use App\Models\Task;
 use Carbon\Carbon;
@@ -62,33 +63,36 @@ class EditSessionTest extends TestCase
         ]);
 
         $newTask = factory(Task::class)->create();
+        $newInvoice = factory(Invoice::class)->create();
 
         $this->actingAsUser();
 
         $response = $this->patch(route('session.update', ['session' => $session]), [
-            'task_id'    => $newTask->id,
             // Started at and ended at times ae submitted in display timezone
             'started_at' => '2018-01-01 12:00:00',
             // Started at and ended at times are submitted in display timezone
-            'ended_at' => '2018-01-01 13:00:00',
+            'ended_at'   => '2018-01-01 13:00:00',
+            'task_id'    => $newTask->id,
+            'invoice_id' => $newInvoice->id,
         ]);
 
         $response->assertRedirect(route('session.index'));
 
         $this->assertDatabaseHas('sessions', [
             'id'         => $session->id,
-            'task_id'    => $newTask->id,
             // Australia/Sydney offset is UTC+11 in January, meaning that the corresponding UTC time for 12:00pm in display timezone
             // will be 1:00am on the same date
             'started_at' => '2018-01-01 01:00:00',
             // Australia/Sydney offset is UTC+11 in January, meaning that the corresponding UTC time for 1:00pm in display timezone
             // will be 2:00am on the same date
             'ended_at'   => '2018-01-01 02:00:00',
+            'task_id'    => $newTask->id,
+            'invoice_id' => $newInvoice->id,
         ]);
     }
 
     /** @test */
-    public function a_user_can_send_a_patch_request_to_edit_a_session_for_a_session_with_no_task()
+    public function a_user_can_send_a_patch_request_to_edit_a_session_for_a_session_with_no_task_or_invoice()
     {
         $this->usingTestDisplayTimezone('UTC');
         $this->withoutExceptionHandling();
@@ -111,10 +115,11 @@ class EditSessionTest extends TestCase
         $response->assertRedirect(route('session.index'));
 
         $this->assertDatabaseHas('sessions', [
-            'id'         => $session->id,
-            'task_id'    => null,
-            'started_at' => '2018-01-01 00:00:00',
-            'ended_at'   => null,
+            'id'            => $session->id,
+            'task_id'       => null,
+            'invoice_id'    => null,
+            'started_at'    => '2018-01-01 00:00:00',
+            'ended_at'      => null,
         ]);
     }
 
