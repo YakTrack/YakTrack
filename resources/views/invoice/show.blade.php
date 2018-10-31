@@ -20,9 +20,14 @@
         'Invoice Date' => $invoice->date,
         'Due Date' => $invoice->due_date,
         'Amount' => $invoice->amountForHumans,
-        'Total Hours' => $invoice->totalHours,
+        'Total Session Hours' => $invoice->sessions->totalDurationForHumans(),
+        'Total Invoiced Hours' => $invoice->totalHours,
         'Is Sent' => $invoice->is_sent ? 'Yes' : 'No',
         'Is Paid' => $invoice->is_paid ? 'Yes' : 'No',
     ]])
 
+    <h2 class="mb-4"> Linked Sessions </h2>
+    @include('partials.session.session-table', ['sessions' => $invoice->sessions])
+
 @endsection
+

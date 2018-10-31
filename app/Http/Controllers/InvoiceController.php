@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Invoice;
+use App\Models\ThirdPartyApplication;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -11,7 +12,7 @@ class InvoiceController extends Controller
     public function index()
     {
         return view('invoice.index', [
-            'invoices' => Invoice::with(['client', 'sessions'])->get(),
+            'invoices'               => Invoice::with(['client', 'sessions'])->get(),
         ]);
     }
 
@@ -41,7 +42,10 @@ class InvoiceController extends Controller
 
     public function show(Invoice $invoice)
     {
-        return view('invoice.show', ['invoice' => $invoice]);
+        return view('invoice.show', [
+            'invoice'                => $invoice,
+            'thirdPartyApplications' => ThirdPartyApplication::all(),
+        ]);
     }
 
     public function destroy(Invoice $invoice)
