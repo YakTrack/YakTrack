@@ -13,7 +13,6 @@ use Illuminate\Support\Facades\Redirect;
 
 class SessionController extends Controller
 {
-
     public function __construct(DateTimeFormatter $dateTimeFormatter)
     {
         $this->dateTimeFormatter = $dateTimeFormatter;
@@ -63,8 +62,8 @@ class SessionController extends Controller
     public function edit(Session $session)
     {
         return view('session.edit', [
-            'session' => $session,
-            'tasks' => Task::all(),
+            'session'  => $session,
+            'tasks'    => Task::all(),
             'invoices' => Invoice::all(),
         ]);
     }
@@ -80,8 +79,8 @@ class SessionController extends Controller
     {
         $session->update([
             'started_at' => request('started_at') ? $this->dateTimeFormatter->utcFormat(request('started_at')) : null,
-            'ended_at' => request('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
-            'task_id' => request('task_id') ?: null,
+            'ended_at'   => request('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
+            'task_id'    => request('task_id') ?: null,
             'invoice_id' => request('invoice_id') ?: null,
         ]);
 

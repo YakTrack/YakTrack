@@ -21,7 +21,7 @@ if (!config('app.allow_registration')) {
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [
-        'as' => 'home',
+        'as'   => 'home',
         'uses' => 'HomeController@index',
     ]);
 
