@@ -63,14 +63,14 @@ class SessionController extends Controller
     public function edit(Session $session)
     {
         return view('session.edit', [
-            'session'  => $session,
-            'tasks'    => Task::all(),
+            'session' => $session,
+            'tasks' => Task::all(),
             'invoices' => Invoice::all(),
         ]);
     }
 
-    public function showEdit($id) {
-
+    public function showEdit($id)
+    {
         $session = Session::where('id', $id)->first();
 
         return Redirect::route('session.edit', ['session' => $session]);
@@ -80,8 +80,8 @@ class SessionController extends Controller
     {
         $session->update([
             'started_at' => request('started_at') ? $this->dateTimeFormatter->utcFormat(request('started_at')) : null,
-            'ended_at'   => request('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
-            'task_id'    => request('task_id') ?: null,
+            'ended_at' => request('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
+            'task_id' => request('task_id') ?: null,
             'invoice_id' => request('invoice_id') ?: null,
         ]);
 
@@ -118,6 +118,7 @@ class SessionController extends Controller
     public function destroyById($id)
     {
         Session::where('id', $id)->first()->delete();
+
         return 200;
     }
 }

@@ -21,7 +21,7 @@ if (!config('app.allow_registration')) {
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [
-        'as'   => 'home',
+        'as' => 'home',
         'uses' => 'HomeController@index',
     ]);
 
@@ -43,5 +43,4 @@ Route::group(['middleware' => 'auth'], function () {
     Route::delete('session/{id}/destroy', 'SessionController@destroyById');
     Route::get('third-party-application/store', 'ThirdPartyApplicationController@store');
     Route::get('invoice/{id}', 'Invoice@showInvoice');
-
 });
