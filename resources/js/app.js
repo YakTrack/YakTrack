@@ -3,7 +3,6 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
-
 require('bootstrap');
 require('./bootstrap');
 window.Vue = require('vue');
@@ -20,6 +19,9 @@ import createTaskForm from './components/CreateTaskForm.vue';
 import clientSelect from './components/ClientSelect.vue';
 import invoiceSelect from './components/InvoiceSelect.vue';
 import taskSelect from './components/TaskSelect.vue';
+import sessionsComponent from './components/SessionsComponent.vue';
+import sessionTask from './components/SessionTask.vue';
+import thirdPartyApp from './components/ThirdPartyApp.vue';
 
 const app = new Vue({
     el: '#app',
@@ -28,5 +30,8 @@ const app = new Vue({
         createTaskForm: createTaskForm,
         invoiceSelect: invoiceSelect,
         taskSelect: taskSelect,
+        sessionsComponent: sessionsComponent,
+        sessionTask: sessionTask,
+        thirdPartyApp: thirdPartyApp,
     },
 });

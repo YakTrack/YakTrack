@@ -9,9 +9,11 @@ use App\Models\ThirdPartyApplication;
 use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 
 class SessionController extends Controller
 {
+
     public function __construct(DateTimeFormatter $dateTimeFormatter)
     {
         $this->dateTimeFormatter = $dateTimeFormatter;
@@ -28,6 +30,21 @@ class SessionController extends Controller
                 }),
             'thirdPartyApplications' => ThirdPartyApplication::all(),
         ]);
+    }
+
+    public function filter(Request $request)
+    {
+        $query = Session::orderBy('started_at', 'desc')
+            ->with(['task.project.client', 'invoice', 'thirdPartyApplicationSessions']);
+
+        if ($request->has(['start', 'end'])) {
+            $query = $query->where('started_at', '>', Carbon::parse($request->start))->where('ended_at', '<', Carbon::parse($request->end));
+        }
+
+        return $query->get()
+            ->groupBy(function ($session) {
+                return $session->localStartedAt->format('Y-m-d');
+            });
     }
 
     public function store()
@@ -50,6 +67,13 @@ class SessionController extends Controller
             'tasks'    => Task::all(),
             'invoices' => Invoice::all(),
         ]);
+    }
+
+    public function showEdit($id) {
+
+        $session = Session::where('id', $id)->first();
+
+        return Redirect::route('session.edit', ['session' => $session]);
     }
 
     public function update(Session $session)
@@ -89,5 +113,11 @@ class SessionController extends Controller
         $session->delete();
 
         return redirect()->route('session.index');
+    }
+
+    public function destroyById($id)
+    {
+        Session::where('id', $id)->first()->delete();
+        return 200;
     }
 }

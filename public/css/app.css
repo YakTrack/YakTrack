@@ -29268,3 +29268,18 @@ li:hover .parent-hover\:text-white {
     z-index: auto;
   }
 }
+
+.mx-input {
+  border: none !important;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1) !important;
+}
+
+.mx-calendar-icon {
+  height: 22px !important;
+}
+
+.mx-datepicker-popup {
+  border: none !important;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .1) !important;
+  border-radius: .25rem;
+}

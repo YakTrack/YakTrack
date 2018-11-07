@@ -44,6 +44,13 @@ class InvoiceController extends Controller
         return view('invoice.show', ['invoice' => $invoice]);
     }
 
+    public function showInvoice($id)
+    {
+        $invoice = Invoice::where('id', $id)->first();
+
+        return redirect()->route('invoice.show', ['invoice' => $invoice]);
+    }
+
     public function destroy(Invoice $invoice)
     {
         $invoice->delete();

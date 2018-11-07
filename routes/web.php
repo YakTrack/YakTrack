@@ -38,4 +38,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('session/stop', 'SessionController@stop')->name('session.stop');
 
     Route::resource('session', 'SessionController');
+    Route::post('session/filter', 'SessionController@filter')->name('session.filter');
+    Route::get('session/{id}/edit', 'SessionController@showEdit');
+    Route::delete('session/{id}/destroy', 'SessionController@destroyById');
+    Route::get('third-party-application/store', 'ThirdPartyApplicationController@store');
+    Route::get('invoice/{id}', 'Invoice@showInvoice');
+
 });
