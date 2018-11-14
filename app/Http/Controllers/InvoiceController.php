@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Invoice;
+use App\Models\Session;
 use App\Models\ThirdPartyApplication;
 use Illuminate\Http\Request;
 
@@ -12,7 +13,7 @@ class InvoiceController extends Controller
     public function index()
     {
         return view('invoice.index', [
-            'invoices'               => Invoice::with(['client', 'sessions'])->get(),
+            'invoices' => Invoice::with(['client', 'sessions'])->get(),
         ]);
     }
 
@@ -66,11 +67,23 @@ class InvoiceController extends Controller
     public function update(Request $request, Invoice $invoice)
     {
         $this->validate($request, [
-            'number'      => 'required',
+            'number'      => 'string',
             'client_id'   => 'exists:clients,id',
+            'sessions.*'  => 'exists:sessions,id',
         ]);
 
-        $invoice->update($request->all());
+        $invoice->update($request->only([
+            'number',
+            'date',
+            'amount',
+            'total_hours',
+            'client_id',
+            'description',
+            'is_paid',
+            'is_sent',
+        ]));
+
+        $invoice->sessions()->saveMany(Session::findMany($request->sessions));
 
         return redirect()
             ->route('invoice.index')
