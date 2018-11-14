@@ -15,7 +15,7 @@
         @foreach($thisWeeksWorkSessions as $dayOfWeek)
             <div class="flex pt-2 pb-2 @if($dayOfWeek['date']->isToday()) -ml-4 pl-4 -mr-4 pr-4 bg-blue-lightest @endif">
                 <div class="flex-1 text-grey-dark"> {{ $dayOfWeek['dateForHumans'] }} </div>
-                <div class="flex-1 {{ $dayOfWeek['totalTimeWorked'] != '0:00:00' ? 'text-grey-dark' : '' }}"> {{ $dayOfWeek['totalTimeWorked'] != '0:00:00' ? $dayOfWeek['totalTimeWorked']: '-' }} </div>
+                <div class="flex-1 {{ $dayOfWeek['totalTimeWorked'] != '0:00:00' ? 'text-grey-darkest' : '' }}"> {{ $dayOfWeek['totalTimeWorked'] != '0:00:00' ? $dayOfWeek['totalTimeWorked']: '-' }} </div>
             </div>
         @endforeach
         <div class="active">
