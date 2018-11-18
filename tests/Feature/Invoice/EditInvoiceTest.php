@@ -60,7 +60,7 @@ class EditInvoiceTest extends TestCase
 
         $response->assertJson([
             'success' => true,
-            'invoice' => $invoice->fresh(),
+            'invoice' => $invoice->fresh()->toArray(),
         ]);
 
         $sessions->each(function ($session) use ($invoice) {
