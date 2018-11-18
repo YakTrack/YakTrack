@@ -85,6 +85,14 @@ class InvoiceController extends Controller
 
         $invoice->sessions()->saveMany(Session::findMany($request->sessions));
 
+        if (request()->wantsJson()) {
+            return response()
+                ->json([
+                    'success' => true,
+                    'invoice' => $invoice->fresh(),
+                ]);
+        }
+
         return redirect()
             ->route('invoice.index')
             ->with(['messages' => ['success' => 'Invoice '.$invoice->number.' updated.']]);
