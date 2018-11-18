@@ -8,4 +8,7 @@
         @include('layouts.alert', ['class' => $class, 'message' => $message])
     @endforeach
 
+    <alert v-for="(alert, index) in alerts" :key="index" :alert="alert">
+    </alert>
+
 </div>
