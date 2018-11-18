@@ -630,3 +630,7 @@ fieldset[disabled] .multiselect {
 li:hover .parent-hover\:text-white {
     color: #FFF;
 }
+
+.w-max-content {
+    width: max-content;
+}
