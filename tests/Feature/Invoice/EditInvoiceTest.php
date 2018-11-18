@@ -42,7 +42,7 @@ class EditInvoiceTest extends TestCase
     }
 
     /** @test */
-    public function a_user_can_attach_sessions_to_an_invoice_with_a_patch_request()
+    public function a_user_can_attach_sessions_to_an_invoice_with_a_patch_json_request()
     {
         $this->withoutExceptionHandling();
 
@@ -58,7 +58,10 @@ class EditInvoiceTest extends TestCase
             'sessions' => $sessions->pluck('id'),
         ]);
 
-        $response->assertRedirect(route('invoice.index'));
+        $response->assertJson([
+            'success' => true,
+            'invoice' => $invoice->fresh(),
+        ]);
 
         $sessions->each(function ($session) use ($invoice) {
             $this->assertTrue($session->fresh()->invoice_id == $invoice->id);
