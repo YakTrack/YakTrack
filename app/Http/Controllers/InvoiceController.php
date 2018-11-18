@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Invoice;
+use App\Models\Session;
+use App\Models\ThirdPartyApplication;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -41,7 +43,10 @@ class InvoiceController extends Controller
 
     public function show(Invoice $invoice)
     {
-        return view('invoice.show', ['invoice' => $invoice]);
+        return view('invoice.show', [
+            'invoice'                => $invoice,
+            'thirdPartyApplications' => ThirdPartyApplication::all(),
+        ]);
     }
 
     public function destroy(Invoice $invoice)
@@ -62,11 +67,31 @@ class InvoiceController extends Controller
     public function update(Request $request, Invoice $invoice)
     {
         $this->validate($request, [
-            'number'      => 'required',
+            'number'      => 'string',
             'client_id'   => 'exists:clients,id',
+            'sessions.*'  => 'exists:sessions,id',
         ]);
 
-        $invoice->update($request->all());
+        $invoice->update($request->only([
+            'number',
+            'date',
+            'amount',
+            'total_hours',
+            'client_id',
+            'description',
+            'is_paid',
+            'is_sent',
+        ]));
+
+        $invoice->sessions()->saveMany(Session::findMany($request->sessions));
+
+        if (request()->wantsJson()) {
+            return response()
+                ->json([
+                    'success' => true,
+                    'invoice' => $invoice->fresh(),
+                ]);
+        }
 
         return redirect()
             ->route('invoice.index')

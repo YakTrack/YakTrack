@@ -6,13 +6,19 @@ use App\Models\Collections\SessionCollection;
 use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 
 class Session extends Model
 {
     protected $guarded = [];
 
     // protected $dates = ['started_at', 'ended_at'];
+
+    protected $appends = [
+        'durationForHumans',
+        'localEndedAtTimeForHumans',
+        'localStartedAtDateForHumans',
+        'localStartedAtTimeForHumans',
+    ];
 
     public function invoice()
     {
@@ -41,7 +47,7 @@ class Session extends Model
 
     public function getEndedAtAttribute()
     {
-        if (is_null($this->attributes['ended_at'])) {
+        if (!isset($this->attributes['ended_at']) || is_null($this->attributes['ended_at'])) {
             return;
         }
 

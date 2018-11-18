@@ -29,7 +29,8 @@
                     <th> Date </th>
                     <th> Due Date </th>
                     <th> Client </th>
-                    <th> Hours </th>
+                    <th> Session Hours </th>
+                    <th> Invoiced Hours </th>
                     <th> Amount </th>
                     <th> <span class="pull-right"> Actions </span> </th>
                 </tr>
@@ -54,6 +55,7 @@
                             </a>
                         </td>
                         <td> {{ $invoice->sessions->totalDurationForHumans() == '0:00:00' ? '-' : $invoice->sessions->totalDurationForHumans() }} </td>
+                        <td> {{ $invoice->totalHours ?? '-' }} </td>
                         <td> {{ $invoice->amountForHumans }} </td>
                         <td>
                             <div class="btn-group pull-right">

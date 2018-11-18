@@ -627,10 +627,10 @@ fieldset[disabled] .multiselect {
     }
 }
 
-.btn:not(:focus) .dropdown {
-    display: none;
-}
-
 li:hover .parent-hover\:text-white {
     color: #FFF;
+}
+
+.w-max-content {
+    width: max-content;
 }

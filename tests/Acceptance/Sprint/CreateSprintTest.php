@@ -26,9 +26,6 @@ class CreateSprintTest extends BrowserKitTestCase
             ->select($project->id, 'project_id')
             ->press('Create');
 
-        // Verify success alert shown
-        $this->see('alert-success');
-
         // Verify redirected to correct page
         $this->seePageIs(route('sprint.index'));
 

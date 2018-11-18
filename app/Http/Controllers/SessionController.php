@@ -27,6 +27,7 @@ class SessionController extends Controller
                     return $session->localStartedAt->format('Y-m-d');
                 }),
             'thirdPartyApplications' => ThirdPartyApplication::all(),
+            'invoices'               => Invoice::all(),
         ]);
     }
 
