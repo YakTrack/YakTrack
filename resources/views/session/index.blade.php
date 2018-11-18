@@ -27,6 +27,7 @@
 <index-session-table
     :days="{{ $days->values()->toJson() }}"
     :third-party-applications="{{ $thirdPartyApplications->toJson() }}"
+    :invoices="{{ $invoices->toJson() }}"
 ></index-session-table>
 
 @endsection

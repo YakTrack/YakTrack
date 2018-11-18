@@ -10,10 +10,19 @@
     import multiSelect from 'vue-multiselect';
 
     export default {
-        props: [
-            'invoices',
-            'invoice'
-        ],
+        props: {
+            onChange: {
+                type: Function,
+                default: () => null,
+            },
+            invoices: {
+                type: Array,
+                default: () => [],
+            },
+            invoice: {
+                default: null,
+            },
+        },
         components: {
             multiSelect: multiSelect,
         },
@@ -33,6 +42,11 @@
                 }
 
                 return this.selectedInvoice.id;
+            }
+        },
+        watch: {
+            invoiceId(newValue) {
+                this.onChange(newValue);
             }
         }
     }

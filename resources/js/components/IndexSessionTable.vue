@@ -1,10 +1,9 @@
 <template>
     <div class="p-4 bg-white rounded shadow" v-if="days.length > 0">
-        {{ selectedSessions }}
         <table class="table table-hover bg-white">
             <thead>
                 <tr>
-                    <th class="pl-0"> <input type="checkbox"/> </th>
+                    <th class="pl-0"> <input v-model="selectAll" type="checkbox"/> </th>
                     <th class="text-right"> Start Time </th>
                     <th class="text-right"> End Time </th>
                     <th class="text-right"> Total Time </th>
@@ -12,12 +11,7 @@
                     <th v-for="app in thirdPartyApplications" :key="app.id"> Linked to {{ app.name }} </th>
                     <th> Invoice </th>
                     <th class="text-right pr-0">
-                        <dropdown :options="[
-                            {
-                                name: 'Link to invoice',
-                                event: 'sessions.link-to-invoice',
-                            }
-                        ]"></dropdown>
+                        <dropdown :options="actionsDropdown"></dropdown>
                     </th>
                 </tr>
             </thead>
@@ -80,6 +74,26 @@
                 </tr>
             </tbody>
         </table>
+
+        <modal
+            open-on="sessions.link-to-invoice"
+            close-on="sessions.linked-to-invoice"
+            :on-submit="linkSelectedSessionsToInvoice"
+        >
+            <template slot-scope="modal">
+                <h3 class="text-center"> Link Selected Sessions To Invoice </h3>
+                <div class="form-group mt-8">
+                    {{ modal.payload }}
+                    <label for="invoice_id"> Select Invoice </label>
+                    <invoice-select
+                        :invoices="invoices"
+                        :on-change="selectInvoice"
+                        v-model="modal.payload"
+                    ></invoice-select>
+                </div>
+            </template>
+        </modal>
+
     </div>
     <div v-else>
         You have not created any sessions yet.
@@ -89,42 +103,77 @@
 <script>
     import dropdown from './Dropdown';
     import axios from 'axios';
+    import modal from './Modal';
+    import invoiceSelect from './InvoiceSelect';
 
     export default {
-        props: ['days', 'third-party-applications'],
+        props: [
+            'days',
+            'third-party-applications',
+            'invoices',
+        ],
         components: {
             dropdown: dropdown,
+            modal: modal,
+            invoiceSelect: invoiceSelect,
         },
         data() {
             return {
                 sessions: [].concat(...this.days),
-            }
+                selectAll: false,
+                selectedInvoiceId: null,
+                actionsDropdown: [
+                    {
+                        name: 'Link to invoice',
+                        event: 'sessions.link-to-invoice',
+                        disabled: () => this.selectedSessions.length > 0,
+                    },
+                ],
+            };
         },
         computed: {
             selectedSessions() {
                 return this.sessions.filter(function (session) {
                     return session.isSelected;
                 });
-            }
-        },
-        mounted() {
-            events.$on('sessions.link-to-invoice', () => {
-var id = 1;
-                    window.axios.put(`invoice/1/session/${id}`, []).then(function (response) {
-                        console.log(response); 
-                    });
-                this.selectedSessions.forEach(function (session) {
-                    var url = 'invoice/1/session/'+session.id.toString(); 
-                    console.log(session.id, url, `invoice/1/session/${session.id}`);
-                    axios.put(`invoice/1/session/${session.id}`, []).then(function (response) {
-                        console.log(response); 
-                    });
-                });
-            });
+            },
+            selectedSessionIds() {
+                return this.selectedSessions.map((session) => session.id);
+            },
         },
         methods: {
-            toggleSelected(sessionId) {
+            toggleAllCheckboxes(event) {
+                this.sessions.forEach((session) => {
+                    session.isSelected = event.target.isChecked;
+                });
+            },
+            linkSelectedSessionsToInvoice() {
+                window.axios.patch(`invoice/${this.selectedInvoiceId}/`, {
+                    sessions: this.selectedSessionIds,
+                }).then((response) => {
+                    this.selectedSessionIds.forEach((sessionId) => {
+                        this.sessions[
+                            this.sessions.indexOf(this.sessions.find((session) => session.id == sessionId))
+                        ].invoice = response.data.invoice;
+                    });
 
+                    window.events.$emit('notify', {
+                        type: "success",
+                        message: "Sessions linked to invoice "+this.invoices.find((invoice) => invoice.id == this.selectedInvoiceId).number,
+                    });
+
+                    window.events.$emit('sessions.linked-to-invoice');
+                });
+            },
+            selectInvoice(invoiceId) {
+                this.selectedInvoiceId = invoiceId;
+            }
+        },
+        watch: {
+            selectAll(newValue) {
+                this.sessions.forEach((session) => {
+                    session.isSelected = newValue;
+                });
             }
         }
     }
