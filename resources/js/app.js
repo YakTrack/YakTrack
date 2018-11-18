@@ -13,7 +13,7 @@ window.token = document.head.querySelector('meta[name="csrf-token"]').content;
 
 Vue.component('csrf-input', require('./components/CsrfInput.vue'));
 
-import axios from 'axios';
+import alert from './components/Alert.vue';
 import clientSelect from './components/ClientSelect.vue';
 import createTaskForm from './components/CreateTaskForm.vue';
 import dropdown from './components/Dropdown.vue';
@@ -24,7 +24,11 @@ import indexSessionTable from './components/IndexSessionTable';
 
 const app = new Vue({
     el: '#app',
+    data: {
+        alerts: [],
+    },
     components: {
+        alert: alert,
         clientSelect: clientSelect,
         createTaskForm: createTaskForm,
         dropdown: dropdown,
@@ -32,4 +36,9 @@ const app = new Vue({
         invoiceSelect: invoiceSelect,
         taskSelect: taskSelect,
     },
+    created() {
+        window.events.$on('notify', (notification) => {
+            this.alerts.push(notification);
+        });
+    }
 });
