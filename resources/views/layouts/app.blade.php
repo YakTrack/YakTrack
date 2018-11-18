@@ -8,6 +8,7 @@
             <div id="content-wrapper" class="min-h-screen w-full lg:static lg:max-h-full lg:overflow-visible">
                 <main role="main" class="lg:sticky w-full py-24">
                     @yield('breadcrumbs')
+                    @include('layouts.messages')
                     <div class="flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
                         <div class="flex-1">
                             <h1 class="h2"> @yield('title') </h1>
@@ -16,7 +17,6 @@
                             @yield('top-right-toolbar')
                         </div>
                     </div>
-                    @include('layouts.messages')
                     @yield('content')
                 </main>
             </div>
