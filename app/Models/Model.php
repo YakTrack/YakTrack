@@ -28,6 +28,7 @@ abstract class Model extends BaseModel
     {
         return route($this->resourceName().'.show', [
             $this->resourceName() => $this,
+
         ]);
     }
 
