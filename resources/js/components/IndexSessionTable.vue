@@ -27,6 +27,7 @@
                         {{ session.localStartedAtTimeForHumans }}
                     </td>
                     <td class="min-w-1 text-right">
+                        {{ session.stopUrl }}
                         <a v-if="session.isRunning" class="btn" :href="session.stopUrl"><i class="fa fa-stop text-red"></i></a>
                         <span v-else> {{ session.localEndedAtTimeForHumans }} </span>
                     </td>
@@ -57,6 +58,7 @@
                     </td>
                     <td class="text-right inline-flex pb-2 @if($key == 0) pt-2 @endif float-right">
                         <form :action="session.destroyUrl" method="post">
+                            <csrf-input></csrf-input>
                             <div class="btn-group pull-right">
                                 <a
                                     :href="session.editUrl"

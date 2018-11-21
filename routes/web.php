@@ -38,4 +38,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('session/stop', 'SessionController@stop')->name('session.stop');
 
     Route::resource('session', 'SessionController');
+
+    Route::get('wherehas', function () {
+        $invoices = App\Models\Invoice::has('sessions')->get();
+    });
 });
