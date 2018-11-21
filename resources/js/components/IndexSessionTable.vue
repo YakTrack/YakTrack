@@ -27,7 +27,6 @@
                         {{ session.localStartedAtTimeForHumans }}
                     </td>
                     <td class="min-w-1 text-right">
-                        {{ session.stopUrl }}
                         <a v-if="session.isRunning" class="btn" :href="session.stopUrl"><i class="fa fa-stop text-red"></i></a>
                         <span v-else> {{ session.localEndedAtTimeForHumans }} </span>
                     </td>
