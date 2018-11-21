@@ -13,6 +13,7 @@ abstract class Model extends BaseModel
         $this->appends = array_merge($this->appends, [
             'editUrl',
             'showUrl',
+            'destroyUrl',
         ]);
     }
 
@@ -26,6 +27,14 @@ abstract class Model extends BaseModel
     public function getShowUrlAttribute()
     {
         return route($this->resourceName().'.show', [
+            $this->resourceName() => $this,
+
+        ]);
+    }
+
+    public function getDestroyUrlAttribute()
+    {
+        return route($this->resourceName().'.destroy', [
             $this->resourceName() => $this,
         ]);
     }

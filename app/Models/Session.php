@@ -15,9 +15,11 @@ class Session extends Model
 
     protected $appends = [
         'durationForHumans',
+        'isRunning',
         'localEndedAtTimeForHumans',
         'localStartedAtDateForHumans',
         'localStartedAtTimeForHumans',
+        'stopUrl',
     ];
 
     public function invoice()
@@ -148,6 +150,11 @@ class Session extends Model
         return is_null($this->ended_at);
     }
 
+    public function getIsRunningAttribute()
+    {
+        return $this->isRunning();
+    }
+
     public function scopeRunning($query)
     {
         return $query->whereNull('ended_at');
@@ -179,6 +186,11 @@ class Session extends Model
     {
         $this->ended_at = $endedAt ?? Carbon::now();
         $this->save();
+    }
+
+    public function getStopUrlAttribute()
+    {
+        return route('session.stop');
     }
 
     /**
