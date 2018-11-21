@@ -48975,7 +48975,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
-//
 
 
 
@@ -49487,11 +49486,6 @@ var render = function() {
                           ]),
                           _vm._v(" "),
                           _c("td", { staticClass: "min-w-1 text-right" }, [
-                            _vm._v(
-                              "\n                    " +
-                                _vm._s(session.stopUrl) +
-                                "\n                    "
-                            ),
                             session.isRunning
                               ? _c(
                                   "a",
