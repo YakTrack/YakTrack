@@ -15,7 +15,7 @@ class EditInvoiceTest extends TestCase
     /** @test */
     public function a_user_can_edit_an_invoice()
     {
-        $invoice   = factory(Invoice::class)->create();
+        $invoice = factory(Invoice::class)->create();
         $newClient = factory(Client::class)->create();
 
         $this->actingAsUser();

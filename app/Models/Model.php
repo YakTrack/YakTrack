@@ -20,21 +20,21 @@ abstract class Model extends BaseModel
     public function getEditUrlAttribute()
     {
         return route($this->resourceName().'.edit', [
-            $this->resourceName() => $this
+            $this->resourceName() => $this,
         ]);
     }
 
     public function getShowUrlAttribute()
     {
         return route($this->resourceName().'.show', [
-            $this->resourceName() => $this
+            $this->resourceName() => $this,
         ]);
     }
 
     public function getDestroyUrlAttribute()
     {
         return route($this->resourceName().'.destroy', [
-            $this->resourceName() => $this
+            $this->resourceName() => $this,
         ]);
     }
 
