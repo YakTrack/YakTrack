@@ -249,4 +249,22 @@ class Session extends Model
             'invoice_id' => $invoice->id,
         ]);
     }
+
+    public function hasNoClient()
+    {
+        return $this->getClient() === null;
+    }
+
+    public function getClient()
+    {
+        if ($this->task === null) {
+            return null;
+        }
+
+        if ($this->task->project === null) {
+            return null;
+        }
+
+        return $this->task->project->client;
+    }
 }

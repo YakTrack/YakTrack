@@ -17,9 +17,9 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
 
-        $this->dateTimeFormatter = $dateTimeFormatter;
+        $this->dateTimeFormatter     = $dateTimeFormatter;
         $this->dateIntervalFormatter = $dateIntervalFormatter;
-        $this->sessions = $sessions;
+        $this->sessions              = $sessions;
     }
 
     /**
@@ -29,11 +29,20 @@ class HomeController extends Controller
      */
     public function index()
     {
+        $noClient = (object) [
+            'name'             => 'No Client',
+            'sessionsThisWeek' => Session::thisWeek()
+                ->get()
+                ->filter(function ($session) {
+                    return $session->hasNoClient();
+                })->values()
+        ];
+
         $clients = Client::with('projects.tasks.sessions')
             ->get()
             ->filter(function ($client) {
                 return $client->sessionsThisWeek->count() > 0;
-            });
+            })->push($noClient)->chunk(3);
 
         return view('home', [
             'thisWeeksWorkSessions' => $this->sessions->thisWeeksWorkSessions(),
