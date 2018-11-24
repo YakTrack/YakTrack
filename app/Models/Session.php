@@ -258,11 +258,11 @@ class Session extends Model
     public function getClient()
     {
         if ($this->task === null) {
-            return null;
+            return;
         }
 
         if ($this->task->project === null) {
-            return null;
+            return;
         }
 
         return $this->task->project->client;
