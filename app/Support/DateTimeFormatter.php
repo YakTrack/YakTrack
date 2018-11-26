@@ -3,6 +3,7 @@
 namespace App\Support;
 
 use Carbon\Carbon;
+use Illuminate\Support\Collection;
 
 class DateTimeFormatter
 {
@@ -120,20 +121,10 @@ class DateTimeFormatter
 
     public function daysThisWeek()
     {
-        return $this->daysOfWeek()->map(function ($dayOfWeek) {
-            $day = Carbon::parse($dayOfWeek)->timezone($this->timezone())->hour(0);
+        $startOfWeek = Carbon::now()->timezone($this->timezone())->startOfWeek();
 
-            if ($day->lt(
-                $lastMonday = Carbon::parse('last monday')->timezone($this->timezone())->hour(0)->minute(0)->second(0)
-            )) {
-                return $day->addWeek();
-            }
-
-            if ($day->gte($lastMonday->addWeek())) {
-                return $day->subWeek();
-            }
-
-            return $day;
+        return Collection::times(7, function ($day) use ($startOfWeek) {
+            return $startOfWeek->copy()->addDays($day - 1);
         });
     }
 }
