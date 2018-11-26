@@ -42,7 +42,7 @@ class HomeController extends Controller
             ->get()
             ->filter(function ($client) {
                 return $client->sessionsThisWeek->count() > 0;
-            })->push($noClient)->chunk(3);
+            })->push($noClient);
 
         return view('home', [
             'thisWeeksWorkSessions' => $this->sessions->thisWeeksWorkSessions(),

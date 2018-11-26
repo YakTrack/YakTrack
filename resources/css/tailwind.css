@@ -631,6 +631,18 @@ li:hover .parent-hover\:text-white {
     color: #FFF;
 }
 
-.w-max-content {
-    width: max-content;
+@screen sm {
+    .grid {
+        display: grid;
+        grid-template-columns: calc(50% - 0.5rem) calc(50% - 0.5rem);
+        grid-gap: 1rem;
+    }
+}
+
+@screen lg {
+    .grid {
+        display: grid;
+        grid-template-columns: calc(25% - 0.75rem) calc(25% - 0.75rem) calc(25% - 0.75rem) calc(25% - 0.75rem);
+        grid-gap: 1rem;
+    }
 }

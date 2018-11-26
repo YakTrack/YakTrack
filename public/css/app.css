@@ -7209,8 +7209,20 @@ li:hover .parent-hover\:text-white {
   color: #fff;
 }
 
-.w-max-content {
-  width: max-content;
+@media (min-width: 576px) {
+  .grid {
+    display: grid;
+    grid-template-columns: calc(50% - .5rem) calc(50% - .5rem);
+    grid-gap: 1rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .grid {
+    display: grid;
+    grid-template-columns: calc(25% - .75rem) calc(25% - .75rem) calc(25% - .75rem) calc(25% - .75rem);
+    grid-gap: 1rem;
+  }
 }
 
 @media (min-width: 576px) {

@@ -24,10 +24,9 @@
         </div>
     </div>
 
-    @foreach($clients as $chunk)
-        <div class="pt-6 -ml-2 -mr-2 flex">
-            @foreach($chunk as $client)
-                <div class="rounded shadow ml-2 mr-2 flex-1 bg-white">
+        <div class="grid pt-4">
+            @foreach($clients as $key => $client)
+                <div class="rounded shadow bg-white">
                     <div class="p-4">
                         <h5 class="card-title">
                             {{ $client->name }}
@@ -40,6 +39,5 @@
                 </div>
             @endforeach
         </div>
-    @endforeach
 
 @endsection
