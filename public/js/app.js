@@ -18070,6 +18070,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_TaskSelect_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_TaskSelect_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_IndexSessionTable__ = __webpack_require__(67);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_IndexSessionTable___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_6__components_IndexSessionTable__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__filters_DateTime_js__ = __webpack_require__(74);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -18092,6 +18093,10 @@ Vue.component('csrf-input', __webpack_require__(43));
 
 
 
+
+
+Vue.filter('secondsSince', __WEBPACK_IMPORTED_MODULE_7__filters_DateTime_js__["a" /* default */].secondsSince);
+Vue.filter('durationForHumans', __WEBPACK_IMPORTED_MODULE_7__filters_DateTime_js__["a" /* default */].durationForHumans);
 
 var app = new Vue({
     el: '#app',
@@ -48870,6 +48875,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Modal___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__Modal__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__InvoiceSelect__ = __webpack_require__(16);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__InvoiceSelect___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__InvoiceSelect__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__filters_DateTime__ = __webpack_require__(74);
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 //
@@ -48975,6 +48981,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
+//
+
 
 
 
@@ -48993,6 +49001,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             _this = this;
 
         return {
+            dateTime: __WEBPACK_IMPORTED_MODULE_4__filters_DateTime__["a" /* default */],
             sessions: (_ref = []).concat.apply(_ref, _toConsumableArray(this.days)),
             selectAll: false,
             selectedInvoiceId: null,
@@ -49002,7 +49011,8 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 disabled: function disabled() {
                     return _this.selectedSessions.length > 0;
                 }
-            }]
+            }],
+            now: Date.now()
         };
     },
 
@@ -49016,6 +49026,11 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             return this.selectedSessions.map(function (session) {
                 return session.id;
             });
+        },
+        secondsElapsedInCurrentSession: function secondsElapsedInCurrentSession() {
+            return __WEBPACK_IMPORTED_MODULE_4__filters_DateTime__["a" /* default */].secondsSince(this.sessions.find(function (session) {
+                return session.isRunning;
+            }).started_at, this.now);
         }
     },
     methods: {
@@ -49056,6 +49071,13 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
                 session.isSelected = newValue;
             });
         }
+    },
+    created: function created() {
+        var _this3 = this;
+
+        setInterval(function () {
+            return _this3.$data.now = Date.now();
+        }, 1000);
     }
 });
 
@@ -49312,7 +49334,7 @@ var render = function() {
                 _c(
                   "tr",
                   [
-                    _c("th", { staticClass: "pl-0" }, [
+                    _c("th", { staticClass: "pl-2" }, [
                       _c("input", {
                         directives: [
                           {
@@ -49425,9 +49447,12 @@ var render = function() {
                     _vm._l(sessionsInDay, function(session, index) {
                       return _c(
                         "tr",
-                        { key: index },
+                        {
+                          key: index,
+                          class: session.isRunning ? "bg-grey-lightest" : ""
+                        },
                         [
-                          _c("td", {}, [
+                          _c("td", { staticClass: "pl-2" }, [
                             _c("input", {
                               directives: [
                                 {
@@ -49485,7 +49510,7 @@ var render = function() {
                             )
                           ]),
                           _vm._v(" "),
-                          _c("td", { staticClass: "min-w-1 text-right" }, [
+                          _c("td", { staticClass: "min-w-1 text-center" }, [
                             session.isRunning
                               ? _c(
                                   "a",
@@ -49511,11 +49536,38 @@ var render = function() {
                           ]),
                           _vm._v(" "),
                           _c("td", { staticClass: "min-w-1 text-right pr-4" }, [
-                            _vm._v(
-                              "\n                    " +
-                                _vm._s(session.durationForHumans) +
-                                "\n                "
-                            )
+                            session.isRunning
+                              ? _c(
+                                  "span",
+                                  {
+                                    staticClass:
+                                      "text-grey-dark font-light p-2 border-green-light border rounded"
+                                  },
+                                  [
+                                    _vm._v(
+                                      " " +
+                                        _vm._s(
+                                          _vm._f("durationForHumans")(
+                                            _vm.secondsElapsedInCurrentSession
+                                          )
+                                        ) +
+                                        " "
+                                    )
+                                  ]
+                                )
+                              : _c(
+                                  "span",
+                                  {
+                                    staticClass: "p-2 text-grey-dark font-light"
+                                  },
+                                  [
+                                    _vm._v(
+                                      " " +
+                                        _vm._s(session.durationForHumans) +
+                                        " "
+                                    )
+                                  ]
+                                )
                           ]),
                           _vm._v(" "),
                           _c("td", { staticClass: "pl-4 max-w-3" }, [
@@ -49734,6 +49786,45 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-2a6220ef", module.exports)
   }
 }
+
+/***/ }),
+/* 73 */,
+/* 74 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var DateTime = function () {
+    function DateTime() {
+        _classCallCheck(this, DateTime);
+    }
+
+    _createClass(DateTime, null, [{
+        key: 'secondsSince',
+        value: function secondsSince(carbonDate) {
+            var fromTimeStamp = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+            var now = fromTimeStamp == null ? new Date().getTime() : fromTimeStamp;
+            return Math.round((now - new Date(carbonDate.date + ' GMT').getTime()) / 1000);
+        }
+    }, {
+        key: 'durationForHumans',
+        value: function durationForHumans(numberOfSeconds) {
+            var date = new Date(null);
+
+            date.setSeconds(numberOfSeconds);
+
+            return date.toISOString().substr(11, 8);
+        }
+    }]);
+
+    return DateTime;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (DateTime);
 
 /***/ })
 /******/ ]);
