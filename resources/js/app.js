@@ -20,7 +20,10 @@ import dropdown from './components/Dropdown.vue';
 import invoiceSelect from './components/InvoiceSelect.vue';
 import taskSelect from './components/TaskSelect.vue';
 import indexSessionTable from './components/IndexSessionTable';
+import dateTime from './filters/DateTime.js';
 
+Vue.filter('secondsSince', dateTime.secondsSince);
+Vue.filter('durationForHumans', dateTime.durationForHumans);
 
 const app = new Vue({
     el: '#app',

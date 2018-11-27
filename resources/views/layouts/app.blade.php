@@ -11,7 +11,7 @@
                     @include('layouts.messages')
                     <div class="flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
                         <div class="flex-1">
-                            <h1 class="h2"> @yield('title') </h1>
+                            <h1 class="h2 font-normal"> @yield('title') </h1>
                         </div>
                         <div class="btn-toolbar mb-2 mb-md-0 flex-1 text-right">
                             @yield('top-right-toolbar')

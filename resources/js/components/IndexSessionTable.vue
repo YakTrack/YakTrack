@@ -3,7 +3,7 @@
         <table class="table table-hover bg-white">
             <thead>
                 <tr>
-                    <th class="pl-0"> <input v-model="selectAll" type="checkbox"/> </th>
+                    <th class="pl-2"> <input v-model="selectAll" type="checkbox"/> </th>
                     <th class="text-right"> Start Time </th>
                     <th class="text-right"> End Time </th>
                     <th class="text-right"> Total Time </th>
@@ -19,19 +19,20 @@
                 <tr class="bg-blue-lightest text-grey-dark font-light text-xs uppercase">
                     <td class="px-3 py-1 rounded" colspan="10"> {{ sessionsInDay[0].localStartedAtDateForHumans }} </td>
                 </tr>
-                <tr v-for="(session, index) in sessionsInDay" :key="index">
-                    <td class="">
+                <tr v-for="(session, index) in sessionsInDay" :key="index" :class="session.isRunning ? 'bg-grey-lightest' : ''">
+                    <td class="pl-2">
                         <input type="checkbox" v-model="session.isSelected" :value="session.id"/>
                     </td>
                     <td class="min-w-1 text-right">
                         {{ session.localStartedAtTimeForHumans }}
                     </td>
-                    <td class="min-w-1 text-right">
+                    <td class="min-w-1 text-center">
                         <a v-if="session.isRunning" class="btn" :href="session.stopUrl"><i class="fa fa-stop text-red"></i></a>
                         <span v-else> {{ session.localEndedAtTimeForHumans }} </span>
                     </td>
                     <td class="min-w-1 text-right pr-4">
-                        {{ session.durationForHumans }}
+                        <span v-if="session.isRunning" class="text-grey-dark font-light p-2 border-green-light border rounded"> {{ secondsElapsedInCurrentSession | durationForHumans }} </span>
+                        <span v-else class="p-2 text-grey-dark font-light"> {{ session.durationForHumans }} </span>
                     </td>
                     <td class="pl-4 max-w-3">
                         <div v-if="session.task">
@@ -106,6 +107,7 @@
     import axios from 'axios';
     import modal from './Modal';
     import invoiceSelect from './InvoiceSelect';
+    import DateTime from './../filters/DateTime';
 
     export default {
         props: [
@@ -120,6 +122,7 @@
         },
         data() {
             return {
+                dateTime: DateTime,
                 sessions: [].concat(...this.days),
                 selectAll: false,
                 selectedInvoiceId: null,
@@ -130,6 +133,7 @@
                         disabled: () => this.selectedSessions.length > 0,
                     },
                 ],
+                now: Date.now(),
             };
         },
         computed: {
@@ -141,6 +145,9 @@
             selectedSessionIds() {
                 return this.selectedSessions.map((session) => session.id);
             },
+            secondsElapsedInCurrentSession() {
+                return DateTime.secondsSince(this.sessions.find(session => session.isRunning).started_at, this.now);
+            }
         },
         methods: {
             toggleAllCheckboxes(event) {
@@ -176,6 +183,9 @@
                     session.isSelected = newValue;
                 });
             }
+        },
+        created() {
+            setInterval(() => this.$data.now = Date.now(), 1000);
         }
     }
 </script>
