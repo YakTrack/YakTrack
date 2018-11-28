@@ -10,6 +10,6 @@ $factory->define(Sprint::class, function (Faker $faker) {
         'name'       => $faker->word(),
         'project_id' => function () {
             return factory(Project::class)->create();
-        }
+        },
     ];
 });
