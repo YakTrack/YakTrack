@@ -16,11 +16,12 @@ Vue.component('csrf-input', require('./components/CsrfInput.vue'));
 import alert from './components/Alert.vue';
 import clientSelect from './components/ClientSelect.vue';
 import createTaskForm from './components/CreateTaskForm.vue';
-import dropdown from './components/Dropdown.vue';
-import invoiceSelect from './components/InvoiceSelect.vue';
-import taskSelect from './components/TaskSelect.vue';
-import indexSessionTable from './components/IndexSessionTable';
 import dateTime from './filters/DateTime.js';
+import dropdown from './components/Dropdown.vue';
+import indexSessionTable from './components/IndexSessionTable';
+import invoiceSelect from './components/InvoiceSelect.vue';
+import sprintSelect from './components/SprintSelect.vue';
+import taskSelect from './components/TaskSelect.vue';
 
 Vue.filter('secondsSince', dateTime.secondsSince);
 Vue.filter('durationForHumans', dateTime.durationForHumans);
@@ -37,6 +38,7 @@ const app = new Vue({
         dropdown: dropdown,
         indexSessionTable: indexSessionTable,
         invoiceSelect: invoiceSelect,
+        sprintSelect: sprintSelect,
         taskSelect: taskSelect,
     },
     created() {

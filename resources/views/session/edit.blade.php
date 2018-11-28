@@ -27,11 +27,20 @@
         <task-select :tasks="{{ $tasks->toJson() }}" task="{{ $session->task_id }}"></task-select>
     </div>
     <div class="form-group">
+        <label for="sprint_id"> Sprint </label>
+        <sprint-select :sprints="{{ $sprints->toJson() }}" sprint="{{ $session->sprint_id }}"></sprint-select>
+    </div>
+    <div class="form-group">
         {!! Form::label('invoice_id', 'Invoice') !!}
         <invoice-select :invoices="{{ $invoices->toJson() }}" invoice="{{ $session->invoice_id }}"></invoice-select>
     </div>
-    <div class="form-group">
-        {!! Form::submit('Update', ['class' => 'btn btn-default']) !!}
+    <div class="flex mt-4">
+        <div class="flex-1 mt-2">
+            <a href="{{ route('session.index') }}" class="btn btn-default"> Cancel </a>
+        </div>
+        <div class="flex-1 float-right">
+            {!! Form::submit('Update', ['class' => 'btn btn-blue float-right']) !!}
+        </div>
     </div>
 {!! Form::close() !!}
 </div>

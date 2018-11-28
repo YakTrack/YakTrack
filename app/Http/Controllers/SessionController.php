@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Invoice;
 use App\Models\Session;
+use App\Models\Sprint;
 use App\Models\Task;
 use App\Models\ThirdPartyApplication;
 use App\Support\DateTimeFormatter;
@@ -50,6 +51,7 @@ class SessionController extends Controller
             'session'  => $session,
             'tasks'    => Task::all(),
             'invoices' => Invoice::all(),
+            'sprints'  => Sprint::with('project.client')->get(),
         ]);
     }
 
@@ -60,6 +62,7 @@ class SessionController extends Controller
             'ended_at'   => request('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
             'task_id'    => request('task_id') ?: null,
             'invoice_id' => request('invoice_id') ?: null,
+            'sprint_id'  => request('sprint_id') ?: null,
         ]);
 
         return request()->expectsJson() ? response()->json($session) : redirect()->route('session.index');

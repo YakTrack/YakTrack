@@ -4,6 +4,7 @@ namespace Tests\Feature\Session;
 
 use App\Models\Invoice;
 use App\Models\Session;
+use App\Models\Sprint;
 use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -62,8 +63,9 @@ class EditSessionTest extends TestCase
             'ended_at'   => '2018-01-01 01:00:00',
         ]);
 
-        $newTask = factory(Task::class)->create();
-        $newInvoice = factory(Invoice::class)->create();
+        $newTask     = factory(Task::class)->create();
+        $newInvoice  = factory(Invoice::class)->create();
+        $newSprint   = factory(Sprint::class)->create();
 
         $this->actingAsUser();
 
@@ -74,6 +76,7 @@ class EditSessionTest extends TestCase
             'ended_at'   => '2018-01-01 13:00:00',
             'task_id'    => $newTask->id,
             'invoice_id' => $newInvoice->id,
+            'sprint_id'  => $newSprint->id,
         ]);
 
         $response->assertRedirect(route('session.index'));
@@ -88,6 +91,7 @@ class EditSessionTest extends TestCase
             'ended_at'   => '2018-01-01 02:00:00',
             'task_id'    => $newTask->id,
             'invoice_id' => $newInvoice->id,
+            'sprint_id'  => $newSprint->id,
         ]);
     }
 
