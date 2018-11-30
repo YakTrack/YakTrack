@@ -27,6 +27,11 @@ class Session extends Model
         return $this->belongsTo(Invoice::class);
     }
 
+    public function sprint()
+    {
+        return $this->belongsTo(Sprint::class);
+    }
+
     public function task()
     {
         return $this->belongsTo(Task::class);

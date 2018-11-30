@@ -22,7 +22,7 @@ class SessionController extends Controller
     {
         return view('session.index', [
             'days' => Session::orderBy('started_at', 'desc')
-                ->with(['task.project.client', 'invoice', 'thirdPartyApplicationSessions'])
+                ->with(['task.project.client', 'invoice', 'thirdPartyApplicationSessions', 'sprint'])
                 ->get()
                 ->groupBy(function ($session) {
                     return $session->localStartedAt->format('Y-m-d');

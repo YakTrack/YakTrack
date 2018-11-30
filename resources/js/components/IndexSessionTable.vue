@@ -9,6 +9,7 @@
                     <th class="text-right"> Total Time </th>
                     <th class="text-center"> Linked To </th>
                     <th v-for="app in thirdPartyApplications" :key="app.id"> Linked to {{ app.name }} </th>
+                    <th> Sprint </th>
                     <th> Invoice </th>
                     <th class="text-right pr-0">
                         <dropdown :options="actionsDropdown"></dropdown>
@@ -52,6 +53,9 @@
                     </td>
                     <td v-for="app in thirdPartyApplications" :key="app.id">
                         TODO
+                    </td>
+                    <td>
+                        <a v-if="session.sprint != null" class="no-underline text-xs" :href="session.sprint.showUrl"> {{ session.sprint.name }} </a>
                     </td>
                     <td>
                         <a v-if="session.invoice != null" class="no-underline text-xs" :href="session.invoice.showUrl"> {{ session.invoice.number }} </a>
