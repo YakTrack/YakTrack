@@ -48786,6 +48786,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -49306,6 +49310,8 @@ var render = function() {
                       ])
                     }),
                     _vm._v(" "),
+                    _c("th", [_vm._v(" Sprint ")]),
+                    _vm._v(" "),
                     _c("th", [_vm._v(" Invoice ")]),
                     _vm._v(" "),
                     _c(
@@ -49547,6 +49553,23 @@ var render = function() {
                               )
                             ])
                           }),
+                          _vm._v(" "),
+                          _c("td", [
+                            session.sprint != null
+                              ? _c(
+                                  "a",
+                                  {
+                                    staticClass: "no-underline text-xs",
+                                    attrs: { href: session.sprint.showUrl }
+                                  },
+                                  [
+                                    _vm._v(
+                                      " " + _vm._s(session.sprint.name) + " "
+                                    )
+                                  ]
+                                )
+                              : _vm._e()
+                          ]),
                           _vm._v(" "),
                           _c("td", [
                             session.invoice != null
