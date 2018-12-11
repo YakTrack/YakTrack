@@ -22,6 +22,7 @@ import indexSessionTable from './components/IndexSessionTable';
 import invoiceSelect from './components/InvoiceSelect.vue';
 import sprintSelect from './components/SprintSelect.vue';
 import taskSelect from './components/TaskSelect.vue';
+import timer from './components/Timer.vue';
 
 Vue.filter('secondsSince', dateTime.secondsSince);
 Vue.filter('durationForHumans', dateTime.durationForHumans);
@@ -40,6 +41,7 @@ const app = new Vue({
         invoiceSelect: invoiceSelect,
         sprintSelect: sprintSelect,
         taskSelect: taskSelect,
+        timer: timer,
     },
     created() {
         window.events.$on('notify', (notification) => {

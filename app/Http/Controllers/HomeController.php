@@ -17,9 +17,9 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
 
-        $this->dateTimeFormatter = $dateTimeFormatter;
+        $this->dateTimeFormatter     = $dateTimeFormatter;
         $this->dateIntervalFormatter = $dateIntervalFormatter;
-        $this->sessions = $sessions;
+        $this->sessions              = $sessions;
     }
 
     /**
@@ -46,8 +46,12 @@ class HomeController extends Controller
 
         return view('home', [
             'thisWeeksWorkSessions' => $this->sessions->thisWeeksWorkSessions(),
-            'thisWeeksTotal'        => Session::thisWeek()->get()->totalDurationForHumans(),
+            'thisWeeksTotal'        => ($thisWeeksSessions = Session::thisWeek()->get())->totalDurationForHumans(),
             'clients'               => $noClientSessions->count() > 0 ? $clients->push($noClient) : $clients,
+            'currentlyWorking'      => $currentlyWorking = $this->sessions->currentlyWorking(),
+            'currentSession'        => $currentSession = $this->sessions->currentSession(),
+            'totalSecondsThisWeek'  => $thisWeeksSessions->totalDurationInSeconds(),
+            'currentClientName'     => $currentlyWorking ? $currentSession->getClient()->name ?? 'No Client' : null,
         ]);
     }
 }
