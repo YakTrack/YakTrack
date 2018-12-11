@@ -32,7 +32,7 @@
                         <span v-else> {{ session.localEndedAtTimeForHumans }} </span>
                     </td>
                     <td class="min-w-1 text-right pr-4">
-                        <span v-if="session.isRunning" class="text-grey-dark font-light p-2 border-green-light border rounded"> {{ secondsElapsedInCurrentSession | durationForHumans }} </span>
+                        <timer :started-at="new Date(session.started_at.date + ' UTC').getTime()" v-if="session.isRunning"></timer>
                         <span v-else class="p-2 text-grey-dark font-light"> {{ session.durationForHumans }} </span>
                     </td>
                     <td class="pl-4 max-w-3">
@@ -107,26 +107,26 @@
 </template>
 
 <script>
-    import dropdown from './Dropdown';
     import axios from 'axios';
-    import modal from './Modal';
-    import invoiceSelect from './InvoiceSelect';
-    import DateTime from './../filters/DateTime';
+    import Dropdown from './Dropdown';
+    import InvoiceSelect from './InvoiceSelect';
+    import Modal from './Modal';
+    import Timer from './Timer';
 
     export default {
         props: [
             'days',
-            'third-party-applications',
             'invoices',
+            'third-party-applications',
         ],
         components: {
-            dropdown: dropdown,
-            modal: modal,
-            invoiceSelect: invoiceSelect,
+            dropdown: Dropdown,
+            invoiceSelect: InvoiceSelect,
+            modal: Modal,
+            timer: Timer,
         },
         data() {
             return {
-                dateTime: DateTime,
                 sessions: [].concat(...this.days),
                 selectAll: false,
                 selectedInvoiceId: null,
@@ -137,7 +137,6 @@
                         disabled: () => this.selectedSessions.length > 0,
                     },
                 ],
-                now: Date.now(),
             };
         },
         computed: {
@@ -149,9 +148,6 @@
             selectedSessionIds() {
                 return this.selectedSessions.map((session) => session.id);
             },
-            secondsElapsedInCurrentSession() {
-                return DateTime.secondsSince(this.sessions.find(session => session.isRunning).started_at, this.now);
-            }
         },
         methods: {
             toggleAllCheckboxes(event) {
@@ -188,8 +184,5 @@
                 });
             }
         },
-        created() {
-            setInterval(() => this.$data.now = Date.now(), 1000);
-        }
     }
 </script>
