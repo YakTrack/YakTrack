@@ -1,4 +1,4 @@
 <alert :alert="{
-    type: {{ $class }},
-    message: {{ $message }},
+    type: '{{ $class }}',
+    message: '{{ $message }}',
 }"></alert>

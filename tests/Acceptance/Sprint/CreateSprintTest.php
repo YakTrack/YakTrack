@@ -24,6 +24,7 @@ class CreateSprintTest extends BrowserKitTestCase
         // Fill in form an submit
         $this->type('Test sprint', 'name')
             ->select($project->id, 'project_id')
+            ->check('is_open')
             ->press('Create');
 
         // Verify redirected to correct page
@@ -32,6 +33,7 @@ class CreateSprintTest extends BrowserKitTestCase
         // Verify sprint added to database
         $this->seeInDatabase('sprints', [
             'name'       => 'Test sprint',
+            'is_open'    => true,
             'project_id' => $project->id,
         ]);
     }

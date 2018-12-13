@@ -25,6 +25,10 @@
             {!! Form::select('project_id', $projects->pluck('name', 'id'), $sprint->project_id, ['class' => 'form-control']) !!}
         </div>
         <div class="form-group">
+            {!! Form::label('is_open', 'Is Open') !!}
+            {!! Form::checkbox('is_open', 'is_open', $sprint->is_open) !!}
+        </div>
+        <div class="form-group">
             {!! Form::submit('Update', ['class' => 'btn btn-default']) !!}
         </div>
     {!! Form::close() !!}

@@ -30,6 +30,7 @@ class EditSprintTest extends BrowserKitTestCase
         // Fill in form an submit
         $this->type($newSprint->name, 'name')
             ->select($projects[1]->id, 'project_id')
+            ->check('is_open')
             ->press('Update');
 
         // Verify redirected to correct page
@@ -40,6 +41,7 @@ class EditSprintTest extends BrowserKitTestCase
             'id'         => $sprint->id,
             'name'       => $newSprint->name,
             'project_id' => $projects[1]->id,
+            'is_open'    => true,
         ]);
     }
 }

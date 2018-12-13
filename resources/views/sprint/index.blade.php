@@ -26,7 +26,8 @@
             <tr>
                 <th> Name </th>
                 <th> Project </th>
-                <th> <span class="pull-right"> Actions </span> </th>
+                <th> Status </th>
+                <th> <span class="float-right"> Actions </span> </th>
                 @foreach($sprints as $sprint)
                 <tr
                     class="item-container"
@@ -44,7 +45,12 @@
                         </a>
                     </td>
                     <td>
-                        <div class="btn-group pull-right">
+                        @if($sprint->is_open) 
+                            <div class="text-green"> Open </div>
+                        @endif
+                    </td>
+                    <td>
+                        <div class="mx-auto btn-group float-right">
                             <a
                                 href="{{ route('sprint.edit', ['sprint' => $sprint]) }}"
                                 class="btn btn-default"

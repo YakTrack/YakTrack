@@ -15,7 +15,7 @@ class SprintController extends Controller
      */
     public function index()
     {
-        return view('sprint.index', ['sprints' => Sprint::all()]);
+        return view('sprint.index', ['sprints' => Sprint::orderBy('id', 'desc')->get()]);
     }
 
     /**
@@ -42,7 +42,10 @@ class SprintController extends Controller
             'project_id' => 'exists:projects,id',
         ]);
 
-        $sprint = Sprint::create($request->all());
+        $sprint = Sprint::create($request->only([
+            'name',
+            'project_id'
+        ]) + ['is_open' => $request->is_open == 'is_open']);
 
         return redirect()
             ->route('sprint.index')
@@ -91,7 +94,10 @@ class SprintController extends Controller
             'project_id' => 'exists:projects,id',
         ]);
 
-        $sprint->update($request->all());
+        $sprint->update($request->only([
+            'name',
+            'project_id'
+        ]) + ['is_open' => $request->is_open == 'is_open']);
 
         return redirect()
             ->route('sprint.index')
