@@ -56,6 +56,19 @@
                             @endif
                         </div>
                     </div>
+                    @foreach($client->openSprints as $sprint)
+                        <h4 class="mt-4"> Sprint: {{ $sprint->name }} </h4>
+                        <div class="flex mt-3">
+                            <div class="flex-1"> Total Time </div>
+                            <div class="flex-1 text-right">
+                                @if($currentlyWorking && $currentSession->sprint_id == $sprint->id)
+                                    <timer :initial-time="{{ $sprint->sessions->totalDurationInSeconds() }}"></timer>
+                                @else
+                                    {{ $sprint->sessions->totalDurationForHumans() }}
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         @endforeach

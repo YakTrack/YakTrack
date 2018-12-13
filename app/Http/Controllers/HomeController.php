@@ -36,6 +36,7 @@ class HomeController extends Controller
                 ->filter(function ($session) {
                     return $session->hasNoClient();
                 })->values(),
+            'openSprints' => [],
         ];
 
         $clients = Client::with('projects.tasks.sessions')

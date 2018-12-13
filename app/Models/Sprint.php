@@ -13,6 +13,16 @@ class Sprint extends Model
      **/
     public function project()
     {
-        return $this->belongsTo('App\Models\Project');
+        return $this->belongsTo(Project::class);
+    }
+
+    public function sessions()
+    {
+        return $this->hasMany(Session::class);
+    }
+
+    public function scopeOpen($query)
+    {
+        return $query->where('is_open', 1);
     }
 }

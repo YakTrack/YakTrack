@@ -8,13 +8,23 @@ class Client extends Model
 {
     protected $guarded = [];
 
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
+
+    public function sprints()
+    {
+        return $this->hasManyThrough(Sprint::class, Project::class);
+    }
+
     public function getSessionsThisWeekAttribute()
     {
         return $this->projects->sessionsThisWeek();
     }
 
-    public function projects()
+    public function getOpenSprintsAttribute()
     {
-        return $this->hasMany(Project::class);
+        return $this->sprints()->open()->get();
     }
 }
