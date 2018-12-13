@@ -44,7 +44,7 @@ class SprintController extends Controller
 
         $sprint = Sprint::create($request->only([
             'name',
-            'project_id'
+            'project_id',
         ]) + ['is_open' => $request->is_open == 'is_open']);
 
         return redirect()
@@ -96,7 +96,7 @@ class SprintController extends Controller
 
         $sprint->update($request->only([
             'name',
-            'project_id'
+            'project_id',
         ]) + ['is_open' => $request->is_open == 'is_open']);
 
         return redirect()
