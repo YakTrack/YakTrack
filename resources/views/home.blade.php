@@ -17,7 +17,7 @@
                 <div class="flex-1 text-grey-dark"> {{ $dayOfWeek['dateForHumans'] }} </div>
                 <div class="flex-1 {{ $dayOfWeek['totalTimeWorked'] != '0:00:00' ? 'text-grey-darkest' : '' }}">
                     @if($dayOfWeek['totalTimeWorked'] != '0:00:00')
-                        @if ($currentlyWorking)
+                        @if ($currentlyWorking && $dayOfWeek['date']->isToday())
                             <timer :initial-time="{{ $dayOfWeek['totalSecondsWorked'] }}"></timer>
                         @else
                             {{ $dayOfWeek['totalTimeWorked'] }}
