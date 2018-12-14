@@ -13,7 +13,7 @@ class InvoiceController extends Controller
     public function index()
     {
         return view('invoice.index', [
-            'invoices' => Invoice::with(['client', 'sessions'])->get(),
+            'invoices' => Invoice::with(['client', 'sessions'])->orderBy('id', 'desc')->get(),
         ]);
     }
 

@@ -17,7 +17,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        return view('task.index', ['tasks' => Task::all()]);
+        return view('task.index', ['tasks' => Task::orderBy('id', 'desc')->get()]);
     }
 
     /**
@@ -28,9 +28,9 @@ class TaskController extends Controller
     public function create()
     {
         return view('task.create', [
-            'projects' => Project::with(['sprints', 'tasks'])->get(),
-            'sprints'  => Sprint::with(['project'])->get(),
-            'tasks'    => Task::all(),
+            'projects' => Project::with(['sprints', 'tasks'])->orderBy('name')->get(),
+            'sprints'  => Sprint::with(['project'])->orderBy('name')->get(),
+            'tasks'    => Task::orderBy('id', 'desc')->get(),
         ]);
     }
 

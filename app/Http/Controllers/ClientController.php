@@ -15,7 +15,7 @@ class ClientController extends Controller
     public function index()
     {
         return view('client.index', [
-            'clients' => \App\Models\Client::all(),
+            'clients' => \App\Models\Client::orderBy('name')->get(),
         ]);
     }
 
@@ -91,7 +91,7 @@ class ClientController extends Controller
             'email' => 'email',
         ]);
 
-        $client->name = $request->name;
+        $client->name  = $request->name;
         $client->email = $request->email;
         $client->save();
 
