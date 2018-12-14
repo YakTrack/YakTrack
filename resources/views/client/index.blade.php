@@ -26,7 +26,7 @@
             <tr>
                 <th> Name </th>
                 <th> Email </th>
-                <th> <span class="pull-right"> Actions </span> </th>
+                <th> <span class="float-right"> Actions </span> </th>
                 @foreach($clients as $client)
                 <tr
                     class="item-container"
@@ -40,7 +40,7 @@
                 </td>
                     <td> {{ $client->email }} </td>
                     <td>
-                        <div class="btn-group pull-right">
+                        <div class="btn-group float-right">
                             <a 
                                 href="{{ route('client.edit', ['client' => $client]) }}" 
                                 class="btn btn-default"

@@ -17,7 +17,7 @@
 </head>
 
 <body class="font-source-sans font-normal leading-normal bg-grey-lighter text-grey-darkest">
-    <div class="wrapper px-16" id="app">
+    <div class="wrapper" id="app">
         @yield('page')
     </div>
 

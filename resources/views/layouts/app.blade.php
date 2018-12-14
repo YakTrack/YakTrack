@@ -2,7 +2,7 @@
 
 @section('page')
     @include('layouts.header-nav')
-    <div class="w-full max-w-5xl mx-auto px-6x">
+    <div class="w-full max-w-5xl mx-auto px-8">
         <div class="lg:flex -mx-6">
             @include('layouts.sidebar')
             <div id="content-wrapper" class="min-h-screen w-full lg:static lg:max-h-full lg:overflow-visible">

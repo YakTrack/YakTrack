@@ -32,7 +32,7 @@
                     <th> Session Hours </th>
                     <th> Invoiced Hours </th>
                     <th> Amount </th>
-                    <th> <span class="pull-right"> Actions </span> </th>
+                    <th> <span class="float-right"> Actions </span> </th>
                 </tr>
             </thead>
             <tbody>
@@ -58,7 +58,7 @@
                         <td> {{ $invoice->totalHours ?? '-' }} </td>
                         <td> {{ $invoice->amountForHumans }} </td>
                         <td>
-                            <div class="btn-group pull-right">
+                            <div class="btn-group float-right">
                                 <a
                                     href="{{ route('invoice.edit', ['invoice' => $invoice]) }}"
                                     class="btn btn-default"

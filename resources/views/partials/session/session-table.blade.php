@@ -58,7 +58,7 @@
                     @endif
                     <td class="text-right inline-flex pb-2 @if($key == 0) pt-2 @endif float-right">
                         <form action="{{ route('session.destroy', $session->id) }}" method="post">
-                            <div class="btn-group pull-right">
+                            <div class="btn-group float-right">
                                 <a
                                     href="{{ route('session.edit', ['session' => $session]) }}"
                                     class="btn btn-default"

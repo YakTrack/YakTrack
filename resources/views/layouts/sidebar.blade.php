@@ -1,6 +1,6 @@
-<div id="sidebar" class="block z-90 bg-white w-full border-b -mb-16 lg:-mb-0 lg:static lg:bg-transparent lg:border-b-0 lg:pt-0 lg:w-1/4 lg:border-0 xl:w-1/6 sm:flex md:flex md:relative sm:relative">
+<div id="sidebar" class="block z-90 bg-white w-full border-b -mb-16 lg:-mb-0 lg:static lg:bg-transparent lg:border-b-0 lg:pt-0 md:w-full lg:w-1/4 lg:border-0 xl:w-1/5 sm:flex md:flex md:relative sm:relative">
    <div class="lg:block lg:relative lg:sticky">
-        <nav class="pr-6 pt-24 overflow-y-auto text-base lg:text-lg lg:pl-0 lg:pr-8 sticky?lg:h-(screen-16) leading-loose">
+        <nav class="px-6 pb-6 pt-24 overflow-y-auto text-base lg:text-lg lg:pl-0 lg:pr-8 sticky?lg:h-(screen-16) leading-loose">
             <ul class="list-reset">
                 @foreach([
                     [

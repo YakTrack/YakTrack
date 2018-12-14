@@ -16,11 +16,11 @@
                     </th>
                 </tr>
             </thead>
-            <tbody v-for="(sessionsInDay, index) in days" :key="index">
+            <tbody v-for="(sessionsInDay, dayIndex) in days" :key="dayIndex">
                 <tr class="bg-blue-lightest text-grey-dark font-light text-xs uppercase">
                     <td class="px-3 py-1 rounded" colspan="10"> {{ sessionsInDay[0].localStartedAtDateForHumans }} </td>
                 </tr>
-                <tr v-for="(session, index) in sessionsInDay" :key="index" :class="session.isRunning ? 'bg-grey-lightest' : ''">
+                <tr v-for="(session, sessionIndex) in sessionsInDay" :key="sessionIndex" :class="session.rowClasses">
                     <td class="pl-2">
                         <input type="checkbox" v-model="session.isSelected" :value="session.id"/>
                     </td>
@@ -63,7 +63,7 @@
                     <td class="text-right inline-flex pb-2 @if($key == 0) pt-2 @endif float-right">
                         <form :action="session.destroyUrl" method="post">
                             <csrf-input></csrf-input>
-                            <div class="btn-group pull-right">
+                            <div class="btn-group float-right">
                                 <a
                                     :href="session.editUrl"
                                     class="btn btn-default"
@@ -127,7 +127,10 @@
         },
         data() {
             return {
-                sessions: [].concat(...this.days),
+                sessions: [].concat(...this.days).map(function (session) {
+                   session.rowClasses = '';
+                   return session;  
+                }),
                 selectAll: false,
                 selectedInvoiceId: null,
                 actionsDropdown: [
@@ -175,6 +178,19 @@
             },
             selectInvoice(invoiceId) {
                 this.selectedInvoiceId = invoiceId;
+            },
+            rowClasses(session) {
+                var classes = [];
+                
+                if (session.isRunning) {
+                    classes.push('bg-grey-lightest');
+                };
+
+                if (session.isSelected) {
+                    classes.push('bg-green-lightest');
+                }
+                
+                return classes.join(' ');
             }
         },
         watch: {
@@ -182,6 +198,14 @@
                 this.sessions.forEach((session) => {
                     session.isSelected = newValue;
                 });
+            },
+            sessions: {
+                deep: true,
+                handler(newValue) {
+                    newValue.forEach(session => {
+                        session.rowClasses = this.rowClasses(session);
+                    });
+                }
             }
         },
     }

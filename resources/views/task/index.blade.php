@@ -29,7 +29,7 @@
                 <th> Sprint </th>
                 <th> Project </th>
                 <th> Client </th>
-                <th> <span class="pull-right"> Actions </span> </th>
+                <th> <span class="float-right"> Actions </span> </th>
                 @foreach($tasks as $task)
                 <tr
                     class="item-container"
@@ -62,7 +62,7 @@
                     </a>
                 </td>
                     <td>
-                        <div class="btn-group pull-right">
+                        <div class="btn-group float-right">
                             <a
                                 href="{{ route('task.edit', ['task' => $task]) }}"
                                 class="btn btn-default"
