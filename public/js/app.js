@@ -48862,7 +48862,10 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             _this = this;
 
         return {
-            sessions: (_ref = []).concat.apply(_ref, _toConsumableArray(this.days)),
+            sessions: (_ref = []).concat.apply(_ref, _toConsumableArray(this.days)).map(function (session) {
+                session.rowClasses = '';
+                return session;
+            }),
             selectAll: false,
             selectedInvoiceId: null,
             actionsDropdown: [{
@@ -48917,6 +48920,19 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
         },
         selectInvoice: function selectInvoice(invoiceId) {
             this.selectedInvoiceId = invoiceId;
+        },
+        rowClasses: function rowClasses(session) {
+            var classes = [];
+
+            if (session.isRunning) {
+                classes.push('bg-grey-lightest');
+            };
+
+            if (session.isSelected) {
+                classes.push('bg-green-lightest');
+            }
+
+            return classes.join(' ');
         }
     },
     watch: {
@@ -48924,6 +48940,17 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
             this.sessions.forEach(function (session) {
                 session.isSelected = newValue;
             });
+        },
+
+        sessions: {
+            deep: true,
+            handler: function handler(newValue) {
+                var _this3 = this;
+
+                newValue.forEach(function (session) {
+                    session.rowClasses = _this3.rowClasses(session);
+                });
+            }
         }
     }
 });
@@ -49450,10 +49477,10 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _vm._l(_vm.days, function(sessionsInDay, index) {
+              _vm._l(_vm.days, function(sessionsInDay, dayIndex) {
                 return _c(
                   "tbody",
-                  { key: index },
+                  { key: dayIndex },
                   [
                     _c(
                       "tr",
@@ -49481,13 +49508,10 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _vm._l(sessionsInDay, function(session, index) {
+                    _vm._l(sessionsInDay, function(session, sessionIndex) {
                       return _c(
                         "tr",
-                        {
-                          key: index,
-                          class: session.isRunning ? "bg-grey-lightest" : ""
-                        },
+                        { key: sessionIndex, class: session.rowClasses },
                         [
                           _c("td", { staticClass: "pl-2" }, [
                             _c("input", {
@@ -49724,7 +49748,7 @@ var render = function() {
                                   _vm._v(" "),
                                   _c(
                                     "div",
-                                    { staticClass: "btn-group pull-right" },
+                                    { staticClass: "btn-group float-right" },
                                     [
                                       _c(
                                         "a",
