@@ -79,4 +79,5 @@ class FilterSessionTest extends TestCase
 
         $this->assertTrue(count($res_array) == 0);
     }
+
 }

@@ -37,7 +37,6 @@ class CreateSessionTest extends TestCase
     /** @test */
     public function a_user_can_store_session_by_post()
     {
-
         Carbon::setTestNow(Carbon::parse('2018-01-01 00:00:00'));
 
         $this->actingAsUser();
@@ -64,4 +63,5 @@ class CreateSessionTest extends TestCase
 
         Carbon::setTestNow();
     }
+
 }

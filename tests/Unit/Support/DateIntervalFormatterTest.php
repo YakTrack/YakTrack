@@ -14,7 +14,6 @@ use Tests\TestCase;
 
 class DateIntervalFormatterTest extends TestCase
 {
-
     /** @test
      * @throws \Exception
      */
@@ -38,4 +37,5 @@ class DateIntervalFormatterTest extends TestCase
 
         $this->assertEquals($expected, (new DateIntervalFormatter())->numberOfHours($dateInterval));
     }
+
 }
