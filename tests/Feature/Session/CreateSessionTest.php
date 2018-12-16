@@ -3,13 +3,11 @@
  * Created by PhpStorm.
  * User: dominiksecka
  * Date: 2018-12-14
- * Time: 22:28
+ * Time: 22:28.
  */
 
 namespace Tests\Feature\Session;
 
-
-use App\Models\Session;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -30,7 +28,7 @@ class CreateSessionTest extends TestCase
         $response->assertRedirect(route('session.index'));
 
         $this->assertDatabaseHas('sessions', [
-            'started_at' => '2018-01-01 00:00:00'
+            'started_at' => '2018-01-01 00:00:00',
         ]);
 
         Carbon::setTestNow();
@@ -49,7 +47,7 @@ class CreateSessionTest extends TestCase
         $response->assertRedirect(route('session.index'));
 
         $this->assertDatabaseHas('sessions', [
-            'ended_at' => null
+            'ended_at' => null,
         ]);
 
         $response = $this->post(route('session.store'), ['started_at' => '2018-02-01 00:00:00']);
@@ -57,7 +55,7 @@ class CreateSessionTest extends TestCase
         $response->assertSuccessful();
 
         $this->assertDatabaseHas('sessions', [
-            'ended_at' => '2018-01-01 00:00:00'
+            'ended_at' => '2018-01-01 00:00:00',
         ]);
 
         $this->assertDatabaseHas('sessions', [
@@ -65,7 +63,5 @@ class CreateSessionTest extends TestCase
         ]);
 
         Carbon::setTestNow();
-
     }
-
 }

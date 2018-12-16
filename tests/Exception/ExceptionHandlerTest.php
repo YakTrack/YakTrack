@@ -3,17 +3,15 @@
  * Created by PhpStorm.
  * User: dominiksecka
  * Date: 2018-12-15
- * Time: 15:37
+ * Time: 15:37.
  */
 
 namespace Tests\Exception;
-
 
 use App\Exceptions\Handler;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Http\Request;
 use Illuminate\Session\TokenMismatchException;
-use phpDocumentor\Reflection\Types\Void_;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
@@ -46,5 +44,4 @@ class ExceptionHandlerTest extends TestCase
         $expected = null;
         $this->assertTrue($expected == $method->invokeArgs($instance, [$this->createMock(TokenMismatchException::class)]));
     }
-
 }

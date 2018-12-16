@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: dominiksecka
  * Date: 2018-12-16
- * Time: 19:29
+ * Time: 19:29.
  */
 
 namespace Tests\Feature\Auth;
-
 
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -34,10 +33,10 @@ class RegisterTest extends TestCase
         $obj = new RegisterController();
         $response = $validator
             ->invokeArgs($obj, [[
-                'name' => 'dominik',
-                'email' => 'secka.dominik@gmail.com',
-                'password' => 'password',
-                'password_confirmation' => 'password'
+                'name'                  => 'dominik',
+                'email'                 => 'secka.dominik@gmail.com',
+                'password'              => 'password',
+                'password_confirmation' => 'password',
             ]]);
 
         $this->assertFalse($response->fails());
@@ -50,10 +49,10 @@ class RegisterTest extends TestCase
         $controller = new RegisterController();
         $response = $validator
             ->invokeArgs($controller, [[
-                'name' => 'dominik',
-                'email' => 'secka.dominik@gmail.com',
-                'password' => 'pas',
-                'password_confirmation' => 'pas'
+                'name'                  => 'dominik',
+                'email'                 => 'secka.dominik@gmail.com',
+                'password'              => 'pas',
+                'password_confirmation' => 'pas',
             ]]);
 
         $this->assertTrue($response->fails());
@@ -64,14 +63,14 @@ class RegisterTest extends TestCase
     {
         $createMethod = self::getMethod('create');
         $controller = new RegisterController();
-        $createMethod ->invokeArgs($controller, [[
-            'name' => 'dominik',
-            'email' => 'secka.dominik@gmail.com',
+        $createMethod->invokeArgs($controller, [[
+            'name'     => 'dominik',
+            'email'    => 'secka.dominik@gmail.com',
             'password' => 'password',
         ]]);
 
         $this->assertDatabaseHas('users', [
-            'email' => 'secka.dominik@gmail.com'
+            'email' => 'secka.dominik@gmail.com',
         ]);
     }
 
@@ -80,6 +79,7 @@ class RegisterTest extends TestCase
         $class = new \ReflectionClass(RegisterController::class);
         $method = $class->getMethod($name);
         $method->setAccessible(true);
+
         return $method;
     }
 }

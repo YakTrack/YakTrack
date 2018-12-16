@@ -36,7 +36,7 @@ class EditSessionTest extends TestCase
         $session = factory(Session::class)->create();
 
         $this->assertDatabaseHas('sessions', [
-            'id' => $session->id
+            'id' => $session->id,
         ]);
 
         $this->actingAsUser();

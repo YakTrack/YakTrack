@@ -42,7 +42,7 @@ class DeleteSessionTest extends TestCase
         $response->assertSuccessful();
 
         $this->assertDatabaseMissing('sessions', [
-           'id' => $session
+           'id' => $session,
         ]);
     }
 }
