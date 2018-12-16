@@ -63,5 +63,4 @@ class CreateSessionTest extends TestCase
 
         Carbon::setTestNow();
     }
-
 }

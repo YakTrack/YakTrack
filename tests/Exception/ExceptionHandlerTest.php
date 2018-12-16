@@ -43,5 +43,4 @@ class ExceptionHandlerTest extends TestCase
         $expected = null;
         $this->assertTrue($expected == $method->invokeArgs($instance, [$this->createMock(TokenMismatchException::class)]));
     }
-    
 }

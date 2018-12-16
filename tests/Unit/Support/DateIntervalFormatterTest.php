@@ -37,5 +37,4 @@ class DateIntervalFormatterTest extends TestCase
 
         $this->assertEquals($expected, (new DateIntervalFormatter())->numberOfHours($dateInterval));
     }
-
 }

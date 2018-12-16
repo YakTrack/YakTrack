@@ -82,5 +82,4 @@ class RegisterTest extends TestCase
 
         return $method;
     }
-
 }
