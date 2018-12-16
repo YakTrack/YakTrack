@@ -25,4 +25,24 @@ class DeleteSessionTest extends TestCase
             'id' => $session->id,
         ]);
     }
+
+    /** @test */
+    public function a_user_can_delete_a_session_by_id()
+    {
+        $session = factory(Session::class)->create();
+
+        $this->assertDatabaseHas('sessions', [
+            'id' => $session->id,
+        ]);
+
+        $this->actingAsUser();
+
+        $response = $this->delete('session/'.$session->id.'/destroy');
+
+        $response->assertSuccessful();
+
+        $this->assertDatabaseMissing('sessions', [
+           'id' => $session
+        ]);
+    }
 }

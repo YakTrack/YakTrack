@@ -13,7 +13,8 @@
         "stevebauman/active": "1.0.*",
         "spatie/laravel-blade-javascript": "*.*",
         "laravel/tinker": "^1.0",
-        "doctrine/dbal": "^2.8"
+        "doctrine/dbal": "^2.8",
+        "phpunit/php-code-coverage": "^6.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -23,7 +24,8 @@
         "symfony/dom-crawler": "4.*",
         "laravel/browser-kit-testing": "*.*",
         "filp/whoops": "~2.0",
-        "laravel/telescope": "^0.1.3"
+        "laravel/telescope": "^0.1.3",
+      "ext-json": "*"
     },
     "autoload": {
         "classmap": [

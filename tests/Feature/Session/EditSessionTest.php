@@ -31,6 +31,22 @@ class EditSessionTest extends TestCase
     }
 
     /** @test */
+    public function a_user_can_load_the_page_to_edit_by_get()
+    {
+        $session = factory(Session::class)->create();
+
+        $this->assertDatabaseHas('sessions', [
+            'id' => $session->id
+        ]);
+
+        $this->actingAsUser();
+
+        $response = $this->get('session/'.$session->id.'/edit');
+
+        $response->assertSuccessful();
+    }
+
+    /** @test */
     public function a_user_can_load_the_page_to_edit_a_session_in_pogress()
     {
         $this->withoutExceptionHandling();

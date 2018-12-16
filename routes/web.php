@@ -36,6 +36,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::get('session/start', 'SessionController@start')->name('session.start');
     Route::get('session/stop', 'SessionController@stop')->name('session.stop');
+    Route::post('session/store', 'SessionController@store')->name('session.store');
 
     Route::resource('session', 'SessionController');
     Route::post('session/filter', 'SessionController@filter')->name('session.filter');

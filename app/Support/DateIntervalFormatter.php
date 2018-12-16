@@ -23,7 +23,7 @@ class DateIntervalFormatter
         return $afterNumberOfSeconds->diff($now);
     }
 
-    protected function numberOfHours(DateInterval $interval)
+    public function numberOfHours(DateInterval $interval)
     {
         return $interval->days * 24 + $interval->h;
     }
