@@ -187,6 +187,11 @@ class Session extends Model
         return $query->whereNotNull('ended_at');
     }
 
+    public function scopeStartedAfter($query, $date)
+    {
+        return $query->where('started_at', '>', $date);
+    }
+
     public function stop($endedAt = null)
     {
         $this->ended_at = $endedAt ?? Carbon::now();
