@@ -50,9 +50,9 @@ class SessionController extends Controller
     {
         return view('session.edit', [
             'session'  => $session,
-            'tasks'    => Task::all(),
-            'invoices' => Invoice::all(),
-            'sprints'  => Sprint::with('project.client')->get(),
+            'tasks'    => Task::orderBy('id', 'desc')->get(),
+            'invoices' => Invoice::orderBy('id', 'desc')->get(),
+            'sprints'  => Sprint::with('project.client')->orderBy('id', 'desc')->get(),
         ]);
     }
 
