@@ -47971,12 +47971,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
 
 
 
@@ -48059,31 +48053,6 @@ var render = function() {
                   _vm.selectedProject = $$v
                 },
                 expression: "selectedProject"
-              }
-            })
-          ],
-          1
-        ),
-        _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "form-group" },
-          [
-            _c("label", { attrs: { for: "sprint_id" } }, [_vm._v(" Sprint ")]),
-            _vm._v(" "),
-            _c("input", {
-              attrs: { type: "hidden", name: "sprint_id" },
-              domProps: { value: _vm.selectedSprintId }
-            }),
-            _vm._v(" "),
-            _c("multi-select", {
-              attrs: { options: _vm.selectableSprints, label: "name" },
-              model: {
-                value: _vm.selectedSprint,
-                callback: function($$v) {
-                  _vm.selectedSprint = $$v
-                },
-                expression: "selectedSprint"
               }
             })
           ],
