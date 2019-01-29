@@ -15,6 +15,8 @@ class CreateTaskTest extends TestCase
     /** @test */
     public function a_logged_in_user_can_create_a_task()
     {
+        $this->withoutExceptionHandling();
+
         $this->actingAsUser();
 
         // Create project
@@ -26,11 +28,12 @@ class CreateTaskTest extends TestCase
         // Create parent task
         $parentTask = factory(Task::class)->create([
             'parent_id' => $project->id,
-            'sprint_id' => $sprint->id,
         ]);
 
         // Visit page
         $response = $this->get(route('task.create'));
+
+        $response->assertSuccessful();
 
         // Verify correct page loads
         $response->assertViewIs('task.create');
@@ -40,7 +43,6 @@ class CreateTaskTest extends TestCase
             'name'        => 'Test Task',
             'description' => 'Test task description.',
             'project_id'  => $project->id,
-            'sprint_id'   => $sprint->id,
             'parent_id'   => $parentTask->id,
         ]);
 
@@ -53,7 +55,6 @@ class CreateTaskTest extends TestCase
             'description' => 'Test task description.',
             'project_id'  => $project->id,
             'parent_id'   => $parentTask->id,
-            'sprint_id'   => $sprint->id,
         ]);
     }
 }

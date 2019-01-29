@@ -29,7 +29,6 @@ class TaskController extends Controller
     {
         return view('task.create', [
             'projects' => Project::with(['sprints', 'tasks'])->orderBy('name')->get(),
-            'sprints'  => Sprint::with(['project'])->orderBy('name')->get(),
             'tasks'    => Task::orderBy('id', 'desc')->get(),
         ]);
     }
@@ -47,7 +46,6 @@ class TaskController extends Controller
             'name'        => request('name'),
             'description' => request('description'),
             'project_id'  => request('project_id') ?: null,
-            'sprint_id'   => request('sprint_id') ?: null,
             'parent_id'   => request('parent_id') ?: null,
             'status'      => 'incomplete',
         ]);

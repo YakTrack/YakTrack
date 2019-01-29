@@ -19,12 +19,6 @@
             </div>
 
             <div class="form-group">
-                <label for="sprint_id"> Sprint </label>
-                <input type="hidden" name="sprint_id" :value="selectedSprintId"/>
-                <multi-select :options="selectableSprints" label="name" v-model="selectedSprint"></multi-select>
-            </div>
-
-            <div class="form-group">
                 <label for="parent_id"> Parent Task </label>
                 <input type="hidden" name="parent_id" :value="selectedParentTaskId"/>
                 <multi-select :options="selectableParentTasks" label="name" v-model="selectedParentTask"></multi-select>

@@ -16,7 +16,6 @@
     <create-task-form
         url="{{ route('task.store') }}"
         :projects='{{ $projects->toJson() }}'
-        :sprints='{{ $sprints->toJson() }}'
         :tasks='{{ $tasks->toJson() }}'
     ></create-task-form>
 
