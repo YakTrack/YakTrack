@@ -27,6 +27,7 @@ class IndexSessionTest extends TestCase
     public function a_user_can_see_a_list_of_sessions_filtered_by_start_time()
     {
         $this->withoutExceptionHandling();
+        $this->usingTestDisplayTimezone();
 
         Carbon::setTestNow(Carbon::parse('2019-01-08 00:00:00'));
 
