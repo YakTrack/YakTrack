@@ -37,12 +37,12 @@
                         <span v-else class="p-2 text-grey-dark font-light"> {{ session.durationForHumans }} </span>
                     </td>
                     <td class="pl-4 max-w-3">
-                        <div v-if="session.task" class="inline-flex">
+                        <div class="inline-flex">
                             <div class="mr-3 flex my-auto">
                                 <a v-if="session.isRunning" class="btn" :href="session.stopUrl"><i class="fa fa-stop fa-xs text-red"></i></a>
-                                <button v-else class="btn" @click="createSessionForTask(session.task)"><i class="fas fa-play fa-xs text-grey"></i></button>
+                                <button v-if="session.task && !session.isRunning" class="btn" @click="createSessionForTask(session.task)"><i class="fas fa-play fa-xs text-grey"></i></button>
                             </div>
-                            <div>
+                            <div v-if="session.task">
                                 <div>
                                     <span class="text-grey text-sm"> #{{ session.task.id }}</span>
                                     {{ session.task.name }}
