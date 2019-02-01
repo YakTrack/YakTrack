@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
-use App\Models\Sprint;
 use App\Models\Task;
 use App\Models\ThirdPartyApplication;
 use Illuminate\Http\Request;
