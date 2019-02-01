@@ -66682,49 +66682,49 @@ var render = function() {
                           ),
                           _vm._v(" "),
                           _c("td", { staticClass: "pl-4 max-w-3" }, [
-                            session.task
-                              ? _c("div", { staticClass: "inline-flex" }, [
-                                  _c(
-                                    "div",
-                                    { staticClass: "mr-3 flex my-auto" },
-                                    [
-                                      session.isRunning
-                                        ? _c(
-                                            "a",
-                                            {
-                                              staticClass: "btn",
-                                              attrs: { href: session.stopUrl }
-                                            },
-                                            [
-                                              _c("i", {
-                                                staticClass:
-                                                  "fa fa-stop fa-xs text-red"
-                                              })
-                                            ]
-                                          )
-                                        : _c(
-                                            "button",
-                                            {
-                                              staticClass: "btn",
-                                              on: {
-                                                click: function($event) {
-                                                  _vm.createSessionForTask(
-                                                    session.task
-                                                  )
-                                                }
-                                              }
-                                            },
-                                            [
-                                              _c("i", {
-                                                staticClass:
-                                                  "fas fa-play fa-xs text-grey"
-                                              })
-                                            ]
-                                          )
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c("div", [
+                            _c("div", { staticClass: "inline-flex" }, [
+                              _c("div", { staticClass: "mr-3 flex my-auto" }, [
+                                session.isRunning
+                                  ? _c(
+                                      "a",
+                                      {
+                                        staticClass: "btn",
+                                        attrs: { href: session.stopUrl }
+                                      },
+                                      [
+                                        _c("i", {
+                                          staticClass:
+                                            "fa fa-stop fa-xs text-red"
+                                        })
+                                      ]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                session.task && !session.isRunning
+                                  ? _c(
+                                      "button",
+                                      {
+                                        staticClass: "btn",
+                                        on: {
+                                          click: function($event) {
+                                            _vm.createSessionForTask(
+                                              session.task
+                                            )
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c("i", {
+                                          staticClass:
+                                            "fas fa-play fa-xs text-grey"
+                                        })
+                                      ]
+                                    )
+                                  : _vm._e()
+                              ]),
+                              _vm._v(" "),
+                              session.task
+                                ? _c("div", [
                                     _c("div", [
                                       _c(
                                         "span",
@@ -66779,8 +66779,8 @@ var render = function() {
                                         ])
                                       : _vm._e()
                                   ])
-                                ])
-                              : _vm._e()
+                                : _vm._e()
+                            ])
                           ]),
                           _vm._v(" "),
                           _c("td", [
