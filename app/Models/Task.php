@@ -36,7 +36,7 @@ class Task extends Model
 
     public function openSprint()
     {
-        return $this->getProject()->sprints()->open()->orderBy('id', 'desc')->first() ?? new Sprint;
+        return $this->getProject()->sprints()->open()->orderBy('id', 'desc')->first() ?? new Sprint();
     }
 
     public function getClient()
