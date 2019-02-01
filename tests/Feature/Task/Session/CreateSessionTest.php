@@ -6,9 +6,7 @@ use App\Models\Project;
 use App\Models\Session;
 use App\Models\Sprint;
 use App\Models\Task;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class CreateSessionTest extends TestCase
@@ -41,7 +39,7 @@ class CreateSessionTest extends TestCase
                 'task_id'    => $task->id,
                 'started_at' => json_decode($session->toJson(), true)['started_at'],
                 'ended_at'   => null,
-            ]
+            ],
         ]);
     }
 
@@ -81,7 +79,7 @@ class CreateSessionTest extends TestCase
                 'started_at' => json_decode($session->toJson(), true)['started_at'],
                 'ended_at'   => null,
                 'sprint_id'  => $sprint->id,
-            ]
+            ],
         ]);
     }
 }
