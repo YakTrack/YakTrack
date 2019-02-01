@@ -1,5 +1,7 @@
 <template>
     <div class="p-4 bg-white rounded shadow" v-if="days.length > 0">
+        <div class="card">
+        </div>
         <table class="table table-hover bg-white">
             <thead>
                 <tr>
@@ -8,7 +10,6 @@
                     <th class="text-right"> End Time </th>
                     <th class="text-right"> Total Time </th>
                     <th class="text-center"> Linked To </th>
-                    <th v-for="app in thirdPartyApplications" :key="app.id"> Linked to {{ app.name }} </th>
                     <th> Sprint </th>
                     <th> Invoice </th>
                     <th class="text-right pr-0">
@@ -28,7 +29,7 @@
                         {{ session.localStartedAtTimeForHumans }}
                     </td>
                     <td class="min-w-1 text-center">
-                        <a v-if="session.isRunning" class="btn" :href="session.stopUrl"><i class="fa fa-stop text-red"></i></a>
+                        <span v-if="session.isRunning" class="text-grey-light"> --:--:-- </span>
                         <span v-else> {{ session.localEndedAtTimeForHumans }} </span>
                     </td>
                     <td class="min-w-1 text-right pr-4">
@@ -36,23 +37,26 @@
                         <span v-else class="p-2 text-grey-dark font-light"> {{ session.durationForHumans }} </span>
                     </td>
                     <td class="pl-4 max-w-3">
-                        <div v-if="session.task">
-                            <div>
-                                <span class="text-grey text-sm"> #{{ session.task.id }}</span>
-                                {{ session.task.name }}
+                        <div v-if="session.task" class="inline-flex">
+                            <div class="mr-3 flex my-auto">
+                                <a v-if="session.isRunning" class="btn" :href="session.stopUrl"><i class="fa fa-stop fa-xs text-red"></i></a>
+                                <button v-else class="btn" @click="createSessionForTask(session.task)"><i class="fas fa-play fa-xs text-grey"></i></button>
                             </div>
-                            <div v-if="session.task.project">
-                                <span v-if="session.task.project.client" class="text-xs text-grey flex-1">
-                                    {{ session.task.project.client.name }} >
-                                </span>
-                                <span class="text-xs text-grey-darker flex-1">
-                                    {{ session.task.project.name }}
-                                </span>
+                            <div>
+                                <div>
+                                    <span class="text-grey text-sm"> #{{ session.task.id }}</span>
+                                    {{ session.task.name }}
+                                </div>
+                                <div v-if="session.task.project">
+                                    <span v-if="session.task.project.client" class="text-xs text-grey flex-1">
+                                        {{ session.task.project.client.name }} >
+                                    </span>
+                                    <span class="text-xs text-grey-darker flex-1">
+                                        {{ session.task.project.name }}
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                    </td>
-                    <td v-for="app in thirdPartyApplications" :key="app.id">
-                        TODO
                     </td>
                     <td>
                         <a v-if="session.sprint != null" class="no-underline text-xs" :href="session.sprint.showUrl"> {{ session.sprint.name }} </a>
@@ -191,6 +195,13 @@
                 }
                 
                 return classes.join(' ');
+            },
+            createSessionForTask(task) {
+               window.axios.post(`task/${task.id}/session`, {
+                    started_at: (new Date),
+               }).then((response) => {
+                   window.location.reload();
+               });
             }
         },
         watch: {

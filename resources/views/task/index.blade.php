@@ -26,7 +26,6 @@
             <tr>
                 <th> Name </th>
                 <th> Parent </th>
-                <th> Sprint </th>
                 <th> Project </th>
                 <th> Client </th>
                 <th> <span class="float-right"> Actions </span> </th>
@@ -44,11 +43,6 @@
                 <td>
                     <a href="{{ route('task.show', ['task' => $task->getParent()]) }}">
                         {{ $task->getParent()->shortName }}
-                    </a>
-                </td>
-                <td>
-                    <a href="{{ route('sprint.show', ['sprint' => $task->getSprint()]) }}">
-                        {{ $task->getSprint()->name }}
                     </a>
                 </td>
                 <td>

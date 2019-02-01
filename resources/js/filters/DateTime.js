@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 export default class DateTime {
 
     static secondsSince (carbonDate, fromTimeStamp = null) {
@@ -11,5 +13,9 @@ export default class DateTime {
         date.setSeconds(numberOfSeconds);
 
         return date.toISOString().substr(11, 8);
+    }
+
+    static toDateTimeString(date) {
+        return moment(date).format('YYYY-MM-DD HH:mm:ss');
     }
 }

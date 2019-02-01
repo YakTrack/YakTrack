@@ -34,9 +34,9 @@ class Task extends Model
         return $this->belongsTo(self::class, 'parent_id');
     }
 
-    public function sprint()
+    public function openSprint()
     {
-        return $this->belongsTo(Sprint::class);
+        return $this->getProject()->sprints()->open()->orderBy('id', 'desc')->first() ?? new Sprint;
     }
 
     public function getClient()
@@ -47,11 +47,6 @@ class Task extends Model
     public function getProject()
     {
         return $this->getRelation(Project::class);
-    }
-
-    public function getSprint()
-    {
-        return $this->getRelation(Sprint::class);
     }
 
     public function getParent()

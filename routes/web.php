@@ -29,6 +29,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('project', 'ProjectController');
     Route::resource('sprint', 'SprintController');
     Route::resource('task', 'TaskController');
+    Route::resource('task.session', 'Task\SessionController');
     Route::resource('third-party-application', 'ThirdPartyApplicationController');
     Route::resource('third-party-application-session', 'ThirdPartyApplicationSessionController');
     Route::resource('invoice', 'InvoiceController');
