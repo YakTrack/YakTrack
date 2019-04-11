@@ -14,8 +14,8 @@
         <h5 class="pt-4 pb-2 text-grey-darker"> THIS WEEK </h5>
         @foreach($thisWeeksWorkSessions as $dayOfWeek)
             <div class="flex pt-2 pb-2 @if($dayOfWeek['date']->isToday()) -ml-4 pl-4 -mr-4 pr-4 bg-blue-lightest @endif">
-                <div class="flex-1 text-grey-dark"> {{ $dayOfWeek['dateForHumans'] }} </div>
-                <div class="flex-1 {{ $dayOfWeek['totalTimeWorked'] != '0:00:00' ? 'text-grey-darkest' : '' }}">
+                <div class="flex-1 text-grey-dark"> {{ $dayOfWeek['dateNoYearForHumans'] }} </div>
+                <div class="flex-1 text-center {{ $dayOfWeek['totalTimeWorked'] != '0:00:00' ? 'text-grey-darkest' : '' }}">
                     @if($dayOfWeek['totalTimeWorked'] != '0:00:00')
                         @if ($currentlyWorking && $dayOfWeek['date']->isToday())
                             <timer :initial-time="{{ $dayOfWeek['totalSecondsWorked'] }}"></timer>
@@ -23,14 +23,14 @@
                             {{ $dayOfWeek['totalTimeWorked'] }}
                         @endif
                     @else 
-                        -
+                        <span class="text-grey-light">-</span>
                     @endif
                 </div>
             </div>
         @endforeach
         <div class="flex mt-4">
             <div class="flex-1 text-xl"> Total </div>
-            <div class="flex-1">
+            <div class="flex-1 text-center">
                 @if($currentlyWorking)
                     <timer :initial-time="{{ $totalSecondsThisWeek }}"></timer>
                 @else
@@ -48,7 +48,7 @@
                     <h4 class="mt-4"> This Week </h4>
                     <div class="flex mt-3">
                         <div class="flex-1"> Total Time </div>
-                        <div class="flex-1 text-right">
+                        <div class="flex-1 text-center">
                             @if($currentlyWorking && $currentClientName == $client->name)
                                 <timer :initial-time="{{ $client->sessionsThisWeek->totalDurationInSeconds() }}"></timer>
                             @else
@@ -60,7 +60,7 @@
                         <h4 class="mt-4"> Sprint: {{ $sprint->name }} </h4>
                         <div class="flex mt-3">
                             <div class="flex-1"> Total Time </div>
-                            <div class="flex-1 text-right">
+                            <div class="flex-1 text-center">
                                 @if($currentlyWorking && $currentSession->sprint_id == $sprint->id)
                                     <timer :initial-time="{{ $sprint->sessions->totalDurationInSeconds() }}"></timer>
                                 @else

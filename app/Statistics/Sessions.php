@@ -14,7 +14,7 @@ class Sessions
     public function __construct(DateTimeFormatter $dateTimeFormatter, DateIntervalFormatter $dateIntervalFormatter)
     {
         $this->dateIntervalFormatter = $dateIntervalFormatter;
-        $this->dateTimeFormatter = $dateTimeFormatter;
+        $this->dateTimeFormatter     = $dateTimeFormatter;
     }
 
     public function totalTimeOnDate($date)
@@ -31,10 +31,11 @@ class Sessions
     {
         return $this->dateTimeFormatter->daysThisWeek()->map(function ($date) {
             return [
-                'date'               => $date,
-                'dateForHumans'      => $this->dateTimeFormatter->dateForHumans($date),
-                'totalTimeWorked'    => $this->dateIntervalFormatter->forHumans($this->totalTimeOnDate($date)),
-                'totalSecondsWorked' => $this->totalSecondsOnDate($date),
+                'date'                => $date,
+                'dateForHumans'       => $this->dateTimeFormatter->dateForHumans($date),
+                'dateNoYearForHumans' => $this->dateTimeFormatter->dateNoYearForHumans($date),
+                'totalTimeWorked'     => $this->dateIntervalFormatter->forHumans($this->totalTimeOnDate($date)),
+                'totalSecondsWorked'  => $this->totalSecondsOnDate($date),
             ];
         });
     }

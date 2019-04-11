@@ -13,6 +13,8 @@ class DateTimeFormatter
 
     const DATE_FOR_HUMANS_FORMAT = 'l jS M Y';
 
+    const DATE_NO_YEAR_FOR_HUMANS_FORMAT = 'l jS M';
+
     const TIME_FOR_HUMANS_FORMAT = 'g:i:s a';
 
     const DAYS_OF_WEEK = [
@@ -38,6 +40,11 @@ class DateTimeFormatter
     public function dateForHumans($dateTime)
     {
         return $this->format($dateTime, self::DATE_FOR_HUMANS_FORMAT);
+    }
+
+    public function dateNoYearForHumans($dateTime)
+    {
+        return $this->format($dateTime, self::DATE_NO_YEAR_FOR_HUMANS_FORMAT);
     }
 
     public function localDateForHumans($dateTime)
