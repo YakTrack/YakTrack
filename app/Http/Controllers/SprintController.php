@@ -61,7 +61,16 @@ class SprintController extends Controller
      */
     public function show(Sprint $sprint)
     {
-        return view('sprint.show', ['sprint' => $sprint]);
+        return view('sprint.show', [
+            'sprint' => $sprint,
+            'tasks'  => $sprint->sessions->groupBy('task_id')->map(function ($sessionsForTask) {
+                $task = $sessionsForTask->first()->task;
+
+                $task->totalDurationInSprintForHumans = $sessionsForTask->totalDurationForHumans();
+
+                return $task;
+            }),
+        ]);
     }
 
     /**
