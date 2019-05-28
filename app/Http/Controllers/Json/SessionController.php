@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Json;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Session;
 use App\Models\Queries\IndexSessionQuery;
+use App\Models\Session;
+use Illuminate\Http\Request;
 
 class SessionController extends Controller
 {
