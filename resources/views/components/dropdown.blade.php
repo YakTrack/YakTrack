@@ -1,5 +1,5 @@
-<div class="relative float-right text-right">
-    <button class="btn float-right">
+<div class="relative text-right">
+    <button class="btn">
         <span>Actions</span>
         <i class="fas fa-caret-down"></i>
         <div class="rounded shadow-md mt-2 absolute mt-12 pin-t pin-l min-w-full bg-white dropdown">

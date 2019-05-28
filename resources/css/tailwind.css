@@ -93,6 +93,14 @@
     @apply bg-blue-dark;
 }
 
+.btn-disabled {
+    @apply text-grey-light cursor-not-allowed
+}
+
+.btn-disabled:hover {
+    @apply bg-white
+}
+
 .btn-green {
     @apply bg-green text-white
 }
@@ -134,6 +142,10 @@ input.form-control, textarea.form-control, select.form-control, .form-group text
     @apply text-left
 }
 
+.clickable {
+    cursor: pointer;
+}
+
 .card {
     @apply bg-white rounded shadow p-4
 }
@@ -170,6 +182,10 @@ input.form-control, textarea.form-control, select.form-control, .form-group text
 
 .max-w-3 {
     max-width: 320px;
+}
+
+.w-max-content {
+    width: max-content;
 }
 
 .flex-05 {
