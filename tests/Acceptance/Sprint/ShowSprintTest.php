@@ -4,8 +4,8 @@ use App\Models\Project;
 use App\Models\Session;
 use App\Models\Sprint;
 use App\Models\Task;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class ShowSprintTest extends TestCase
 {
@@ -18,8 +18,8 @@ class ShowSprintTest extends TestCase
 
         // Create project and sprint
         $project = factory(Project::class)->create();
-        $sprint  = factory(Sprint::class)->create(['project_id' => $project->id]);
-        $task    = factory(Task::class)->create([
+        $sprint = factory(Sprint::class)->create(['project_id' => $project->id]);
+        $task = factory(Task::class)->create([
             'project_id' => $project->id,
         ]);
         $session1 = factory(Session::class)->create([
