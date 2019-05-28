@@ -314,6 +314,10 @@
                }).then((response) => {
                    window.location.reload();
                });
+            },
+            selectPage(page) {
+                window.router.setQueryParam('page', page);
+                this.page = page;
             }
         },
         watch: {
