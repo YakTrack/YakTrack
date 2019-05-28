@@ -44,7 +44,7 @@ class CreateSessionTest extends BrowserKitTestCase
 
         $this->visit(route('session.start'));
 
-        $this->seePageIs(route('session.index'));
+        $this->seePageIs(route('session.index', ['per-page' => 100]));
 
         $this->seeInDatabase('sessions', [
             'id'         => 1,
@@ -72,7 +72,7 @@ class CreateSessionTest extends BrowserKitTestCase
 
         $this->visit(route('session.start'));
 
-        $this->seePageIs(route('session.index'));
+        $this->seePageIs(route('session.index', ['per-page' => 100]));
 
         $this->seeInDatabase('sessions', [
             'id'         => 1,

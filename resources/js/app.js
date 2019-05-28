@@ -4,7 +4,6 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('bootstrap');
 require('./bootstrap');
 window.Vue = require('vue');
 
@@ -23,9 +22,14 @@ import invoiceSelect from './components/InvoiceSelect.vue';
 import sprintSelect from './components/SprintSelect.vue';
 import taskSelect from './components/TaskSelect.vue';
 import timer from './components/Timer.vue';
+import Router from './router.js';
+
+window.router = new Router;
 
 Vue.filter('secondsSince', dateTime.secondsSince);
 Vue.filter('durationForHumans', dateTime.durationForHumans);
+
+import closeable from './directives/Closeable.js';
 
 const app = new Vue({
     el: '#app',

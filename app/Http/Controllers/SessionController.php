@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
-use App\Models\Queries\IndexSessionQuery;
 use App\Models\Session;
 use App\Models\Sprint;
 use App\Models\Task;
@@ -14,20 +13,18 @@ use Illuminate\Http\Request;
 
 class SessionController extends Controller
 {
-    public function __construct(DateTimeFormatter $dateTimeFormatter, IndexSessionQuery $indexSessionQuery)
+    public function __construct(DateTimeFormatter $dateTimeFormatter)
     {
         $this->dateTimeFormatter = $dateTimeFormatter;
-        $this->indexSessionQuery = $indexSessionQuery;
     }
 
     public function index()
     {
+        if (is_null(request('per-page'))) {
+            return redirect()->route('session.index', array_merge(request()->query(), ['per-page' => 100]));
+        }
+
         return view('session.index', [
-            'days' => $this->indexSessionQuery
-                ->execute()
-                ->groupBy(function ($session) {
-                    return $session->localStartedAt->format('Y-m-d');
-                }),
             'thirdPartyApplications' => ThirdPartyApplication::all(),
             'invoices'               => Invoice::all(),
         ]);
