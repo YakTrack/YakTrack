@@ -3,9 +3,8 @@
 namespace Tests\Feature\Json\Session;
 
 use App\Models\Session;
-use Carbon\Carbon;;
+use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class IndexSessionTest extends TestCase

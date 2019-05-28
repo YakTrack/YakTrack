@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Session;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 
