@@ -21,7 +21,7 @@
                     <tr class="bg-blue-lightest text-grey-dark font-light text-xs uppercase">
                         <td class="px-3 py-1 rounded" colspan="10"> {{ day.date }} </td>
                     </tr>
-                    <tr v-for="(session, sessionIndex) in day.sessions" :key="sessionIndex" :class="session.rowClasses">
+                    <tr v-for="(session, sessionIndex) in day.sessions" :key="session.id" :class="session.rowClasses">
                         <td class="pl-2">
                             <input type="checkbox" v-model="session.isSelected" :value="session.id"/>
                         </td>
@@ -159,7 +159,6 @@
         data() {
             return {
                 days: [],
-                sessions: [],
                 selectAll: false,
                 selectedInvoiceId: null,
                 actionsDropdown: [
@@ -189,6 +188,9 @@
             },
             selectedSessionIds() {
                 return this.selectedSessions.map((session) => session.id);
+            },
+            sessions() {
+                return this.days.reduce((acculumatedSessions, day) => [].concat(acculumatedSessions, day.sessions), []);
             },
             filteredDays() {
                 return this.days.map(day => {
@@ -257,7 +259,13 @@
             };
 
             window.axios.get(window.router.buildUrl(`json/session`, queryParams, this)).then(response => {
-                this.$set(this, 'days', response.data.days);
+                this.$set(this, 'days', response.data.days.map(day => {
+                    day.sessions = day.sessions.map(session => {
+                        session.isSelected = false;
+                        return session;
+                    });
+                    return day;
+                }));
                 this.$set(this, 'total', response.data.total);
                 this.$set(this, 'perPage', response.data.perPage);
                 this.$set(this, 'page', response.data.page);
