@@ -85,7 +85,7 @@
                 </tbody>
             </table>
 
-            <div class="flex justify-center">
+            <div class="flex justify-center mt-10">
                 <div class="flex">
                     <dropdown
                         :options="perPageOptions"
