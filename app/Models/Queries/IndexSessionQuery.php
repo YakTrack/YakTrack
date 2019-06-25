@@ -18,7 +18,8 @@ class IndexSessionQuery
             ->with(['task.project.client', 'invoice', 'thirdPartyApplicationSessions', 'sprint']);
 
         collect([
-            'started_after',
+            'started-after',
+            'started-before',
         ])->filter(function ($filter) {
             return request()->has($filter);
         })->each(function ($filter) use ($query) {
@@ -51,5 +52,10 @@ class IndexSessionQuery
     public function startedAfter($query, $dateTime)
     {
         $query->startedAfter($dateTime);
+    }
+
+    public function startedBefore($query, $dateTime)
+    {
+        $query->startedBefore($dateTime);
     }
 }

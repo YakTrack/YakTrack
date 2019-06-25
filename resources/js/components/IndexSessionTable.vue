@@ -1,4 +1,47 @@
 <template>
+    <div>
+        <div class="p-4 bg-white rounded shadow" v-if="showFilters">
+            <h3> Filters </h3>
+            <div class="flex w-1/2">
+                <div class="flex-1">
+                    <div>
+                        <select>
+                            <option> Started and Finished Between </option>
+                            <option> Started Between </option>
+                            <option> Finished Between </option>
+                        </select>
+                        <div>
+                            <button class="btn" @click="thisMonth()"> This Month </button>
+                            <button class="btn" @click="lastMonth()"> Last Month </button>
+                            <button class="btn" @click="lastWeek()"> Last Week </button>
+                            <button class="btn" @click="thisWeek()"> This Week </button>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="flex-1">
+                            <label> Start </label>
+                            <datetime
+                                v-model="filters.datetimeFilterStart"
+                                class="border border-grey p-2"
+                                :format="dateFormat"
+                                type="datetime"
+                            ></datetime>
+                        </div>
+                        <div class="flex-1 ml-2">
+                            <label> End </label>
+                            <datetime
+                                v-model="filters.datetimeFilterEnd"
+                                class="border border-grey p-2"
+                                :format="dateFormat"
+                                type="datetime"
+                            ></datetime>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="w-1/2">
+            </div>
         </div>
 
         <div class="p-4 bg-white rounded shadow mt-4" v-if="true"> <!--days.length > 0">-->
@@ -323,6 +366,19 @@
                    window.location.reload();
                });
             },
+            thisWeek() {
+                this.filters.datetimeFilterStart = this.dateTime.startOfWeek(new Date());
+                this.filters.datetimeFilterEnd = this.dateTime.endOfWeek(new Date());
+            },
+            lastWeek() {
+
+            },
+            thisMonth() {
+
+            },
+            lastMonth() {
+
+            },
             selectPage(page) {
                 window.router.setQueryParam('page', page);
                 this.page = page;
@@ -340,6 +396,11 @@
                     newValue.forEach(session => {
                         session.rowClasses = this.rowClasses(session);
                     });
+                }
+            },
+            filters: {
+                deep: true,
+                handler(newValue) {
                 }
             }
         },

@@ -6589,6 +6589,15 @@ table {
   background-color: #2779bd;
 }
 
+.btn-disabled {
+  color: #dae1e7;
+  cursor: not-allowed;
+}
+
+.btn-disabled:hover {
+  background-color: #fff;
+}
+
 .btn-green {
   background-color: #38c172;
   color: #fff;
@@ -6648,6 +6657,10 @@ select.form-control,
   text-align: left;
 }
 
+.clickable {
+  cursor: pointer;
+}
+
 .card {
   background-color: #fff;
   border-radius: .25rem;
@@ -6697,6 +6710,10 @@ th {
 
 .max-w-3 {
   max-width: 320px;
+}
+
+.w-max-content {
+  width: max-content;
 }
 
 .flex-05 {
