@@ -1,33 +1,38 @@
-import queryString from 'query-string';
+import camelToKebab from './filters/String.js';
 
 class Router {
-    setQueryParam(key, value) {
-        let query = queryString.parse(window.location.search);
-
-        query[key] = value;
-
-        window.location.search = queryString.stringify(query);
-    }
     getQueryParam(key) {
-        return (new URL(window.location.href)).searchParams.get(key);
+        return this.getQueryParams().get(camelToKebab(key));
     }
-    buildUrl(url, params, state) {
-        let merged = this.mergeQueryParams(params, state);
-        let keys = Object.keys(merged);
-        return url + '?' + keys.map(key => params[key] + '=' + merged[key]).join('&');
+
+    getQueryParams() {
+        return this.getURL().searchParams;
     }
-    mergeQueryParams(params, state) {
-        let merged= {};
 
-        let keys = Object.keys(params);
+    getURL() {
+        return (new URL(window.location.href))
+    }
 
-        keys.forEach((key) => {
-            if (state[key] || this.getQueryParam(params[key])) {
-                merged[key] = state[key] || this.getQueryParam(params[key]);
+    buildUrl(url, params) {
+        let keys = Object.keys(params).filter(key => {
+            if (typeof params[key] == 'undefined') {
+                return false;
             }
+            return params[key] != null
         });
+        return url + '?' + keys.map(key => camelToKebab(key) + '=' + params[key]).join('&');
+    }
 
-        return merged;
+    unsetQueryParam(key) {
+        this.getQueryParams().delete(key)
+    }
+
+    setQueryParam(key, value) {
+        var url = this.getURL();
+        url.searchParams.set(camelToKebab(key), value);
+        window.history.pushState({
+            path: url.toString()
+        }, '', url.toString());
     }
 }
 

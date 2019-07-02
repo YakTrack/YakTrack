@@ -12,6 +12,9 @@
 @endsection
 
 @section('top-right-toolbar')
+    <button type="button" class="btn" :class="(filtersAreShown ? 'btn-blue' : 'btn-primary') + ' btn-sm mr-2'" @click="toggleShowFilters()">
+        <i class="fa fa-filter"></i>
+    </button>
     <a href="{{ route('session.create') }}" class="btn btn-primary btn-sm mr-2">
         <i class="fa fa-stopwatch"></i>
     </a>
@@ -26,6 +29,7 @@
     <index-session-table
         :third-party-applications="{{ $thirdPartyApplications->toJson() }}"
         :invoices="{{ $invoices->toJson() }}"
+        :show-filters="showFilters"
     ></index-session-table>
 
 @endsection
