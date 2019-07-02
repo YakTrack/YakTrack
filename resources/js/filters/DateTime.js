@@ -18,4 +18,48 @@ export default class DateTime {
     static toDateTimeString(date) {
         return moment(date).format('YYYY-MM-DD HH:mm:ss');
     }
+
+    static fromDateTimeString(date) {
+        return moment(date, 'YYYY-MM-DD HH:mm:ss').toISOString();
+    }
+
+    static toDateTimeForHumans(date) {
+        return moment(date).format('h:mm a Mo MMM YYYY');
+    }
+
+    static startOfWeek(date) {
+        return moment(date).startOf('isoWeek').toISOString();
+    }
+
+    static startOfLastWeek(date) {
+        return moment(date).startOf('isoWeek').subtract(1, 'week').toISOString();
+    }
+
+    static endOfWeek(date) {
+        return moment(date).endOf('isoWeek').toISOString();
+    }
+
+    static endOfLastWeek(date) {
+        return moment(date).endOf('isoWeek').subtract(1, 'week').toISOString();
+    }
+
+    static startOfMonth(date) {
+        return moment(date).startOf('month').toISOString();
+    }
+
+    static startOfLastMonth(date) {
+        return moment(date).startOf('month').subtract(1, 'month').toISOString();
+    }
+
+    static endOfMonth(date) {
+        return moment(date).endOf('month').toISOString();
+    }
+
+    static endOfLastMonth(date) {
+        return moment(date).endOf('month').subtract(1, 'month').toISOString();
+    }
+
+    static moment(date) {
+        return moment(date);
+    }
 }

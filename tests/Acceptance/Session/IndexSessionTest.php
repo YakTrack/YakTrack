@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Session;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\TestCase;
 

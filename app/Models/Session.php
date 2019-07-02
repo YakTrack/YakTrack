@@ -189,7 +189,12 @@ class Session extends Model
 
     public function scopeStartedAfter($query, $date)
     {
-        return $query->where('started_at', '>', $date);
+        return $query->where('started_at', '>=', $date);
+    }
+
+    public function scopeStartedBefore($query, $date)
+    {
+        return $query->where('started_at', '<=', $date);
     }
 
     public function stop($endedAt = null)

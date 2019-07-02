@@ -1,4 +1,38 @@
 <template>
+    <div>
+        <div class="p-4 bg-white rounded shadow" v-if="queryParams.showFilters == 'true'">
+            <h3> Filters </h3>
+                <div class="flex-1">
+                    <div class="flex">
+                        <div class="btn-group">
+                            <button class="btn" @click="thisMonth()"> This Month </button>
+                            <button class="btn" @click="lastMonth()"> Last Month </button>
+                            <button class="btn" @click="lastWeek()"> Last Week </button>
+                            <button class="btn" @click="thisWeek()"> This Week </button>
+                        </div>
+                    </div>
+                    <div class="flex mt-2">
+                        <div class="flex-1">
+                            <label> Started After </label>
+                            <datetime
+                                v-model="filters.startedAfter"
+                                class="border border-grey p-2"
+                                :format="dateFormat"
+                                type="datetime"
+                            ></datetime>
+                        </div>
+                        <div class="flex-1 ml-2">
+                            <label> Started Before </label>
+                            <datetime
+                                v-model="filters.startedBefore"
+                                class="border border-grey p-2"
+                                :format="dateFormat"
+                                type="datetime"
+                            ></datetime>
+                        </div>
+                    </div>
+
+            </div>
         </div>
 
         <div class="p-4 bg-white rounded shadow mt-4" v-if="true"> <!--days.length > 0">-->
@@ -85,7 +119,7 @@
                 </tbody>
             </table>
 
-            <div class="flex justify-center">
+            <div class="flex justify-center mt-10">
                 <div class="flex">
                     <dropdown
                         :options="perPageOptions"
@@ -95,9 +129,9 @@
                     ></dropdown>
                     <page-selector
                         :total="total"
-                        :per-page="perPage"
                         :last-page="lastPage"
-                        :page="page"
+                        :page="queryParams.page"
+                        :per-page="queryParams.perPage"
                         :on-page-select="selectPage"
                     >
                     </page-selector>
@@ -139,6 +173,7 @@
     import DateTime from './../filters/DateTime';
     import DatetimeInput from './DatetimeInput';
     import PageSelector from './PageSelector';
+    import { mapState } from 'vuex'
 
     const DATE_FORMAT = "yyyy'-'MM'-'dd HH':'mm':'ss";
 
@@ -170,17 +205,16 @@
                 ],
                 dateFormat: DATE_FORMAT,
                 filters: {
-                    datetimeFilterStart: null,
-                    datetimeFilterEnd: null,
+                    startedAfter: null,
+                    startedBefore: null,
                 },
                 dateTime: DateTime,
-                total: null,
-                perPage: null,
-                page: null,
                 lastPage: null,
+                total: null,
             };
         },
         computed: {
+            ...mapState(['queryParams']),
             selectedSessions() {
                 return this.sessions.filter(function (session) {
                     return session.isSelected;
@@ -193,19 +227,7 @@
                 return this.days.reduce((acculumatedSessions, day) => [].concat(acculumatedSessions, day.sessions), []);
             },
             filteredDays() {
-                return this.days.map(day => {
-                    return {
-                        date: day.date,
-                        sessions: day.sessions.filter(session => {
-                            if (this.filters.datetimeFilterStart == null || this.filters.datetimeFilterEnd == null) {
-                                return true;
-                            }
-
-                            return this.dateTime.toDateTimeString(this.filters.datetimeFilterStart) < this.dateTime.toDateTimeString(session.started_at.date) &&
-                                this.dateTime.toDateTimeString(this.filters.datetimeFilterEnd) > this.dateTime.toDateTimeString(session.ended_at ? session.ended_at.date : new Date);
-                        }),
-                    };
-                }).filter(day => day.sessions.length > 0);
+                return this.days.filter(day => day.sessions.length > 0);
             },
             perPageOptions() {
                 return [
@@ -249,34 +271,44 @@
             selectedPerPageOption() {
                 return this.perPageOptions.find(option =>{
                     return Number.parseInt(option.name) == window.router.getQueryParam('per-page');
-                }); 
+                });
             }
         },
         created() {
-            var queryParams = {
-                perPage: 'per-page',
-                page: 'page',
-            };
+            this.setDateTimeFilters(
+                this.dateTime.fromDateTimeString(this.queryParams.startedAfter),
+                this.dateTime.fromDateTimeString(this.queryParams.startedBefore)
+            );
 
-            window.axios.get(window.router.buildUrl(`json/session`, queryParams, this)).then(response => {
-                this.$set(this, 'days', response.data.days.map(day => {
-                    day.sessions = day.sessions.map(session => {
-                        session.isSelected = false;
-                        return session;
-                    });
-                    return day;
-                }));
-                this.$set(this, 'total', response.data.total);
-                this.$set(this, 'perPage', response.data.perPage);
-                this.$set(this, 'page', response.data.page);
-                this.$set(this, 'lastPage', response.data.lastPage);
-            });
+            this.getSessions();
 
             events.$on('set-per-page', (perPage) => {
-                router.setQueryParam('per-page', perPage);
+                this.$store.dispatch('setQueryParam', {
+                    key: 'perPage',
+                    value: perPage
+                });
             });
         },
         methods: {
+            getSessions() {
+                window.axios.get(
+                    window.router.buildUrl(`json/session`, this.$store.state.queryParams)
+                ).then(response => {
+                    this.$set(this, 'days', response.data.days.map(day => {
+                        day.sessions = day.sessions.map(session => {
+                            session.isSelected = false;
+                            return session;
+                        });
+                        return day;
+                    }));
+                    this.$set(this, 'total', response.data.total);
+                    this.$set(this, 'lastPage', response.data.lastPage);
+                    this.setQueryParams({
+                        page: response.data.page,
+                        perPage: response.data.perPage,
+                    });
+                });
+            },
             toggleAllCheckboxes(event) {
                 this.sessions.forEach((session) => {
                     session.isSelected = event.target.isChecked;
@@ -305,7 +337,7 @@
             },
             rowClasses(session) {
                 var classes = [];
-                
+
                 if (session.isRunning) {
                     classes.push('bg-grey-lightest');
                 };
@@ -313,7 +345,7 @@
                 if (session.isSelected) {
                     classes.push('bg-green-lightest');
                 }
-                
+
                 return classes.join(' ');
             },
             createSessionForTask(task) {
@@ -323,9 +355,55 @@
                    window.location.reload();
                });
             },
+            thisWeek() {
+                this.setDateTimeFilters(
+                    this.dateTime.startOfWeek(new Date()),
+                    this.dateTime.endOfWeek(new Date())
+                );
+            },
+            lastWeek() {
+                this.setDateTimeFilters(
+                    this.dateTime.startOfLastWeek(new Date()),
+                    this.dateTime.endOfLastWeek(new Date())
+                );
+            },
+            thisMonth() {
+                this.setDateTimeFilters(
+                    this.dateTime.startOfMonth(new Date()),
+                    this.dateTime.endOfMonth(new Date())
+                );
+            },
+            lastMonth() {
+                this.setDateTimeFilters(
+                    this.dateTime.startOfLastMonth(new Date()),
+                    this.dateTime.endOfLastMonth(new Date())
+                );
+            },
+            setDateTimeFilters(startedAfter, startedBefore) {
+                this.setStartedAfterFilter(startedAfter);
+                this.setStartedBeforeFilter(startedBefore);
+            },
+            setStartedAfterFilter(startedAfter) {
+                this.filters.startedAfter = startedAfter;
+            },
+            setStartedBeforeFilter(startedBefore) {
+                this.filters.startedBefore = startedBefore;
+            },
             selectPage(page) {
-                window.router.setQueryParam('page', page);
-                this.page = page;
+                this.$store.dispatch('setQueryParam', {
+                    key: 'page',
+                    value: page,
+                });
+            },
+            setQueryParams(params) {
+                this.$store.dispatch('setQueryParam', {
+                    key: 'perPage',
+                    value: params.perPage,
+                });
+                this.$store.dispatch('setQueryParam', {
+                    key: 'page',
+                    value: params.page,
+                });
             }
         },
         watch: {
@@ -341,6 +419,26 @@
                         session.rowClasses = this.rowClasses(session);
                     });
                 }
+            },
+            filters: {
+                deep: true,
+                handler(newValue) {
+                    ['startedAfter', 'startedBefore'].forEach(key => {
+                        this.$store.dispatch(
+                            'setQueryParam',
+                            {
+                                key: key,
+                                value: this.dateTime.toDateTimeString(newValue[key])
+                            }
+                        )
+                    });
+                }
+            },
+            queryParams: {
+                deep:true,
+                handler(newValue) {
+                    this.getSessions();
+                },
             }
         },
     }
