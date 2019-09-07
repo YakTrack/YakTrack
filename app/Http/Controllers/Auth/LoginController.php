@@ -37,4 +37,13 @@ class LoginController extends Controller
     {
         return Inertia::render('Auth/Login');
     }
+
+    public function logout()
+    {
+        $this->guard()->logout();
+
+        request()->session()->invalidate();
+
+        return $this->loggedOut(request()) ?: redirect('/login');
+    }
 }

@@ -6,11 +6,8 @@
             <div class="flex-1 items-left flex-no-shrink text-white m-1">
                 <span class="text-2xl tracking-tight text-grey-darkest font-thin"> {{ $page.app.name }} </span>
             </div>
-            <div class="flex-1">
-                <form action="/logout" method="post" class="float-right">
-                    <input type="hidden" name="_token" :value="$page.app.csrfToken"/>
-                    <button class="btn btn-link nav-link" id="logout-button">Log out</button>
-                </form>
+            <div class="flex-1 text-right p-2">
+                <inertia-link :href="route('logout')" method="post" class="btn btn-link nav-link">Log out</inertia-link>
             </div>
         </nav>
 
@@ -24,6 +21,11 @@
         components: {
             logo: Logo,
         },
+        methods: {
+            logout() {
+                this.$inertia.post(route('logout'));
+            }
+        }
     }
 </script>
 
