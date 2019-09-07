@@ -35,7 +35,6 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->mapApiRoutes();
         $this->mapWebRoutes();
-        $this->mapJsonRoutes();
     }
 
     /**
@@ -50,22 +49,6 @@ class RouteServiceProvider extends ServiceProvider
         Route::middleware('web')
              ->namespace($this->namespace)
              ->group(base_path('routes/web.php'));
-    }
-
-    /**
-     * Define the JSON routes for the application.
-     *
-     * These routes all receive session state, CSRF protection, etc.
-     *
-     * @return void
-     */
-    protected function mapJsonRoutes()
-    {
-        Route::prefix('json')
-            ->as('json.')
-            ->middleware('web')
-            ->namespace($this->namespace)
-            ->group(base_path('routes/json.php'));
     }
 
     /**

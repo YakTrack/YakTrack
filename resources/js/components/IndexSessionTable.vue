@@ -73,7 +73,7 @@
                         <td class="pl-4 max-w-3">
                             <div class="inline-flex">
                                 <div class="mr-3 flex my-auto">
-                                    <a v-if="session.isRunning" class="btn" :href="session.stopUrl"><i class="fa fa-stop fa-xs text-red"></i></a>
+                                    <inertia-link v-if="session.isRunning" class="btn" :href="session.stopUrl"><i class="fa fa-stop fa-xs text-red"></i></inertia-link>
                                     <button v-if="session.task && !session.isRunning" class="btn" @click="createSessionForTask(session.task)"><i class="fas fa-play fa-xs text-grey"></i></button>
                                 </div>
                                 <div v-if="session.task">
@@ -93,27 +93,27 @@
                             </div>
                         </td>
                         <td>
-                            <a v-if="session.sprint != null" class="no-underline text-xs" :href="session.sprint.showUrl"> {{ session.sprint.name }} </a>
+                            <inertia-link v-if="session.sprint != null" class="no-underline text-xs" :href="session.sprint.showUrl || ''"> {{ session.sprint.name }} </inertia-link>
                         </td>
                         <td>
-                            <a v-if="session.invoice != null" class="no-underline text-xs" :href="session.invoice.showUrl"> {{ session.invoice.number }} </a>
+                            <inertia-link v-if="session.invoice != null" class="no-underline text-xs" :href="session.invoice.showUrl"> {{ session.invoice.number }} </inertia-link>
                         </td>
                         <td class="text-right inline-flex pb-2 @if($key == 0) pt-2 @endif float-right">
-                            <form :action="session.destroyUrl" method="post">
-                                <csrf-input></csrf-input>
-                                <div class="btn-group float-right">
-                                    <a
-                                        :href="session.editUrl"
-                                        class="btn btn-default"
-                                    >
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <button class="btn delete-item-button">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                            </form>
+                            <div class="btn-group float-right">
+                                <inertia-link
+                                    :href="session.editUrl"
+                                    class="btn btn-default"
+                                >
+                                    <i class="fa fa-edit"></i>
+                                </inertia-link>
+                                <button
+                                    type="button"
+                                    class="btn delete-item-button"
+                                    @click="deleteSession(session)"
+                                >
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -130,8 +130,8 @@
                     <page-selector
                         :total="total"
                         :last-page="lastPage"
-                        :page="queryParams.page"
-                        :per-page="queryParams.perPage"
+                        :page="page"
+                        :per-page="perPage"
                         :on-page-select="selectPage"
                     >
                     </page-selector>
@@ -174,6 +174,8 @@
     import DatetimeInput from './DatetimeInput';
     import PageSelector from './PageSelector';
     import { mapState } from 'vuex'
+    import closeable from '@/directives/Closeable';
+    import UrlParser from '@/UrlParser.js';
 
     const DATE_FORMAT = "yyyy'-'MM'-'dd HH':'mm':'ss";
 
@@ -182,6 +184,11 @@
             'invoices',
             'third-party-applications',
             'showFilters',
+            'days',
+            'page',
+            'perPage',
+            'total',
+            'lastPage',
         ],
         components: {
             dropdown: Dropdown,
@@ -193,7 +200,6 @@
         },
         data() {
             return {
-                days: [],
                 selectAll: false,
                 selectedInvoiceId: null,
                 actionsDropdown: [
@@ -209,12 +215,13 @@
                     startedBefore: null,
                 },
                 dateTime: DateTime,
-                lastPage: null,
-                total: null,
+                urlParser: UrlParser,
             };
         },
         computed: {
-            ...mapState(['queryParams']),
+            queryParams() {
+                return (new URLSearchParams(window.location.search));
+            },
             selectedSessions() {
                 return this.sessions.filter(function (session) {
                     return session.isSelected;
@@ -270,30 +277,33 @@
             },
             selectedPerPageOption() {
                 return this.perPageOptions.find(option =>{
-                    return Number.parseInt(option.name) == window.router.getQueryParam('per-page');
+                    return Number.parseInt(option.name) == this.queryParams.get('per-page');
                 });
             }
         },
-        created() {
+        mounted() {
             this.setDateTimeFilters(
                 this.dateTime.fromDateTimeString(this.queryParams.startedAfter),
                 this.dateTime.fromDateTimeString(this.queryParams.startedBefore)
             );
 
-            this.getSessions();
 
             events.$on('set-per-page', (perPage) => {
-                this.$store.dispatch('setQueryParam', {
-                    key: 'perPage',
-                    value: perPage
+                this.$inertia.visit(this.urlParser.current({
+                    perPage: perPage,
+                }), {
+                    replace: true,
+                    preserveScroll: true,
                 });
             });
         },
         methods: {
+            deleteSession(session) {
+                this.$inertia.delete(session.destroyUrl);
+            },
             getSessions() {
-                window.axios.get(
-                    window.router.buildUrl(`json/session`, this.$store.state.queryParams)
-                ).then(response => {
+                axios.get(`json/session`, this.queryParams)
+                    .then(response => {
                     this.$set(this, 'days', response.data.days.map(day => {
                         day.sessions = day.sessions.map(session => {
                             session.isSelected = false;
@@ -303,10 +313,6 @@
                     }));
                     this.$set(this, 'total', response.data.total);
                     this.$set(this, 'lastPage', response.data.lastPage);
-                    this.setQueryParams({
-                        page: response.data.page,
-                        perPage: response.data.perPage,
-                    });
                 });
             },
             toggleAllCheckboxes(event) {
@@ -349,11 +355,9 @@
                 return classes.join(' ');
             },
             createSessionForTask(task) {
-               window.axios.post(`task/${task.id}/session`, {
+                this.$inertia.post(`task/${task.id}/session`, {
                     started_at: (new Date),
-               }).then((response) => {
-                   window.location.reload();
-               });
+                });
             },
             thisWeek() {
                 this.setDateTimeFilters(
@@ -390,21 +394,11 @@
                 this.filters.startedBefore = startedBefore;
             },
             selectPage(page) {
-                this.$store.dispatch('setQueryParam', {
-                    key: 'page',
-                    value: page,
+                this.$inertia.visit(this.urlParser.current({page: page}), {
+                    replace: true,
+                    preserveScroll: true,
                 });
             },
-            setQueryParams(params) {
-                this.$store.dispatch('setQueryParam', {
-                    key: 'perPage',
-                    value: params.perPage,
-                });
-                this.$store.dispatch('setQueryParam', {
-                    key: 'page',
-                    value: params.page,
-                });
-            }
         },
         watch: {
             selectAll(newValue) {
@@ -424,22 +418,9 @@
                 deep: true,
                 handler(newValue) {
                     ['startedAfter', 'startedBefore'].forEach(key => {
-                        this.$store.dispatch(
-                            'setQueryParam',
-                            {
-                                key: key,
-                                value: this.dateTime.toDateTimeString(newValue[key])
-                            }
-                        )
                     });
                 }
             },
-            queryParams: {
-                deep:true,
-                handler(newValue) {
-                    this.getSessions();
-                },
-            }
         },
     }
 </script>
