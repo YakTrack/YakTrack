@@ -321,21 +321,8 @@
                 });
             },
             linkSelectedSessionsToInvoice() {
-                window.axios.patch(`invoice/${this.selectedInvoiceId}/`, {
+                this.$inertia.patch(route('invoice.update', this.selectedInvoiceId), {
                     sessions: this.selectedSessionIds,
-                }).then((response) => {
-                    this.selectedSessionIds.forEach((sessionId) => {
-                        this.sessions[
-                            this.sessions.indexOf(this.sessions.find((session) => session.id == sessionId))
-                        ].invoice = response.data.invoice;
-                    });
-
-                    window.events.$emit('notify', {
-                        type: "success",
-                        message: "Sessions linked to invoice "+this.invoices.find((invoice) => invoice.id == this.selectedInvoiceId).number,
-                    });
-
-                    window.events.$emit('sessions.linked-to-invoice');
                 });
             },
             selectInvoice(invoiceId) {
