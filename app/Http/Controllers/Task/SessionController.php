@@ -21,8 +21,6 @@ class SessionController extends Controller
             'sprint_id'  => $task->openSprint()->id,
         ]);
 
-        return [
-            'data' => $session->toArray(),
-        ];
+        return redirect()->route('session.index');
     }
 }

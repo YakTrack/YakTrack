@@ -85,7 +85,7 @@ class SessionController extends Controller
             'sprint_id'  => request('sprint_id') ?: null,
         ]);
 
-        return request()->expectsJson() ? response()->json($session) : redirect()->route('session.index');
+        return redirect()->route('session.index');
     }
 
     public function start()
