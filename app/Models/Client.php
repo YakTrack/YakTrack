@@ -20,7 +20,7 @@ class Client extends Model
 
     public function getSessionsThisWeekAttribute()
     {
-        return $this->projects->sessionsThisWeek();
+        return $this->projects->sessionsThisWeek()->values();
     }
 
     public function getOpenSprintsAttribute()

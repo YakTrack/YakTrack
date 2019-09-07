@@ -12,6 +12,7 @@ Vue.use(datetimePicker);
 
 Vue.filter('secondsSince', dateTime.secondsSince);
 Vue.filter('durationForHumans', dateTime.durationForHumans);
+Vue.filter('totalDurationOfSessions', dateTime.totalDurationOfSessions);
 Vue.filter('toDateTimeString', dateTime.toDateTimeString);
 Vue.filter('toDateTimeForHumans', dateTime.toDateTimeForHumans);
 

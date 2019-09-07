@@ -8,6 +8,10 @@ export default class DateTime {
     }
 
     static durationForHumans (numberOfSeconds) {
+        if (typeof numberOfSeconds === 'undefined') {
+            numberOfSeconds = 0;
+        }
+
         var date = new Date(null);
 
         date.setSeconds(numberOfSeconds);
@@ -61,5 +65,13 @@ export default class DateTime {
 
     static moment(date) {
         return moment(date);
+    }
+
+    static totalDurationOfSessions(sessionsCollection) {
+        if (typeof sessionsCollection === 'undefined') {
+            return DateTime.durationForHumans(0);
+        }
+
+        return DateTime.durationForHumans(sessionsCollection.reduce((tally, session) => session.durationInSeconds + tally, 0));
     }
 }
