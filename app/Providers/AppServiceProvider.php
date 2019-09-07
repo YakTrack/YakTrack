@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use Auth;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -13,7 +15,27 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Inertia::setRootView('layouts.inertia-app');
+
+        Inertia::version(function () {
+            return md5_file(public_path('mix-manifest.json'));
+        });
+
+        Inertia::share([
+            'app' => [
+                'name'      => config('app.name'),
+                'csrfToken' => csrf_token(),
+            ],
+            'auth' => function () {
+                return [
+                    'user' => Auth::user() ? [
+                        'id'         => Auth::user()->id,
+                        'name'       => Auth::user()->name,
+                        'email'      => Auth::user()->email,
+                    ] : null
+                ];
+            }
+        ]);
     }
 
     /**

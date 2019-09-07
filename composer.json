@@ -13,7 +13,9 @@
         "stevebauman/active": "1.0.*",
         "spatie/laravel-blade-javascript": "*.*",
         "laravel/tinker": "^1.0",
-        "doctrine/dbal": "^2.8"
+        "doctrine/dbal": "^2.8",
+        "inertiajs/inertia-laravel": "^0.1.2",
+        "tightenco/ziggy": "^0.8.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
