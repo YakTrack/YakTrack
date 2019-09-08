@@ -40,10 +40,10 @@ class HomeController extends Controller
             'openSprints' => [],
         ];
 
-        $clients = Client::with('projects.tasks.sessions')
+        $clients = Client::with(['projects.tasks.sessions'])
             ->get()
             ->filter(function ($client) {
-                $client->append('sessionsThisWeek');
+                $client->append(['openSprints', 'sessionsThisWeek']);
 
                 return $client->sessionsThisWeek->count() > 0;
             })->values();

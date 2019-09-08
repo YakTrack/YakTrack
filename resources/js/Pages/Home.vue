@@ -29,8 +29,8 @@
                     <div class="flex mt-3">
                         <div class="flex-1"> Total Time </div>
                         <div class="flex-1 text-center">
-                            <timer v-if="false" /> <!--currentlyWorking && currentClientName == client.name" :initial-time="client.sessionsThisWeek | totalDurationOfSessions"></timer>-->
-                            <span v-else>{{ client.sessionsThisWeek | totalDurationOfSessions }}</span>
+                            <timer v-if="currentlyWorking && currentClientName == client.name" :initial-time="client.sessionsThisWeek | totalDuration"></timer>
+                            <span v-else>{{ client.sessionsThisWeek | totalDuration | durationForHumans }}</span>
                         </div>
                     </div>
                     <div v-for="sprint in client.openSprints">
@@ -40,9 +40,9 @@
                             <div class="flex-1 text-center">
                                 <timer
                                     v-if="currentlyWorking && currentSession.sprint_id == sprint.id"
-                                    :initial-time="sprint.sessions | totalDurationOfSessions"
+                                    :initial-time="sprint.sessions | totalDuration"
                                 ></timer>
-                                <span v-else>{{ sprint.sessions | totalDurationOfSessions }} </span>
+                                <span v-else>{{ sprint.sessions | totalDuration | durationForHumans }} </span>
                             </div>
                         </div>
                     </div>
