@@ -25,6 +25,6 @@ class Client extends Model
 
     public function getOpenSprintsAttribute()
     {
-        return $this->sprints()->open()->get();
+        return $this->sprints()->open()->with('sessions')->get();
     }
 }
