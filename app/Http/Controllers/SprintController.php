@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\Sprint;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class SprintController extends Controller
 {
@@ -15,7 +16,7 @@ class SprintController extends Controller
      */
     public function index()
     {
-        return view('sprint.index', ['sprints' => Sprint::orderBy('id', 'desc')->get()]);
+        return Inertia::render('Sprint/Index', ['sprints' => Sprint::orderBy('id', 'desc')->get()]);
     }
 
     /**
