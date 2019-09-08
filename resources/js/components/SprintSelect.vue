@@ -7,11 +7,9 @@
                 <span class="text-grey ml-2">{{ slot.option.project.client.name }}</span>
             </template>
             <template slot="singleLabel" slot-scope="slot">
-                <div class="pt-1">
                 {{ slot.option.name }}
                 <span class="text-grey-dark ml-2">{{ slot.option.project.name }}</span>
                 <span class="text-grey ml-2">{{ slot.option.project.client.name }}</span>
-                </div>
             </template>
         </multi-select>
         <input type="hidden" name="sprint_id" :value="sprintId">

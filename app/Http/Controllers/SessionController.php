@@ -67,7 +67,7 @@ class SessionController extends Controller
 
     public function edit(Session $session)
     {
-        return view('session.edit', [
+        return Inertia::render('Session/Edit', [
             'session'  => $session,
             'tasks'    => Task::orderBy('id', 'desc')->get(),
             'invoices' => Invoice::orderBy('id', 'desc')->get(),

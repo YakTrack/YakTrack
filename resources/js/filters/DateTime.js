@@ -9,7 +9,7 @@ export default class DateTime {
 
     static durationForHumans (numberOfSeconds) {
         if (typeof numberOfSeconds === 'undefined') {
-            numberOfSeconds = 0;
+            debugger
         }
 
         var date = new Date(null);
@@ -67,11 +67,13 @@ export default class DateTime {
         return moment(date);
     }
 
-    static totalDurationOfSessions(sessionsCollection) {
-        if (typeof sessionsCollection === 'undefined') {
-            return DateTime.durationForHumans(0);
+    static totalDuration(sessionsCollection) {
+        if (sessionsCollection == null) {
+            return 0;
         }
 
-        return DateTime.durationForHumans(sessionsCollection.reduce((tally, session) => session.durationInSeconds + tally, 0));
+        return sessionsCollection.reduce((tally, session) => {
+            return session.durationInSeconds + tally
+        }, 0);
     }
 }

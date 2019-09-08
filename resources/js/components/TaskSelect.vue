@@ -12,7 +12,8 @@
     export default {
         props: [
             'tasks',
-            'task'
+            'task',
+            'onChange',
         ],
         components: {
             multiSelect: multiSelect,
@@ -34,7 +35,20 @@
 
                 return this.selectedTask.id;
             }
+        },
+        watch: {
+            taskId(newValue) {
+                if (this.onChange) {
+                    this.onChange(newValue);
+                }
+            }
         }
     }
 
 </script>
+
+<style>
+    span.multiselect__single {
+        padding-top: 0.30rem;
+    }
+</style>
