@@ -50,6 +50,15 @@
                             <dropdown :options="actionsDropdown"></dropdown>
                         </th>
                     </tr>
+                    <tr>
+                        <th class="pl-2"></th>
+                        <th class="text-right"></th>
+                        <th class="text-right"></th>
+                        <th class="text-right"> {{ totalDuration }} </th>
+                        <th class="text-center"></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
                 </thead>
                 <tbody v-for="(day, dayIndex) in filteredDays" :key="dayIndex">
                     <tr class="bg-blue-lightest text-grey-dark font-light text-xs uppercase">
@@ -228,6 +237,9 @@
             },
             filteredDays() {
                 return this.days.filter(day => day.sessions.length > 0);
+            },
+            totalDuration() {
+                return this.dateTime.durationForHumans(this.sessions.reduce((accumlulator, session) => session.duration.s + accumlulator, 0));
             },
             perPageOptions() {
                 return [
