@@ -15,6 +15,7 @@ class Session extends Model
 
     protected $appends = [
         'durationForHumans',
+        'durationInSeconds',
         'duration',
         'isRunning',
         'localEndedAtTimeForHumans',

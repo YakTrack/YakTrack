@@ -239,7 +239,9 @@
                 return this.days.filter(day => day.sessions.length > 0);
             },
             totalDuration() {
-                return this.dateTime.durationForHumans(this.sessions.reduce((accumlulator, session) => session.duration.s + accumlulator, 0));
+                return this.dateTime.durationForHumans(this.sessions.reduce(function (accumulator, session) {
+                    return session.durationInSeconds + accumulator
+                }, 0));
             },
             perPageOptions() {
                 return [

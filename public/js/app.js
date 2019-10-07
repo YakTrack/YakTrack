@@ -5267,12 +5267,17 @@ var DateTime = function () {
         }
     }, {
         key: 'durationForHumans',
-        value: function durationForHumans(numberOfSeconds) {
-            var date = new Date(null);
+        value: function durationForHumans(secs) {
+            var sec_num = parseInt(secs, 10);
+            var hours = Math.floor(sec_num / 3600);
+            var minutes = Math.floor(sec_num / 60) % 60;
+            var seconds = sec_num % 60;
 
-            date.setSeconds(numberOfSeconds);
-
-            return date.toISOString().substr(11, 8);
+            return [hours, minutes, seconds].map(function (v) {
+                return v < 10 ? "0" + v : v;
+            }).filter(function (v, i) {
+                return v !== "00" || i > 0;
+            }).join(":");
         }
     }, {
         key: 'toDateTimeString',
@@ -63755,8 +63760,8 @@ var DATE_FORMAT = "yyyy'-'MM'-'dd HH':'mm':'ss";
             });
         },
         totalDuration: function totalDuration() {
-            return this.dateTime.durationForHumans(this.sessions.reduce(function (accumlulator, session) {
-                return session.duration.s + accumlulator;
+            return this.dateTime.durationForHumans(this.sessions.reduce(function (accumulator, session) {
+                return session.durationInSeconds + accumulator;
             }, 0));
         },
         perPageOptions: function perPageOptions() {
