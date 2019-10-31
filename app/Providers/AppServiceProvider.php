@@ -15,7 +15,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Inertia::setRootView('layouts.inertia-app');
+    }
+
+    /**
+     * Register any application services.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        Inertia::setRootView('layouts.app');
 
         Inertia::version(function () {
             return md5_file(public_path('mix-manifest.json'));
@@ -36,15 +45,5 @@ class AppServiceProvider extends ServiceProvider
                 ];
             }
         ]);
-    }
-
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
-    {
-        //
     }
 }
