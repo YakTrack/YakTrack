@@ -42,7 +42,7 @@
                         <th class="pl-2"> <input v-model="selectAll" type="checkbox"/> </th>
                         <th class="text-right"> Start Time </th>
                         <th class="text-right"> End Time </th>
-                        <th class="text-right"> Total Time </th>
+                        <th class="text-right pr-4"> Total Time </th>
                         <th class="text-center"> Linked To </th>
                         <th> Sprint </th>
                         <th> Invoice </th>
@@ -54,7 +54,7 @@
                         <th class="pl-2"></th>
                         <th class="text-right"></th>
                         <th class="text-right"></th>
-                        <th class="text-right"> {{ totalDuration }} </th>
+                        <th class="text-right font-mono pr-4 text-base text-grey"> {{ totalDuration }} </th>
                         <th class="text-center"></th>
                         <th></th>
                         <th></th>
@@ -62,7 +62,9 @@
                 </thead>
                 <tbody v-for="(day, dayIndex) in filteredDays" :key="dayIndex">
                     <tr class="bg-blue-lightest text-grey-dark font-light text-xs uppercase">
-                        <td class="px-3 py-1 rounded" colspan="10"> {{ day.date }} </td>
+                        <td class="px-3 py-1 rounded" colspan="3"> {{ day.date }} </td>
+                        <td class="text-right pr-4 text-base font-mono text-grey"> {{ day.totalDurationForHumans }} </td>
+                        <td colspan="6"></td>
                     </tr>
                     <tr v-for="(session, sessionIndex) in day.sessions" :key="session.id" :class="session.rowClasses">
                         <td class="pl-2">
@@ -77,7 +79,7 @@
                         </td>
                         <td class="min-w-1 text-right pr-4">
                             <timer :started-at="new Date(session.started_at.date + ' UTC').getTime()" v-if="session.isRunning"></timer>
-                            <span v-else class="p-2 text-grey-dark font-light"> {{ session.durationForHumans }} </span>
+                            <span v-else class="pl-2 text-grey-dark font-light text-base font-mono"> {{ session.durationForHumans }} </span>
                         </td>
                         <td class="pl-4 max-w-3">
                             <div class="inline-flex">
