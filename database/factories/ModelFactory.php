@@ -21,14 +21,6 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     ];
 });
 
-// Client factory
-$factory->define(App\Models\Client::class, function (Faker\Generator $faker) {
-    return [
-        'name'  => $faker->name,
-        'email' => $faker->safeEmail,
-    ];
-});
-
 // Project factory
 $factory->define(App\Models\Project::class, function (Faker\Generator $faker) {
     return [

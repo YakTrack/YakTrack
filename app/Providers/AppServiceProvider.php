@@ -5,6 +5,7 @@ namespace App\Providers;
 use Auth;
 use Illuminate\Support\ServiceProvider;
 use Inertia\Inertia;
+use Session;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,8 +15,7 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    {
-    }
+    { }
 
     /**
      * Register any application services.
@@ -24,8 +24,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        Inertia::setRootView('layouts.app');
-
         Inertia::version(function () {
             return md5_file(public_path('mix-manifest.json'));
         });
@@ -43,7 +41,13 @@ class AppServiceProvider extends ServiceProvider
                         'email'      => Auth::user()->email,
                     ] : null
                 ];
-            }
+            },
+            'flash' => function () {
+                return [
+                    'success' => Session::get('success'),
+                    'error' => Session::get('error'),
+                ];
+            },
         ]);
     }
 }

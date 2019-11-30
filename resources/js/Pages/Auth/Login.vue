@@ -28,7 +28,7 @@
                             <div class="flex-1 pt-3">
                                 <a class="text-grey-light" href="/password/reset">Forgot Your Password?</a>
                             </div>
-                            <div class="flex-1 text-right">
+                            <div class="flex text-right">
                                 <loading-button :is-loading="sending" class="btn btn-primary flex-1" type="submit">Login</loading-button>
                             </div>
                         </div>
