@@ -7,13 +7,16 @@ use App\Models\Invoice;
 use App\Models\Session;
 use App\Models\ThirdPartyApplication;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class InvoiceController extends Controller
 {
     public function index()
     {
-        return view('invoice.index', [
-            'invoices' => Invoice::with(['client', 'sessions'])->orderBy('id', 'desc')->get(),
+        return Inertia::render('Invoice/Index', [
+            'invoices' => Invoice::with(['client', 'sessions'])
+                ->orderBy('id', 'desc')
+                ->get(),
         ]);
     }
 
@@ -87,6 +90,6 @@ class InvoiceController extends Controller
 
         return redirect()
             ->back()
-            ->with(['messages' => ['success' => 'Invoice '.$invoice->number.' updated.']]);
+            ->with(['messages' => ['success' => 'Invoice ' . $invoice->number . ' updated.']]);
     }
 }

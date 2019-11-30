@@ -10,9 +10,19 @@ class Invoice extends Model
 
     protected $guarded = [];
 
+    protected $appends = [
+        'amountForHumans',
+        'totalDurationForHumans',
+    ];
+
     public function getAmountForHumansAttribute()
     {
         return number_format($this->amount / 100, 2);
+    }
+
+    public function getTotalDurationForHumansAttribute()
+    {
+        return $this->sessions->totalDurationForHumans();
     }
 
     public function sessions()
