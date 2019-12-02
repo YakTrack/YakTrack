@@ -3,10 +3,8 @@
 namespace Tests\Feature\Client;
 
 use App\Models\Client;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Tests\TestCase;
 
 class DeleteClientTest extends TestCase
 {

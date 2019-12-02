@@ -3,9 +3,8 @@
 namespace Tests\Feature\Client;
 
 use App\Models\Client;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class EditClientTest extends TestCase
 {
@@ -31,7 +30,7 @@ class EditClientTest extends TestCase
         $this->actingAsUser();
 
         $response = $this->put(route('client.update', ['client' => $client]), $newClientDetails = [
-            'name' => 'New name',
+            'name'  => 'New name',
             'email' => 'test@domain.com',
         ]);
 

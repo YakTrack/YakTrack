@@ -15,7 +15,8 @@ class AppServiceProvider extends ServiceProvider
      * @return void
      */
     public function boot()
-    { }
+    {
+    }
 
     /**
      * Register any application services.
@@ -39,13 +40,13 @@ class AppServiceProvider extends ServiceProvider
                         'id'         => Auth::user()->id,
                         'name'       => Auth::user()->name,
                         'email'      => Auth::user()->email,
-                    ] : null
+                    ] : null,
                 ];
             },
             'flash' => function () {
                 return [
                     'success' => Session::get('success'),
-                    'error' => Session::get('error'),
+                    'error'   => Session::get('error'),
                 ];
             },
             'errors' => function () {

@@ -3,9 +3,8 @@
 namespace Tests\Feature\Client;
 
 use App\Models\Client;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class ShowClientTest extends TestCase
 {

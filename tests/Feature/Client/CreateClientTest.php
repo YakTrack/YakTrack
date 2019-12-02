@@ -2,9 +2,8 @@
 
 namespace Tests\Feature\Client;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class CreateClientTest extends TestCase
 {
@@ -26,7 +25,7 @@ class CreateClientTest extends TestCase
         $this->actingAsUser();
 
         $response = $this->post(route('client.store'), $newClientDetails = [
-            'name' => 'Test Client',
+            'name'  => 'Test Client',
             'email' => 'test@domain.com',
         ]);
 
