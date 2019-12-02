@@ -20,12 +20,16 @@
             }
         },
         created() {
-            ['success', 'error'].map(type => {
-                return {
-                    type: type,
-                    message: this.$page.flash[type],
-                };
-            }).filter(alert => alert.message)
+            [
+                {
+                    type: 'success',
+                    message: this.$page.flash.success,
+                },
+                {
+                    type: 'error',
+                    message: this.$page.flash.error,
+                },
+            ].filter(alert => alert.message)
             .forEach(alert => this.alerts.push(alert));
 
             window.events.$on('notify', (notification) => {

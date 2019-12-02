@@ -22,14 +22,14 @@ class InvoiceController extends Controller
 
     public function create()
     {
-        return view('invoice.create', [
+        return Inertia::render('Invoice/Edit', [
             'clients' => Client::all(),
         ]);
     }
 
     public function store()
     {
-        Invoice::create([
+        $invoice = Invoice::create([
             'number'          => request('number'),
             'date'            => request('date') ?: null,
             'due_date'        => request('due_date') ?: null,
@@ -38,31 +38,17 @@ class InvoiceController extends Controller
             'client_id'       => request('client_id'),
             'is_sent'         => request('is_sent') ?: false,
             'is_paid'         => request('is_paid') ?: false,
-            'description'     => request('description'),
+            'description'     => request('description') ?? '',
         ]);
 
-        return redirect(route('invoice.index'));
-    }
-
-    public function show(Invoice $invoice)
-    {
-        return view('invoice.show', [
-            'invoice'                => $invoice,
-            'thirdPartyApplications' => ThirdPartyApplication::all(),
-        ]);
-    }
-
-    public function destroy(Invoice $invoice)
-    {
-        $invoice->delete();
-
-        return redirect(route('invoice.index'));
+        return redirect(route('invoice.index'))
+            ->with('success', 'You have created invoice "' . $invoice->number . '"');
     }
 
     public function edit(Invoice $invoice)
     {
-        return view('invoice.edit', [
-            'invoices' => $invoice,
+        return Inertia::render('Invoice/Edit', [
+            'invoice' => $invoice,
             'clients'  => Client::all(),
         ]);
     }
@@ -89,7 +75,22 @@ class InvoiceController extends Controller
         $invoice->sessions()->saveMany(Session::findMany($request->sessions));
 
         return redirect()
-            ->back()
-            ->with(['messages' => ['success' => 'Invoice ' . $invoice->number . ' updated.']]);
+            ->route('invoice.index')
+            ->with('success', 'Invoice ' . $invoice->number . ' updated.');
+    }
+
+    public function show(Invoice $invoice)
+    {
+        return view('invoice.show', [
+            'invoice'                => $invoice,
+            'thirdPartyApplications' => ThirdPartyApplication::all(),
+        ]);
+    }
+
+    public function destroy(Invoice $invoice)
+    {
+        $invoice->delete();
+
+        return redirect(route('invoice.index'));
     }
 }
