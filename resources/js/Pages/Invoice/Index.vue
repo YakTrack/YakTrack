@@ -45,18 +45,17 @@
                         <td> {{ invoice.amountForHumans }} </td>
                         <td>
                             <div class="btn-group float-right">
-                                <a
-                                    :href="route('invoice.edit', {id: invoice.id})"
+                                <inertia-link
+                                    :href="route('invoice.edit', invoice.id)"
                                     class="btn btn-default"
                                 >
                                     <i class="fa fa-edit"></i>
-                                </a>
-                                <form :action="route('invoice.destroy', {id: invoice.id})" method="post">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <button class="btn btn-default delete-item-button">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </form>
+                                </inertia-link>
+                                <delete-button
+                                    :url="route('invoice.destroy', invoice.id)"
+                                >
+                                    <i class="fa fa-trash"></i>
+                                </delete-button>
                             </div>
                         </td>
                     </tr>
@@ -80,6 +79,7 @@ export default {
     ],
     components: {
         layout: layout,
+        deleteButton: deleteButton,
     },
 }
 

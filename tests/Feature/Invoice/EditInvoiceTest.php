@@ -58,10 +58,7 @@ class EditInvoiceTest extends TestCase
             'sessions' => $sessions->pluck('id'),
         ]);
 
-        $response->assertJson([
-            'success' => true,
-            'invoice' => $invoice->fresh()->toArray(),
-        ]);
+        $response->assertRedirect(route('invoice.index'));
 
         $sessions->each(function ($session) use ($invoice) {
             $this->assertTrue($session->fresh()->invoice_id == $invoice->id);
