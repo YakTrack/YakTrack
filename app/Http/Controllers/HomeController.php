@@ -18,9 +18,9 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
 
-        $this->dateTimeFormatter     = $dateTimeFormatter;
+        $this->dateTimeFormatter = $dateTimeFormatter;
         $this->dateIntervalFormatter = $dateIntervalFormatter;
-        $this->sessions              = $sessions;
+        $this->sessions = $sessions;
     }
 
     /**

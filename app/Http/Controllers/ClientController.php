@@ -46,7 +46,7 @@ class ClientController extends Controller
 
         return redirect()
             ->route('client.index')
-            ->with('success', 'You have created client "' . $client->name . '"');
+            ->with('success', 'You have created client "'.$client->name.'"');
     }
 
     /**
@@ -90,13 +90,13 @@ class ClientController extends Controller
             'email' => 'email',
         ]);
 
-        $client->name  = $request->name;
+        $client->name = $request->name;
         $client->email = $request->email;
         $client->save();
 
         return redirect()
             ->route('client.index')
-            ->with('success', 'You have updated client "' . $client->name . '"');
+            ->with('success', 'You have updated client "'.$client->name.'"');
     }
 
     /**
@@ -112,6 +112,6 @@ class ClientController extends Controller
 
         return redirect()
             ->route('client.index')
-            ->with('success', 'You have deleted client "' . $client->name . '"');
+            ->with('success', 'You have deleted client "'.$client->name.'"');
     }
 }
