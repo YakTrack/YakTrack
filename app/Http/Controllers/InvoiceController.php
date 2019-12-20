@@ -42,13 +42,13 @@ class InvoiceController extends Controller
         ]);
 
         return redirect(route('invoice.index'))
-            ->with('success', 'You have created invoice "' . $invoice->number . '"');
+            ->with('success', 'You have created invoice "'.$invoice->number.'"');
     }
 
     public function edit(Invoice $invoice)
     {
         return Inertia::render('Invoice/Edit', [
-            'invoice' => $invoice,
+            'invoice'  => $invoice,
             'clients'  => Client::all(),
         ]);
     }
@@ -76,7 +76,7 @@ class InvoiceController extends Controller
 
         return redirect()
             ->route('invoice.index')
-            ->with('success', 'Invoice ' . $invoice->number . ' updated.');
+            ->with('success', 'Invoice '.$invoice->number.' updated.');
     }
 
     public function show(Invoice $invoice)
