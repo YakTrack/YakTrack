@@ -168,7 +168,7 @@
 
 <script>
     import axios from 'axios';
-    import Dropdown from './Dropdown';
+    import Dropdown from '@/Shared/Dropdown';
     import InvoiceSelect from './InvoiceSelect';
     import Modal from './Modal';
     import Timer from './Timer';

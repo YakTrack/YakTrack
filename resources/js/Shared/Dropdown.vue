@@ -1,5 +1,5 @@
 <template>
-    <div class="relative float-right text-right"   v-closable="{
+    <div class="relative float-right text-right"   v-closeable="{
         exclude: ['button'],
         handler: 'onClose'
     }">
