@@ -1,8 +1,11 @@
 import { InertiaApp } from '@inertiajs/inertia-vue'
 import PortalVue from 'portal-vue'
+import closeable from './directives/Closeable';
 import dateTime from './filters/DateTime.js';
 import datetimePicker from 'vue-datetime';
 import Vue from 'vue'
+
+Vue.directive('closeable', closeable);
 
 Vue.config.productionTip = false
 Vue.mixin({ methods: { route: window.route } })
