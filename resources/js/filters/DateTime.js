@@ -19,6 +19,14 @@ export default class DateTime {
         return date.toISOString().substr(11, 8);
     }
 
+    static dateForHumans (date) {
+        return moment(date).format('ddd Do MMM YYYY');
+    }
+
+    static fromNow (date) {
+        return moment(date).fromNow();
+    }
+
     static toDateTimeString(date) {
         return moment(date).format('YYYY-MM-DD HH:mm:ss');
     }

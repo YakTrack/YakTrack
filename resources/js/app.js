@@ -10,11 +10,13 @@ Vue.use(InertiaApp)
 Vue.use(PortalVue)
 Vue.use(datetimePicker);
 
-Vue.filter('secondsSince', dateTime.secondsSince);
+Vue.filter('dateForHumans', dateTime.dateForHumans);
 Vue.filter('durationForHumans', dateTime.durationForHumans);
-Vue.filter('totalDuration', dateTime.totalDuration);
-Vue.filter('toDateTimeString', dateTime.toDateTimeString);
+Vue.filter('secondsSince', dateTime.secondsSince);
+Vue.filter('fromNow', dateTime.fromNow);
 Vue.filter('toDateTimeForHumans', dateTime.toDateTimeForHumans);
+Vue.filter('toDateTimeString', dateTime.toDateTimeString);
+Vue.filter('totalDuration', dateTime.totalDuration);
 
 let app = document.getElementById('app')
 
