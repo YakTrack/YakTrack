@@ -81,8 +81,8 @@ class InvoiceController extends Controller
 
     public function show(Invoice $invoice)
     {
-        return view('invoice.show', [
-            'invoice'                => $invoice,
+        return Inertia::render('Invoice/Show', [
+            'invoice'                => $invoice->load(['client', 'sessions.task.project.client']),
             'thirdPartyApplications' => ThirdPartyApplication::all(),
         ]);
     }
