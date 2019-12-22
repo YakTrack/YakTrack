@@ -3,9 +3,8 @@
 namespace Tests\Feature\Project;
 
 use App\Models\Project;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class IndexProjectTest extends TestCase
 {
