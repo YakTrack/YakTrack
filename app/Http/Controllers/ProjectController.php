@@ -116,10 +116,14 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        if (!$project->isDeletable()) {
+            abort(422, 'Project is unable to be deleted');
+        }
+
         $project->delete();
 
         return redirect()
             ->route('project.index')
-            ->with(['messages' => ['success' => 'You have deleted Project '.$project->name.'.']]);
+            ->with(['messages' => ['success' => 'You have deleted Project ' . $project->name . '.']]);
     }
 }

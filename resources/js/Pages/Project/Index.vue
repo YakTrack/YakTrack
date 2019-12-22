@@ -16,8 +16,6 @@
                     <tr
                         v-for="project in projects"
                         class="item-container"
-                        :data-item-name="project.name"
-                        :data-item-destroy-route="route('project.destroy', {project: project.id})"
                     >
                     <td>
                         <inertia-link :href="route('project.show', {project: project.id})">
@@ -39,9 +37,12 @@
                             >
                                 <i class="fa fa-edit"></i>
                             </inertia-link>
-                            <button class="btn btn-default delete-item-button">
+                            <delete-button
+                                :is-disabled="!project.isDeletable"
+                                :url="route('project.destroy', project.id)"
+                            >
                                 <i class="fa fa-trash"></i>
-                            </button>
+                            </delete-button>
                         </div>
                     </td>
                 </tr>
@@ -55,12 +56,15 @@
 
 <script>
 
+import deleteButton from '@/Shared/DeleteButton';
 import layout from '@/Shared/Layout';
 
 export default {
     props: ['projects'],
+
     components: {
-        layout: layout
+        deleteButton: deleteButton,
+        layout: layout,
     },
 }
 

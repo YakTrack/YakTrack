@@ -1,12 +1,22 @@
 <template>
     <span class="p-1">
-        <inertia-link :href="url" method="delete" class="btn btn-default bg-red-500 clickable" v-if="confirmIsActive">
+        <inertia-link
+            :href="url"
+            method="delete"
+            class="btn btn-default bg-red-500 clickable"
+            v-if="confirmIsActive"
+        >
             Delete
         </inertia-link>
         <button class="btn btn-default" v-if="confirmIsActive" @click="toggleConfirm()">
             Cancel
         </button>
-        <button class="btn btn-default" @click="toggleConfirm()" v-if="!confirmIsActive">
+        <button
+            class="btn btn-default"
+            @click="toggleConfirm()"
+            v-if="!confirmIsActive"
+            :disabled="isDisabled"
+        >
             <slot></slot>
         </button>
     </span>
@@ -22,6 +32,7 @@ export default {
     },
     props: [
         'url',
+        'isDisabled',
     ],
     methods: {
         toggleConfirm() {
