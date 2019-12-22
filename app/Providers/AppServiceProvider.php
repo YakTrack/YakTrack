@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Auth;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Session;
 
@@ -16,6 +17,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        /**
+         * Enforce foreign key constraints if testing with sqlite
+         */
+        if (DB::connection() instanceof \Illuminate\Database\SQLiteConnection) {
+            DB::statement(DB::raw('PRAGMA foreign_keys=1'));
+        }
     }
 
     /**
