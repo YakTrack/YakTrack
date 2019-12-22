@@ -21,14 +21,6 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
     ];
 });
 
-// Project factory
-$factory->define(App\Models\Project::class, function (Faker\Generator $faker) {
-    return [
-        'name'        => $faker->word(),
-        'description' => $faker->sentence,
-    ];
-});
-
 // Task factory
 $factory->define(App\Models\Task::class, function (Faker\Generator $faker) {
     return [
