@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
@@ -15,7 +16,9 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        return view('project.index', ['projects' => Project::orderBy('id', 'desc')->get()]);
+        return Inertia::render('Project/Index', [
+            'projects' => Project::orderBy('name')->with('client')->get()
+        ]);
     }
 
     /**
