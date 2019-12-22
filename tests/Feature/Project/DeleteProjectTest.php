@@ -3,8 +3,8 @@
 use App\Models\Project;
 use App\Models\Sprint;
 use App\Models\Task;
-use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class DeleteProjectTest extends TestCase
 {
