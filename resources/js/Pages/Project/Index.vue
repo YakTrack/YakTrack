@@ -1,5 +1,13 @@
 <template>
     <layout>
+        <template slot="breadcrumbs">
+            <breadcrumbs
+                :breadcrumbs="[
+                    {title: 'Home',     url: route('home')},
+                    {title: 'Projects'},
+                ]"
+            ></breadcrumbs>
+        </template>
         <template slot="title"> Projects </template>
         <template slot="top-right-toolbar">
             <a :href="route('project.create')" class="btn btn-blue">
@@ -56,6 +64,7 @@
 
 <script>
 
+import breadcrumbs from '@/Shared/Breadcrumbs';
 import deleteButton from '@/Shared/DeleteButton';
 import layout from '@/Shared/Layout';
 
@@ -63,6 +72,7 @@ export default {
     props: ['projects'],
 
     components: {
+        breadcrumbs: breadcrumbs,
         deleteButton: deleteButton,
         layout: layout,
     },

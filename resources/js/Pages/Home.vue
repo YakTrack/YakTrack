@@ -1,5 +1,12 @@
 <template>
     <layout>
+        <template slot="breadcrumbs">
+            <breadcrumbs
+                :breadcrumbs="[
+                    {title: 'Home'},
+                ]"
+            ></breadcrumbs>
+        </template>
         <template slot="title"> Home </template>
         <div class="bg-white rounded shadow p-4">
             <h2 class="pb-4"> Time Tracking Summary </h2>
@@ -54,8 +61,9 @@
 
 <script>
     import dayjs from 'dayjs';
-    import Layout from '@/Shared/Layout';
-    import Timer from '@/components/Timer';
+    import breadcrumbs from '@/Shared/Breadcrumbs';
+    import layout from '@/Shared/Layout';
+    import timer from '@/components/Timer';
 
     export default {
         props: [
@@ -68,8 +76,9 @@
             'currentClientName',
         ],
         components: {
-            layout: Layout,
-            timer: Timer,
+            breadcrumbs: breadcrumbs,
+            layout: layout,
+            timer: timer,
         },
         data() {
             return {
