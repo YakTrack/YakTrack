@@ -8,7 +8,10 @@
                     <main role="main" class="lg:sticky w-full py-24">
                         <slot name="breadcrumbs"></slot>
                         <messages></messages>
-                        <div class="flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                        <div
+                            class="flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3"
+                            v-if="hasTitleOrToolbar"
+                        >
                             <div class="flex-1">
                                 <h1 class="h2 font-normal"><slot name="title"></slot></h1>
                             </div>
@@ -35,5 +38,10 @@
             messages: Messages,
             sidebar: Sidebar,
         },
+        computed: {
+            hasTitleOrToolbar() {
+                return !!(this.$slots['footer'] || this.$slots['top-right-toolbar']);
+            }
+        }
     }
 </script>
