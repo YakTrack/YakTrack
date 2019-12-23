@@ -59,15 +59,13 @@ class ProjectController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param Project $project \\ The project to be shown
-     *
-     * @return \Illuminate\Http\Response
+     * Show a single project
      */
     public function show(Project $project)
     {
-        return view('project.show', ['project' => $project]);
+        return Inertia::render('Project/Show', [
+            'project' => $project->load('client'),
+        ]);
     }
 
     /**
