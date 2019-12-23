@@ -41,7 +41,7 @@
 
 <script>
     import layout from '@/Shared/Layout';
-    import clientSelect from '@/components/ClientSelect';
+    import clientSelect from '@/Shared/ClientSelect';
 
     export default {
         props: [
