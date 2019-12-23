@@ -23,20 +23,16 @@ class ProjectController extends Controller
 
     /**
      * Show the form for creating a new project.
-     *
-     * @return \Illuminate\Http\Response
-     */
+     **/
     public function create()
     {
-        return view('project.create', ['clients' => Client::all()]);
+        return Inertia::render('Project/Edit', [
+            'clients' => Client::all()
+        ]);
     }
 
     /**
-     * Store a newly created project in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Response
+     * Save a new project
      */
     public function store(Request $request)
     {
@@ -49,13 +45,7 @@ class ProjectController extends Controller
 
         return redirect()
             ->route('project.index')
-            ->with(
-                ['messages' => [
-                    'success' => 'You have created a new project called '.
-                    $project->name,
-                ],
-                ]
-            );
+            ->with('success', "Project \"$project->name\" created");
     }
 
     /**
