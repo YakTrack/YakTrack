@@ -10,10 +10,10 @@
         </template>
         <template slot="title"> Projects </template>
         <template slot="top-right-toolbar">
-            <a :href="route('project.create')" class="btn btn-blue">
+            <inertia-link :href="route('project.create')" class="btn btn-blue">
                 <i class="fa fa-plus"></i>
                 Create Project
-            </a>
+            </inertia-link>
         </template>
         <div class="card">
             <table class="table card-body" v-if="projects.length">
