@@ -92,7 +92,7 @@ class ProjectController extends Controller
 
         return redirect()
             ->route('project.index')
-            ->with(['messages' => ['success' => 'Project '.$project->name.' updated.']]);
+            ->with(['messages' => ['success' => 'Project ' . $project->name . ' updated.']]);
     }
 
     /**
