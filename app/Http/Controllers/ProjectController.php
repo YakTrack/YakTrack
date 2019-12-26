@@ -15,7 +15,7 @@ class ProjectController extends Controller
     public function index()
     {
         return Inertia::render('Project/Index', [
-            'projects' => Project::orderBy('name')->with('client')->get()
+            'projects' => Project::orderBy('name')->with('client')->get(),
         ]);
     }
 
@@ -110,6 +110,6 @@ class ProjectController extends Controller
 
         return redirect()
             ->route('project.index')
-            ->with(['messages' => ['success' => 'You have deleted Project ' . $project->name . '.']]);
+            ->with(['messages' => ['success' => 'You have deleted Project '.$project->name.'.']]);
     }
 }
