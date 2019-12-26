@@ -10,9 +10,7 @@ use Inertia\Inertia;
 class ProjectController extends Controller
 {
     /**
-     * Display a listing of the projects.
-     *
-     * @return \Illuminate\Http\Response
+     * Show a list of projects.
      */
     public function index()
     {
