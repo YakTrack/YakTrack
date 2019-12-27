@@ -65,7 +65,7 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        return view('project.edit', [
+        return Inertia::render('Project/Edit', [
             'project' => $project,
             'clients' => Client::all(),
         ]);
@@ -90,7 +90,7 @@ class ProjectController extends Controller
 
         return redirect()
             ->route('project.index')
-            ->with(['messages' => ['success' => 'Project ' . $project->name . ' updated.']]);
+            ->with('success', 'Project ' . $project->name . ' updated.');
     }
 
     /**
