@@ -25,12 +25,12 @@ class ProjectController extends Controller
     public function create()
     {
         return Inertia::render('Project/Edit', [
-            'clients' => Client::all()
+            'clients' => Client::all(),
         ]);
     }
 
     /**
-     * Save a new project
+     * Save a new project.
      */
     public function store(Request $request)
     {
@@ -47,7 +47,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Show a single project
+     * Show a single project.
      */
     public function show(Project $project)
     {
@@ -90,7 +90,7 @@ class ProjectController extends Controller
 
         return redirect()
             ->route('project.index')
-            ->with('success', 'Project ' . $project->name . ' updated.');
+            ->with('success', 'Project '.$project->name.' updated.');
     }
 
     /**
