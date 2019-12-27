@@ -110,6 +110,6 @@ class ProjectController extends Controller
 
         return redirect()
             ->route('project.index')
-            ->with(['messages' => ['success' => 'You have deleted Project '.$project->name.'.']]);
+            ->with('success', 'You have deleted Project '.$project->name.'.');
     }
 }
