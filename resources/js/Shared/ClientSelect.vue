@@ -1,7 +1,11 @@
 <template>
     <div>
-        <multi-select v-model="selectedClient" @input="handleInput" label="name" :options="clients"></multi-select>
-        <input type="hidden" name="client_id" :value="clientId">
+        <multi-select
+            v-model="selectedClient"
+            label="name"
+            track-by="id"
+            :options="clients"
+        ></multi-select>
     </div>
 </template>
 
@@ -12,35 +16,23 @@
     export default {
         props: [
             'clients',
-            'client',
             'value',
         ],
         components: {
             multiSelect: multiSelect,
         },
         data() {
-            var _this = this;
-
             return {
-                selectedClient: this.clients.find(function (client) {
-                    return client.id == _this.client || _this.value;
-                }),
-            }
+                selectedClient: this.clients.find(
+                    client => client.id == this.value
+                ),
+            };
         },
-        methods: {
-            handleInput (e) {
-                this.$emit('input', this.clientId)
+        watch: {
+            selectedClient(value) {
+                this.$emit('input', value ? value.id : null);
             }
-        },
-        computed: {
-            clientId() {
-                if (this.selectedClient == null) {
-                    return null;
-                }
-
-                return this.selectedClient.id;
-            }
-        },
+        }
     }
 
 </script>
