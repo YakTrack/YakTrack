@@ -40,9 +40,9 @@ class EditProjectTest extends TestCase
         $response = $this->patch(
             route('project.update', ['project' => $project]),
             $updatedProjectDetails = [
-                'name' => 'Updated Project',
+                'name'        => 'Updated Project',
                 'description' => 'Updated project description',
-                'client_id' => $clients[1]->id,
+                'client_id'   => $clients[1]->id,
             ]
         );
 

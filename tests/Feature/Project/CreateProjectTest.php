@@ -3,7 +3,6 @@
 namespace Tests\Feature\Project;
 
 use App\Models\Client;
-use App\Models\Project;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -36,9 +35,9 @@ class CreateProjectTest extends TestCase
         $this->actingAsUser();
 
         $response = $this->post(route('project.store'), [
-            'name' => 'Test Project',
+            'name'        => 'Test Project',
             'description' => 'Test project description.',
-            'client_id' => $client->id,
+            'client_id'   => $client->id,
         ]);
 
         $response->assertRedirect(route('project.index'));
