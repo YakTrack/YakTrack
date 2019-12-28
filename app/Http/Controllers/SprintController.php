@@ -78,14 +78,10 @@ class SprintController extends Controller
 
     /**
      * Show the form for editing the specified sprint.
-     *
-     * @param Sprint $sprint
-     *
-     * @return \Illuminate\Http\Response
      */
     public function edit(Sprint $sprint)
     {
-        return view('sprint.edit', [
+        return Inertia::render('Sprint/Edit', [
             'projects' => Project::all(),
             'sprint'   => $sprint,
         ]);
@@ -109,11 +105,12 @@ class SprintController extends Controller
         $sprint->update($request->only([
             'name',
             'project_id',
+            'is_open',
         ]) + ['is_open' => $request->is_open == 'is_open']);
 
         return redirect()
             ->route('sprint.index')
-            ->with(['messages' => ['success' => 'You have updated sprint '.$sprint->name.'.']]);
+            ->with('success', 'You have updated sprint '.$sprint->name.'.');
     }
 
     /**
