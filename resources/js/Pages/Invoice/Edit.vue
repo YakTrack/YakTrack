@@ -1,5 +1,14 @@
 <template>
     <layout>
+        <template slot="breadcrumbs">
+            <breadcrumbs
+                :breadcrumbs="[
+                    {title: 'Home',         url: route('home')},
+                    {title: 'Invoices',     url: route('invoice.index')},
+                    {title: (isCreateForm ? 'Create' : 'Edit') + ' Invoice'},
+                ]"
+            ></breadcrumbs>
+        </template>
         <template slot="title"> {{ form.id ? 'Update' : 'Create' }} Invoice </template>
         <template slot="top-right-toolbar"> 
         </template>
@@ -40,8 +49,9 @@
 </template>
 
 <script>
-    import layout from '@/Shared/Layout';
+    import breadcrumbs from '@/Shared/Breadcrumbs';
     import clientSelect from '@/Shared/ClientSelect';
+    import layout from '@/Shared/Layout';
 
     export default {
         props: [
@@ -51,6 +61,7 @@
         components: {
             layout: layout,
             clientSelect: clientSelect,
+            breadcrumbs: breadcrumbs,
         },
         data() {
             return {

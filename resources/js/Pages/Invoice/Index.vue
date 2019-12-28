@@ -1,5 +1,13 @@
 <template>
     <layout>
+        <template slot="breadcrumbs">
+            <breadcrumbs
+                :breadcrumbs="[
+                    {title: 'Home',     url: route('home')},
+                    {title: 'Invoices'},
+                ]"
+            ></breadcrumbs>
+        </template>
         <template slot="title"> Invoices </template>
         <template slot="top-right-toolbar"> 
             <inertia-link :href="route('invoice.create')" class="btn btn-blue">
@@ -70,16 +78,18 @@
 
 <script>
 
-import layout from '@/Shared/Layout';
+import breadcrumbs from '@/Shared/Breadcrumbs';
 import deleteButton from '@/Shared/DeleteButton';
+import layout from '@/Shared/Layout';
 
 export default {
     props: [
         'invoices',
     ],
     components: {
-        layout: layout,
+        breadcrumbs: breadcrumbs,
         deleteButton: deleteButton,
+        layout: layout,
     },
 }
 

@@ -1,5 +1,14 @@
 <template>
     <layout>
+        <template slot="breadcrumbs">
+            <breadcrumbs
+                :breadcrumbs="[
+                    {title: 'Home',         url: route('home')},
+                    {title: 'Clients',     url: route('client.index')},
+                    {title: (isCreateForm ? 'Create' : 'Edit') + ' Client'},
+                ]"
+            ></breadcrumbs>
+        </template>
         <template slot="title"> {{ isCreateForm ? 'Create' : 'Edit' }} Client </template>
         <form :action="route('client.store')" method="post" @submit.prevent="submit">
             <div class="form-group">
@@ -18,10 +27,12 @@
 </template>
 
 <script>
+    import breadcrumbs from '@/Shared/Breadcrumbs';
     import layout from '@/Shared/Layout';
 
     export default {
         components: {
+            breadcrumbs: breadcrumbs,
             layout: layout,
         },
         props: ['client'],

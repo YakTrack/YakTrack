@@ -1,5 +1,14 @@
 <template>
     <layout>
+        <template slot="breadcrumbs">
+            <breadcrumbs
+                :breadcrumbs="[
+                    {title: 'Home',         url: route('home')},
+                    {title: 'Invoices',     url: route('invoice.index')},
+                    {title: invoice.number},
+                ]"
+            ></breadcrumbs>
+        </template>
         <template slot="title"> Invoice {{ invoice.number }} </template>
         <template slot="top-right-toolbar"> 
         </template>
@@ -44,15 +53,17 @@
 
 <script>
 
+import breadcrumbs from '@/Shared/Breadcrumbs';
+import dropdown from '@/Shared/Dropdown';
 import layout from '@/Shared/Layout';
 import sessionTable from '@/Shared/SessionTable';
-import dropdown from '@/Shared/Dropdown';
 
 export default {
     props: [
         'invoice',
     ],
     components: {
+        breadcrumbs: breadcrumbs,
         dropdown: dropdown,
         layout: layout,
         sessionTable: sessionTable,
