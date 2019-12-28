@@ -10,9 +10,7 @@ use Inertia\Inertia;
 class SprintController extends Controller
 {
     /**
-     * Display a listing of the sprints.
-     *
-     * @return \Illuminate\Http\Response
+     * Display a list of sprints
      */
     public function index()
     {
@@ -23,20 +21,14 @@ class SprintController extends Controller
 
     /**
      * Show the form for creating a new sprint.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        return view('sprint.create', ['projects' => Project::all()]);
+        return Inertia::render('Sprint/Edit', ['projects' => Project::all()]);
     }
 
     /**
-     * Store a newly created sprint in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Response
+     * Save a new sprint to the database
      */
     public function store(Request $request)
     {
@@ -52,7 +44,7 @@ class SprintController extends Controller
 
         return redirect()
             ->route('sprint.index')
-            ->with(['messages' => ['success' => 'You have added sprint '.$sprint->name.'.']]);
+            ->with('success', 'Sprint "'.$sprint->name.'" created.');
     }
 
     /**
