@@ -50,7 +50,7 @@
                                     <i class="fa fa-edit"></i>
                                 </inertia-link>
                                 <delete-button
-                                    :url="route('invoice.destroy', invoice.id)"
+                                    :url="route('sprint.destroy', sprint.id)"
                                 >
                                     <i class="fa fa-trash"></i>
                                 </delete-button>
