@@ -6,17 +6,20 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\ThirdPartyApplication;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TaskController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Show a list of tasks
      */
     public function index()
     {
-        return view('task.index', ['tasks' => Task::orderBy('id', 'desc')->get()]);
+        return Inertia::render('Task/Index', [
+            'tasks' => Task::orderBy('id', 'desc')
+                ->with('project.client', 'parent')
+                ->get()
+        ]);
     }
 
     /**
