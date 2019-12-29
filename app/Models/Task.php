@@ -12,6 +12,10 @@ class Task extends Model
 
     protected $guarded = [];
 
+    protected $appends = [
+        'shortName',
+    ];
+
     /**
      * Create a new Eloquent Collection instance.
      *
