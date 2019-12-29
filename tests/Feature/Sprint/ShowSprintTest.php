@@ -1,22 +1,23 @@
 <?php
 
+namespace Tests\Feature\Sprint;
+
 use App\Models\Project;
 use App\Models\Session;
 use App\Models\Sprint;
 use App\Models\Task;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ShowSprintTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
-    public function a_logged_in_user_can_view_details_of_a_sprint()
+    public function a_user_can_view_a_single_sprint()
     {
         $this->withoutExceptionHandling();
 
-        // Create project and sprint
         $project = factory(Project::class)->create();
         $sprint = factory(Sprint::class)->create(['project_id' => $project->id]);
         $task = factory(Task::class)->create([
@@ -35,18 +36,12 @@ class ShowSprintTest extends TestCase
             'ended_at'   => '2019-01-01 00:01:23',
         ]);
 
-        // Login user
-        $user = $this->actingAsUser();
+        $this->actingAsUser();
 
-        // Visit show sprint page
         $response = $this->get(route('sprint.show', ['sprint' => $sprint]));
 
         $response->assertSuccessful();
 
-        // Verify correct page has loaded
-        $response->assertViewIs('sprint.show');
-
-        // Verify sprint data is included in view
         $response->assertSee($sprint->name);
         $response->assertSee($project->name);
         $response->assertSee('01:23');

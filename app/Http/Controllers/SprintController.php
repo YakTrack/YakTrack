@@ -44,20 +44,16 @@ class SprintController extends Controller
 
         return redirect()
             ->route('sprint.index')
-            ->with('success', 'Sprint "'.$sprint->name.'" created');
+            ->with('success', 'Sprint "'.$sprint->name.'" create');
     }
 
     /**
-     * Display the specified sprint.
-     *
-     * @param Sprint $sprint
-     *
-     * @return \Illuminate\Http\Response
+     * Display a single sprint
      */
     public function show(Sprint $sprint)
     {
-        return view('sprint.show', [
-            'sprint' => $sprint,
+        return Inertia::render('Sprint/Show', [
+            'sprint' => $sprint->load('project', 'sessions.task.project'),
             'tasks'  => $sprint->sessions->groupBy('task_id')->map(function ($sessionsForTask) {
                 $task = $sessionsForTask->first()->task;
 
@@ -65,6 +61,7 @@ class SprintController extends Controller
 
                 return $task;
             }),
+            'totalDurationForHumans' => $sprint->sessions->totalDurationForHumans(),
         ]);
     }
 
