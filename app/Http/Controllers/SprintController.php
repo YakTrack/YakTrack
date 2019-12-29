@@ -44,7 +44,7 @@ class SprintController extends Controller
 
         return redirect()
             ->route('sprint.index')
-            ->with('success', 'Sprint "'.$sprint->name.'" created.');
+            ->with('success', 'Sprint "'.$sprint->name.'" created');
     }
 
     /**
@@ -102,7 +102,7 @@ class SprintController extends Controller
 
         return redirect()
             ->route('sprint.index')
-            ->with('success', 'You have updated sprint '.$sprint->name.'.');
+            ->with('success', 'Sprint "'.$sprint->name.'" updated');
     }
 
     /**
@@ -118,6 +118,6 @@ class SprintController extends Controller
 
         return redirect()
             ->route('sprint.index')
-            ->with(['messages' => ['success' => 'You have deleted sprint '.$sprint->name.'.']]);
+            ->with('success', '"Sprint '.$sprint->name.'" deleted');
     }
 }
