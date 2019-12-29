@@ -37,16 +37,16 @@
                         class="item-container"
                     >
                         <td>
-                            <a :href="route('invoice.show', {id: invoice.id})">
+                            <inertia-link :href="route('invoice.show', {id: invoice.id})">
                                 {{ invoice.number }}
-                            </a>
+                            </inertia-link>
                         </td>
                         <td> {{ invoice.date }} </td>
                         <td> {{ invoice.due_date }} </td>
                         <td>
-                            <a v-if="invoice.client" :href="route('client.show', {id: invoice.client_id})">
+                            <inertia-link v-if="invoice.client" :href="route('client.show', {id: invoice.client_id})">
                                 {{ invoice.client.name }}
-                            </a>
+                            </inertia-link>
                         </td>
                         <td> {{ invoice.totalDurationForHumans == '0:00:00' ? '-' : invoice.totalDurationForHumans }} </td>
                         <td> {{ invoice.total_hours }} </td>
