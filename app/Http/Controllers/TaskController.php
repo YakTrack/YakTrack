@@ -23,36 +23,32 @@ class TaskController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Show the form for creating a new task
      */
     public function create()
     {
-        return view('task.create', [
+        return Inertia::render('Task/Edit', [
             'projects' => Project::with(['sprints', 'tasks'])->orderBy('name')->get(),
             'tasks'    => Task::orderBy('id', 'desc')->get(),
         ]);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Response
+     * Store a new task in the database
      */
     public function store(Request $request)
     {
         $task = Task::create([
             'name'        => request('name'),
-            'description' => request('description'),
-            'project_id'  => request('project_id') ?: null,
-            'parent_id'   => request('parent_id') ?: null,
+            'description' => request('description') ?? '',
+            'project_id'  => request('project_id') ?? null,
+            'parent_id'   => request('parent_id') ?? null,
             'status'      => 'incomplete',
         ]);
 
-        return redirect()->route('task.index');
+        return redirect()
+            ->route('task.index')
+            ->with('success', 'Created task "' . $task->name . '"');
     }
 
     /**
