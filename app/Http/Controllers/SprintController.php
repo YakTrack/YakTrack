@@ -44,7 +44,7 @@ class SprintController extends Controller
 
         return redirect()
             ->route('sprint.index')
-            ->with('success', 'Sprint "'.$sprint->name.'" create');
+            ->with('success', 'Sprint "'.$sprint->name.'" created');
     }
 
     /**
