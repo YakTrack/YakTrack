@@ -10,9 +10,7 @@
             ></breadcrumbs>
         </template>
         <template slot="title"> {{ form.id ? 'Update' : 'Create' }} Invoice </template>
-        <template slot="top-right-toolbar"> 
-        </template>
-        <div>
+        <form :action="route('invoice.store')" method="post" @submit.prevent="submit">
             <div class="form-group">
                 <label for="client_id"> Client </label>
                 <client-select
@@ -41,10 +39,15 @@
                 <label for="description"> Description </label>
                 <textarea name="description" class="form-control" placeholder="Enter a description for this invoice (optional)" v-model="form.description"/>
             </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary" @click="submit()"> {{ form.id ? 'Update' : 'Create' }} </button>
+            <div class="flex mt-4">
+                <div class="flex-1 mt-2">
+                    <inertia-link :href="route('invoice.index')" class="btn btn-default"> Cancel </inertia-link>
+                </div>
+                <div class="flex-1 float-right">
+                    <button class="btn btn-blue float-right"> {{ isCreateForm ? 'Create' : 'Update' }} </button>
+                </div>
             </div>
-        </div>
+        </form>
     </layout>
 </template>
 

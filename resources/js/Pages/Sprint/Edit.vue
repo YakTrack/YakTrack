@@ -12,7 +12,7 @@
         <template slot="title"> {{ form.id ? 'Update' : 'Create' }} Sprint </template>
         <template slot="top-right-toolbar"> 
         </template>
-        <div>
+        <form @submit.prevent="submit" class="mt-2">
             <div class="form-group">
                 <label for="name"> Name </label>
                 <input type="text" class="form-control" v-model="form.name" placeholder="Sprint name" />
@@ -28,10 +28,15 @@
                 <label for="is_open"> Is Open </label>
                 <input type="checkbox" name="is_open" v-model="form.is_open"/>
             </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary" @click="submit()"> {{ form.id ? 'Update' : 'Create' }} </button>
+            <div class="flex mt-4">
+                <div class="flex-1 mt-2">
+                    <inertia-link :href="route('sprint.index')" class="btn btn-default"> Cancel </inertia-link>
+                </div>
+                <div class="flex-1 float-right">
+                    <button class="btn btn-blue float-right"> {{ isCreateForm ? 'Create' : 'Update' }} </button>
+                </div>
             </div>
-        </div>
+        </form>
     </layout>
 </template>
 

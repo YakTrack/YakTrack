@@ -19,8 +19,13 @@
                 <label for="email"> Email </label>
                 <input type="email" name="email" v-model="form.email" placeholder="Email address of client" class="form-control" />
             </div>
-            <div class="form-group float-right">
-                <button class="btn btn-blue"> Submit </button>
+            <div class="flex mt-4">
+                <div class="flex-1 mt-2">
+                    <inertia-link :href="route('client.index')" class="btn btn-default"> Cancel </inertia-link>
+                </div>
+                <div class="flex-1 float-right">
+                    <button class="btn btn-blue float-right"> {{ isCreateForm ? 'Create' : 'Update' }} </button>
+                </div>
             </div>
         </form>
     </layout>
