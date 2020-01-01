@@ -1,5 +1,7 @@
 <?php
 
+namespace Tests\Feature\Project;
+
 use App\Models\Project;
 use App\Models\Sprint;
 use App\Models\Task;
@@ -21,10 +23,8 @@ class DeleteProjectTest extends TestCase
             'project' => $project,
         ]));
 
-        // Verify redirected to correct page
         $response->assertRedirect(route('project.index'));
 
-        // Verify project removed from database
         $this->assertDatabaseMissing('projects', [
             'id' => $project->id,
         ]);
