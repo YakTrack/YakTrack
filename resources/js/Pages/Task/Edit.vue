@@ -51,15 +51,13 @@
     export default {
         props: [
             'projects',
-            'sprints',
             'task',
             'tasks',
         ],
         data() {
             return {
-                selectedProject: null,
-                selectedSprint: null,
-                selectedParentTask: null,
+                selectedProject: (this.task && this.task.project_id) ? this.projects.find(p => p.id == this.task.project_id) : null,
+                selectedParentTask: (this.task && this.task.parent_id) ? this.tasks.find(t => t.id == this.task.parent_id) : null,
                 form: this.task || {},
             }
         },
@@ -90,27 +88,15 @@
             selectedProjectId() {
                 return this.selectedProject ? this.selectedProject.id : null;
             },
-            selectedSprintId() {
-                return this.selectedSprint ? this.selectedSprint.id : null;
-            },
             selectedParentTaskId() {
                 return this.selectedParentTask ? this.selectedParentTask.id : null;
-            },
-            selectableSprints() {
-                var _this = this;
-                return this.selectedProject ? this.sprints.filter(function (sprint) {
-                    return sprint.project_id === _this.selectedProjectId;
-                }) : this.sprints;
             },
             selectableParentTasks() {
                 var _this = this;
 
-                return this.selectedProject ? 
-                    this.selectedSprint ? this.tasks.filter(function (task) {
-                        return task.sprint_id === _this.selectedSprintId;
-                    }) : this.tasks.filter(function (task) {
-                        return task.project_id === _this.selectedProjectId;
-                    }) : this.tasks;
+                return this.selectedProject ? this.tasks.filter(function (task) {
+                    return task.project_id === _this.selectedProjectId;
+                }) : this.tasks;
             }
         }
     }

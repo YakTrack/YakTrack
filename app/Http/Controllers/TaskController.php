@@ -67,31 +67,28 @@ class TaskController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Http\Response
+     * Edit a task
      */
     public function edit(Task $task)
     {
-        return view('task.edit', [
+        return Inertia::render('Task/Edit', [
             'task'     => $task,
+            'tasks'    => Task::all(),
             'projects' => Project::all(),
         ]);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int                      $id
-     *
-     * @return \Illuminate\Http\Response
+     * Update the task in the database
      */
-    public function update(Request $request, Task $task)
+    public function update(Task $task)
     {
-        $task->update(request()->all());
+        $task->update(request()->validate([
+            'name' => 'string',
+            'description' => 'string',
+            'project_id' => 'exists:projects,id',
+            'parent_id' => 'exists:tasks,id|not_in:'.$task->id,
+        ]));
 
         return redirect()->route('task.index');
     }
