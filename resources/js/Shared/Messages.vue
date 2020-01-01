@@ -32,6 +32,13 @@
             ].filter(alert => alert.message)
             .forEach(alert => this.alerts.push(alert));
 
+            Object.keys(this.$page.errors).forEach(key => {
+                this.alerts.push({
+                    type: 'error',
+                    message: this.$page.errors[key].join("\n"),
+                });
+            })
+
             window.events.$on('notify', (notification) => {
                 this.alerts.push(notification);
             });  

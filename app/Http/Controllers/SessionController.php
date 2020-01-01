@@ -24,6 +24,7 @@ class SessionController extends Controller
     public function index()
     {
         if (is_null(request('per-page'))) {
+            request()->session()->reflash();
             return redirect()->route('session.index', array_merge(request()->query(), ['per-page' => 100]));
         }
         $page = request('page') ?? 1;
@@ -52,17 +53,43 @@ class SessionController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        return Inertia::render('Session/Edit', [
+            'invoices' => Invoice::all(),
+            'sprints' => Sprint::all(),
+            'tasks' => Task::all(),
+        ]);  
+    }
+
     public function store()
     {
-        Session::running()->get()->each(function ($session) {
-            $session->stop();
-        });
-
-        $session = Session::create([
-            'started_at' => request('started_at') ?? Carbon::now()->format('Y-m-d H:i:s'),
+        request()->validate([
+            'started_at' => 'date|required',
+            'ended_at' => 'date|after:started_at',
+            'sprint_id' => 'exists:sprints,id',
+            'task_id' => 'exists:tasks,id',
+            'invoice_id' => 'exists:invoices,id',
         ]);
 
-        return response()->json($session);
+        // If the new session has no end time, we want to stop any running sessions
+        if (request('ended_at') == null) {
+            Session::running()->get()->each(function ($session) {
+                $session->stop();
+            });
+        }
+
+        $session = Session::create([
+            'started_at' => $this->dateTimeFormatter->utcFormat(request('started_at')),
+            'ended_at'   => request('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
+            'task_id'    => request('task_id') ?: null,
+            'invoice_id' => request('invoice_id') ?: null,
+            'sprint_id'  => request('sprint_id') ?: null,
+        ]);
+
+        return redirect()
+            ->route('session.index')
+            ->with('success', "Session $session->id created");
     }
 
     public function edit(Session $session)
@@ -85,7 +112,9 @@ class SessionController extends Controller
             'sprint_id'  => request('sprint_id') ?: null,
         ]);
 
-        return redirect()->route('session.index');
+        return redirect()
+            ->route('session.index')
+            ->with('success', "Session $session->id updated");
     }
 
     public function start()
@@ -94,7 +123,7 @@ class SessionController extends Controller
             $session->stop();
         });
 
-        $session = Session::create(['started_at' => Carbon::now()]);
+        Session::create(['started_at' => Carbon::now()]);
 
         return redirect(route('session.index'));
     }

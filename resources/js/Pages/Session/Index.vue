@@ -8,10 +8,10 @@
             <inertia-link :href="route('session.create')" class="btn btn-primary btn-sm mr-2">
                 <i class="fa fa-stopwatch"></i>
             </inertia-link>
-            <inertia-link :href="route('session.start')" class="btn btn-green">
+            <button @click="startSession" class="btn btn-green">
                 <i class="fa fa-play pr-2"></i>
                 Start Session
-            </inertia-link>
+            </button>
         </template>
 
         <index-session-table
@@ -55,6 +55,9 @@ export default {
     methods: {
         showFilters() {
 
+        },
+        startSession() {
+            this.$inertia.post(route('session.start'));
         },
     }
 }

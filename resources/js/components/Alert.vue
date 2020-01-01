@@ -1,5 +1,5 @@
 <template>
-    <div v-if="isVisible" class="bg-green rounded mb-8 mt-8 p-8 text-white text-lg" :class="alertClass">
+    <div v-if="isVisible" class="rounded mb-8 mt-8 p-8 text-white text-lg" :class="alertClass">
         {{ alert.message }}
         <button type="button" class="float-right" @click="closeAlert" aria-label="Close">
             <span aria-hidden="true" class="text-lg text-white">&times;</span>

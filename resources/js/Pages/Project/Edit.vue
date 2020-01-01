@@ -43,8 +43,6 @@
     </layout>
 </template>
 
-@endsection
-
 <script>
 
     import clientSelect from '@/Shared/ClientSelect';

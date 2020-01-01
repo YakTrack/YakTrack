@@ -4,12 +4,12 @@ namespace Tests\Feature\DashboardTest;
 
 use App\Models\Session;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class DashboardTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function a_user_can_view_the_dashboard()
@@ -28,7 +28,8 @@ class DashboardTest extends TestCase
         $response = $this->get(route('home'));
 
         $response->assertSuccessful();
-        $response->assertViewIs('home');
+        
+        $response->assertSee('Monday 1st Jan 2018');
 
         Carbon::setTestNow();
     }

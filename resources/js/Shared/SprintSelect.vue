@@ -1,15 +1,15 @@
 <template>
     <div>
         <multi-select v-model="selectedSprint" label="name" :custom-label="customLabel" :options="sprints">
-            <template slot="option" slot-scope="slot">
+            <template slot="option" slot-scope="slot" v-if="slot.option">
                 {{ slot.option.name }}
-                <span class="text-grey-dark ml-2">{{ slot.option.project.name }}</span>
-                <span class="text-grey ml-2">{{ slot.option.project.client.name }}</span>
+                <span class="text-grey-dark ml-2" v-if="slot.option.project">{{ slot.option.project.name }}</span>
+                <span class="text-grey ml-2" v-if="slot.option.project && slot.option.project.client">{{ slot.option.project.client.name }}</span>
             </template>
-            <template slot="singleLabel" slot-scope="slot">
+            <template slot="singleLabel" slot-scope="slot" v-if="slot.option">
                 {{ slot.option.name }}
-                <span class="text-grey-dark ml-2">{{ slot.option.project.name }}</span>
-                <span class="text-grey ml-2">{{ slot.option.project.client.name }}</span>
+                <span class="text-grey-dark ml-2" v-if="slot.option.project">{{ slot.option.project.name }}</span>
+                <span class="text-grey ml-2" v-if="slot.option.project && slot.option.project.client">{{ slot.option.project.client.name }}</span>
             </template>
         </multi-select>
         <input type="hidden" name="sprint_id" :value="sprintId">
@@ -58,7 +58,11 @@
         },
         methods: {
             customLabel(option) {
-                return option.name + ' ' + option.project.name + ' ' + option.project.client.name;
+                return [
+                    option.name,
+                    option.project ? option.project.name : '',
+                    (option.project && option.project.client) ? option.project.client.name : '',
+                ].filter(s => s.length > 0).join(' ');
             }
         }
     }
