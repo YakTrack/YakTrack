@@ -94,16 +94,14 @@ class TaskController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Http\Response
+     * Delete a task from the database
      */
     public function destroy(Task $task)
     {
         $task->delete();
 
-        return redirect()->route('task.index');
+        return redirect()
+            ->route('task.index')
+            ->with('success', 'Task "' . $task->name . '" deleted');
     }
 }

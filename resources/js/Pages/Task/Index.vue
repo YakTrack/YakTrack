@@ -56,9 +56,11 @@
                             >
                                 <i class="fa fa-edit"></i>
                             </inertia-link>
-                            <button class="btn btn-default delete-item-button">
+                            <delete-button
+                                :url="route('task.destroy', task.id)"
+                            >
                                 <i class="fa fa-trash"></i>
-                            </button>
+                            </delete-button>
                         </div>
                     </td>
                 </tr>
@@ -73,6 +75,7 @@
 <script>
 
     import breadcrumbs from '@/Shared/Breadcrumbs';
+    import deleteButton from '@/Shared/DeleteButton';
     import layout from '@/Shared/Layout';
 
     export default {
@@ -81,6 +84,7 @@
         ],
         components: {
             breadcrumbs: breadcrumbs,
+            deleteButton: deleteButton,
             layout: layout,
         }
     }
