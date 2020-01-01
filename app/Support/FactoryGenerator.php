@@ -8,7 +8,16 @@ class FactoryGenerator
     {
         return collect([
             $this->projectVerb(),
-            $this->projectNounAndArticle(),
+            $this->nounAndArticle(),
+        ])->implode(' ');
+    }
+
+    public function taskName()
+    {
+        return collect([
+            $this->storyUser(),
+            $this->taskVerb(),
+            $this->nounAndArticle(),
         ])->implode(' ');
     }
 
@@ -32,7 +41,33 @@ class FactoryGenerator
         ])->random();
     }
 
-    protected function projectNounAndArticle()
+    protected function taskVerb()
+    {
+        return collect([
+            'click',
+            'update',
+            'view',
+            'edit',
+            'update',
+            'drag',
+            'search through',
+            'filter',
+            'delete',
+            'deactivate',
+            'activate',
+            'enable',
+            'disable',
+            'exit',
+            'login to',
+            'logout of',
+            'switch to',
+            'switch from',
+            'navigate to',
+            'navigate away from',
+        ])->random();
+    }
+
+    protected function nounAndArticle()
     {
         $isPlural = array_random([true, false]);
         $noun = $isPlural ? $this->pluralNoun() : $this->noun();
@@ -104,5 +139,16 @@ class FactoryGenerator
     protected function pluralNoun()
     {
         return str_plural($this->noun());
+    }
+
+    protected function storyUser()
+    {
+        return collect([
+            'as a user I can',
+            'as an admin I can',
+            'as a guest I can',
+            'as a vendor I can',
+            'as a subscriber I can',
+        ])->random();
     }
 }
