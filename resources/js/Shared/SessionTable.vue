@@ -4,10 +4,11 @@
             <thead>
                 <tr>
                     <th class="pl-0"> <input type="checkbox"/> </th>
-                    <th> Start Time </th>
-                    <th> End Time </th>
-                    <th> Total Time </th>
-                    <th> Linked To </th>
+                    <th class="text-right pr-0"> Start Time </th>
+                    <th class="text-right pr-0"> End Time </th>
+                    <th class="text-right pr-0"> Total Time </th>
+                    <th v-if="!hideLinkedToColumn"> Linked To </th>
+                    <th v-if="!hideInvoiceColumn"> Invoice </th>
                     <th class="text-right pr-0">
                         <dropdown :options="[
                             {
@@ -23,23 +24,23 @@
                     v-for="session in sessions"
                 >
                     <td class=""> <input type="checkbox"/></td>
-                    <td class="min-w-1">
+                    <td class="min-w-1 text-right font-mono">
                         {{ session.localStartedAtTimeForHumans }}
                     </td>
-                    <td class="min-w-1">
+                    <td class="min-w-1 text-right font-mono">
                         <a v-if="session.isRunning" class="btn" :href="route('session.stop', session.id)">
                             <i class="fa fa-stop text-red"></i>
                         </a>
                         <span v-else> {{ session.localEndedAtTimeForHumans }} </span>
                     </td>
-                    <td class="min-w-1">
+                    <td class="min-w-1 text-right font-mono">
                         {{ session.durationForHumans }}
                     </td>
-                    <td class="max-w-3">
+                    <td class="max-w-3" v-if="!hideLinkedToColumn">
                         <session-task :session="session"></session-task>
                     </td>
                     <td v-if="!hideInvoiceColumn">
-                        <a class="no-underline text-xs" :href="route('invoice.show', session.invoice.id)"> {{ session.invoice.number }} </a>
+                        <a v-if="session.invoice" class="no-underline text-xs" :href="route('invoice.show', session.invoice.id)"> {{ session.invoice.number }} </a>
                     </td>
                     <td class="text-right inline-flex pb-2 @if($key == 0) pt-2 @endif float-right">
                         <div class="btn-group float-right">
@@ -79,6 +80,7 @@
         props: [
             'sessions',
             'hideInvoiceColumn',
+            'hideLinkedToColumn',
         ],
     }
 </script>

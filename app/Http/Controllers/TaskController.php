@@ -52,16 +52,12 @@ class TaskController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Http\Response
+     * Show a single task
      */
     public function show(Task $task)
     {
-        return view('task.show', [
-            'task'                   => $task->load('sessions'),
+        return Inertia::render('Task/Show', [
+            'task'                   => $task->load('project.client', 'sessions'),
             'thirdPartyApplications' => ThirdPartyApplication::all(),
         ]);
     }
