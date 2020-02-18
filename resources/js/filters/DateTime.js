@@ -1,13 +1,13 @@
-import moment from 'moment';
+import dayjs from 'dayjs';
 
-export default class DateTime {
+export default {
 
-    static secondsSince (carbonDate, fromTimeStamp = null) {
+    secondsSince (carbonDate, fromTimeStamp = null) {
         var now = fromTimeStamp == null ? (new Date).getTime() : fromTimeStamp;
         return Math.round((now - (new Date(carbonDate.date+' GMT')).getTime()) / 1000);
-    }
+    },
 
-    static durationForHumans (numberOfSeconds) {
+    durationForHumans (numberOfSeconds) {
         if (typeof numberOfSeconds === 'undefined') {
             debugger
         }
@@ -17,65 +17,73 @@ export default class DateTime {
         date.setSeconds(numberOfSeconds);
 
         return date.toISOString().substr(11, 8);
-    }
+    },
 
-    static dateForHumans (date) {
-        return moment(date).format('ddd Do MMM YYYY');
-    }
+    dateForHumans (date) {
+        return dayjs(date).format('ddd Do MMM YYYY');
+    },
 
-    static fromNow (date) {
-        return moment(date).fromNow();
-    }
+    fromNow (date) {
+        return dayjs(date).fromNow();
+    },
 
-    static toDateTimeString(date) {
-        return moment(date).format('YYYY-MM-DD HH:mm:ss');
-    }
+    toInputFormat(date) {
+        return date.format('YYYY-MM-DDTHH:mm:ss');
+    },
 
-    static fromDateTimeString(date) {
-        return moment(date, 'YYYY-MM-DD HH:mm:ss').toISOString();
-    }
+    toDateTimeString(date) {
+        return dayjs(date).format('YYYY-MM-DD HH:mm:ss');
+    },
 
-    static toDateTimeForHumans(date) {
-        return moment(date).format('h:mm a Mo MMM YYYY');
-    }
+    fromDateTimeString(date) {
+        return dayjs(date, 'YYYY-MM-DD HH:mm:ss');
+    },
 
-    static startOfWeek(date) {
-        return moment(date).startOf('isoWeek').toISOString();
-    }
+    fromSearchParam(date) {
+        return dayjs(date, 'yyyy-MM-ddThh:mm');
+    },
 
-    static startOfLastWeek(date) {
-        return moment(date).startOf('isoWeek').subtract(1, 'week').toISOString();
-    }
+    toDateTimeForHumans(date) {
+        return dayjs(date).format('h:mm a Mo MMM YYYY');
+    },
 
-    static endOfWeek(date) {
-        return moment(date).endOf('isoWeek').toISOString();
-    }
+    startOfWeek(date) {
+        return this.toInputFormat(dayjs(date).startOf('week'));
+    },
 
-    static endOfLastWeek(date) {
-        return moment(date).endOf('isoWeek').subtract(1, 'week').toISOString();
-    }
+    startOfLastWeek(date) {
+        return this.toInputFormat(dayjs(date).startOf('week').subtract(1, 'week'));
+    },
 
-    static startOfMonth(date) {
-        return moment(date).startOf('month').toISOString();
-    }
+    endOfWeek(date) {
+        return this.toInputFormat(dayjs(date).endOf('week'));
+    },
 
-    static startOfLastMonth(date) {
-        return moment(date).startOf('month').subtract(1, 'month').toISOString();
-    }
+    endOfLastWeek(date) {
+        return this.toInputFormat(dayjs(date).endOf('week').subtract(1, 'week'));
+    },
 
-    static endOfMonth(date) {
-        return moment(date).endOf('month').toISOString();
-    }
+    startOfMonth(date) {
+        return this.toInputFormat(dayjs(date).startOf('month'));
+    },
 
-    static endOfLastMonth(date) {
-        return moment(date).endOf('month').subtract(1, 'month').toISOString();
-    }
+    startOfLastMonth(date) {
+        return this.toInputFormat(dayjs(date).startOf('month').subtract(1, 'month'));
+    },
 
-    static moment(date) {
-        return moment(date);
-    }
+    endOfMonth(date) {
+        return this.toInputFormat(dayjs(date).endOf('month'));
+    },
 
-    static totalDuration(sessionsCollection) {
+    endOfLastMonth(date) {
+        return this.toInputFormat(dayjs(date).endOf('month').subtract(1, 'month'));
+    },
+
+    dayjs(date) {
+        return dayjs(date);
+    },
+
+    totalDuration(sessionsCollection) {
         if (sessionsCollection == null) {
             return 0;
         }

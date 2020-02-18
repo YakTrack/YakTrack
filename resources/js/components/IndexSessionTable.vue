@@ -1,37 +1,30 @@
 <template>
     <div>
-        <div class="p-4 bg-white rounded shadow" v-if="queryParams.showFilters == 'true'">
+        <div class="p-4 bg-white rounded shadow" v-if="searchParams.get('show-filters') == 'true'">
             <h3> Filters </h3>
-                <div class="flex-1">
-                    <div class="flex">
-                        <div class="btn-group">
-                            <button class="btn" @click="thisMonth()"> This Month </button>
-                            <button class="btn" @click="lastMonth()"> Last Month </button>
-                            <button class="btn" @click="lastWeek()"> Last Week </button>
-                            <button class="btn" @click="thisWeek()"> This Week </button>
-                        </div>
+            <div class="flex-1 mt-2">
+                <div class="flex">
+                    <div class="btn-group">
+                        <button class="btn" :class="filterPresetIsSelected('thisMonth') ? 'btn-grey-lighter' : ''" @click="loadFilterPreset('thisMonth')"> This Month </button>
+                        <button class="btn" :class="filterPresetIsSelected('lastMonth') ? 'btn-grey-lighter' : ''" @click="loadFilterPreset('lastMonth')"> Last Month </button>
+                        <button class="btn" :class="filterPresetIsSelected('thisWeek') ? 'btn-grey-lighter' : ''" @click="loadFilterPreset('thisWeek')"> This Week </button>
+                        <button class="btn" :class="filterPresetIsSelected('lastWeek') ? 'btn-grey-lighter' : ''" @click="loadFilterPreset('lastWeek')"> Last Week </button>
                     </div>
-                    <div class="flex mt-2">
-                        <div class="flex-1">
-                            <label> Started After </label>
-                            <datetime
-                                v-model="filters.startedAfter"
-                                class="border border-grey p-2"
-                                :format="dateFormat"
-                                type="datetime"
-                            ></datetime>
-                        </div>
-                        <div class="flex-1 ml-2">
-                            <label> Started Before </label>
-                            <datetime
-                                v-model="filters.startedBefore"
-                                class="border border-grey p-2"
-                                :format="dateFormat"
-                                type="datetime"
-                            ></datetime>
-                        </div>
+                </div>
+                <div class="flex mt-2">
+                    <div class="flex-1">
+                        <label> Started After </label>
+                        <datetime-input
+                            v-model="filters.startedAfter"
+                        />
                     </div>
-
+                    <div class="flex-1 ml-2">
+                        <label> Started Before </label>
+                        <datetime-input
+                            v-model="filters.startedBefore"
+                        />
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -53,7 +46,7 @@
                 </thead>
                 <tbody v-for="(day, dayIndex) in filteredDays" :key="dayIndex">
                     <tr class="bg-blue-lightest text-grey-dark font-light text-xs uppercase">
-                        <td class="px-3 py-1 rounded" colspan="10"> {{ day.date }} </td>
+                        <td class="px-3 py-1 rounded" colspan="10"> {{ day.sessions[0].localStartedAtDateForHumans }} </td>
                     </tr>
                     <tr v-for="(session, sessionIndex) in day.sessions" :key="session.id" :class="session.rowClasses">
                         <td class="pl-2">
@@ -170,24 +163,24 @@
 
 <script>
     import axios from 'axios';
-    import Dropdown from '@/Shared/Dropdown';
-    import InvoiceSelect from '@/Shared/InvoiceSelect';
-    import Modal from './Modal';
-    import Timer from './Timer';
-    import DateTime from './../filters/DateTime';
-    import DatetimeInput from './DatetimeInput';
-    import PageSelector from './PageSelector';
+    import dropdown from '@/Shared/Dropdown';
+    import invoiceSelect from '@/Shared/InvoiceSelect';
+    import modal from './Modal';
+    import timer from './Timer';
+    import dateTime from './../filters/DateTime';
+    import datetimeInput from './DatetimeInput';
+    import pageSelector from './PageSelector';
     import { mapState } from 'vuex'
     import closeable from '@/directives/Closeable';
-    import UrlParser from '@/UrlParser.js';
+    import urlParser from '@/UrlParser.js';
+    import searchParams from '@/SearchParams';
 
     const DATE_FORMAT = "yyyy'-'MM'-'dd HH':'mm':'ss";
 
     export default {
         props: [
             'invoices',
-            'third-party-applications',
-            'showFilters',
+            'thirdPartyApplications',
             'days',
             'page',
             'perPage',
@@ -195,12 +188,12 @@
             'lastPage',
         ],
         components: {
-            dropdown: Dropdown,
-            invoiceSelect: InvoiceSelect,
-            modal: Modal,
-            timer: Timer,
-            datetimeInput: DatetimeInput,
-            pageSelector: PageSelector,
+            dropdown: dropdown,
+            invoiceSelect: invoiceSelect,
+            modal: modal,
+            timer: timer,
+            datetimeInput: datetimeInput,
+            pageSelector: pageSelector,
         },
         data() {
             return {
@@ -218,14 +211,30 @@
                     startedAfter: null,
                     startedBefore: null,
                 },
-                dateTime: DateTime,
-                urlParser: UrlParser,
+                dateTime: dateTime,
+                urlParser: urlParser,
+                searchParams: searchParams,
+                filterPresets: {
+                    thisWeek: {
+                        startedAfter: dateTime.startOfWeek(new Date()),
+                        startedBefore: dateTime.endOfWeek(new Date()),
+                    },
+                    lastWeek: {
+                        startedAfter: dateTime.startOfLastWeek(new Date()),
+                        startedBefore: dateTime.endOfLastWeek(new Date()),
+                    },
+                    thisMonth: {
+                        startedAfter: dateTime.startOfMonth(new Date()),
+                        startedBefore: dateTime.endOfMonth(new Date()),
+                    },
+                    lastMonth: {
+                        startedAfter: dateTime.startOfLastMonth(new Date()),
+                        startedBefore: dateTime.endOfLastMonth(new Date()),
+                    },
+                },
             };
         },
         computed: {
-            queryParams() {
-                return (new URLSearchParams(window.location.search));
-            },
             selectedSessions() {
                 return this.sessions.filter(function (session) {
                     return session.isSelected;
@@ -281,16 +290,16 @@
             },
             selectedPerPageOption() {
                 return this.perPageOptions.find(option =>{
-                    return Number.parseInt(option.name) == this.queryParams.get('per-page');
+                    return Number.parseInt(option.name) == searchParams.get('per-page');
                 });
             }
         },
         mounted() {
             this.setDateTimeFilters(
-                this.dateTime.fromDateTimeString(this.queryParams.startedAfter),
-                this.dateTime.fromDateTimeString(this.queryParams.startedBefore)
+                this.dateTime.toInputFormat(this.dateTime.fromSearchParam(searchParams.get('started-after'))),
+                this.dateTime.toInputFormat(this.dateTime.fromSearchParam(searchParams.get('started-before'))),
+                false
             );
-
 
             events.$on('set-per-page', (perPage) => {
                 this.$inertia.visit(this.urlParser.current({
@@ -302,6 +311,16 @@
             });
         },
         methods: {
+            loadFilterPreset(presetKey) {
+                this.setDateTimeFilters(
+                    this.filterPresets[presetKey].startedAfter,
+                    this.filterPresets[presetKey].startedBefore
+                );
+            },
+            filterPresetIsSelected(presetKey) {
+                const preset = this.filterPresets[presetKey];
+                return this.filters.startedAfter == preset.startedAfter && this.filters.startedBefore == preset.startedBefore;
+            },
             deleteSession(session) {
                 this.$inertia.delete(session.destroyUrl);
             },
@@ -309,7 +328,7 @@
                 this.$inertia.post(route('session.stop', session.id));
             },
             getSessions() {
-                axios.get(`json/session`, this.queryParams)
+                axios.get(`json/session`, searchParams)
                     .then(response => {
                     this.$set(this, 'days', response.data.days.map(day => {
                         day.sessions = day.sessions.map(session => {
@@ -353,33 +372,21 @@
                     started_at: (new Date),
                 });
             },
-            thisWeek() {
-                this.setDateTimeFilters(
-                    this.dateTime.startOfWeek(new Date()),
-                    this.dateTime.endOfWeek(new Date())
-                );
-            },
-            lastWeek() {
-                this.setDateTimeFilters(
-                    this.dateTime.startOfLastWeek(new Date()),
-                    this.dateTime.endOfLastWeek(new Date())
-                );
-            },
-            thisMonth() {
-                this.setDateTimeFilters(
-                    this.dateTime.startOfMonth(new Date()),
-                    this.dateTime.endOfMonth(new Date())
-                );
-            },
-            lastMonth() {
-                this.setDateTimeFilters(
-                    this.dateTime.startOfLastMonth(new Date()),
-                    this.dateTime.endOfLastMonth(new Date())
-                );
-            },
-            setDateTimeFilters(startedAfter, startedBefore) {
+            setDateTimeFilters(startedAfter, startedBefore, reload = true) {
                 this.setStartedAfterFilter(startedAfter);
                 this.setStartedBeforeFilter(startedBefore);
+
+                if (!reload) {
+                    return;
+                }
+
+                this.$inertia.visit(this.urlParser.current({
+                    startedAfter: this.filters.startedAfter,
+                    startedBefore: this.filters.startedBefore,
+                }), {
+                    preserveScroll: true,
+                });
+
             },
             setStartedAfterFilter(startedAfter) {
                 this.filters.startedAfter = startedAfter;
@@ -388,7 +395,7 @@
                 this.filters.startedBefore = startedBefore;
             },
             selectPage(page) {
-                this.$inertia.visit(this.urlParser.current({page: page}), {
+                this.$inertia.visit(this.urlParser.current({page: this.page}), {
                     replace: true,
                     preserveScroll: true,
                 });
@@ -411,8 +418,7 @@
             filters: {
                 deep: true,
                 handler(newValue) {
-                    ['startedAfter', 'startedBefore'].forEach(key => {
-                    });
+
                 }
             },
         },

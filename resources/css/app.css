@@ -89,6 +89,14 @@
     @apply bg-blue text-white
 }
 
+.btn-blue-light {
+    @apply bg-blue-light text-white
+}
+
+.btn-grey-lighter {
+    @apply bg-grey-lighter
+}
+
 .btn-blue:hover {
     @apply bg-blue-dark;
 }
