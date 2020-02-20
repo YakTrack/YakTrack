@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Json\Session;
+namespace Tests\Feature\Session;
 
 use App\Models\Session;
 use Carbon\Carbon;
@@ -10,6 +10,30 @@ use Tests\TestCase;
 class IndexSessionTest extends TestCase
 {
     use RefreshDatabase;
+
+    /** @test */
+    public function when_no_per_page_parameter_is_present_the_user_is_redirected()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->actingAsUser();
+
+        $response = $this->get(route('session.index'));
+
+        $response->assertRedirect(route('session.index', ['per-page' => 100]));
+    }
+
+    /** @test */
+    public function a_user_can_load_the_session_index_page()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->actingAsUser();
+
+        $response = $this->get(route('session.index', ['per-page' => 100]));
+
+        $response->assertSuccessful();
+    }
 
     /** @test */
     public function a_user_can_see_a_list_of_sessions_filtered_by_start_time()
@@ -33,12 +57,15 @@ class IndexSessionTest extends TestCase
 
         $this->actingAsUser();
 
-        $response = $this->get(route('json.session.index', [
+        $response = $this->get(route('session.index', [
             'started-after'  => '2019-01-01 01:00:00',
             'started-before' => '2019-01-02 24:59:59',
+            'per-page' => 100,
         ]));
 
-        $days = collect($response->decodeResponseJson()['days'])->keyBy(function ($day) {
+        $response->assertHasProp('days');
+
+        $days = collect($response->props()['days'])->keyBy(function ($day) {
             return $day['date'];
         })->map(function ($day) {
             return collect($day['sessions']);
