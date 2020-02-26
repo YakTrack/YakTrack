@@ -22,7 +22,7 @@
         },
         computed: {
             alertClass() {
-                return this.type == 'success' ? 'bg-green' : 'bg-red';
+                return this.alert.type == 'success' ? 'bg-green' : 'bg-red';
             }
         }
     }
