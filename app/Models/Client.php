@@ -20,11 +20,11 @@ class Client extends Model
 
     public function getSessionsThisWeekAttribute()
     {
-        return $this->projects->sessionsThisWeek();
+        return $this->projects->sessionsThisWeek()->values();
     }
 
     public function getOpenSprintsAttribute()
     {
-        return $this->sprints()->open()->get();
+        return $this->sprints()->open()->with('sessions')->get();
     }
 }

@@ -4,7 +4,6 @@ use App\Models\Project;
 use App\Models\Sprint;
 use Faker\Generator as Faker;
 
-// Sprint factory
 $factory->define(Sprint::class, function (Faker $faker) {
     return [
         'name'       => $faker->word(),
@@ -12,4 +11,14 @@ $factory->define(Sprint::class, function (Faker $faker) {
             return factory(Project::class)->create();
         },
     ];
+});
+
+$factory->afterCreating(Sprint::class, function ($sprint) {
+    $sprint->name = implode(' ', [
+        $sprint->project->name,
+        '-',
+        'Sprint',
+        ($sprint->id % $sprint->project->sprints()->count()) + 1,
+    ]);
+    $sprint->save();
 });

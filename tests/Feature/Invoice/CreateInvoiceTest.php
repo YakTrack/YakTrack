@@ -19,11 +19,11 @@ class CreateInvoiceTest extends TestCase
 
         $response = $this->get(route('invoice.create'));
 
-        $response->assertViewIs('invoice.create');
+        $response->assertSuccessful();
     }
 
     /** @test */
-    public function a_user_can_create_an_invoice()
+    public function a_user_can_store_an_invoice_with_a_post_request()
     {
         $this->withoutExceptionHandling();
 

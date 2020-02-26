@@ -1,37 +1,30 @@
 <template>
     <div>
-        <div class="p-4 bg-white rounded shadow" v-if="queryParams.showFilters == 'true'">
+        <div class="p-4 bg-white rounded shadow" v-if="searchParams.get('show-filters') == 'true'">
             <h3> Filters </h3>
-                <div class="flex-1">
-                    <div class="flex">
-                        <div class="btn-group">
-                            <button class="btn" @click="thisMonth()"> This Month </button>
-                            <button class="btn" @click="lastMonth()"> Last Month </button>
-                            <button class="btn" @click="lastWeek()"> Last Week </button>
-                            <button class="btn" @click="thisWeek()"> This Week </button>
-                        </div>
+            <div class="flex-1 mt-2">
+                <div class="flex">
+                    <div class="btn-group">
+                        <button class="btn" :class="filterPresetIsSelected('thisMonth') ? 'btn-grey-lighter' : ''" @click="loadFilterPreset('thisMonth')"> This Month </button>
+                        <button class="btn" :class="filterPresetIsSelected('lastMonth') ? 'btn-grey-lighter' : ''" @click="loadFilterPreset('lastMonth')"> Last Month </button>
+                        <button class="btn" :class="filterPresetIsSelected('thisWeek') ? 'btn-grey-lighter' : ''" @click="loadFilterPreset('thisWeek')"> This Week </button>
+                        <button class="btn" :class="filterPresetIsSelected('lastWeek') ? 'btn-grey-lighter' : ''" @click="loadFilterPreset('lastWeek')"> Last Week </button>
                     </div>
-                    <div class="flex mt-2">
-                        <div class="flex-1">
-                            <label> Started After </label>
-                            <datetime
-                                v-model="filters.startedAfter"
-                                class="border border-grey p-2"
-                                :format="dateFormat"
-                                type="datetime"
-                            ></datetime>
-                        </div>
-                        <div class="flex-1 ml-2">
-                            <label> Started Before </label>
-                            <datetime
-                                v-model="filters.startedBefore"
-                                class="border border-grey p-2"
-                                :format="dateFormat"
-                                type="datetime"
-                            ></datetime>
-                        </div>
+                </div>
+                <div class="flex mt-2">
+                    <div class="flex-1">
+                        <label> Started After </label>
+                        <datetime-input
+                            v-model="filters.startedAfter"
+                        />
                     </div>
-
+                    <div class="flex-1 ml-2">
+                        <label> Started Before </label>
+                        <datetime-input
+                            v-model="filters.startedBefore"
+                        />
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -62,7 +55,7 @@
                 </thead>
                 <tbody v-for="(day, dayIndex) in filteredDays" :key="dayIndex">
                     <tr class="bg-blue-lightest text-grey-dark font-light text-xs uppercase">
-                        <td class="px-3 py-1 rounded" colspan="3"> {{ day.date }} </td>
+                        <td class="px-3 py-1 rounded" colspan="10"> {{ day.sessions[0].localStartedAtDateForHumans }} </td>
                         <td class="text-right pr-4 text-base font-mono text-grey"> {{ day.totalDurationForHumans }} </td>
                         <td colspan="6"></td>
                     </tr>
@@ -84,8 +77,12 @@
                         <td class="pl-4 max-w-3">
                             <div class="inline-flex">
                                 <div class="mr-3 flex my-auto">
-                                    <a v-if="session.isRunning" class="btn" :href="session.stopUrl"><i class="fa fa-stop fa-xs text-red"></i></a>
-                                    <button v-if="session.task && !session.isRunning" class="btn" @click="createSessionForTask(session.task)"><i class="fas fa-play fa-xs text-grey"></i></button>
+                                    <button v-if="session.isRunning" class="btn" @click="stopSession(session)">
+                                        <i class="fa fa-stop fa-xs text-red"></i>
+                                    </button>
+                                    <button v-if="session.task && !session.isRunning" class="btn" @click="createSessionForTask(session.task)">
+                                        <i class="fas fa-play fa-xs text-grey"></i>
+                                    </button>
                                 </div>
                                 <div v-if="session.task">
                                     <div>
@@ -104,27 +101,27 @@
                             </div>
                         </td>
                         <td>
-                            <a v-if="session.sprint != null" class="no-underline text-xs" :href="session.sprint.showUrl"> {{ session.sprint.name }} </a>
+                            <inertia-link v-if="session.sprint != null" class="no-underline text-xs" :href="session.sprint.showUrl || ''"> {{ session.sprint.name }} </inertia-link>
                         </td>
                         <td>
-                            <a v-if="session.invoice != null" class="no-underline text-xs" :href="session.invoice.showUrl"> {{ session.invoice.number }} </a>
+                            <inertia-link v-if="session.invoice != null" class="no-underline text-xs" :href="session.invoice.showUrl"> {{ session.invoice.number }} </inertia-link>
                         </td>
                         <td class="text-right inline-flex pb-2 @if($key == 0) pt-2 @endif float-right">
-                            <form :action="session.destroyUrl" method="post">
-                                <csrf-input></csrf-input>
-                                <div class="btn-group float-right">
-                                    <a
-                                        :href="session.editUrl"
-                                        class="btn btn-default"
-                                    >
-                                        <i class="fa fa-edit"></i>
-                                    </a>
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <button class="btn delete-item-button">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                            </form>
+                            <div class="btn-group float-right">
+                                <inertia-link
+                                    :href="session.editUrl"
+                                    class="btn btn-default"
+                                >
+                                    <i class="fa fa-edit"></i>
+                                </inertia-link>
+                                <button
+                                    type="button"
+                                    class="btn delete-item-button"
+                                    @click="deleteSession(session)"
+                                >
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -141,8 +138,8 @@
                     <page-selector
                         :total="total"
                         :last-page="lastPage"
-                        :page="queryParams.page"
-                        :per-page="queryParams.perPage"
+                        :page="page"
+                        :per-page="perPage"
                         :on-page-select="selectPage"
                     >
                     </page-selector>
@@ -177,34 +174,40 @@
 
 <script>
     import axios from 'axios';
-    import Dropdown from './Dropdown';
-    import InvoiceSelect from './InvoiceSelect';
-    import Modal from './Modal';
-    import Timer from './Timer';
-    import DateTime from './../filters/DateTime';
-    import DatetimeInput from './DatetimeInput';
-    import PageSelector from './PageSelector';
+    import dropdown from '@/Shared/Dropdown';
+    import invoiceSelect from '@/Shared/InvoiceSelect';
+    import modal from './Modal';
+    import timer from './Timer';
+    import dateTime from './../filters/DateTime';
+    import datetimeInput from './DatetimeInput';
+    import pageSelector from './PageSelector';
     import { mapState } from 'vuex'
+    import closeable from '@/directives/Closeable';
+    import urlParser from '@/UrlParser.js';
+    import searchParams from '@/SearchParams';
 
     const DATE_FORMAT = "yyyy'-'MM'-'dd HH':'mm':'ss";
 
     export default {
         props: [
             'invoices',
-            'third-party-applications',
-            'showFilters',
+            'thirdPartyApplications',
+            'days',
+            'page',
+            'perPage',
+            'total',
+            'lastPage',
         ],
         components: {
-            dropdown: Dropdown,
-            invoiceSelect: InvoiceSelect,
-            modal: Modal,
-            timer: Timer,
-            datetimeInput: DatetimeInput,
-            pageSelector: PageSelector,
+            dropdown: dropdown,
+            invoiceSelect: invoiceSelect,
+            modal: modal,
+            timer: timer,
+            datetimeInput: datetimeInput,
+            pageSelector: pageSelector,
         },
         data() {
             return {
-                days: [],
                 selectAll: false,
                 selectedInvoiceId: null,
                 actionsDropdown: [
@@ -219,13 +222,30 @@
                     startedAfter: null,
                     startedBefore: null,
                 },
-                dateTime: DateTime,
-                lastPage: null,
-                total: null,
+                dateTime: dateTime,
+                urlParser: urlParser,
+                searchParams: searchParams,
+                filterPresets: {
+                    thisWeek: {
+                        startedAfter: dateTime.startOfWeek(new Date()),
+                        startedBefore: dateTime.endOfWeek(new Date()),
+                    },
+                    lastWeek: {
+                        startedAfter: dateTime.startOfLastWeek(new Date()),
+                        startedBefore: dateTime.endOfLastWeek(new Date()),
+                    },
+                    thisMonth: {
+                        startedAfter: dateTime.startOfMonth(new Date()),
+                        startedBefore: dateTime.endOfMonth(new Date()),
+                    },
+                    lastMonth: {
+                        startedAfter: dateTime.startOfLastMonth(new Date()),
+                        startedBefore: dateTime.endOfLastMonth(new Date()),
+                    },
+                },
             };
         },
         computed: {
-            ...mapState(['queryParams']),
             selectedSessions() {
                 return this.sessions.filter(function (session) {
                     return session.isSelected;
@@ -286,30 +306,46 @@
             },
             selectedPerPageOption() {
                 return this.perPageOptions.find(option =>{
-                    return Number.parseInt(option.name) == window.router.getQueryParam('per-page');
+                    return Number.parseInt(option.name) == searchParams.get('per-page');
                 });
             }
         },
-        created() {
+        mounted() {
             this.setDateTimeFilters(
-                this.dateTime.fromDateTimeString(this.queryParams.startedAfter),
-                this.dateTime.fromDateTimeString(this.queryParams.startedBefore)
+                this.dateTime.toInputFormat(this.dateTime.fromSearchParam(searchParams.get('started-after'))),
+                this.dateTime.toInputFormat(this.dateTime.fromSearchParam(searchParams.get('started-before'))),
+                false
             );
 
-            this.getSessions();
-
             events.$on('set-per-page', (perPage) => {
-                this.$store.dispatch('setQueryParam', {
-                    key: 'perPage',
-                    value: perPage
+                this.$inertia.visit(this.urlParser.current({
+                    perPage: perPage,
+                }), {
+                    replace: true,
+                    preserveScroll: true,
                 });
             });
         },
         methods: {
+            loadFilterPreset(presetKey) {
+                this.setDateTimeFilters(
+                    this.filterPresets[presetKey].startedAfter,
+                    this.filterPresets[presetKey].startedBefore
+                );
+            },
+            filterPresetIsSelected(presetKey) {
+                const preset = this.filterPresets[presetKey];
+                return this.filters.startedAfter == preset.startedAfter && this.filters.startedBefore == preset.startedBefore;
+            },
+            deleteSession(session) {
+                this.$inertia.delete(session.destroyUrl);
+            },
+            stopSession(session) {
+                this.$inertia.post(route('session.stop', session.id));
+            },
             getSessions() {
-                window.axios.get(
-                    window.router.buildUrl(`json/session`, this.$store.state.queryParams)
-                ).then(response => {
+                axios.get(`json/session`, searchParams)
+                    .then(response => {
                     this.$set(this, 'days', response.data.days.map(day => {
                         day.sessions = day.sessions.map(session => {
                             session.isSelected = false;
@@ -319,10 +355,6 @@
                     }));
                     this.$set(this, 'total', response.data.total);
                     this.$set(this, 'lastPage', response.data.lastPage);
-                    this.setQueryParams({
-                        page: response.data.page,
-                        perPage: response.data.perPage,
-                    });
                 });
             },
             toggleAllCheckboxes(event) {
@@ -331,21 +363,8 @@
                 });
             },
             linkSelectedSessionsToInvoice() {
-                window.axios.patch(`invoice/${this.selectedInvoiceId}/`, {
+                this.$inertia.patch(route('invoice.update', this.selectedInvoiceId), {
                     sessions: this.selectedSessionIds,
-                }).then((response) => {
-                    this.selectedSessionIds.forEach((sessionId) => {
-                        this.sessions[
-                            this.sessions.indexOf(this.sessions.find((session) => session.id == sessionId))
-                        ].invoice = response.data.invoice;
-                    });
-
-                    window.events.$emit('notify', {
-                        type: "success",
-                        message: "Sessions linked to invoice "+this.invoices.find((invoice) => invoice.id == this.selectedInvoiceId).number,
-                    });
-
-                    window.events.$emit('sessions.linked-to-invoice');
                 });
             },
             selectInvoice(invoiceId) {
@@ -365,39 +384,25 @@
                 return classes.join(' ');
             },
             createSessionForTask(task) {
-               window.axios.post(`task/${task.id}/session`, {
+                this.$inertia.post(`task/${task.id}/session`, {
                     started_at: (new Date),
-               }).then((response) => {
-                   window.location.reload();
-               });
+                });
             },
-            thisWeek() {
-                this.setDateTimeFilters(
-                    this.dateTime.startOfWeek(new Date()),
-                    this.dateTime.endOfWeek(new Date())
-                );
-            },
-            lastWeek() {
-                this.setDateTimeFilters(
-                    this.dateTime.startOfLastWeek(new Date()),
-                    this.dateTime.endOfLastWeek(new Date())
-                );
-            },
-            thisMonth() {
-                this.setDateTimeFilters(
-                    this.dateTime.startOfMonth(new Date()),
-                    this.dateTime.endOfMonth(new Date())
-                );
-            },
-            lastMonth() {
-                this.setDateTimeFilters(
-                    this.dateTime.startOfLastMonth(new Date()),
-                    this.dateTime.endOfLastMonth(new Date())
-                );
-            },
-            setDateTimeFilters(startedAfter, startedBefore) {
+            setDateTimeFilters(startedAfter, startedBefore, reload = true) {
                 this.setStartedAfterFilter(startedAfter);
                 this.setStartedBeforeFilter(startedBefore);
+
+                if (!reload) {
+                    return;
+                }
+
+                this.$inertia.visit(this.urlParser.current({
+                    startedAfter: this.filters.startedAfter,
+                    startedBefore: this.filters.startedBefore,
+                }), {
+                    preserveScroll: true,
+                });
+
             },
             setStartedAfterFilter(startedAfter) {
                 this.filters.startedAfter = startedAfter;
@@ -406,21 +411,11 @@
                 this.filters.startedBefore = startedBefore;
             },
             selectPage(page) {
-                this.$store.dispatch('setQueryParam', {
-                    key: 'page',
-                    value: page,
+                this.$inertia.visit(this.urlParser.current({page: this.page}), {
+                    replace: true,
+                    preserveScroll: true,
                 });
             },
-            setQueryParams(params) {
-                this.$store.dispatch('setQueryParam', {
-                    key: 'perPage',
-                    value: params.perPage,
-                });
-                this.$store.dispatch('setQueryParam', {
-                    key: 'page',
-                    value: params.page,
-                });
-            }
         },
         watch: {
             selectAll(newValue) {
@@ -439,23 +434,9 @@
             filters: {
                 deep: true,
                 handler(newValue) {
-                    ['startedAfter', 'startedBefore'].forEach(key => {
-                        this.$store.dispatch(
-                            'setQueryParam',
-                            {
-                                key: key,
-                                value: this.dateTime.toDateTimeString(newValue[key])
-                            }
-                        )
-                    });
+
                 }
             },
-            queryParams: {
-                deep:true,
-                handler(newValue) {
-                    this.getSessions();
-                },
-            }
         },
     }
 </script>

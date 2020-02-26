@@ -6,108 +6,98 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\ThirdPartyApplication;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class TaskController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Show a list of tasks.
      */
     public function index()
     {
-        return view('task.index', ['tasks' => Task::orderBy('id', 'desc')->get()]);
+        return Inertia::render('Task/Index', [
+            'tasks' => Task::orderBy('id', 'desc')
+                ->with('project.client', 'parent')
+                ->get(),
+        ]);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Show the form for creating a new task.
      */
     public function create()
     {
-        return view('task.create', [
+        return Inertia::render('Task/Edit', [
             'projects' => Project::with(['sprints', 'tasks'])->orderBy('name')->get(),
             'tasks'    => Task::orderBy('id', 'desc')->get(),
         ]);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Response
+     * Store a new task in the database.
      */
     public function store(Request $request)
     {
         $task = Task::create([
             'name'        => request('name'),
-            'description' => request('description'),
-            'project_id'  => request('project_id') ?: null,
-            'parent_id'   => request('parent_id') ?: null,
+            'description' => request('description') ?? '',
+            'project_id'  => request('project_id') ?? null,
+            'parent_id'   => request('parent_id') ?? null,
             'status'      => 'incomplete',
         ]);
 
-        return redirect()->route('task.index');
+        return redirect()
+            ->route('task.index')
+            ->with('success', 'Created task "'.$task->name.'"');
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Http\Response
+     * Show a single task.
      */
     public function show(Task $task)
     {
-        return view('task.show', [
-            'task'                   => $task->load('sessions'),
+        return Inertia::render('Task/Show', [
+            'task'                   => $task->load('project.client', 'sessions'),
             'thirdPartyApplications' => ThirdPartyApplication::all(),
         ]);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Http\Response
+     * Edit a task.
      */
     public function edit(Task $task)
     {
-        return view('task.edit', [
+        return Inertia::render('Task/Edit', [
             'task'     => $task,
+            'tasks'    => Task::all(),
             'projects' => Project::all(),
         ]);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int                      $id
-     *
-     * @return \Illuminate\Http\Response
+     * Update the task in the database.
      */
-    public function update(Request $request, Task $task)
+    public function update(Task $task)
     {
-        $task->update(request()->all());
+        $task->update(request()->validate([
+            'name'        => 'string',
+            'description' => 'string',
+            'project_id'  => 'exists:projects,id',
+            'parent_id'   => 'exists:tasks,id|not_in:'.$task->id,
+        ]));
 
         return redirect()->route('task.index');
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Http\Response
+     * Delete a task from the database.
      */
     public function destroy(Task $task)
     {
         $task->delete();
 
-        return redirect()->route('task.index');
+        return redirect()
+            ->route('task.index')
+            ->with('success', 'Task "'.$task->name.'" deleted');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ClientController extends Controller
 {
@@ -14,7 +15,7 @@ class ClientController extends Controller
      */
     public function index()
     {
-        return view('client.index', [
+        return Inertia::render('Client/Index', [
             'clients' => \App\Models\Client::orderBy('name')->get(),
         ]);
     }
@@ -26,7 +27,7 @@ class ClientController extends Controller
      */
     public function create()
     {
-        return view('client.create');
+        return Inertia::render('Client/Edit');
     }
 
     /**
@@ -38,16 +39,14 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
+        $client = Client::create($request->validate([
             'name'  => 'required',
             'email' => 'email',
-        ]);
-
-        Client::create($request->except('_token'));
+        ]));
 
         return redirect()
             ->route('client.index')
-            ->with(['messages' => ['success' => 'You have created new client "'.$request->name]]);
+            ->with('success', 'You have created client "'.$client->name.'"');
     }
 
     /**
@@ -59,7 +58,7 @@ class ClientController extends Controller
      */
     public function show(Client $client)
     {
-        return view('client.show', ['client' => $client]);
+        return Inertia::render('Client/Show', ['client' => $client]);
     }
 
     /**
@@ -71,7 +70,7 @@ class ClientController extends Controller
      */
     public function edit(Client $client)
     {
-        return view('client.edit', [
+        return Inertia::render('Client/Edit', [
             'client' => $client,
         ]);
     }
@@ -97,9 +96,7 @@ class ClientController extends Controller
 
         return redirect()
             ->route('client.index')
-            ->with(['messages' => [
-                'success' => 'You have updated client "'.$client->name.'"',
-            ]]);
+            ->with('success', 'You have updated client "'.$client->name.'"');
     }
 
     /**
@@ -115,8 +112,6 @@ class ClientController extends Controller
 
         return redirect()
             ->route('client.index')
-            ->with(['messages' => [
-                'success' => 'You have deleted client "'.$client->name.'"',
-            ]]);
+            ->with('success', 'You have deleted client "'.$client->name.'"');
     }
 }

@@ -5,35 +5,32 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
     /**
-     * Display a listing of the projects.
-     *
-     * @return \Illuminate\Http\Response
+     * Show a list of projects.
      */
     public function index()
     {
-        return view('project.index', ['projects' => Project::orderBy('id', 'desc')->get()]);
+        return Inertia::render('Project/Index', [
+            'projects' => Project::orderBy('name')->with('client')->get(),
+        ]);
     }
 
     /**
      * Show the form for creating a new project.
-     *
-     * @return \Illuminate\Http\Response
-     */
+     **/
     public function create()
     {
-        return view('project.create', ['clients' => Client::all()]);
+        return Inertia::render('Project/Edit', [
+            'clients' => Client::all(),
+        ]);
     }
 
     /**
-     * Store a newly created project in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Response
+     * Save a new project.
      */
     public function store(Request $request)
     {
@@ -46,25 +43,17 @@ class ProjectController extends Controller
 
         return redirect()
             ->route('project.index')
-            ->with(
-                ['messages' => [
-                    'success' => 'You have created a new project called '.
-                    $project->name,
-                ],
-                ]
-            );
+            ->with('success', "Project \"$project->name\" created");
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param Project $project \\ The project to be shown
-     *
-     * @return \Illuminate\Http\Response
+     * Show a single project.
      */
     public function show(Project $project)
     {
-        return view('project.show', ['project' => $project]);
+        return Inertia::render('Project/Show', [
+            'project' => $project->load('client'),
+        ]);
     }
 
     /**
@@ -76,7 +65,7 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        return view('project.edit', [
+        return Inertia::render('Project/Edit', [
             'project' => $project,
             'clients' => Client::all(),
         ]);
@@ -101,7 +90,7 @@ class ProjectController extends Controller
 
         return redirect()
             ->route('project.index')
-            ->with(['messages' => ['success' => 'Project '.$project->name.' updated.']]);
+            ->with('success', 'Project '.$project->name.' updated.');
     }
 
     /**
@@ -113,10 +102,14 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        if (!$project->isDeletable()) {
+            abort(422, 'Project is unable to be deleted');
+        }
+
         $project->delete();
 
         return redirect()
             ->route('project.index')
-            ->with(['messages' => ['success' => 'You have deleted Project '.$project->name.'.']]);
+            ->with('success', 'You have deleted Project '.$project->name.'.');
     }
 }

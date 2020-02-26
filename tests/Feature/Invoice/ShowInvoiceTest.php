@@ -21,7 +21,7 @@ class ShowInvoiceTest extends TestCase
 
         $response = $this->get(route('invoice.show', ['invoice' => $invoice]));
 
-        $response->assertViewIs('invoice.show');
+        $response->assertSuccessful();
 
         $response->assertSee($invoice->number);
     }

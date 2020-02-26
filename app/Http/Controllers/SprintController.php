@@ -5,64 +5,57 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\Sprint;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class SprintController extends Controller
 {
     /**
-     * Display a listing of the sprints.
-     *
-     * @return \Illuminate\Http\Response
+     * Display a list of sprints.
      */
     public function index()
     {
-        return view('sprint.index', ['sprints' => Sprint::orderBy('id', 'desc')->get()]);
+        return Inertia::render('Sprint/Index', [
+            'sprints' => Sprint::orderBy('id', 'desc')->with('project')->get(),
+        ]);
     }
 
     /**
      * Show the form for creating a new sprint.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
-        return view('sprint.create', ['projects' => Project::all()]);
+        return Inertia::render('Sprint/Edit', ['projects' => Project::all()]);
     }
 
     /**
-     * Store a newly created sprint in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Response
+     * Save a new sprint to the database.
      */
     public function store(Request $request)
     {
         $this->validate($request, [
             'name'       => 'required|unique:sprints,name',
             'project_id' => 'exists:projects,id',
+            'is_open'    => 'boolean',
         ]);
 
         $sprint = Sprint::create($request->only([
             'name',
             'project_id',
-        ]) + ['is_open' => $request->is_open == 'is_open']);
+            'is_open',
+        ]));
 
         return redirect()
             ->route('sprint.index')
-            ->with(['messages' => ['success' => 'You have added sprint '.$sprint->name.'.']]);
+            ->with('success', 'Sprint "'.$sprint->name.'" created');
     }
 
     /**
-     * Display the specified sprint.
-     *
-     * @param Sprint $sprint
-     *
-     * @return \Illuminate\Http\Response
+     * Display a single sprint.
      */
     public function show(Sprint $sprint)
     {
-        return view('sprint.show', [
-            'sprint' => $sprint,
+        return Inertia::render('Sprint/Show', [
+            'sprint' => $sprint->load('project', 'sessions.task.project'),
             'tasks'  => $sprint->sessions->groupBy('task_id')->map(function ($sessionsForTask) {
                 $task = $sessionsForTask->first()->task;
 
@@ -70,19 +63,16 @@ class SprintController extends Controller
 
                 return $task;
             }),
+            'totalDurationForHumans' => $sprint->sessions->totalDurationForHumans(),
         ]);
     }
 
     /**
      * Show the form for editing the specified sprint.
-     *
-     * @param Sprint $sprint
-     *
-     * @return \Illuminate\Http\Response
      */
     public function edit(Sprint $sprint)
     {
-        return view('sprint.edit', [
+        return Inertia::render('Sprint/Edit', [
             'projects' => Project::all(),
             'sprint'   => $sprint,
         ]);
@@ -106,11 +96,12 @@ class SprintController extends Controller
         $sprint->update($request->only([
             'name',
             'project_id',
+            'is_open',
         ]) + ['is_open' => $request->is_open == 'is_open']);
 
         return redirect()
             ->route('sprint.index')
-            ->with(['messages' => ['success' => 'You have updated sprint '.$sprint->name.'.']]);
+            ->with('success', 'Sprint "'.$sprint->name.'" updated');
     }
 
     /**
@@ -126,6 +117,6 @@ class SprintController extends Controller
 
         return redirect()
             ->route('sprint.index')
-            ->with(['messages' => ['success' => 'You have deleted sprint '.$sprint->name.'.']]);
+            ->with('success', '"Sprint '.$sprint->name.'" deleted');
     }
 }

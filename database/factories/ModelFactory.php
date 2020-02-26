@@ -20,28 +20,3 @@ $factory->define(App\Models\User::class, function (Faker\Generator $faker) {
         'remember_token' => str_random(10),
     ];
 });
-
-// Client factory
-$factory->define(App\Models\Client::class, function (Faker\Generator $faker) {
-    return [
-        'name'  => $faker->name,
-        'email' => $faker->safeEmail,
-    ];
-});
-
-// Project factory
-$factory->define(App\Models\Project::class, function (Faker\Generator $faker) {
-    return [
-        'name'        => $faker->word(),
-        'description' => $faker->sentence,
-    ];
-});
-
-// Task factory
-$factory->define(App\Models\Task::class, function (Faker\Generator $faker) {
-    return [
-        'name'        => $faker->sentence,
-        'description' => $faker->sentence,
-        'status'      => $faker->word,
-    ];
-});

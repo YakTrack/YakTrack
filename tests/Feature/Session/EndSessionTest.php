@@ -12,7 +12,7 @@ class EndSessionTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function a_user_can_end_a_session_with_a_get_request()
+    public function a_user_can_end_a_session_with_a_post_request()
     {
         Carbon::setTestNow(Carbon::parse('2018-01-01 00:10:00'));
 
@@ -25,7 +25,7 @@ class EndSessionTest extends TestCase
 
         $this->actingAsUser();
 
-        $response = $this->get(route('session.stop'));
+        $response = $this->post(route('session.stop'));
 
         $response->assertRedirect(route('session.index'));
 

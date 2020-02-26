@@ -29,8 +29,8 @@ class ShowTaskTest extends TestCase
         $response->assertSuccessful();
 
         $response->assertSee($task->name);
-        $response->assertViewIs('task.show');
         $response->assertSee($task->description);
-        $response->assertSee(route('session.show', ['session' => $session]));
+
+        $response->assertSee($session->created_at);
     }
 }

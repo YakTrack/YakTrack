@@ -21,7 +21,7 @@ class IndexInvoiceTest extends TestCase
 
         $response = $this->get(route('invoice.index'));
 
-        $response->assertViewIs('invoice.index');
+        $response->assertSuccessful();
 
         $response->assertSee($invoice->number);
     }

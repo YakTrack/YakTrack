@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -11,7 +13,10 @@
 |
 */
 
-Auth::routes(['verify' => true]);
+// Auth
+Route::get('login')->name('login')->uses('Auth\LoginController@showLoginForm')->middleware('guest');
+Route::post('login')->name('login.attempt')->uses('Auth\LoginController@login')->middleware('guest');
+Route::post('logout')->name('logout')->uses('Auth\LoginController@logout');
 
 if (!config('app.allow_registration')) {
     Route::any('/register', function () {
@@ -35,12 +40,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('invoice', 'InvoiceController');
     Route::resource('invoice.session', 'Invoice\SessionController');
 
-    Route::get('session/start', 'SessionController@start')->name('session.start');
-    Route::get('session/stop', 'SessionController@stop')->name('session.stop');
+    Route::post('session/start', 'SessionController@start')->name('session.start');
+    Route::post('session/stop', 'SessionController@stop')->name('session.stop');
 
     Route::resource('session', 'SessionController');
-
-    Route::get('wherehas', function () {
-        $invoices = App\Models\Invoice::has('sessions')->get();
-    });
 });

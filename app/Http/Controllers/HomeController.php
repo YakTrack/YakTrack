@@ -7,6 +7,7 @@ use App\Models\Session;
 use App\Statistics\Sessions;
 use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
+use Inertia\Inertia;
 
 class HomeController extends Controller
 {
@@ -39,13 +40,15 @@ class HomeController extends Controller
             'openSprints' => [],
         ];
 
-        $clients = Client::with('projects.tasks.sessions')
+        $clients = Client::with(['projects.tasks.sessions'])
             ->get()
             ->filter(function ($client) {
-                return $client->sessionsThisWeek->count() > 0;
-            });
+                $client->append(['openSprints', 'sessionsThisWeek']);
 
-        return view('home', [
+                return $client->sessionsThisWeek->count() > 0;
+            })->values();
+
+        return Inertia::render('Home', [
             'thisWeeksWorkSessions' => $this->sessions->thisWeeksWorkSessions(),
             'thisWeeksTotal'        => ($thisWeeksSessions = Session::thisWeek()->get())->totalDurationForHumans(),
             'clients'               => $noClientSessions->count() > 0 ? $clients->push($noClient) : $clients,
