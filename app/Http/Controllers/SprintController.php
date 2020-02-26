@@ -35,12 +35,14 @@ class SprintController extends Controller
         $this->validate($request, [
             'name'       => 'required|unique:sprints,name',
             'project_id' => 'exists:projects,id',
+            'is_open'    => 'boolean'
         ]);
 
         $sprint = Sprint::create($request->only([
             'name',
             'project_id',
-        ]) + ['is_open' => $request->is_open == 'is_open']);
+            'is_open',
+        ]));
 
         return redirect()
             ->route('sprint.index')

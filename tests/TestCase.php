@@ -77,6 +77,12 @@ abstract class TestCase extends BaseTestCase
             return $this;
         });
 
+        TestResponse::macro('assertPropValues', function ($values) {
+            foreach($values as $key => $value) {
+                $this->assertPropValue($key, $value);
+            }
+        });
+
         TestResponse::macro('assertPropCount', function ($key, $count) {
             $this->assertHasProp($key);
 

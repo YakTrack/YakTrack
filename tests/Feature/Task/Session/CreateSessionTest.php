@@ -50,17 +50,15 @@ class CreateSessionTest extends TestCase
             'ended_at'   => null,
         ]);
 
-        $response->assertSuccessful();
+        $response->assertRedirect(route('session.index'));
 
         $session = Session::orderBy('id', 'desc')->first();
 
-        $response->assertJson([
-            'data' => [
-                'id'         => $session->id,
-                'task_id'    => $task->id,
-                'started_at' => json_decode($session->toJson(), true)['started_at'],
-                'ended_at'   => null,
-            ],
+        $this->assertDatabaseHas('sessions', [
+            'id'         => $session->id,
+            'task_id'    => $task->id,
+            'started_at' => '2019-01-01 00:00:00',
+            'ended_at'   => null,
         ]);
     }
 
@@ -89,18 +87,13 @@ class CreateSessionTest extends TestCase
             'ended_at'   => null,
         ]);
 
-        $response->assertSuccessful();
+        $response->assertRedirect(route('session.index'));
 
-        $session = Session::orderBy('id', 'desc')->first();
-
-        $response->assertJson([
-            'data' => [
-                'id'         => $session->id,
-                'task_id'    => $task->id,
-                'started_at' => json_decode($session->toJson(), true)['started_at'],
-                'ended_at'   => null,
-                'sprint_id'  => $sprint->id,
-            ],
+        $this->assertDatabaseHas('sessions', [
+            'task_id'    => $task->id,
+            'started_at' => '2019-01-01 00:00:00',
+            'ended_at'   => null,
+            'sprint_id'  => $sprint->id,
         ]);
     }
 }

@@ -25,14 +25,11 @@ class EditSessionTest extends TestCase
 
         $response = $this->get(route('session.edit', ['session' => $session]));
 
-        $response->assertViewIs('session.edit');
-
-        $response->assertSee($session->localStartedAt);
-        $response->assertSee($session->localEndedAt);
+        $response->assertHasProp('session', $session->fresh()->toArray());
     }
 
     /** @test */
-    public function a_user_can_load_the_page_to_edit_a_session_in_pogress()
+    public function a_user_can_load_the_page_to_edit_a_session_in_progress()
     {
         $this->withoutExceptionHandling();
 
@@ -44,9 +41,7 @@ class EditSessionTest extends TestCase
 
         $response = $this->get(route('session.edit', ['session' => $session]));
 
-        $response->assertViewIs('session.edit');
-
-        $response->assertSee($session->localStartedAt);
+        $response->assertHasProp('session', $session->fresh()->toArray());
     }
 
     /** @test */
@@ -145,18 +140,12 @@ class EditSessionTest extends TestCase
             'ended_at'   => '2018-01-01 12:34:56',
         ]);
 
-        $response->assertJson([
-            'id'         => $session->id,
-            'started_at' => [
-                'date'          => '2018-01-01 00:00:00.000000',
-                'timezone'      => 'UTC',
-                'timezone_type' => 3,
-            ],
-            'ended_at' => [
-                'date'          => '2018-01-01 12:34:56.000000',
-                'timezone'      => 'UTC',
-                'timezone_type' => 3,
-            ],
+        $response->assertRedirect(route('session.index'));
+
+        $this->assertDatabaseHas('sessions', [
+            'id' => $session->id,
+            'started_at' => '2018-01-01 00:00:00',
+            'ended_at' => '2018-01-01 12:34:56',
         ]);
 
         Carbon::setTestNow();

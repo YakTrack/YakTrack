@@ -65,6 +65,6 @@ class CreateSessionTest extends TestCase
             'ended_at' => null,
         ]);
 
-        $this->assertFalse($previouslyRunningSession->isRunning);
+        $this->assertFalse($previouslyRunningSession->fresh()->isRunning);
     }
 }
