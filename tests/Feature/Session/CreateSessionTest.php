@@ -7,7 +7,6 @@ use App\Models\Session;
 use App\Models\Sprint;
 use App\Models\Task;
 use App\Support\DateTimeFormatter;
-use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -62,7 +61,7 @@ class CreateSessionTest extends TestCase
 
         $this->assertDatabaseHas('sessions', [
             'started_at' => app(DateTimeFormatter::class)->utcFormat('2018-01-01 12:34:56'),
-            'ended_at' => null,
+            'ended_at'   => null,
         ]);
 
         $this->assertFalse($previouslyRunningSession->fresh()->isRunning);

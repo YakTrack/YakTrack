@@ -32,9 +32,9 @@ class CreateSprintTest extends TestCase
         $this->actingAsUser();
 
         $response = $this->post(route('sprint.store'), $sprintDetails = [
-            'name' => 'New sprint',
+            'name'       => 'New sprint',
             'project_id' => $project->id,
-            'is_open' => array_random([0, 1]),
+            'is_open'    => array_random([0, 1]),
         ]);
 
         $response->assertRedirect(route('sprint.index'));

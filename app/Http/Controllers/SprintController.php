@@ -10,7 +10,7 @@ use Inertia\Inertia;
 class SprintController extends Controller
 {
     /**
-     * Display a list of sprints
+     * Display a list of sprints.
      */
     public function index()
     {
@@ -28,14 +28,14 @@ class SprintController extends Controller
     }
 
     /**
-     * Save a new sprint to the database
+     * Save a new sprint to the database.
      */
     public function store(Request $request)
     {
         $this->validate($request, [
             'name'       => 'required|unique:sprints,name',
             'project_id' => 'exists:projects,id',
-            'is_open'    => 'boolean'
+            'is_open'    => 'boolean',
         ]);
 
         $sprint = Sprint::create($request->only([
@@ -50,7 +50,7 @@ class SprintController extends Controller
     }
 
     /**
-     * Display a single sprint
+     * Display a single sprint.
      */
     public function show(Sprint $sprint)
     {

@@ -38,9 +38,9 @@ class EditSprintTest extends TestCase
         $this->actingAsUser();
 
         $response = $this->patch(route('sprint.update', ['sprint' => $sprint]), $newSprintDetails = [
-            'name' => 'New sprint name',
+            'name'       => 'New sprint name',
             'project_id' => $newProject->id,
-            'is_open' => 'is_open',
+            'is_open'    => 'is_open',
         ]);
 
         $response->assertRedirect(route('sprint.index'));

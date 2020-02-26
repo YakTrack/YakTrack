@@ -11,19 +11,19 @@ use Inertia\Inertia;
 class TaskController extends Controller
 {
     /**
-     * Show a list of tasks
+     * Show a list of tasks.
      */
     public function index()
     {
         return Inertia::render('Task/Index', [
             'tasks' => Task::orderBy('id', 'desc')
                 ->with('project.client', 'parent')
-                ->get()
+                ->get(),
         ]);
     }
 
     /**
-     * Show the form for creating a new task
+     * Show the form for creating a new task.
      */
     public function create()
     {
@@ -34,7 +34,7 @@ class TaskController extends Controller
     }
 
     /**
-     * Store a new task in the database
+     * Store a new task in the database.
      */
     public function store(Request $request)
     {
@@ -48,11 +48,11 @@ class TaskController extends Controller
 
         return redirect()
             ->route('task.index')
-            ->with('success', 'Created task "' . $task->name . '"');
+            ->with('success', 'Created task "'.$task->name.'"');
     }
 
     /**
-     * Show a single task
+     * Show a single task.
      */
     public function show(Task $task)
     {
@@ -63,7 +63,7 @@ class TaskController extends Controller
     }
 
     /**
-     * Edit a task
+     * Edit a task.
      */
     public function edit(Task $task)
     {
@@ -75,22 +75,22 @@ class TaskController extends Controller
     }
 
     /**
-     * Update the task in the database
+     * Update the task in the database.
      */
     public function update(Task $task)
     {
         $task->update(request()->validate([
-            'name' => 'string',
+            'name'        => 'string',
             'description' => 'string',
-            'project_id' => 'exists:projects,id',
-            'parent_id' => 'exists:tasks,id|not_in:'.$task->id,
+            'project_id'  => 'exists:projects,id',
+            'parent_id'   => 'exists:tasks,id|not_in:'.$task->id,
         ]));
 
         return redirect()->route('task.index');
     }
 
     /**
-     * Delete a task from the database
+     * Delete a task from the database.
      */
     public function destroy(Task $task)
     {
@@ -98,6 +98,6 @@ class TaskController extends Controller
 
         return redirect()
             ->route('task.index')
-            ->with('success', 'Task "' . $task->name . '" deleted');
+            ->with('success', 'Task "'.$task->name.'" deleted');
     }
 }

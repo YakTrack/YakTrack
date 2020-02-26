@@ -60,7 +60,7 @@ class IndexSessionTest extends TestCase
         $response = $this->get(route('session.index', [
             'started-after'  => '2019-01-01 01:00:00',
             'started-before' => '2019-01-02 24:59:59',
-            'per-page' => 100,
+            'per-page'       => 100,
         ]));
 
         $response->assertHasProp('days');

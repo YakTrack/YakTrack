@@ -4,9 +4,9 @@ namespace Tests;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Illuminate\Foundation\Testing\TestResponse;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Assert;
-use Illuminate\Support\Arr;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -78,7 +78,7 @@ abstract class TestCase extends BaseTestCase
         });
 
         TestResponse::macro('assertPropValues', function ($values) {
-            foreach($values as $key => $value) {
+            foreach ($values as $key => $value) {
                 $this->assertPropValue($key, $value);
             }
         });

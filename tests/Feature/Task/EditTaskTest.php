@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Task;
 
-use App\Models\Task;
 use App\Models\Project;
+use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -23,7 +23,7 @@ class EditTaskTest extends TestCase
         $response = $this->get(route('task.edit', ['task' => $task]));
 
         $response->assertSuccessful();
-        
+
         $response->assertSee($newProject->name);
         $response->assertSee($newParentTask->name);
     }
@@ -40,10 +40,10 @@ class EditTaskTest extends TestCase
         $this->actingAsUser();
 
         $response = $this->patch(route('task.update', ['task' => $task]), $updatedTaskDetails = [
-            'name' => 'Updated Task Name',
+            'name'        => 'Updated Task Name',
             'description' => 'Updated task description.',
-            'parent_id' => $newParentTask->id,
-            'project_id' => $newProject->id,
+            'parent_id'   => $newParentTask->id,
+            'project_id'  => $newProject->id,
         ]);
 
         $response->assertRedirect(route('task.index'));

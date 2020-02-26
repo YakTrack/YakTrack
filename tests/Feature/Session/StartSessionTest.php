@@ -3,7 +3,6 @@
 namespace Tests\Feature\Session;
 
 use App\Models\Session;
-use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
