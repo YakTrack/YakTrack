@@ -3,7 +3,6 @@
 namespace Tests\Task;
 
 use App\Models\Project;
-use App\Models\Sprint;
 use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;

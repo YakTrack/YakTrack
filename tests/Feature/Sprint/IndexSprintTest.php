@@ -16,7 +16,7 @@ class IndexSprintTest extends TestCase
     {
         $project = factory(Project::class)->create();
         $sprints = factory(Sprint::class)->create(['project_id' => $project->id]);
-        
+
         $this->actingAsUser();
 
         $response = $this->get(route('sprint.index'));

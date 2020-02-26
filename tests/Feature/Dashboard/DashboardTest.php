@@ -28,7 +28,7 @@ class DashboardTest extends TestCase
         $response = $this->get(route('home'));
 
         $response->assertSuccessful();
-        
+
         $response->assertSee('Monday 1st Jan 2018');
 
         Carbon::setTestNow();

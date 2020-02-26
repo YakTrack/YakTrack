@@ -143,9 +143,9 @@ class EditSessionTest extends TestCase
         $response->assertRedirect(route('session.index'));
 
         $this->assertDatabaseHas('sessions', [
-            'id' => $session->id,
+            'id'         => $session->id,
             'started_at' => '2018-01-01 00:00:00',
-            'ended_at' => '2018-01-01 12:34:56',
+            'ended_at'   => '2018-01-01 12:34:56',
         ]);
 
         Carbon::setTestNow();

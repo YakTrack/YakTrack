@@ -25,6 +25,7 @@ class SessionController extends Controller
     {
         if (is_null(request('per-page'))) {
             request()->session()->reflash();
+
             return redirect()->route('session.index', array_merge(request()->query(), ['per-page' => 100]));
         }
         $page = request('page') ?? 1;
@@ -57,18 +58,18 @@ class SessionController extends Controller
     {
         return Inertia::render('Session/Edit', [
             'invoices' => Invoice::all(),
-            'sprints' => Sprint::all(),
-            'tasks' => Task::all(),
-        ]);  
+            'sprints'  => Sprint::all(),
+            'tasks'    => Task::all(),
+        ]);
     }
 
     public function store()
     {
         request()->validate([
             'started_at' => 'date|required',
-            'ended_at' => 'date|after:started_at',
-            'sprint_id' => 'exists:sprints,id',
-            'task_id' => 'exists:tasks,id',
+            'ended_at'   => 'date|after:started_at',
+            'sprint_id'  => 'exists:sprints,id',
+            'task_id'    => 'exists:tasks,id',
             'invoice_id' => 'exists:invoices,id',
         ]);
 
