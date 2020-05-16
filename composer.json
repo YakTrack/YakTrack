@@ -13,7 +13,8 @@
         "laravel/tinker": "^1.0",
         "doctrine/dbal": "^2.8",
         "inertiajs/inertia-laravel": "^0.1.2",
-        "tightenco/ziggy": "^0.8.0"
+        "tightenco/ziggy": "^0.8.0",
+        "laravel/helpers": "^1.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
