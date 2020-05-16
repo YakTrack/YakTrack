@@ -23,11 +23,12 @@ class SessionController extends Controller
 
     public function index()
     {
-        if (is_null(request('per-page'))) {
+        if (!request()->has('per-page')) {
             request()->session()->reflash();
 
             return redirect()->route('session.index', array_merge(request()->query(), ['per-page' => 100]));
         }
+
         $page = request('page') ?? 1;
 
         $sessions = $this->indexSessionQuery
