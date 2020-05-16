@@ -8,6 +8,11 @@ class Client extends Model
 {
     protected $guarded = [];
 
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
+    }
+
     public function projects()
     {
         return $this->hasMany(Project::class);
