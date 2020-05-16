@@ -11,7 +11,7 @@ class Session extends Model
 {
     protected $guarded = [];
 
-    // protected $dates = ['started_at', 'ended_at'];
+    protected $dates = ['started_at', 'ended_at'];
 
     protected $appends = [
         'durationForHumans',
