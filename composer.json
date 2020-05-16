@@ -10,7 +10,6 @@
         "fideloper/proxy": "^4.0",
         "davejamesmiller/laravel-breadcrumbs": "^5.1.1",
         "laravelcollective/html": "5.*",
-        "stevebauman/active": "1.0.*",
         "spatie/laravel-blade-javascript": "*.*",
         "laravel/tinker": "^1.0",
         "doctrine/dbal": "^2.8",
