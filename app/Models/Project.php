@@ -13,10 +13,6 @@ class Project extends Model
         'client_id',
     ];
 
-    protected $appends = [
-        'isDeletable',
-    ];
-
     /**
      * Create a new Eloquent Collection instance.
      *
@@ -70,11 +66,11 @@ class Project extends Model
 
     public function isDeletable()
     {
-        if ($this->sprints()->exists()) {
+        if ($this->sprints->count() > 0) {
             return false;
         }
 
-        if ($this->tasks()->exists()) {
+        if ($this->tasks->count() > 0) {
             return false;
         }
 

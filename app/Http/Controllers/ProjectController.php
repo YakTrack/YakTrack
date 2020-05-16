@@ -15,7 +15,11 @@ class ProjectController extends Controller
     public function index()
     {
         return Inertia::render('Project/Index', [
-            'projects' => Project::orderBy('name')->with('client')->get(),
+            'projects' => Project::orderBy('name')
+                ->with('sprints', 'tasks', 'client')
+                ->get()
+                ->map
+                ->append('isDeletable'),
         ]);
     }
 
