@@ -12,6 +12,6 @@ class SessionsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Session::class, 100)->create();
+        factory(Session::class, 100)->states('classified')->create();
     }
 }

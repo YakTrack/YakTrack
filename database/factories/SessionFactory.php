@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Session;
+use App\Models\Task;
 use Carbon\Carbon;
 use Faker\Generator as Faker;
 
@@ -15,4 +16,14 @@ $factory->state(Session::class, 'is_running', function () {
     return [
         'ended_at' => null,
     ];
+});
+
+$factory->afterCreatingState(Session::class, 'classified', function ($session) {
+    $task = Task::inRandomOrder()->first();
+
+    $session->update([
+        'task_id' => $task->id,
+        'sprint_id' => $task->project->client->sprints->random()->id,
+        'invoice_id' => $task->project->client->invoices->random()->id,
+    ]);
 });
