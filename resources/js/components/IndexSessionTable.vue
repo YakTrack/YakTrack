@@ -71,7 +71,7 @@
                             <span v-else> {{ session.localEndedAtTimeForHumans }} </span>
                         </td>
                         <td class="min-w-1 text-right pr-4">
-                            <timer :started-at="new Date(session.started_at.date + ' UTC').getTime()" v-if="session.isRunning"></timer>
+                            <timer :started-at="new Date(session.started_at).getTime()" v-if="session.isRunning"></timer>
                             <span v-else class="pl-2 text-grey-dark font-light text-base font-mono"> {{ session.durationForHumans }} </span>
                         </td>
                         <td class="pl-4 max-w-3">

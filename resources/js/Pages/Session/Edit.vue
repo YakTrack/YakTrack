@@ -69,8 +69,8 @@
         data() {
             return {
                 form: this.session ? {
-                    started_at: dateTime.toDateTimeString(new Date(this.session.localStartedAt.date)),
-                    ended_at: this.session.localEndedAt ? dateTime.toDateTimeString(new Date(this.session.localEndedAt.date)) : null,
+                    started_at: dateTime.toDateTimeString(new Date(this.session.localStartedAt)),
+                    ended_at: this.session.localEndedAt ? dateTime.toDateTimeString(new Date(this.session.localEndedAt)) : null,
                     task_id: this.session.task_id,
                     sprint_id: this.session.sprint_id,
                     invoice_id: this.session.invoice_id,
