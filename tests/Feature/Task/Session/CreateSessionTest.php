@@ -38,6 +38,7 @@ class CreateSessionTest extends TestCase
     public function a_user_can_create_a_session_for_a_task_with_a_post_request()
     {
         $this->withoutExceptionHandling();
+        $this->usingTestDisplayTimeZone();
 
         $this->actingAsUser();
 
@@ -57,7 +58,7 @@ class CreateSessionTest extends TestCase
         $this->assertDatabaseHas('sessions', [
             'id'         => $session->id,
             'task_id'    => $task->id,
-            'started_at' => '2019-01-01 00:00:00',
+            'started_at' => '2018-12-31 13:00:00',
             'ended_at'   => null,
         ]);
     }
@@ -66,6 +67,7 @@ class CreateSessionTest extends TestCase
     public function a_user_can_create_a_session_for_a_task_and_its_latest_open_sprint_with_a_post_request()
     {
         $this->withoutExceptionHandling();
+        $this->usingTestDisplayTimeZone();
 
         $this->actingAsUser();
 
@@ -91,7 +93,7 @@ class CreateSessionTest extends TestCase
 
         $this->assertDatabaseHas('sessions', [
             'task_id'    => $task->id,
-            'started_at' => '2019-01-01 00:00:00',
+            'started_at' => '2018-12-31 13:00:00',
             'ended_at'   => null,
             'sprint_id'  => $sprint->id,
         ]);

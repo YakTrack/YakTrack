@@ -25,7 +25,7 @@ class SessionController extends Controller
 
         $session = $task->sessions()->create([
             'started_at' => $this->dateTimeFormatter->utcFormat(request('started_at')),
-            'ended_at'   => request('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
+            'ended_at'   => request()->filled('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
             'sprint_id'  => $task->openSprint()->id,
         ]);
 
