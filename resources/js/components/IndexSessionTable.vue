@@ -80,31 +80,31 @@
                                     <button v-if="session.isRunning" class="btn" @click="stopSession(session)">
                                         <i class="fa fa-stop fa-xs text-red"></i>
                                     </button>
-                                    <button v-if="session.task && !session.isRunning" class="btn" @click="createSessionForTask(session.task)">
+                                    <button v-if="session.task_id && !session.isRunning" class="btn" @click="createSessionForTask(session.task_id)">
                                         <i class="fas fa-play fa-xs text-grey"></i>
                                     </button>
                                 </div>
-                                <div v-if="session.task">
+                                <div v-if="session.task_id">
                                     <div>
-                                        <span class="text-grey text-sm"> #{{ session.task.id }}</span>
-                                        {{ session.task.name }}
+                                        <span class="text-grey text-sm"> #{{ session.task_id }}</span>
+                                        {{ session.task_name }}
                                     </div>
-                                    <div v-if="session.task.project">
-                                        <span v-if="session.task.project.client" class="text-xs text-grey flex-1">
-                                            {{ session.task.project.client.name }} >
+                                    <div v-if="session.project_id">
+                                        <span v-if="session.client_id" class="text-xs text-grey flex-1">
+                                            {{ session.client_name }} >
                                         </span>
                                         <span class="text-xs text-grey-darker flex-1">
-                                            {{ session.task.project.name }}
+                                            {{ session.project_name }}
                                         </span>
                                     </div>
                                 </div>
                             </div>
                         </td>
                         <td>
-                            <inertia-link v-if="session.sprint != null" class="no-underline text-xs" :href="session.sprint.showUrl || ''"> {{ session.sprint.name }} </inertia-link>
+                            <inertia-link v-if="session.sprint_id != null" class="no-underline text-xs" :href="route('sprint.show', session.sprint_id)"> {{ session.sprint_name }} </inertia-link>
                         </td>
                         <td>
-                            <inertia-link v-if="session.invoice != null" class="no-underline text-xs" :href="session.invoice.showUrl"> {{ session.invoice.number }} </inertia-link>
+                            <inertia-link v-if="session.invoice_id != null" class="no-underline text-xs" :href="route('invoice.show', session.invoice_id)"> {{ session.invoice_number }} </inertia-link>
                         </td>
                         <td class="text-right inline-flex pb-2 @if($key == 0) pt-2 @endif float-right">
                             <div class="btn-group float-right">
@@ -383,8 +383,8 @@
 
                 return classes.join(' ');
             },
-            createSessionForTask(task) {
-                this.$inertia.post(`task/${task.id}/session`, {
+            createSessionForTask(taskId) {
+                this.$inertia.post(`task/${taskId}/session`, {
                     started_at: (new Date),
                 });
             },
