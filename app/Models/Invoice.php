@@ -12,7 +12,6 @@ class Invoice extends Model
 
     protected $appends = [
         'amountForHumans',
-        'totalDurationForHumans',
     ];
 
     public function getAmountForHumansAttribute()

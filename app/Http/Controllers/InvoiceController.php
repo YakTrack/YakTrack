@@ -16,7 +16,9 @@ class InvoiceController extends Controller
         return Inertia::render('Invoice/Index', [
             'invoices' => Invoice::with(['client', 'sessions'])
                 ->orderBy('id', 'desc')
-                ->get(),
+                ->get()
+                ->map
+                ->append('totalDurationForHumans')
         ]);
     }
 
