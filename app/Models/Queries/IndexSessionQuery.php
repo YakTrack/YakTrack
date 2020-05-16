@@ -15,7 +15,50 @@ class IndexSessionQuery
     public function execute()
     {
         $query = Session::orderBy('started_at', 'desc')
-            ->with(['task.project.client', 'invoice', 'thirdPartyApplicationSessions', 'sprint']);
+            ->addSelect([
+                'task_name' => function ($query) {
+                    $query
+                        ->select('name')
+                        ->from('tasks')
+                        ->whereColumn('id', 'sessions.task_id');
+                },
+                'project_id' => function ($query) {
+                    $query
+                        ->select('project_id')
+                        ->from('tasks')
+                        ->whereColumn('id', 'sessions.task_id');
+                },
+                'project_name' => function ($query) {
+                    $query
+                        ->select('name')
+                        ->from('projects')
+                        ->whereColumn('id', 'project_id');
+                },
+                'client_id' => function ($query) {
+                    $query
+                        ->select('client_id')
+                        ->from('projects')
+                        ->whereColumn('id', 'project_id');
+                },
+                'client_name' => function ($query) {
+                    $query
+                        ->select('name')
+                        ->from('clients')
+                        ->whereColumn('id', 'client_id');
+                },
+                'invoice_number' => function ($query) {
+                    $query
+                        ->select('number')
+                        ->from('invoices')
+                        ->whereColumn('id', 'invoice_id');
+                },
+                'sprint_name' => function ($query) {
+                    $query
+                        ->select('name')
+                        ->from('sprints')
+                        ->whereColumn('id', 'sprint_id');
+                },
+            ]);
 
         collect([
             'started-after',
