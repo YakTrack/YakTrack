@@ -22,8 +22,8 @@ $factory->afterCreatingState(Session::class, 'classified', function ($session) {
     $task = Task::inRandomOrder()->first();
 
     $session->update([
-        'task_id' => $task->id,
-        'sprint_id' => $task->project->client->sprints->random()->id,
+        'task_id'    => $task->id,
+        'sprint_id'  => $task->project->client->sprints->random()->id,
         'invoice_id' => $task->project->client->invoices->random()->id,
     ]);
 });
