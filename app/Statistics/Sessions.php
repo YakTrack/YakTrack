@@ -5,6 +5,7 @@ namespace App\Statistics;
 use App\Models\Session;
 use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
+use Illuminate\Support\Carbon;
 
 class Sessions
 {
@@ -24,7 +25,7 @@ class Sessions
 
     public function totalSecondsOnDate($date)
     {
-        return Session::onDate($date)->get()->totalDurationInSeconds();
+        return $this->sessionsOnDate($date)->totalDurationInSeconds();
     }
 
     public function thisWeeksWorkSessions()
@@ -36,6 +37,10 @@ class Sessions
                 'dateNoYearForHumans' => $this->dateTimeFormatter->dateNoYearForHumans($date),
                 'totalTimeWorked'     => $this->dateIntervalFormatter->forHumans($this->totalTimeOnDate($date)),
                 'totalSecondsWorked'  => $this->totalSecondsOnDate($date),
+                'currentlyWorking'    => !$this->currentSession()
+                    ? false
+                    : $this->sessionsOnDate($date)->pluck('id')->contains($this->currentSession()->id),
+                'isToday'             => Carbon::parse($date)->isToday(),
             ];
         });
     }
@@ -48,5 +53,10 @@ class Sessions
     public function currentSession()
     {
         return Session::whereNull('ended_at')->first();
+    }
+
+    public function sessionsOnDate($date)
+    {
+        return Session::onDate($date)->get();
     }
 }
