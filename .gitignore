@@ -6,3 +6,6 @@ Homestead.json
 .env
 /.idea
 npm-debug.log
+public/js
+public/mix-manifest.json
+public/css
