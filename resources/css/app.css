@@ -95,6 +95,10 @@ input.form-control, textarea.form-control, select.form-control, .form-group text
     min-height: 200px;
 }
 
+.form-checkbox {
+    @apply w-5 h-5
+}
+
 .table, .table tbody, .table thead, .table tr {
     @apply w-full
 }

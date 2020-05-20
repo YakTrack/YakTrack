@@ -3,7 +3,7 @@
         <table class="table table-hover bg-white">
             <thead>
                 <tr>
-                    <th class="pl-0"> <input type="checkbox"/> </th>
+                    <th class="pl-0"> <input type="checkbox" class="form-checkbox"/> </th>
                     <th class="text-right pr-0"> Start Time </th>
                     <th class="text-right pr-0"> End Time </th>
                     <th class="text-right pr-0"> Total Time </th>
@@ -23,7 +23,7 @@
                 <tr
                     v-for="session in sessions"
                 >
-                    <td class=""> <input type="checkbox"/></td>
+                    <td class=""> <input type="checkbox" class="form-checkbox"/></td>
                     <td class="min-w-1 text-right font-mono">
                         {{ session.localStartedAtTimeForHumans }}
                     </td>

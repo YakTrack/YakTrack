@@ -21,7 +21,7 @@
                         </div>
                         <div class="form-group">
                             <label class="">
-                                <input type="checkbox" name="remember"> Remember Me
+                                <input type="checkbox" class="form-checkbox" name="remember"> Remember Me
                             </label>
                         </div>
                         <div class="flex">

@@ -32,7 +32,9 @@
             <table class="table table-hover bg-white">
                 <thead>
                     <tr>
-                        <th class="pl-2"> <input v-model="selectAll" type="checkbox"/> </th>
+                        <th class="pl-2">
+                            <input v-model="selectAll" type="checkbox" class="form-checkbox" />
+                        </th>
                         <th class="text-right"> Start Time </th>
                         <th class="text-right"> End Time </th>
                         <th class="text-right pr-4"> Total Time </th>
@@ -61,7 +63,7 @@
                     </tr>
                     <tr v-for="(session, sessionIndex) in day.sessions" :key="session.id" :class="session.rowClasses">
                         <td class="pl-2">
-                            <input type="checkbox" v-model="session.isSelected" :value="session.id"/>
+                            <input type="checkbox" class="form-checkbox " v-model="session.isSelected" :value="session.id"/>
                         </td>
                         <td class="min-w-1 text-right font-mono">
                             {{ session.localStartedAtTimeForHumans }}

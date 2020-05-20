@@ -31,5 +31,8 @@
     "vue-template-compiler": "^2.6.11",
     "dayjs": "^1.8.27",
     "jest": "^25.5.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/custom-forms": "^0.2.1"
   }
 }

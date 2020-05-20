@@ -26,7 +26,7 @@
             </div>
             <div class="form-group">
                 <label for="is_open"> Is Open </label>
-                <input type="checkbox" name="is_open" v-model="form.is_open"/>
+                <input type="checkbox" class="form-checkbox" name="is_open" v-model="form.is_open"/>
             </div>
             <div class="flex mt-4">
                 <div class="flex-1 mt-2">
