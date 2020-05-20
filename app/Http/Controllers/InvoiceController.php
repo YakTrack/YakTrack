@@ -18,7 +18,7 @@ class InvoiceController extends Controller
                 ->orderBy('id', 'desc')
                 ->get()
                 ->map
-                ->append('totalDurationForHumans')
+                ->append('totalDurationForHumans'),
         ]);
     }
 
