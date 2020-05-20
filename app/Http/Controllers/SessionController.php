@@ -46,6 +46,7 @@ class SessionController extends Controller
                     return [
                         'date'     => $date,
                         'sessions' => $sessionsOnDay,
+                        'totalDurationForHumans' => $sessionsOnDay->totalDurationForHumans(),
                     ];
                 })->values(),
             'total'       => (int) $total = Session::count(),
