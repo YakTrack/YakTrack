@@ -1,7 +1,7 @@
 module.exports = {
   purge: [
-    './src/**/*.html',
-    './src/**/*.html',
+    './resources/views/**/*.blade.php',
+    './resources/js/**/*.vue',
   ],
   target: 'relaxed',
   prefix: '',

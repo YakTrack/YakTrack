@@ -29,13 +29,6 @@ mix.postCss('resources/css/app.css', 'public/css', [
     cssImport(),
     cssNesting(),
     tailwindcss('tailwind.js'),
-    ...mix.inProduction() ? [
-        purgecss({
-            content: ['./resources/views/**/*.blade.php', './resources/js/**/*.vue'],
-            defaultExtractor: content => content.match(/[\w-/:.]+(?<!:)/g) || [],
-            whitelistPatternsChildren: [/nprogress/],
-        }),
-    ] : [],
 ])
     
 mix.webpackConfig({
