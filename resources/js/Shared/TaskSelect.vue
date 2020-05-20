@@ -46,9 +46,3 @@
     }
 
 </script>
-
-<style>
-    span.multiselect__single {
-        padding-top: 0.30rem;
-    }
-</style>

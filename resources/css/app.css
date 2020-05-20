@@ -633,3 +633,7 @@ li:hover .parent-hover\:text-white {
 .dropdown-closed {
     display: none;
 }
+
+span.multiselect__single {
+    padding-top: 0.30rem;
+}
