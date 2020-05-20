@@ -3,12 +3,12 @@
     <div class="w-full max-w-md mt-10 mx-auto px-6">
         <div class="max-w-xl">
             <div class="text-center">
-                <a href="{{ URL::route('home') }}" class="text-4xl no-underline text-grey-darkest">
+                <a href="{{ URL::route('home') }}" class="text-4xl no-underline text-gray-900">
                     <b>Y</b>ak<b>T</b>rack
                 </a>
             </div>
-            <div class="text-center mt-4 text-grey-darker">Sign in to start your session</div>
-            <div class="card mt-8 bg-grey-lightest">
+            <div class="text-center mt-4 text-gray-700">Sign in to start your session</div>
+            <div class="card mt-8 bg-grey-100">
                 <div class="card-body">
 
                     <form role="form" method="POST" action="{{ url('/login') }}">
@@ -28,7 +28,7 @@
                         </div>
                         <div class="flex">
                             <div class="flex-1 pt-3">
-                                <a class="text-grey-light" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
+                                <a class="text-gray-300" href="{{ url('/password/reset') }}">Forgot Your Password?</a>
                             </div>
                             <div class="flex-1 text-right">
                                 <button type="submit" class="btn btn-primary flex-1">Sign In</button>

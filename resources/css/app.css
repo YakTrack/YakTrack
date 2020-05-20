@@ -1,68 +1,18 @@
-/**
- * This injects Tailwind's base styles, which is a combination of
- * Normalize.css and some additional base styles.
- *
- * You can see the styles here:
- * https://github.com/tailwindcss/tailwindcss/blob/master/css/preflight.css
- *
- * If using `postcss-import`, use this import instead:
- *
- * @import "tailwindcss/preflight";
- */
- @tailwind preflight;
+/* Reset */
+@import "tailwindcss/base";
 
- /**
-  * This injects any component classes registered by plugins.
-  *
-  * If using `postcss-import`, use this import instead:
-  *
-  * @import "tailwindcss/components";
-  */
- @tailwind components;
+/* Components */
+@import "tailwindcss/components";
 
- /**
-  * Here you would add any of your custom component classes; stuff that you'd
-  * want loaded *before* the utilities so that the utilities could still
-  * override them.
-  *
-  * Example:
-  *
-  * .btn { ... }
-  * .form-input { ... }
-  *
-  * Or if using a preprocessor or `postcss-import`:
-  *
-  * @import "components/buttons";
-  * @import "components/forms";
-  */
-
- /**
-  * This injects all of Tailwind's utility classes, generated based on your
-  * config file.
-  *
-  * If using `postcss-import`, use this import instead:
-  *
-  * @import "tailwindcss/utilities";
-  */
- @tailwind utilities;
-
- /**
-  * Here you would add any custom utilities you need that don't come out of the
-  * box with Tailwind.
-  *
-  * Example :
-  *
-  * .bg-pattern-graph-paper { ... }
-  * .skew-45 { ... }
-  *
-  * Or if using a preprocessor or `postcss-import`:
-  *
-  * @import "utilities/background-patterns";
-  * @import "utilities/skew-transforms";
-  */
+/* Utilities */
+@import "tailwindcss/utilities";
 
 .btn {
-    @apply bg-white py-3 px-4 rounded shadow no-underline text-grey-darker
+    @apply py-3 px-4 rounded inline-block shadow no-underline
+}
+
+.btn-default {
+    @apply bg-white text-gray-700
 }
 
 .btn-group {
@@ -73,36 +23,36 @@
     @apply shadow-none rounded-none
 }
 
-.btn:hover {
-    @apply bg-grey-lightest
+.btn-default:hover {
+    @apply bg-gray-100
 }
 
 .btn-red {
-    @apply bg-red text-white
+    @apply bg-red-500 text-white
 }
 
 .btn-red:hover {
-    @apply bg-red-dark;
+    @apply bg-red-400;
 }
 
 .btn-blue {
-    @apply bg-blue text-white
+    @apply bg-blue-500 text-white
 }
 
-.btn-blue-light {
-    @apply bg-blue-light text-white
+.btn-blue-300 {
+    @apply bg-blue-400 text-white
 }
 
-.btn-grey-lighter {
-    @apply bg-grey-lighter
+.btn-gray-300 {
+    @apply bg-gray-300
 }
 
 .btn-blue:hover {
-    @apply bg-blue-dark;
+    @apply bg-blue-600;
 }
 
 .btn-disabled {
-    @apply text-grey-light cursor-not-allowed
+    @apply text-gray-400 cursor-not-allowed
 }
 
 .btn-disabled:hover {
@@ -110,11 +60,15 @@
 }
 
 .btn-green {
-    @apply bg-green text-white
+    @apply bg-green-500 text-white
 }
 
 .btn-green:hover {
-    @apply bg-green-dark
+    @apply bg-green-600
+}
+
+.btn-sm {
+    height: 45px;
 }
 
 .top-16 {
@@ -130,7 +84,7 @@
 }
 
 .form-group label {
-    @apply text-grey-darker font-light mb-1 block
+    @apply text-gray-700 font-light mb-1 block
 }
 
 input.form-control, textarea.form-control, select.form-control, .form-group textarea {
@@ -177,7 +131,7 @@ input.form-control, textarea.form-control, select.form-control, .form-group text
     @apply w-full
 }
 .card .card-body a {
-    @apply no-underline text-grey-darkest
+    @apply no-underline text-gray-900
 }
 
 .card .card-body td, .card .card-body, th {
@@ -353,7 +307,7 @@ fieldset[disabled] .multiselect {
 }
 
 .multiselect__tag {
-    @apply relative inline-block pt-1 pr-6 pb-1 pl-2 rounded mr-2 mb-1 text-white leading-normal bg-green
+    @apply relative inline-block pt-1 pr-6 pb-1 pl-2 rounded mr-2 mb-1 text-white leading-normal bg-green-500
 }
 
 .multiselect__tag {
@@ -663,10 +617,10 @@ li:hover .parent-hover\:text-white {
     }
 }
 
-@screen lg {
+@screen md {
     .grid {
         display: grid;
-        grid-template-columns: calc(25% - 0.75rem) calc(25% - 0.75rem) calc(25% - 0.75rem) calc(25% - 0.75rem);
+        grid-template-columns: calc(50% - 0.5rem) calc(50% - 0.5rem);
         grid-gap: 1rem;
     }
 }

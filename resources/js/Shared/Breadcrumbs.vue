@@ -1,14 +1,14 @@
 <template>
     <nav class="font-sans w-full pb-4">
-        <ol class="list-reset flex text-grey-dark">
+        <ol class="list-reset flex text-gray-600">
             <li class="" v-for="(breadcrumb, index) in breadcrumbs">
                 <inertia-link
                     v-if="!isLast(index) && breadcrumb.url"
-                    class="text-grey text-light no-underline"
+                    class="text-gray-500 text-light no-underline"
                     :href="breadcrumb.url">
                     {{ breadcrumb.title }}
                 </inertia-link>
-                <span class="mx-4 text-grey-light" v-if="!isLast(index)"> > </span>
+                <span class="mx-4 text-gray-400" v-if="!isLast(index)"> > </span>
                 <span v-else> {{ breadcrumb.title }} </span>
             </li>
         </ol>

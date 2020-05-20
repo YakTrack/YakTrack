@@ -1,23 +1,21 @@
 <template>
-    <div id="sidebar" class="block z-90 bg-white w-full border-b -mb-16 lg:-mb-0 lg:static lg:bg-transparent lg:border-b-0 lg:pt-0 md:w-full lg:w-1/4 lg:border-0 xl:w-1/5 sm:flex md:flex md:relative sm:relative">
-        <div class="lg:block lg:relative lg:sticky">
-            <nav class="px-6 pb-6 pt-24 overflow-y-auto text-base lg:text-lg lg:pl-0 lg:pr-8 sticky?lg:h-(screen-16) leading-loose">
-                <ul
-                    class="list-reset"
-                    v-for="menuItem in menuItems"
-                >
-                        <li class="lg:mb-2 hover:bg-blue-light px-4 py-1 rounded" :class="menuItem.active ? 'bg-grey-light' : ''">
-                            <inertia-link
-                                class="no-underline text-grey-darkest"
-                                :href="route(menuItem.route)"
-                            >
-                                <i class="text-grey parent-hover:text-white" :class="menuItem.icon"></i>
-                                <span class="ml-3 parent-hover:text-white"> {{ menuItem.name }} </span>
-                            </inertia-link>
-                        </li>
-                </ul>
-            </nav>
-        </div>
+    <div class="bg-gray-200 pl-4">
+        <nav class="px-6 pb-6 pt-24 overflow-y-auto text-base lg:text-lg lg:pl-0 lg:pr-8 sticky?lg:h-(screen-16) leading-loose">
+            <ul
+                class="list-reset"
+                v-for="menuItem in menuItems"
+            >
+                <li class="lg:mb-2 hover:bg-blue-400 px-4 py-1 rounded" :class="menuItem.active ? 'bg-grey-300' : ''">
+                    <inertia-link
+                        class="no-underline text-gray-900"
+                        :href="route(menuItem.route)"
+                    >
+                        <i class="text-gray-500 parent-hover:text-white" :class="menuItem.icon"></i>
+                        <span class="ml-3 parent-hover:text-white"> {{ menuItem.name }} </span>
+                    </inertia-link>
+                </li>
+            </ul>
+        </nav>
     </div>
 </template>
 

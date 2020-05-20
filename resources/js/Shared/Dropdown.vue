@@ -12,7 +12,7 @@
                 <li v-for="option in options" :key="option.name" class="clickable"> 
                     <a
                         v-on:click="optionWasClicked(option)"
-                        class="px-4 py-2 block text-grey-darker font-normal hover:bg-grey-light no-underline"
+                        class="px-4 py-2 block text-gray-700 font-normal hover:bg-grey-300 no-underline"
                     > {{ option.name }} </a>
                 </li>
             </ul>

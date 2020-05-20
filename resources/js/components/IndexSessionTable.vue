@@ -5,10 +5,10 @@
             <div class="flex-1 mt-2">
                 <div class="flex">
                     <div class="btn-group">
-                        <button class="btn" :class="filterPresetIsSelected('thisMonth') ? 'btn-grey-lighter' : ''" @click="loadFilterPreset('thisMonth')"> This Month </button>
-                        <button class="btn" :class="filterPresetIsSelected('lastMonth') ? 'btn-grey-lighter' : ''" @click="loadFilterPreset('lastMonth')"> Last Month </button>
-                        <button class="btn" :class="filterPresetIsSelected('thisWeek') ? 'btn-grey-lighter' : ''" @click="loadFilterPreset('thisWeek')"> This Week </button>
-                        <button class="btn" :class="filterPresetIsSelected('lastWeek') ? 'btn-grey-lighter' : ''" @click="loadFilterPreset('lastWeek')"> Last Week </button>
+                        <button class="btn" :class="filterPresetIsSelected('thisMonth') ? 'btn-gray-300' : ''" @click="loadFilterPreset('thisMonth')"> This Month </button>
+                        <button class="btn" :class="filterPresetIsSelected('lastMonth') ? 'btn-gray-300' : ''" @click="loadFilterPreset('lastMonth')"> Last Month </button>
+                        <button class="btn" :class="filterPresetIsSelected('thisWeek') ? 'btn-gray-300' : ''" @click="loadFilterPreset('thisWeek')"> This Week </button>
+                        <button class="btn" :class="filterPresetIsSelected('lastWeek') ? 'btn-gray-300' : ''" @click="loadFilterPreset('lastWeek')"> Last Week </button>
                     </div>
                 </div>
                 <div class="flex mt-2">
@@ -47,53 +47,53 @@
                         <th class="pl-2"></th>
                         <th class="text-right"></th>
                         <th class="text-right"></th>
-                        <th class="text-right font-mono pr-4 text-base text-grey"> {{ totalDuration }} </th>
+                        <th class="text-right font-mono pr-4 text-base text-gray-500"> {{ totalDuration }} </th>
                         <th class="text-center"></th>
                         <th></th>
                         <th></th>
                     </tr>
                 </thead>
                 <tbody v-for="(day, dayIndex) in filteredDays" :key="dayIndex">
-                    <tr class="bg-blue-lightest text-grey-dark font-light text-xs uppercase">
-                        <td class="px-3 py-1 rounded" colspan="10"> {{ day.sessions[0].localStartedAtDateForHumans }} </td>
-                        <td class="text-right pr-4 text-base font-mono text-grey"> {{ day.totalDurationForHumans }} </td>
+                    <tr class="bg-blue-100 text-gray-600 font-light text-xs uppercase">
+                        <td class="px-3 py-1 rounded" colspan="3"> {{ day.sessions[0].localStartedAtDateForHumans }} </td>
+                        <td class="text-right pr-4 text-base font-mono text-gray-500"> {{ day.totalDurationForHumans }} </td>
                         <td colspan="6"></td>
                     </tr>
                     <tr v-for="(session, sessionIndex) in day.sessions" :key="session.id" :class="session.rowClasses">
                         <td class="pl-2">
                             <input type="checkbox" v-model="session.isSelected" :value="session.id"/>
                         </td>
-                        <td class="min-w-1 text-right">
+                        <td class="min-w-1 text-right font-mono">
                             {{ session.localStartedAtTimeForHumans }}
                         </td>
-                        <td class="min-w-1 text-right">
-                            <span v-if="session.isRunning" class="text-grey-light"> --:--:-- </span>
+                        <td class="min-w-1 text-right font-mono">
+                            <span v-if="session.isRunning" class="text-gray-400"> --:--:--&nbsp;--</span>
                             <span v-else> {{ session.localEndedAtTimeForHumans }} </span>
                         </td>
                         <td class="min-w-1 text-right pr-4">
                             <timer :started-at="new Date(session.started_at).getTime()" v-if="session.isRunning"></timer>
-                            <span v-else class="pl-2 text-grey-dark font-light text-base font-mono"> {{ session.durationForHumans }} </span>
+                            <span v-else class="pl-2 text-gray-600 font-light text-base font-mono"> {{ session.durationForHumans }} </span>
                         </td>
                         <td class="pl-4 max-w-3">
                             <div class="inline-flex">
                                 <div class="mr-3 flex my-auto">
-                                    <button v-if="session.isRunning" class="btn" @click="stopSession(session)">
-                                        <i class="fa fa-stop fa-xs text-red"></i>
+                                    <button v-if="session.isRunning" class="btn btn-default btn-sm" @click="stopSession(session)">
+                                        <i class="fa fa-stop fa-xs text-red-500"></i>
                                     </button>
-                                    <button v-if="session.task_id && !session.isRunning" class="btn" @click="createSessionForTask(session.task_id)">
-                                        <i class="fas fa-play fa-xs text-grey"></i>
+                                    <button v-if="session.task_id && !session.isRunning" class="btn btn-default btn-sm" @click="createSessionForTask(session.task_id)">
+                                        <i class="fas fa-play fa-xs text-gray-500"></i>
                                     </button>
                                 </div>
                                 <div v-if="session.task_id">
                                     <div>
-                                        <span class="text-grey text-sm"> #{{ session.task_id }}</span>
+                                        <span class="text-gray-500 text-sm"> #{{ session.task_id }}</span>
                                         {{ session.task_name }}
                                     </div>
                                     <div v-if="session.project_id">
-                                        <span v-if="session.client_id" class="text-xs text-grey flex-1">
+                                        <span v-if="session.client_id" class="text-xs text-gray-500 flex-1">
                                             {{ session.client_name }} >
                                         </span>
-                                        <span class="text-xs text-grey-darker flex-1">
+                                        <span class="text-xs text-gray-700 flex-1">
                                             {{ session.project_name }}
                                         </span>
                                     </div>
@@ -106,7 +106,7 @@
                         <td>
                             <inertia-link v-if="session.invoice_id != null" class="no-underline text-xs" :href="route('invoice.show', session.invoice_id)"> {{ session.invoice_number }} </inertia-link>
                         </td>
-                        <td class="text-right inline-flex pb-2 @if($key == 0) pt-2 @endif float-right">
+                        <td class="text-right inline-flex pb-2 pt-2 float-right">
                             <div class="btn-group float-right">
                                 <inertia-link
                                     :href="session.editUrl"
@@ -114,13 +114,11 @@
                                 >
                                     <i class="fa fa-edit"></i>
                                 </inertia-link>
-                                <button
-                                    type="button"
-                                    class="btn delete-item-button"
-                                    @click="deleteSession(session)"
+                                <delete-button
+                                    :url="route('session.destroy', session.id)"
                                 >
                                     <i class="fa fa-trash"></i>
-                                </button>
+                                </delete-button>
                             </div>
                         </td>
                     </tr>
@@ -173,15 +171,14 @@
 </template>
 
 <script>
-    import axios from 'axios';
     import dropdown from '@/Shared/Dropdown';
     import invoiceSelect from '@/Shared/InvoiceSelect';
+    import deleteButton from '@/Shared/DeleteButton';
     import modal from './Modal';
     import timer from './Timer';
     import dateTime from './../filters/DateTime';
     import datetimeInput from './DatetimeInput';
     import pageSelector from './PageSelector';
-    import { mapState } from 'vuex'
     import closeable from '@/directives/Closeable';
     import urlParser from '@/UrlParser.js';
     import searchParams from '@/SearchParams';
@@ -199,6 +196,7 @@
             'lastPage',
         ],
         components: {
+            deleteButton: deleteButton,
             dropdown: dropdown,
             invoiceSelect: invoiceSelect,
             modal: modal,
@@ -344,7 +342,7 @@
                 this.$inertia.post(route('session.stop', session.id));
             },
             getSessions() {
-                axios.get(`json/session`, searchParams)
+                this.$inertia.get(`json/session`, searchParams)
                     .then(response => {
                     this.$set(this, 'days', response.data.days.map(day => {
                         day.sessions = day.sessions.map(session => {
@@ -374,11 +372,11 @@
                 var classes = [];
 
                 if (session.isRunning) {
-                    classes.push('bg-grey-lightest');
+                    classes.push('bg-grey-100');
                 };
 
                 if (session.isSelected) {
-                    classes.push('bg-green-lightest');
+                    classes.push('bg-green-100');
                 }
 
                 return classes.join(' ');

@@ -2,12 +2,12 @@
     <div class="w-full max-w-md mt-10 mx-auto px-6">
         <div class="max-w-xl">
             <div class="text-center">
-                <a :href="route('home')" class="text-4xl no-underline text-grey-darkest">
+                <a :href="route('home')" class="text-4xl no-underline text-gray-900">
                     <b>Y</b>ak<b>T</b>rack
                 </a>
             </div>
-            <div class="text-center mt-4 text-grey-darker">Log in to start your session</div>
-            <div class="card mt-8 bg-grey-lightest">
+            <div class="text-center mt-4 text-gray-700">Log in to start your session</div>
+            <div class="card mt-8 bg-grey-100">
                 <div class="card-body">
 
                     <form role="form" method="POST" action="/login" @submit.prevent="submit">
@@ -26,7 +26,7 @@
                         </div>
                         <div class="flex">
                             <div class="flex-1 pt-3">
-                                <a class="text-grey-light" href="/password/reset">Forgot Your Password?</a>
+                                <a class="text-gray-300" href="/password/reset">Forgot Your Password?</a>
                             </div>
                             <div class="flex text-right">
                                 <loading-button :is-loading="sending" class="btn btn-primary flex-1" type="submit">Login</loading-button>

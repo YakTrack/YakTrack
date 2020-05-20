@@ -10,7 +10,7 @@
         <div class="card">
             <h1 class="font-medium text-gray-dark"> {{ project.name }} </h1>
             <div class="p4 mt-4">
-                <i class="fa fa-user text-2xl text-grey-light mr-2"></i>
+                <i class="fa fa-user text-2xl text-gray-300 mr-2"></i>
                 <span class="text-2xl font-light"> {{ project.client.name }} </span>
             </div>
             <p class="mt-4">

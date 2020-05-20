@@ -91,5 +91,5 @@ export default {
         return sessionsCollection.reduce((tally, session) => {
             return session.durationInSeconds + tally
         }, 0);
-    }
+    },
 }

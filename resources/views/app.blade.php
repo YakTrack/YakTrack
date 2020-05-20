@@ -26,7 +26,7 @@
     @routes
 </head>
 
-<body class="font-source-sans font-normal leading-normal bg-grey-lighter text-grey-darkest">
+<body class="font-source-sans font-normal leading-normal bg-gray-100 text-gray-700">
 
     @inertia
 

@@ -1,18 +1,18 @@
 <template>
     <div class="flex justify-center mx-4">
         <button
-            class="py-2 px-4 hover:bg-grey-light text-grey-dark rounded"
+            class="py-2 px-4 hover:bg-grey-300 text-gray-600 rounded"
             :disabled="page < 2"
             :class="page < 2 ? 'btn-disabled' : 'hover:text-white hover:shadow'"
             @click="selectPage(page - 1)"
             >
             <i class="fa fa-caret-left"></i>
         </button>
-        <button class="bg-white text-grey-dark p-2" @click="selectPage(key)">
+        <button class="bg-white text-gray-600 p-2" @click="selectPage(key)">
             {{ ((page - 1) * perPage) + 1 }} - {{ Math.min(page * perPage, total) }} of {{ total }}
         </button>
         <button
-            class="py-2 px-4 hover:bg-grey-light text-grey-dark rounded"
+            class="py-2 px-4 hover:bg-grey-300 text-gray-600 rounded"
             :class="isLastPage ? 'btn-disabled' : ' hover:text-white hover:shadow'"
             :disabled="isLastPage"
             @click="selectPage(parseInt(page) + 1)"

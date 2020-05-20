@@ -1,9 +1,9 @@
 <template>
-    <span class="p-1">
+    <span>
         <inertia-link
             :href="url"
             method="delete"
-            class="btn btn-default bg-red-500 clickable"
+            class="btn btn-red"
             v-if="confirmIsActive"
         >
             Delete

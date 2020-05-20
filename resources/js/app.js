@@ -19,8 +19,9 @@ Vue.use(PortalVue)
 
 Vue.filter('dateForHumans', dateTime.dateForHumans);
 Vue.filter('durationForHumans', dateTime.durationForHumans);
-Vue.filter('secondsSince', dateTime.secondsSince);
 Vue.filter('fromNow', dateTime.fromNow);
+Vue.filter('isToday', dateTime.isToday);
+Vue.filter('secondsSince', dateTime.secondsSince);
 Vue.filter('toDateTimeForHumans', dateTime.toDateTimeForHumans);
 Vue.filter('toDateTimeString', dateTime.toDateTimeString);
 Vue.filter('totalDuration', dateTime.totalDuration);

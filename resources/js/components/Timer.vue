@@ -1,5 +1,5 @@
 <template>
-    <span class="text-grey-dark font-light p-2 border-green-light border rounded">
+    <span class="text-gray-700 font-light font-mono p-2 border-green-300 border rounded">
         {{ secondsElapsedSinceStartTime | durationForHumans }}
     </span>
 </template>

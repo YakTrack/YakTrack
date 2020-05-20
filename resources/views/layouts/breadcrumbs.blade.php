@@ -1,13 +1,13 @@
 @if (count($breadcrumbs))
 
     <nav class="font-sans w-full pb-4">
-        <ol class="list-reset flex text-grey-dark">
+        <ol class="list-reset flex text-gray-600">
             @foreach ($breadcrumbs as $breadcrumb)
 
                 @if ($breadcrumb->url && !$loop->last)
                     <li class="">
-                        <a class="text-grey text-light no-underline" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
-                        <span class="mx-4 text-grey-light"> > </span>
+                        <a class="text-gray-500 text-light no-underline" href="{{ $breadcrumb->url }}">{{ $breadcrumb->title }}</a>
+                        <span class="mx-4 text-gray-300"> > </span>
                     </li>
                 @else
                     <li class="">{{ $breadcrumb->title }}</li>
