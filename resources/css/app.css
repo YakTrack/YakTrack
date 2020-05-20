@@ -624,3 +624,8 @@ li:hover .parent-hover\:text-white {
         grid-gap: 1rem;
     }
 }
+
+
+.dropdown-closed {
+    display: none;
+}

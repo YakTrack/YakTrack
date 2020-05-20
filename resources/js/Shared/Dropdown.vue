@@ -1,5 +1,5 @@
 <template>
-    <div class="relative float-right text-right"   v-closeable="{
+    <div class="relative float-right text-right" v-closeable="{
         exclude: ['button'],
         handler: 'onClose'
     }">
@@ -53,9 +53,3 @@ export default {
     },
 }
 </script>
-
-<style>
-    .dropdown-closed {
-        display: none;
-    }
-</style>
