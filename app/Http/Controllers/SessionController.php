@@ -44,8 +44,8 @@ class SessionController extends Controller
                     return $session->localStartedAt->format('Y-m-d');
                 })->map(function ($sessionsOnDay, $date) {
                     return [
-                        'date'     => $date,
-                        'sessions' => $sessionsOnDay,
+                        'date'                   => $date,
+                        'sessions'               => $sessionsOnDay,
                         'totalDurationForHumans' => $sessionsOnDay->totalDurationForHumans(),
                     ];
                 })->values(),
