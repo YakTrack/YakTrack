@@ -1,8 +1,8 @@
 <template>
     <div class="w-full">
-        <header-nav></header-nav>
+        <header-nav v-if="!hideNavbar"></header-nav>
         <div class="flex flex-wrap">
-            <div class="block z-90 bg-white w-full lg:max-w-3xs border-b -mb-16 lg:-mb-0 lg:static lg:bg-transparent lg:border-b-0 lg:pt-0 lg:border-0 sm:flex md:flex md:relative sm:relative">
+            <div v-if="!hideSidebar" class="block z-90 bg-white w-full lg:max-w-3xs border-b -mb-16 lg:-mb-0 lg:static lg:bg-transparent lg:border-b-0 lg:pt-0 lg:border-0 sm:flex md:flex md:relative sm:relative">
                 <sidebar></sidebar>
             </div>
             <div class="flex-1 container mx-auto px-8">
@@ -17,7 +17,7 @@
                             <div class="flex-1">
                                 <h1 class="text-3xl font-normal"><slot name="title"></slot></h1>
                             </div>
-                            <div class="btn-toolbar mb-2 mb-md-0 flex-1 text-right">
+                            <div class="btn-toolbar mb-2 mb-md-0 flex-1 flex justify-end items-center">
                                 <slot name="top-right-toolbar"></slot>
                             </div>
                         </div>
@@ -37,6 +37,10 @@
     import Sidebar from '@/Shared/Sidebar';
 
     export default {
+        props: [
+            'hideNavbar',
+            'hideSidebar',
+        ],
         components: {
             headerNav: HeaderNav,
             messages: Messages,
