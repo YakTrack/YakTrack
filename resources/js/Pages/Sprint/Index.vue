@@ -10,10 +10,10 @@
         </template>
         <template slot="title"> Sprints </template>
         <template slot="top-right-toolbar"> 
-            <inertia-link :href="route('sprint.create')" class="btn btn-blue">
-                <i class="fa fa-plus"></i>
+            <button-link :href="route('sprint.create')" color="blue">
+                <i class="fa fa-plus text-blue-100 mr-2"></i>
                 Create Sprint
-            </inertia-link>
+            </button-link>
         </template>
         <div class="card item-type-container" data-item-type="sprint">
             <table class="table card-body" v-if="sprints.length">
@@ -24,6 +24,7 @@
                     <th> <span class="float-right"> Actions </span> </th>
                     <tr
                         v-for="sprint in sprints"
+                        :key="sprint.id"
                         class="item-container"
                         :data-item-name="sprint.name"
                         :data-item-destroy-route="route('sprint.destroy', sprint.id)"
@@ -43,16 +44,15 @@
                         </td>
                         <td>
                             <div class="mx-auto btn-group float-right">
-                                <inertia-link
+                                <button-link
                                     :href="route('sprint.edit', sprint.id)"
-                                    class="btn btn-default"
                                 >
-                                    <i class="fa fa-edit"></i>
-                                </inertia-link>
+                                    <i class="fa fa-edit text-gray-600 text-xs"></i>
+                                </button-link>
                                 <delete-button
                                     :url="route('sprint.destroy', sprint.id)"
                                 >
-                                    <i class="fa fa-trash"></i>
+                                    <i class="fa fa-trash text-gray-600 text-xs"></i>
                                 </delete-button>
                             </div>
                         </td>

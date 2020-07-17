@@ -10,10 +10,10 @@
         </template>
         <template slot="title"> Tasks </template>
         <template slot="top-right-toolbar">
-            <inertia-link :href="route('task.create')" class="btn btn-blue">
-                <i class="fa fa-plus"></i>
+            <button-link :href="route('task.create')" color="blue">
+                <i class="fa fa-plus text-blue-100 mr-2"></i>
                 Create Task
-            </inertia-link>
+            </button-link>
         </template>
         <div class="card" v-if="tasks.length">
             <table class="table card-body">
@@ -50,16 +50,15 @@
                     </td>
                     <td>
                         <div class="btn-group float-right">
-                            <inertia-link
+                            <button-link
                                 :href="route('task.edit', task)"
-                                class="btn btn-default"
                             >
-                                <i class="fa fa-edit"></i>
-                            </inertia-link>
+                                <i class="fa fa-edit text-gray-600 text-xs"></i>
+                            </button-link>
                             <delete-button
                                 :url="route('task.destroy', task.id)"
                             >
-                                <i class="fa fa-trash"></i>
+                                <i class="fa fa-trash text-gray-600 text-xs"></i>
                             </delete-button>
                         </div>
                     </td>

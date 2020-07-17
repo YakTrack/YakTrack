@@ -30,7 +30,7 @@
             </div>
             <div class="flex mt-4">
                 <div class="flex-1 mt-2">
-                    <inertia-link :href="route('sprint.index')" class="btn btn-default"> Cancel </inertia-link>
+                    <button-link :href="route('sprint.index')"> Cancel </button-link>
                 </div>
                 <div class="flex-1 float-right">
                     <button class="btn btn-blue float-right"> {{ isCreateForm ? 'Create' : 'Update' }} </button>
