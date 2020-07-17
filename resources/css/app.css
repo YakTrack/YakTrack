@@ -7,8 +7,16 @@
 /* Utilities */
 @import "tailwindcss/utilities";
 
+.btn-height {
+    height: 42px;
+}
+
 .btn {
-    @apply py-3 px-4 rounded inline-block shadow no-underline
+    @apply px-4 rounded shadow no-underline btn-height;
+}
+
+.btn:not(.table-cell) {
+    @apply inline-block;
 }
 
 .btn-default {
@@ -16,11 +24,11 @@
 }
 
 .btn-group {
-    @apply shadow rounded p-1
+    @apply shadow rounded btn-height;
 }
 
 .btn-group .btn {
-    @apply shadow-none rounded-none
+    @apply shadow-none rounded-none;
 }
 
 .btn-default:hover {
@@ -68,7 +76,7 @@
 }
 
 .btn-sm {
-    height: 45px;
+    height: 36px;
 }
 
 .top-16 {
@@ -88,7 +96,7 @@
 }
 
 input.form-control, textarea.form-control, select.form-control, .form-group textarea {
-    @apply rounded bg-white shadow h-12 w-full py-2 px-4
+    @apply rounded bg-white shadow h-12 w-full py-2 px-4 btn-height
 }
 
 .form-group textarea {
@@ -99,9 +107,9 @@ input.form-control, textarea.form-control, select.form-control, .form-group text
     @apply w-5 h-5
 }
 
-.table, .table tbody, .table thead, .table tr {
+/* .table, .table tbody, .table thead, .table tr {
     @apply w-full
-}
+} */
 
 .table td:not(.text-right):not(.text-center),
 .table th:not(.text-right):not(.text-center) {
