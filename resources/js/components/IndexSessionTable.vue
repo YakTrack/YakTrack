@@ -28,98 +28,92 @@
             </div>
         </div>
 
-        <div class="p-4 bg-white rounded shadow mt-4" v-if="true"> <!--days.length > 0">-->
-            <table class="table table-hover bg-white">
+        <div class="pt-4 pb-4 bg-white rounded shadow mt-4" v-if="true"> <!--days.length > 0">-->
+            <table class="table w-full table-hover bg-white">
                 <thead>
                     <tr>
-                        <th class="pl-2">
+                        <th class="pl-4 pb-4">
                             <input v-model="selectAll" type="checkbox" class="form-checkbox" />
                         </th>
-                        <th class="text-right"> Start Time </th>
-                        <th class="text-right"> End Time </th>
-                        <th class="text-right pr-4"> Total Time </th>
-                        <th class="text-center"> Linked To </th>
-                        <th> Sprint </th>
-                        <th> Invoice </th>
-                        <th class="text-right pr-0">
+                        <th class="">  </th>
+                        <th class="">  </th>
+                        <th class="text-right font-mono pr-2 font-thin text-base text-gray-500"> {{ totalDuration }} </th>
+                        <th class="text-right pr-4 pb-4">
                             <dropdown :options="actionsDropdown"></dropdown>
                         </th>
                     </tr>
-                    <tr>
-                        <th class="pl-2"></th>
-                        <th class="text-right"></th>
-                        <th class="text-right"></th>
-                        <th class="text-right font-mono pr-4 text-base text-gray-500"> {{ totalDuration }} </th>
-                        <th class="text-center"></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
                 </thead>
                 <tbody v-for="(day, dayIndex) in filteredDays" :key="dayIndex">
-                    <tr class="bg-blue-100 text-gray-600 font-light text-xs uppercase">
-                        <td class="px-3 py-1 rounded" colspan="3"> {{ day.sessions[0].localStartedAtDateForHumans }} </td>
-                        <td class="text-right pr-4 text-base font-mono text-gray-500"> {{ day.totalDurationForHumans }} </td>
+                    <tr class="bg-gray-200 text-gray-600 font-light text-xs uppercase">
+                        <td class="px-3 py-1 border-solid" colspan="4"> {{ day.sessions[0].localStartedAtDateForHumans }} </td>
+                        <td class="text-right pr-6 text-base font-thin font-mono text-gray-500"> {{ day.totalDurationForHumans }} </td>
                         <td colspan="6"></td>
                     </tr>
                     <tr v-for="(session, sessionIndex) in day.sessions" :key="session.id" :class="session.rowClasses">
-                        <td class="pl-2">
+                        <td class="pl-4">
                             <input type="checkbox" class="form-checkbox " v-model="session.isSelected" :value="session.id"/>
                         </td>
-                        <td class="min-w-1 text-right font-mono">
-                            {{ session.localStartedAtTimeForHumans }}
-                        </td>
-                        <td class="min-w-1 text-right font-mono">
-                            <span v-if="session.isRunning" class="text-gray-400"> --:--:--&nbsp;--</span>
-                            <span v-else> {{ session.localEndedAtTimeForHumans }} </span>
-                        </td>
-                        <td class="min-w-1 text-right pr-4">
-                            <timer :started-at="new Date(session.started_at).getTime()" v-if="session.isRunning"></timer>
-                            <span v-else class="pl-2 text-gray-600 font-light text-base font-mono"> {{ session.durationForHumans }} </span>
-                        </td>
-                        <td class="pl-4 max-w-3">
-                            <div class="inline-flex">
-                                <div class="mr-3 flex my-auto">
-                                    <button v-if="session.isRunning" class="btn btn-default btn-sm" @click="stopSession(session)">
-                                        <i class="fa fa-stop fa-xs text-red-500"></i>
-                                    </button>
-                                    <button v-if="session.task_id && !session.isRunning" class="btn btn-default btn-sm" @click="createSessionForTask(session.task_id)">
-                                        <i class="fas fa-play fa-xs text-gray-500"></i>
-                                    </button>
-                                </div>
+                        <td class="pl-4">
+                            <div class="overflow-auto h-full whitespace-no-wrap">
                                 <div v-if="session.task_id">
-                                    <div>
-                                        <span class="text-gray-500 text-sm"> #{{ session.task_id }}</span>
-                                        {{ session.task_name }}
+                                    <i class="fas fa-check-square text-gray-400 mr-2"></i>
+                                    <span class="font-semibold"> {{ taskPrefix(session.task_name) }} </span>
+                                    <span class="text-base"> {{ taskSuffix(session.task_name) }} </span>
+                                </div>
+                                <div class="flex items-center text-gray-500">
+                                    <div class="w-32">
+                                        <inertia-link v-if="session.client_id != null" class="no-underline text-xs text-blue-700 opacity-50 hover:opacity-100" :href="route('client.show', session.client_id)">
+                                            <i class="fas fa-users text-blue-700 mr-2 opacity-50"></i>
+                                            {{ session.client_name }}
+                                        </inertia-link>
                                     </div>
-                                    <div v-if="session.project_id">
-                                        <span v-if="session.client_id" class="text-xs text-gray-500 flex-1">
-                                            {{ session.client_name }} >
-                                        </span>
-                                        <span class="text-xs text-gray-700 flex-1">
+                                    <div class="w-32">
+                                        <inertia-link v-if="session.project_id != null" class="no-underline text-xs text-indigo-700 opacity-50 hover:opacity-100" :href="route('project.show', session.project_id)">
+                                            <i class="fas fa-briefcase text-indigo-700 opacity-50 mr-2"></i>
                                             {{ session.project_name }}
-                                        </span>
+                                        </inertia-link>
+                                    </div>
+                                    <div class="w-32">
+                                        <inertia-link v-if="session.sprint_id != null" class="no-underline text-xs text-purple-700 opacity-50 hover:opacity-100" :href="route('sprint.show', session.sprint_id)">
+                                            <i class="fas fa-calendar-times text-purple-700 opacity-50 mr-2"></i>
+                                            {{ session.sprint_name }}
+                                        </inertia-link>
+                                    </div>
+                                    <div class="w-32">
+                                        <inertia-link v-if="session.invoice_id != null" class="no-underline text-xs text-teal-700 opacity-50 hover:opacity-100" :href="route('invoice.show', session.invoice_id)">
+                                            <i class="fas fa-file-invoice-dollar text-teal-700 opacity-50 mr-2"></i>
+                                            {{ session.invoice_number }}
+                                        </inertia-link>
                                     </div>
                                 </div>
                             </div>
                         </td>
-                        <td>
-                            <inertia-link v-if="session.sprint_id != null" class="no-underline text-xs" :href="route('sprint.show', session.sprint_id)"> {{ session.sprint_name }} </inertia-link>
+                        <td class="text-right">
+                            <timestamp class="mr-2" :time="session.started_at"></timestamp>
+                            <span class="text-gray-400 font-mono"> to </span>
+                            <timestamp class="" :time="session.ended_at"></timestamp>
                         </td>
-                        <td>
-                            <inertia-link v-if="session.invoice_id != null" class="no-underline text-xs" :href="route('invoice.show', session.invoice_id)"> {{ session.invoice_number }} </inertia-link>
+                        <td class="text-right">
+                            <timer :started-at="new Date(session.started_at).getTime()" :ended-at="session.isRunning ? null : new Date(session.ended_at)"></timer>
                         </td>
-                        <td class="text-right inline-flex pb-2 pt-2 float-right">
+                        <td class="text-right inline-flex pr-4 pb-4 float-right" :class="sessionIndex || 'pt-4' ">
                             <div class="btn-group float-right">
+                                <button v-if="session.isRunning" class="btn text-gray-600 hover:text-red-600 hover:bg-red-100" @click="stopSession(session)">
+                                    <i class="fa fa-stop fa-xs"></i>
+                                </button>
+                                <button v-if="session.task_id && !session.isRunning" class="btn text-gray-600 hover:text-green-600 hover:bg-green-100" @click="createSessionForTask(session.task_id)">
+                                    <i class="fas fa-play fa-xs"></i>
+                                </button>
                                 <inertia-link
                                     :href="session.editUrl"
-                                    class="btn btn-default"
+                                    class="btn btn-default py-2"
                                 >
-                                    <i class="fa fa-edit"></i>
+                                    <i class="fa fa-edit fa-xs text-gray-600"></i>
                                 </inertia-link>
                                 <delete-button
                                     :url="route('session.destroy', session.id)"
                                 >
-                                    <i class="fa fa-trash"></i>
+                                    <i class="fa fa-trash fa-xs text-gray-600"></i>
                                 </delete-button>
                             </div>
                         </td>
@@ -176,6 +170,7 @@
     import dropdown from '@/Shared/Dropdown';
     import invoiceSelect from '@/Shared/InvoiceSelect';
     import deleteButton from '@/Shared/DeleteButton';
+    import timestamp from '@/Shared/Timestamp';
     import modal from './Modal';
     import timer from './Timer';
     import dateTime from './../filters/DateTime';
@@ -184,6 +179,7 @@
     import closeable from '@/directives/Closeable';
     import urlParser from '@/UrlParser.js';
     import searchParams from '@/SearchParams';
+    import dayjs from 'dayjs';
 
     const DATE_FORMAT = "yyyy'-'MM'-'dd HH':'mm':'ss";
 
@@ -203,11 +199,13 @@
             invoiceSelect: invoiceSelect,
             modal: modal,
             timer: timer,
+            timestamp: timestamp,
             datetimeInput: datetimeInput,
             pageSelector: pageSelector,
         },
         data() {
             return {
+                dayjs: dayjs,
                 selectAll: false,
                 selectedInvoiceId: null,
                 actionsDropdown: [
@@ -374,11 +372,11 @@
                 var classes = [];
 
                 if (session.isRunning) {
-                    classes.push('bg-grey-100');
+                    classes.push('bg-green-100');
                 };
 
                 if (session.isSelected) {
-                    classes.push('bg-green-100');
+                    classes.push('bg-blue-100');
                 }
 
                 return classes.join(' ');
@@ -415,6 +413,14 @@
                     replace: true,
                     preserveScroll: true,
                 });
+            },
+            taskPrefix(name) {
+                return name.split(':')[0];
+            },
+            taskSuffix(name) {
+                let suffix = name.split(':')[1];
+                
+                return suffix ? ':' + suffix : '';
             },
         },
         watch: {
