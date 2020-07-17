@@ -1,7 +1,9 @@
 <template>
-    <span class="text-gray-700 font-light font-mono p-2 border-green-300 border rounded">
-        {{ secondsElapsedSinceStartTime | durationForHumans }}
-    </span>
+    <div class="px-3 inline-block btn-height font-light font-mono" :class="classes">
+        <div class="flex h-full">
+            <div class="self-center"> {{ secondsElapsedSinceStartTime | durationForHumans }} </div>
+        </div>
+    </div>
 </template>
 
 <script>
@@ -11,6 +13,9 @@
         props: {
             startedAt: {
                 default: (new Date).getTime(),
+            },
+            endedAt: {
+                default: null,
             },
             initialTime: {
                 default: 0,
@@ -24,8 +29,33 @@
             }
         },
         computed: {
+            endTime() {
+                return this.isRunning ? this.now : this.endedAt;
+            },
             secondsElapsedSinceStartTime() {
-                return Math.floor((this.now - this.startedAt) / 1000) + this.initialTime;
+                return Math.floor((this.endTime - this.startedAt) / 1000) + this.initialTime;
+            },
+            isRunning() {
+                return this.endedAt === null;
+            },
+            classes() {
+                return [
+                    this.textColor,
+                    this.fontSize,
+                    this.border,
+                    this.padding,
+                ].join(' ');
+            },
+            textColor() {
+                return this.isRunning ? 'text-green-700' : 'text-gray-700'
+            },
+            fontSize() {
+                return this.isRunning ? '' : 'font-base'
+            },
+            border() {
+                return this.isRunning ? 'bg-lue-100 rounded' : ''
+            },
+            padding() {
             },
         },
         created() {
