@@ -10,12 +10,12 @@
         </template>
         <template slot="title"> Sessions </template>
         <template slot="top-right-toolbar">
-            <button type="button" class="btn" :class="(showFilters ? 'btn-blue' : 'btn-default') + ' btn-sm mr-2'" @click="toggleShowFilters()">
+            <button type="button" class="btn" :class="(showFilters ? 'btn-blue' : 'btn-default') + ' mr-2'" @click="toggleShowFilters()">
                 <i class="fa fa-filter"></i>
             </button>
-            <inertia-link :href="route('session.create')" class="btn btn-default btn-sm mr-2">
+            <button-link :href="route('session.create')" class="mr-2">
                 <i class="fa fa-stopwatch"></i>
-            </inertia-link>
+            </button-link>
             <button @click="startSession" class="btn btn-green">
                 <i class="fa fa-play pr-2"></i>
                 Start Session
@@ -38,9 +38,9 @@
 
 <script>
 
+import breadcrumbs from '@/Shared/Breadcrumbs'
 import indexSessionTable from '@/components/IndexSessionTable'
 import layout from '@/Shared/Layout'
-import breadcrumbs from '@/Shared/Breadcrumbs'
 import searchParams from '@/SearchParams'
 import urlParser from '@/UrlParser.js';
 

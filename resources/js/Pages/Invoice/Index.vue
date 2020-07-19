@@ -10,10 +10,10 @@
         </template>
         <template slot="title"> Invoices </template>
         <template slot="top-right-toolbar"> 
-            <inertia-link :href="route('invoice.create')" class="btn btn-blue">
-                <i class="fa fa-plus"></i>
+            <button-link :href="route('invoice.create')" color="blue">
+                <i class="fa fa-plus text-blue-100 mr-2"></i>
                 Create Invoice
-            </inertia-link>
+            </button-link>
         </template>
 
 
@@ -34,6 +34,7 @@
                 <tbody>
                     <tr
                         v-for="invoice in invoices"
+                        :key="invoice.id"
                         class="item-container"
                     >
                         <td>
@@ -53,16 +54,15 @@
                         <td> {{ invoice.amountForHumans }} </td>
                         <td>
                             <div class="btn-group float-right">
-                                <inertia-link
+                                <button-link
                                     :href="route('invoice.edit', invoice.id)"
-                                    class="btn btn-default"
                                 >
-                                    <i class="fa fa-edit"></i>
-                                </inertia-link>
+                                    <i class="fa fa-edit text-xs text-gray-600"></i>
+                                </button-link>
                                 <delete-button
                                     :url="route('invoice.destroy', invoice.id)"
                                 >
-                                    <i class="fa fa-trash"></i>
+                                    <i class="fa fa-trash text-xs text-gray-600"></i>
                                 </delete-button>
                             </div>
                         </td>

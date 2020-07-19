@@ -10,10 +10,10 @@
         </template>
         <template slot="title"> Projects </template>
         <template slot="top-right-toolbar">
-            <inertia-link :href="route('project.create')" class="btn btn-blue">
-                <i class="fa fa-plus"></i>
+            <button-link :href="route('project.create')" color="blue">
+                <i class="fa fa-plus mr-2 text-blue-100"></i>
                 Create Project
-            </inertia-link>
+            </button-link>
         </template>
         <div class="card">
             <table class="table card-body" v-if="projects.length">
@@ -23,6 +23,7 @@
                     <th> <span class="float-right"> Actions </span> </th>
                     <tr
                         v-for="project in projects"
+                        :key="project.id"
                         class="item-container"
                     >
                     <td>
@@ -39,17 +40,16 @@
                     </td>
                     <td>
                         <div class="btn-group float-right">
-                            <inertia-link
+                            <button-link
                                 :href="route('project.edit', {project: project})"
-                                class="btn btn-default"
                             >
-                                <i class="fa fa-edit"></i>
-                            </inertia-link>
+                                <i class="fa fa-edit text-xs text-gray-600"></i>
+                            </button-link>
                             <delete-button
                                 :is-disabled="!project.isDeletable"
                                 :url="route('project.destroy', project.id)"
                             >
-                                <i class="fa fa-trash"></i>
+                                <i class="fa fa-trash text-xs text-gray-600"></i>
                             </delete-button>
                         </div>
                     </td>

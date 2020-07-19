@@ -33,7 +33,7 @@
             </div>
             <div class="flex">
                 <div class="flex-1 mt-2">
-                    <inertia-link :href="route('project.index')" class="btn btn-default"> Cancel </inertia-link>
+                    <button-link :href="route('project.index')"> Cancel </button-link>
                 </div>
                 <div class="flex-1 float-right">
                     <button class="btn btn-blue float-right"> {{ isCreateForm ? 'Create' : 'Update' }} </button>

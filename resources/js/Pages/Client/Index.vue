@@ -10,19 +10,20 @@
         </template>
         <template slot="title"> Clients </template>
         <template slot="top-right-toolbar"> 
-            <inertia-link :href="route('client.create')" class="btn btn-blue">
-                <i class="fa fa-plus"></i>
+            <button-link :href="route('client.create')" color="blue">
+                <i class="fa fa-plus text-blue-100 mr-2"></i>
                 Create Client
-            </inertia-link>
+            </button-link>
         </template>
         <div class="card item-type-container" data-item-type="client">
-            <table class="table card-body" v-if="clients.length">
+            <table class="table w-full card-body" v-if="clients.length">
                 <tr>
                     <th> Name </th>
                     <th> Email </th>
                     <th> <span class="float-right"> Actions </span> </th>
                     <tr
                         v-for="client in clients"
+                        :key="client.id"
                         class="item-container"
                         :data-item-name="client.name"
                         :data-item-destroy-route="route('client.destroy', client.id)"
@@ -35,16 +36,15 @@
                         <td> {{ client.email }} </td>
                         <td>
                             <div class="mx-auto btn-group float-right">
-                                <inertia-link
+                                <button-link
                                     :href="route('client.edit', client.id)"
-                                    class="btn btn-default"
                                 >
-                                    <i class="fa fa-edit"></i>
-                                </inertia-link>
+                                    <i class="fa fa-edit text-xs text-gray-600"></i>
+                                </button-link>
                                 <delete-button
                                     :url="route('client.destroy', client.id)"
                                 >
-                                    <i class="fa fa-trash"></i>
+                                    <i class="fa fa-trash text-xs text-gray-600"></i>
                                 </delete-button>
                             </div>
                         </td>
