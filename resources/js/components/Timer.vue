@@ -43,7 +43,6 @@
                     this.textColor,
                     this.fontSize,
                     this.border,
-                    this.padding,
                 ].join(' ');
             },
             textColor() {
@@ -54,8 +53,6 @@
             },
             border() {
                 return this.isRunning ? 'bg-lue-100 rounded' : ''
-            },
-            padding() {
             },
         },
         created() {
