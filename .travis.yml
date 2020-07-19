@@ -25,7 +25,6 @@ before_script:
   - composer install --no-interaction
   - php artisan key:generate
   - php artisan migrate
-  - npm install
-  - npm run prod
+  - touch public/mix-mainfest.json
 
 script: vendor/bin/phpunit
