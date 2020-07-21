@@ -5,7 +5,7 @@
                 <logo></logo>
                 <span class="text-2xl tracking-tight text-gray-900 font-thin"> {{ $page.app.name }} </span>
             </div>
-            <inertia-link :href="route('logout')" method="post" class="btn btn-default btn-sm nav-link mx-8">Log out</inertia-link>
+            <button-link :href="route('logout')" method="post" class="nav-link mx-8">Log out</button-link>
         </nav>
 
     </div>
