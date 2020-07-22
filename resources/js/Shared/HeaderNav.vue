@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white fixed w-full flex border-b border-gray-300 pin-t pin-x z-50 h-16 items-center shadow">
+    <div class="bg-white fixed w-full flex border-b border-gray-300 pin-t pin-x z-40 h-16 items-center shadow">
         <nav class="flex justify-between flex-wrap bg-white pl-5 py-3 pr-0 h-16 w-full mx-auto">
             <div class="flex items-left flex-no-shrink text-white m-1">
                 <logo></logo>
