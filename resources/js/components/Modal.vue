@@ -1,6 +1,7 @@
 <template>
-    <div v-if="modalIsOpen" @click.self="toggleModal" class="animated fadeIn fixed z-50 pin overflow-auto bg-smoke-dark flex">
-        <div class="animated fadeInUp fixed shadow-inner max-w-md md:relative pin-b pin-x align-top m-auto justify-end md:justify-center p-8 bg-white md:rounded w-full md:h-auto md:shadow flex flex-col">
+    <div v-if="modalIsOpen" @click.self="toggleModal" class="modal opacity-100 pin-x pin-b fixed w-full h-full top-0 left-0 flex items-center justify-center z-50">
+        <div class="modal-overlay fixed w-full h-full bg-gray-900 opacity-50 z-50"></div>
+        <div class="modal-container bg-white p-4 w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto opacity-100 relative">
             <slot :payload="payload"></slot>
             <div class="flex">
                 <button @click="toggleModal" class="btn mr-auto">
@@ -15,6 +16,7 @@
             </span>
         </div>
     </div>
+    
 </template>
 
 <script>
@@ -46,7 +48,9 @@
             }
         },
         created() {
-            events.$on(this.openOn, () => this.modalIsOpen = true);
+            events.$on(this.openOn, () => {
+                this.modalIsOpen = true
+            });
             events.$on(this.closeOn, () => this.modalIsOpen = false);
         },
         methods: {

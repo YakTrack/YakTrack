@@ -140,29 +140,29 @@
                 </div>
             </div>
 
-            <modal
-                open-on="sessions.link-to-invoice"
-                close-on="sessions.linked-to-invoice"
-                :on-submit="linkSelectedSessionsToInvoice"
-            >
-                <template slot-scope="modal">
-                    <h3 class="text-center"> Link Selected Sessions To Invoice </h3>
-                    <div class="form-group mt-8">
-                        {{ modal.payload }}
-                        <label for="invoice_id"> Select Invoice </label>
-                        <invoice-select
-                            :invoices="invoices"
-                            :on-change="selectInvoice"
-                            v-model="modal.payload"
-                        ></invoice-select>
-                    </div>
-                </template>
-            </modal>
 
         </div>
         <div v-else>
             You have not created any sessions yet.
         </div>
+        <modal
+            open-on="sessions.link-to-invoice"
+            close-on="sessions.linked-to-invoice"
+            :on-submit="linkSelectedSessionsToInvoice"
+        >
+            <template slot-scope="modal">
+                <h3 class="text-center"> Link Selected Sessions To Invoice </h3>
+                <div class="form-group mt-8">
+                    {{ modal.payload }}
+                    <label for="invoice_id"> Select Invoice </label>
+                    <invoice-select
+                        :invoices="invoices"
+                        :on-change="selectInvoice"
+                        v-model="modal.payload"
+                    ></invoice-select>
+                </div>
+            </template>
+        </modal>
     </div>
 </template>
 
