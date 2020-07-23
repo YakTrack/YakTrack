@@ -409,7 +409,7 @@
                 this.filters.startedBefore = startedBefore;
             },
             selectPage(page) {
-                this.$inertia.visit(this.urlParser.current({page: this.page}), {
+                this.$inertia.visit(this.urlParser.current({page: page}), {
                     replace: true,
                     preserveScroll: true,
                 });
