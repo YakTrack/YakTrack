@@ -79,12 +79,19 @@ class TaskController extends Controller
      */
     public function update(Task $task)
     {
-        $task->update(request()->validate([
+        request()->validate([
             'name'        => 'string',
             'description' => 'string',
             'project_id'  => 'exists:projects,id',
-            'parent_id'   => 'exists:tasks,id|not_in:'.$task->id,
-        ]));
+            'parent_id'   => 'nullable|exists:tasks,id|not_in:'.$task->id,
+        ]);
+
+        $task->update([
+            'name'        => request('name', $task->name),
+            'description' => request('description', $task->description),
+            'project_id'  => request('project_id', $task->project_id),
+            'parent_id'   => request('parent_id', $task->parent_id),
+        ]);
 
         return redirect()->route('task.index');
     }
