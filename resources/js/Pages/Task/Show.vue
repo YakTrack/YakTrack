@@ -18,6 +18,10 @@
                 <i class="fa fa-users text-2xl text-gray-300 mr-2"></i>
                 <span class="text-2xl font-light"> {{ task.project.client.name }} </span>
             </div>
+            <div class="mt-2">
+                <div class="font-mono text-lg"> {{ totalDurationForHumans }} </div>
+                <div class="mt-1 text-gray-500"> Total time </div>
+            </div>
             <p class="mt-4">
                 {{ task.description }}
             </p>
@@ -39,6 +43,7 @@
     export default {
         props: [
             'task',
+            'totalDurationForHumans',
         ],
         components: {
             breadcrumbs: breadcrumbs,
