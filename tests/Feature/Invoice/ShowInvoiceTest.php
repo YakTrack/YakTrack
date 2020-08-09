@@ -16,7 +16,7 @@ class ShowInvoiceTest extends TestCase
         $this->withoutExceptionHandling();
 
         $invoice = factory(Invoice::class)->create([
-            'amount' => 12345
+            'amount' => 12345,
         ]);
 
         $this->actingAsUser();

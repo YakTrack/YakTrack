@@ -11,6 +11,7 @@ use Tests\TestCase;
 class EditInvoiceTest extends TestCase
 {
     use RefreshDatabase;
+
     /** @test */
     public function a_user_can_view_the_edit_invoice_view()
     {
