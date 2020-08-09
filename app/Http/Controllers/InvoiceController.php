@@ -50,7 +50,9 @@ class InvoiceController extends Controller
     public function edit(Invoice $invoice)
     {
         return Inertia::render('Invoice/Edit', [
-            'invoice'  => $invoice,
+            'invoice'  => array_merge($invoice->toArray(), [
+                'amount' => $invoice->amount / 100,
+            ]),
             'clients'  => Client::all(),
         ]);
     }
@@ -63,15 +65,16 @@ class InvoiceController extends Controller
             'sessions.*'  => 'exists:sessions,id',
         ]);
 
-        $invoice->update($request->only([
+        $invoice->update(array_merge($request->only([
             'number',
             'date',
-            'amount',
             'total_hours',
             'client_id',
             'description',
             'is_paid',
             'is_sent',
+        ]), [
+            'amount' => request('amount') ? intval(floatval(request('amount')) * 100) : $invoice->amount,
         ]));
 
         $invoice->sessions()->saveMany(Session::findMany($request->sessions));

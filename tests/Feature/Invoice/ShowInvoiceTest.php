@@ -15,7 +15,9 @@ class ShowInvoiceTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $invoice = factory(Invoice::class)->create();
+        $invoice = factory(Invoice::class)->create([
+            'amount' => 12345
+        ]);
 
         $this->actingAsUser();
 
@@ -24,5 +26,6 @@ class ShowInvoiceTest extends TestCase
         $response->assertSuccessful();
 
         $response->assertSee($invoice->number);
+        $response->assertSee(123.45);
     }
 }
