@@ -13,6 +13,20 @@ class EditInvoiceTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
+    public function a_user_can_view_the_edit_invoice_view()
+    {
+        $invoice = factory(Invoice::class)->create([
+            'amount' => 12345,
+        ]);
+
+        $this->actingAsUser();
+
+        $response = $this->get(route('invoice.edit', ['invoice' => $invoice]));
+
+        $response->assertSee(123.45);
+    }
+
+    /** @test */
     public function a_user_can_edit_an_invoice()
     {
         $invoice = factory(Invoice::class)->create();
@@ -36,9 +50,11 @@ class EditInvoiceTest extends TestCase
 
         $response->assertRedirect(route('invoice.index'));
 
-        $this->assertDatabaseHas('invoices', [
+        $this->assertDatabaseHas('invoices', array_merge([
             'id' => $invoice->id,
-        ] + $newInvoiceDetails);
+        ], $newInvoiceDetails, [
+            'amount' => '12345',
+        ]));
     }
 
     /** @test */
