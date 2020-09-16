@@ -9,9 +9,12 @@ class SessionCollection extends EloquentCollection
 {
     public function totalDurationInSeconds()
     {
-        return $this->sum(function ($session) {
-            return $session->durationInSeconds;
-        });
+        return $this->sum->durationInSeconds;
+    }
+
+    public function totalDurationInHours()
+    {
+        return $this->sum->durationInHours;
     }
 
     public function totalDurationForHumans()
