@@ -22,6 +22,7 @@ class CreateTargetsTable extends Migration
             $table->dateTime('duration')->nullable();
             $table->string('value_unit');
             $table->integer('value');
+            $table->boolean('billable_only');
             $table->timestamps();
         });
     }
