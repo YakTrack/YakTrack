@@ -9,6 +9,8 @@ use Carbon\Carbon;
 
 class Session extends Model
 {
+    use Concerns\CanBeBillable;
+
     protected $guarded = [];
 
     protected $dates = ['started_at', 'ended_at'];
