@@ -10,6 +10,7 @@ $factory->define(Target::class, function (Faker $faker) {
     return [
         'value_unit' => array_random(Target::VALUE_UNITS)['key'],
         'value' => $faker->numberBetween(0, 100),
+        'billable_only' => 0,
     ];
 });
 

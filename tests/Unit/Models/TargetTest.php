@@ -37,7 +37,7 @@ class TargetTest extends TestCase
     {
         $target = factory(Target::class)->states('for_date', 'in_hours')->create([
             'starts_at' => '2020-01-01 00:00:00',
-            'value' => 7,
+            'value' => 8,
         ]);
 
         $session = factory(Session::class)->create([
@@ -46,5 +46,23 @@ class TargetTest extends TestCase
         ]);
 
         $this->assertEquals(7, $target->hoursRemaining());
+    }
+
+    /** @test */
+    public function hours_remaining_method_excludes_non_billable_hours_method_if_billable_only_is_selected()
+    {
+        $target = factory(Target::class)->states('for_date', 'in_hours')->create([
+            'starts_at' => '2020-01-01 00:00:00',
+            'value' => 8,
+            'billable_only' => 1,
+        ]);
+
+        $session = factory(Session::class)->create([
+            'started_at' => '2020-01-01 00:00:00',
+            'ended_at' => '2020-01-01 01:00:00',
+            'is_billable' => 0,
+        ]);
+
+        $this->assertEquals(8, $target->hoursRemaining());
     }
 }

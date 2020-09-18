@@ -122,6 +122,11 @@ class Session extends Model
         return $this->duration->days * 86400 + $this->duration->h * 3600 + $this->duration->i * 60 + $this->duration->s;
     }
 
+    public function getDurationInHoursAttribute()
+    {
+        return $this->durationInSeconds / 3600;
+    }
+
     public function getEndedAtTimeForHumansAttribute()
     {
         return (new DateTimeFormatter())->timeForHumans($this->ended_at);

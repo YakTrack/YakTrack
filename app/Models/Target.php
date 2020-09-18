@@ -38,8 +38,8 @@ class Target extends Model
 
     public function sessions()
     {
-        return Session::whereStartedAfter($this->starts_at)
-            ->whereFinishedBefore($this->endsAt());
+        return Session::startedAfter($this->starts_at)
+            ->startedBefore($this->endsAt());
     }
 
     public function endsAt()
@@ -49,7 +49,13 @@ class Target extends Model
 
     public function hoursRemaining()
     {
-        return $this->valueInHours() - $this->sessions()->get()->totalDurationInHours();
+        $sessionsQuery = $this->sessions();
+
+        if ($this->billable_only) {
+            $sessionsQuery->whereBillable();
+        }
+
+        return $this->valueInHours() - $sessionsQuery->get()->totalDurationInHours();
     }
 
     public function valueInHours()
