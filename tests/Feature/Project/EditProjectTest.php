@@ -4,12 +4,12 @@ namespace Tests\Feature\Project;
 
 use App\Models\Client;
 use App\Models\Project;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class EditProjectTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function a_user_can_view_the_page_to_edit_a_project()
