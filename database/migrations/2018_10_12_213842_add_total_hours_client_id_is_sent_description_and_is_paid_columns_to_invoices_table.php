@@ -32,7 +32,13 @@ class AddTotalHoursClientIdIsSentDescriptionAndIsPaidColumnsToInvoicesTable exte
     public function down()
     {
         Schema::table('invoices', function (Blueprint $table) {
-            //
+            $table->dropColumn('due_date');
+            $table->dropColumn('total_hours');
+            $table->dropForeign(['client_id']);
+            $table->dropColumn('client_id');
+            $table->dropColumn('description');
+            $table->dropColumn('is_paid');
+            $table->dropColumn('is_sent');
         });
     }
 }
