@@ -9,6 +9,8 @@ use Carbon\Carbon;
 
 class Session extends Model
 {
+    use Concerns\CanBeBillable;
+
     protected $guarded = [];
 
     protected $dates = ['started_at', 'ended_at'];
@@ -118,6 +120,11 @@ class Session extends Model
     public function getDurationInSecondsAttribute()
     {
         return $this->duration->days * 86400 + $this->duration->h * 3600 + $this->duration->i * 60 + $this->duration->s;
+    }
+
+    public function getDurationInHoursAttribute()
+    {
+        return $this->durationInSeconds / 3600;
     }
 
     public function getEndedAtTimeForHumansAttribute()

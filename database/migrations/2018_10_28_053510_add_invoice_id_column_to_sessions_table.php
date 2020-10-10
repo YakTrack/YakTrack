@@ -27,7 +27,7 @@ class AddInvoiceIdColumnToSessionsTable extends Migration
     public function down()
     {
         Schema::table('sessions', function (Blueprint $table) {
-            //
+            $table->dropForeign(['invoice_id']);
         });
     }
 }

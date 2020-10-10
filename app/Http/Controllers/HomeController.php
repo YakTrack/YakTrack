@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Session;
+use App\Models\Target;
 use App\Statistics\Sessions;
 use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
@@ -49,13 +50,14 @@ class HomeController extends Controller
             })->values();
 
         return Inertia::render('Home', [
-            'thisWeeksWorkSessions' => $this->sessions->thisWeeksWorkSessions(),
-            'thisWeeksTotal'        => ($thisWeeksSessions = Session::thisWeek()->get())->totalDurationForHumans(),
-            'clients'               => $noClientSessions->count() > 0 ? $clients->push($noClient) : $clients,
-            'currentlyWorking'      => $currentlyWorking = $this->sessions->currentlyWorking(),
-            'currentSession'        => $currentSession = $this->sessions->currentSession(),
-            'totalSecondsThisWeek'  => $thisWeeksSessions->totalDurationInSeconds(),
-            'currentClientName'     => $currentlyWorking ? $currentSession->getClient()->name ?? 'No Client' : null,
+            'thisWeeksWorkSessions'                    => $this->sessions->thisWeeksWorkSessions(),
+            'thisWeeksTotal'                           => ($thisWeeksSessions = Session::thisWeek()->get())->totalDurationForHumans(),
+            'totalSecondsRemainingForTargetsThisWeek'  => Target::whereForThisWeek()->get()->totalValueInSeconds() - $thisWeeksSessions->totalDurationInSeconds(),
+            'clients'                                  => $noClientSessions->count() > 0 ? $clients->push($noClient) : $clients,
+            'currentlyWorking'                         => $currentlyWorking = $this->sessions->currentlyWorking(),
+            'currentSession'                           => $currentSession = $this->sessions->currentSession(),
+            'totalSecondsThisWeek'                     => $thisWeeksSessions->totalDurationInSeconds(),
+            'currentClientName'                        => $currentlyWorking ? $currentSession->getClient()->name ?? 'No Client' : null,
         ]);
     }
 }

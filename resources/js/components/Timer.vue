@@ -1,15 +1,18 @@
 <template>
-    <div class="px-3 inline-block btn-height font-light font-mono" :class="classes">
-        <div class="flex h-full">
-            <div class="self-center"> {{ secondsElapsedSinceStartTime | durationForHumans }} </div>
-        </div>
-    </div>
+    <duration
+        :duration-in-seconds="secondsElapsedSinceStartTime"
+        :color="textColor"
+    ></duration>
 </template>
 
 <script>
+    import Duration from './../components/Duration';
     import DateTime from './../filters/DateTime';
 
     export default {
+        components: {
+            duration: Duration,
+        },
         props: {
             startedAt: {
                 default: (new Date).getTime(),
@@ -19,7 +22,19 @@
             },
             initialTime: {
                 default: 0,
-            }
+            },
+            countDown: {
+                type: Boolean,
+                default: false,
+            },
+            isPaused: {
+                type: Boolean,
+                default: false,
+            },
+            color: {
+                type: String,
+                default: null,
+            },
         },
         data() {
             return {
@@ -33,9 +48,19 @@
                 return this.isRunning ? this.now : this.endedAt;
             },
             secondsElapsedSinceStartTime() {
-                return Math.floor((this.endTime - this.startedAt) / 1000) + this.initialTime;
+                let secondsElapsedSinceLoaded = Math.floor((this.endTime - this.startedAt) / 1000);
+
+                if (this.countDown) {
+                    return this.initialTime - secondsElapsedSinceLoaded;
+                }
+
+                return this.initialTime + secondsElapsedSinceLoaded;
             },
             isRunning() {
+                if (this.isPaused) {
+                    return false;
+                }
+
                 return this.endedAt === null;
             },
             classes() {
@@ -46,13 +71,18 @@
                 ].join(' ');
             },
             textColor() {
-                return this.isRunning ? 'text-green-700' : 'text-gray-700'
+                if (this.color) {
+                    return this.color;
+                }
+
+                if (this.countDown) {
+                    return 'gray';
+                }
+
+                return this.isRunning ? 'green' : 'gray';
             },
             fontSize() {
                 return this.isRunning ? '' : 'font-base'
-            },
-            border() {
-                return this.isRunning ? 'bg-lue-100 rounded' : ''
             },
         },
         created() {

@@ -5,8 +5,13 @@ namespace App\Models\Collections;
 use App\Support\DateIntervalFormatter;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
-class SessionCollection extends EloquentCollection
+class TargetCollection extends EloquentCollection
 {
+    public function totalValueInSeconds()
+    {
+        return $this->sum->valueInSeconds();
+    }
+
     public function totalDurationInSeconds()
     {
         return $this->sum->durationInSeconds;
@@ -30,8 +35,8 @@ class SessionCollection extends EloquentCollection
 
     public function thisWeek()
     {
-        return $this->filter(function ($session) {
-            return $session->isThisWeek();
+        return $this->filter(function ($target) {
+            return $target->isThisWeek();
         });
     }
 }

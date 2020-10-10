@@ -3,6 +3,7 @@
 namespace App\Statistics;
 
 use App\Models\Session;
+use App\Models\Target;
 use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
 use Illuminate\Support\Carbon;
@@ -31,16 +32,16 @@ class Sessions
     public function thisWeeksWorkSessions()
     {
         return $this->dateTimeFormatter->daysThisWeek()->map(function ($date) {
+            $target = Target::findForDate($date->format('Y-m-d'));
+
             return [
-                'date'                => $date,
-                'dateForHumans'       => $this->dateTimeFormatter->dateForHumans($date),
-                'dateNoYearForHumans' => $this->dateTimeFormatter->dateNoYearForHumans($date),
-                'totalTimeWorked'     => $this->dateIntervalFormatter->forHumans($this->totalTimeOnDate($date)),
-                'totalSecondsWorked'  => $this->totalSecondsOnDate($date),
-                'currentlyWorking'    => !$this->currentSession()
+                'date'                          => $date,
+                'totalSecondsWorked'            => $this->totalSecondsOnDate($date),
+                'totalSecondsTarget'            => $target ? $target->valueInSeconds() : 0,
+                'currentlyWorking'              => !$this->currentSession()
                     ? false
                     : $this->sessionsOnDate($date)->pluck('id')->contains($this->currentSession()->id),
-                'isToday'             => Carbon::parse($date)->isToday(),
+                'isToday'                       => Carbon::parse($date)->isToday(),
             ];
         });
     }

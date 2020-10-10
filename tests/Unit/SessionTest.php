@@ -2,11 +2,11 @@
 
 use App\Models\Session;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class SessionTest extends BrowserKitTestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function stop_session_stops_the_session()

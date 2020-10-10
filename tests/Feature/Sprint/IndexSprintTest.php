@@ -4,12 +4,12 @@ namespace Tests\Feature\Sprint;
 
 use App\Models\Project;
 use App\Models\Sprint;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class IndexSprintTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function a_user_can_view_a_list_of_sprints()

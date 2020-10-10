@@ -1,7 +1,9 @@
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import advancedFormats from 'dayjs/plugin/advancedFormat';
 
 dayjs.extend(relativeTime);
+dayjs.extend(advancedFormats);
 
 export default {
 
@@ -10,14 +12,15 @@ export default {
         return Math.round((now - (new Date(carbonDate.date+' GMT')).getTime()) / 1000);
     },
 
-    durationForHumans (secs) {
-        var sec_num = parseInt(secs, 10)
-        var hours   = Math.floor(sec_num / 3600)
-        var minutes = Math.floor(sec_num / 60) % 60
-        var seconds = sec_num % 60
+    durationForHumans (numberOfSeconds) {
+        let isNegative = numberOfSeconds < 0;
+        let absoluteNumberOfSeconds = Math.abs(numberOfSeconds);
+        let hours   = Math.floor(absoluteNumberOfSeconds / 3600)
+        let minutes = Math.floor(absoluteNumberOfSeconds / 60) % 60
+        let seconds = absoluteNumberOfSeconds % 60
     
-        return [hours,minutes,seconds]
-            .map(v => v < 10 ? "0" + v : v)
+        return (isNegative ? '-' : ' ') + [hours, minutes, seconds]
+            .map(component => component < 10 ? "0" + component : component)
             .join(":")
     },
 

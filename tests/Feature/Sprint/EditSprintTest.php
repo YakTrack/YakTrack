@@ -4,12 +4,12 @@ namespace Tests\Feature\Sprint;
 
 use App\Models\Project;
 use App\Models\Sprint;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class EditSprintTest extends TestCase
 {
-    use DatabaseMigrations;
+    use RefreshDatabase;
 
     /** @test */
     public function a_user_can_view_the_page_to_edit_a_sprint()
