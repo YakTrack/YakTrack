@@ -9,6 +9,8 @@ use App\Models\Collections\TargetCollection;
 
 class Target extends Model
 {
+    protected $guarded = [];
+
     const DURATION_UNITS = [
         'DAYS' => [
             'key' => 'days',
