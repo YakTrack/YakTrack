@@ -4,8 +4,8 @@ namespace Tests\Feature\DashboardTest;
 
 use App\Models\Client;
 use App\Models\Project;
-use App\Models\Task;
 use App\Models\Session;
+use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -35,7 +35,7 @@ class DashboardTest extends TestCase
         $session = factory(Session::class)->create([
             'task_id'    => $task->id,
             'started_at' => '2018-01-01 13:00:00',
-            'ended_at' => null,
+            'ended_at'   => null,
         ]);
 
         Carbon::setTestNow(Carbon::parse('2018-01-02'));
