@@ -33,6 +33,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('client', 'ClientController');
     Route::resource('project', 'ProjectController');
     Route::resource('sprint', 'SprintController');
+    Route::resource('target', 'TargetController');
     Route::resource('task', 'TaskController');
     Route::resource('task.session', 'Task\SessionController');
     Route::resource('third-party-application', 'ThirdPartyApplicationController');

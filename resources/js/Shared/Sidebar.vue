@@ -54,6 +54,12 @@
                         icon: 'fas fa-briefcase fa-fw'
                     },
                     {
+                        name: 'Targets',
+                        route: 'target.index',
+                        icon: 'fas fa-bullseye fa-fw',
+                        active: route().current('target.*'),
+                    },
+                    {
                         name: 'Invoices',
                         route: 'invoice.index',
                         icon: 'fas fa-file-invoice-dollar fa-fw',
