@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\Collections\TargetCollection;
+use App\Support\DateTimeFormatter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
-use App\Support\DateTimeFormatter;
-use App\Models\Collections\TargetCollection;
 
 class Target extends Model
 {
@@ -23,7 +23,7 @@ class Target extends Model
     const VALUE_UNITS = [
         'HOURS' => [
             'key' => 'hours',
-        ]
+        ],
     ];
 
     public static function findForDate($date)
@@ -48,7 +48,7 @@ class Target extends Model
     {
         $query->whereDurationUnit(self::DURATION_UNITS['DAYS']['key'])
             ->whereDuration(1);
-        
+
         if ($date) {
             $query->whereStartsAt(Carbon::parse($date)->toDateTimeString());
         }
@@ -65,7 +65,7 @@ class Target extends Model
     {
         $sessionsQuery = Session::startedAfter($this->starts_at)
             ->startedBefore($this->endsAt());
-    
+
         if ($this->billable_only) {
             $sessionsQuery->whereBillable();
         }
