@@ -5,7 +5,7 @@
             <div v-if="!hideSidebar" class="block z-10 bg-white w-full lg:max-w-3xs border-b -mb-16 lg:-mb-0 lg:static lg:bg-transparent lg:border-b-0 lg:pt-0 lg:border-0 sm:flex md:flex md:relative sm:relative">
                 <sidebar></sidebar>
             </div>
-            <div class="flex-1 container mx-auto px-8">
+            <div class="flex-1 container mx-auto px-2 sm:px-8">
                 <div id="content-wrapper" class="min-h-screen w-full lg:static lg:max-h-full lg:overflow-visible">
                     <main role="main" class="lg:sticky w-full py-24">
                         <slot name="breadcrumbs"></slot>

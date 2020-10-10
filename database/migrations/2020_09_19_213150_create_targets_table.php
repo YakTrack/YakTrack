@@ -18,10 +18,10 @@ class CreateTargetsTable extends Migration
             $table->string('targetable_type')->nullable();
             $table->string('targetable_id')->nullable();
             $table->dateTime('starts_at')->nullable();
-            $table->dateTime('duration_unit')->nullable();
-            $table->dateTime('duration')->nullable();
+            $table->string('duration_unit')->nullable();
+            $table->unsignedInteger('duration')->nullable();
             $table->string('value_unit');
-            $table->integer('value');
+            $table->unsignedInteger('value');
             $table->boolean('billable_only');
             $table->timestamps();
         });

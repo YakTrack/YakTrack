@@ -13,6 +13,8 @@ class DateTimeFormatter
 
     const DATE_FOR_HUMANS_FORMAT = 'l jS M Y';
 
+    const DATE_FOR_HUMANS_COMPACT_FORMAT = 'D jS M';
+
     const DATE_NO_YEAR_FOR_HUMANS_FORMAT = 'l jS M';
 
     const TIME_FOR_HUMANS_FORMAT = 'g:i:s a';
@@ -40,6 +42,11 @@ class DateTimeFormatter
     public function dateForHumans($dateTime)
     {
         return $this->format($dateTime, self::DATE_FOR_HUMANS_FORMAT);
+    }
+
+    public function dateForHumansCompact($dateTime)
+    {
+        return $this->format($dateTime, self::DATE_FOR_HUMANS_COMPACT_FORMAT);
     }
 
     public function dateNoYearForHumans($dateTime)

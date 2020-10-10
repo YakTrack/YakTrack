@@ -27,3 +27,7 @@ $factory->afterCreatingState(Session::class, 'classified', function ($session) {
         'invoice_id' => $task->project->client->invoices->random()->id,
     ]);
 });
+
+$factory->state(Session::class, 'billable', [
+    'is_billable' => 1,
+]);
