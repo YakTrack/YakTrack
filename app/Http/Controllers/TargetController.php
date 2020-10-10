@@ -11,7 +11,7 @@ class TargetController extends Controller
     public function index()
     {
         return Inertia::render('Target/Index', [
-            'targets' => Target::orderBy('id', 'desc')->limit(1000)->get(),
+            'targets' => Target::orderBy('starts_at', 'desc')->limit(1000)->get(),
         ]);
     }
 
