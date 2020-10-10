@@ -41,4 +41,26 @@ class CreateTargetTest extends TestCase
 
         $this->assertDatabaseHas('targets', $targetDetails);
     }
+
+    /** @test */
+    public function a_user_cannot_create_a_daily_target_for_a_date_which_already_has_one()
+    {
+        $this->actingAsUser();
+
+        $existingTarget = Target::create($targetDetails = [
+            'duration' => 1,
+            'duration_unit' => Target::DURATION_UNITS['DAYS']['key'],
+            'value' => 8,
+            'value_unit' => Target::VALUE_UNITS['HOURS']['key'],
+            'billable_only' => 1,
+            'starts_at' => '2020-01-01 00:00:00',
+        ]);
+
+        $response = $this->post(route('target.store', $targetDetails));
+
+        $response->assertRedirect();
+        $response->assertSessionHasErrors();
+
+        $this->assertEquals(1, Target::count());
+    }
 }

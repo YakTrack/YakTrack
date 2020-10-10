@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Target;
+use App\Rules\TargetDoesNotAlreadyExist;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -24,6 +25,13 @@ class TargetController extends Controller
 
     public function store()
     {
+        request()->validate([
+            'starts_at' => new TargetDoesNotAlreadyExist(request()->only([
+                'duration_unit',
+                'duration',
+            ]))
+        ]);
+
         Target::create([
             'value_unit' => request('value_unit'),
             'value' => request('value'),
