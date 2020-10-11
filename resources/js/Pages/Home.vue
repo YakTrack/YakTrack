@@ -162,5 +162,8 @@
                 dayjs: dayjs,
             }
         },
+        mounted() {
+          document.title = 'YakTrack'
+        },
     }
 </script>
