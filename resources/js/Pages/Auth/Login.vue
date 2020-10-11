@@ -11,8 +11,12 @@
                 <div class="card-body">
 
                     <form role="form" method="POST" action="/login" @submit.prevent="submit">
+                        <div v-if="Object.keys(this.errors).length > 0" class="text-sm mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                            Error: {{this.errors[0]}}
+                           <span v-for="error in this.errors" class="block sm:inline">{{error[0]}}</span>
+                        </div>
                         <div class="form-group">
-                            <label for="email"> Email </label> 
+                            <label for="email"> Email </label>
                             <input type="email" class="form-control" placeholder="Email" name="email" v-model="form.email">
                         </div>
                         <div class="form-group">
