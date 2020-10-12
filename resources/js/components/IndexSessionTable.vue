@@ -56,9 +56,11 @@
                         <td class="pl-4">
                             <div class="overflow-auto h-full whitespace-no-wrap">
                                 <div v-if="session.task_id">
-                                    <i class="fas fa-check-square text-gray-400 mr-2"></i>
-                                    <span class="font-semibold"> {{ taskPrefix(session.task_name) }} </span>
-                                    <span class="text-base"> {{ taskSuffix(session.task_name) }} </span>
+                                    <inertia-link  class="no-underline hover:opacity-50 opacity-100" :href="route('task.show', session.task_id)">
+                                        <i class="fas fa-check-square text-gray-400 mr-2"></i>
+                                        <span class="font-semibold"> {{ taskPrefix(session.task_name) }} </span>
+                                        <span class="text-base"> {{ taskSuffix(session.task_name) }} </span>
+                                    </inertia-link>
                                 </div>
                                 <div class="flex items-center text-gray-500">
                                     <div class="w-32">
@@ -419,7 +421,7 @@
             },
             taskSuffix(name) {
                 let suffix = name.split(':')[1];
-                
+
                 return suffix ? ':' + suffix : '';
             },
         },
