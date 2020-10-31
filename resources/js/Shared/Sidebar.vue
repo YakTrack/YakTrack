@@ -1,11 +1,12 @@
 <template>
-    <div class="bg-gray-200 pl-4">
-        <nav class="px-6 pb-6 pt-24 overflow-y-auto text-base lg:text-lg lg:pl-0 lg:pr-8 sticky?lg:h-(screen-16) leading-loose">
+    <div class="bg-gray-200 px-4">
+        <nav class="px-6 pb-6 pt-24 overflow-y-auto text-base lg:text-lg lg:px-0 sticky?lg:h-(screen-16) leading-loose">
             <ul
                 class="list-reset"
                 v-for="menuItem in menuItems"
+                :key="menuItem.name"
             >
-                <li class="lg:mb-2 hover:bg-blue-400 px-4 py-1 rounded" :class="menuItem.active ? 'bg-grey-300' : ''">
+                <li class="lg:mb-2 hover:bg-blue-400 px-6 py-1 rounded" :class="menuItem.active ? 'bg-grey-300' : ''">
                     <inertia-link
                         class="no-underline text-gray-900"
                         :href="route(menuItem.route)"
