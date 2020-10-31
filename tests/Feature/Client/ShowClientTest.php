@@ -13,7 +13,9 @@ class ShowClientTest extends TestCase
     /** @test */
     public function a_user_can_see_a_single_client()
     {
-        $client = factory(Client::class)->create();
+        $client = factory(Client::class)->create([
+            'name' => 'Joseph O\'Conner',
+        ]);
 
         $this->actingAsUser();
 
@@ -21,7 +23,7 @@ class ShowClientTest extends TestCase
 
         $response->assertSuccessful();
 
-        $response->assertSee($client->name);
+        $response->assertSee(e($client->name));
         $response->assertSee($client->email);
     }
 }
