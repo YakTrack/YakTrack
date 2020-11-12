@@ -31,6 +31,10 @@
                 <label for="invoice_id"> Invoice </label>
                 <invoice-select :invoices="invoices" :invoice="form.invoice_id" :on-change="selectInvoice"></invoice-select>
             </div>
+            <div class="form-group">
+                <label for="is_billable"> Is Billable </label>
+                <input type="checkbox" class="form-checkbox" name="is_billable" v-model="form.is_billable"/>
+            </div>
             <div class="flex mt-4">
                 <div class="flex-1 mt-2">
                     <button-link :href="route('session.index')"> Cancel </button-link>
