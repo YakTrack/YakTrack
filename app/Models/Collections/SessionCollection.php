@@ -34,4 +34,18 @@ class SessionCollection extends EloquentCollection
             return $session->isThisWeek();
         });
     }
+
+    public function whereBillable()
+    {
+        return $this->filter(function ($session) {
+            return $session->is_billable;
+        });
+    }
+
+    public function whereNotBillable()
+    {
+        return $this->filter(function ($session) {
+            return !$session->is_billable;
+        });
+    }
 }
