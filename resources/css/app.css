@@ -620,6 +620,9 @@ fieldset[disabled] .multiselect {
 li:hover .parent-hover\:text-white {
     color: #FFF;
 }
+li:focus .parent-focus\:text-white {
+    color: #FFF;
+}
 
 @screen sm {
     .grid {
