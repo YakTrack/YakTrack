@@ -45,6 +45,27 @@ abstract class TestCase extends BaseTestCase
         Config::set('app.display_timezone', $timezone ?? 'Australia/Sydney');
     }
 
+    protected function assertArrayMatches($expected, $tested, $address = null)
+    {
+        $this->assertIsArray($tested, "Failed asserting that $address is an array");
+
+        foreach ($expected as $key => $value) {
+
+            $compoundKey = $address ? "$address.$key" : $key;
+            $this->assertArrayHasKey($key, $tested, "Failed asserting that array has key $compoundKey");
+
+            if (is_array($value)) {
+                $this->assertArrayMatches($value, $tested[$key], $compoundKey);
+            } else {
+                $this->assertEquals(
+                    $value,
+                    $tested[$key],
+                    "Failed asserting that array has key $compoundKey equal to $value. Actual value was {$tested[$key]}"
+                );
+            }
+        }
+    }
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -60,7 +81,7 @@ abstract class TestCase extends BaseTestCase
         });
 
         TestResponse::macro('assertHasProp', function ($key) {
-            Assert::assertTrue(Arr::has($this->props(), $key));
+            Assert::assertTrue(Arr::has($this->props(), $key), "Failed asserting that prop '$key' exists");
 
             return $this;
         });
@@ -71,7 +92,7 @@ abstract class TestCase extends BaseTestCase
             if (is_callable($value)) {
                 $value($this->props($key));
             } else {
-                Assert::assertEquals($this->props($key), $value);
+                Assert::assertEquals($this->props($key), $value, "Failed asserting that $key prop is equal to $value. Got {$this->props($key)}");
             }
 
             return $this;
