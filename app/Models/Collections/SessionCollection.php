@@ -28,11 +28,19 @@ class SessionCollection extends EloquentCollection
         );
     }
 
-    public function thisWeek()
+    public function whereThisWeek()
     {
         return $this->filter(function ($session) {
             return $session->isThisWeek();
         });
+    }
+
+    /**
+     * Deprecated in favour of whereThisWeek
+     */
+    public function thisWeek()
+    {
+        return $this->whereThisWeek();
     }
 
     public function whereBillable()
