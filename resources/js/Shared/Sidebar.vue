@@ -1,6 +1,6 @@
 <template>
     <div class="bg-gray-200 pl-4">
-        <nav class="px-6 pb-6 pt-24 overflow-y-auto text-base lg:text-lg lg:pl-0 lg:pr-8 sticky?lg:h-(screen-16) leading-loose">
+        <nav class="px-6 pb-6 pt-24 overflow-y-auto text-base lg:text-lg lg:pl-0 lg:pr-4 sticky?lg:h-(screen-16) leading-loose">
             <ul
                 class="list-reset"
                 v-for="menuItem in menuItems"
