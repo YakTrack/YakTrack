@@ -1,6 +1,19 @@
 <template>
     <div>
-        <multi-select v-model="selectedTask" label="name" :options="tasks"></multi-select>
+        <multi-select v-model="selectedTask" label="name" :options="tasks">
+            <template slot="singleLabel" slot-scope="props">
+                <span class="option__desc"><span class="option__title">{{ props.option.name }}</span></span>
+                <span class="option__desc text-sm pl-2 font-light">{{ props.option.project ? props.option.project.name : '' }}</span>
+                <span class="option__desc text-sm pl-2 font-thin">{{ props.option.project.client ? props.option.project.client.name : '' }}</span>
+            </template>
+            <template slot="option" slot-scope="props">
+                <div class="option__desc">
+                    <span class="option__title">{{ props.option.name }}</span>
+                    <span class="option__title text-sm pl-2 font-light">{{ props.option.project ? props.option.project.name : '' }}</span>
+                    <span class="option__title text-sm pl-2 font-thin">{{ props.option.project.client ? props.option.project.client.name : '' }}</span>
+                </div>
+            </template>
+        </multi-select>
         <input type="hidden" name="task_id" :value="taskId">
     </div>
 </template>
