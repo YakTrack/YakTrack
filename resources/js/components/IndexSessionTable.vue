@@ -85,6 +85,7 @@
                                             {{ session.invoice_number }}
                                         </inertia-link>
                                     </div>
+                                    <i v-if="session.is_billable" class="fas fa-money-bill-alt text-gray-400 mr-2"></i>
                                 </div>
                             </div>
                         </td>

@@ -113,6 +113,7 @@ class SessionController extends Controller
             'task_id'    => request('task_id') ?: null,
             'invoice_id' => request('invoice_id') ?: null,
             'sprint_id'  => request('sprint_id') ?: null,
+            'is_billable' => request('is_billable') ?: 0,
         ]);
 
         return redirect()
