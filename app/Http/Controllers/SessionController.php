@@ -83,11 +83,12 @@ class SessionController extends Controller
         }
 
         $session = Session::create([
-            'started_at' => $this->dateTimeFormatter->utcFormat(request('started_at')),
-            'ended_at'   => request('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
-            'task_id'    => request('task_id') ?: null,
-            'invoice_id' => request('invoice_id') ?: null,
-            'sprint_id'  => request('sprint_id') ?: null,
+            'started_at'    => $this->dateTimeFormatter->utcFormat(request('started_at')),
+            'ended_at'      => request('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
+            'task_id'       => request('task_id') ?: null,
+            'invoice_id'    => request('invoice_id') ?: null,
+            'sprint_id'     => request('sprint_id') ?: null,
+            'is_billable'   => request('is_billable', 1),
         ]);
 
         return redirect()
@@ -99,7 +100,7 @@ class SessionController extends Controller
     {
         return Inertia::render('Session/Edit', [
             'session'  => $session,
-            'tasks'    => Task::orderBy('id', 'desc')->get(),
+            'tasks'    => Task::with('project.client')->orderBy('id', 'desc')->get(),
             'invoices' => Invoice::orderBy('id', 'desc')->get(),
             'sprints'  => Sprint::with('project.client')->orderBy('id', 'desc')->get(),
         ]);
@@ -127,7 +128,10 @@ class SessionController extends Controller
             $session->stop();
         });
 
-        Session::create(['started_at' => Carbon::now()]);
+        Session::create([
+            'started_at' => Carbon::now(),
+            'is_billable' => 1,
+        ]);
 
         return redirect(route('session.index'));
     }
