@@ -3,7 +3,8 @@
         <nav class="px-6 pb-6 pt-24 overflow-y-auto text-base lg:text-lg lg:pl-0 lg:pr-4 sticky?lg:h-(screen-16) leading-loose">
             <ul
                 class="list-reset"
-                v-for="menuItem in menuItems"
+                v-for="(menuItem, index) in menuItems"
+                :key="index"
             >
                 <li class="lg:mb-2 hover:bg-blue-400 px-4 py-1 rounded" :class="menuItem.active ? 'bg-grey-300' : ''">
                     <inertia-link
