@@ -10,6 +10,12 @@
             ></breadcrumbs>
         </template>
         <template slot="title"> {{ sprint.name }} </template>
+        <template slot="top-right-toolbar">
+            <button @click="createInvoice" class="btn btn-blue">
+                <i class="fa fa-plus text-blue-100 mr-2"></i>
+                Create Invoice
+            </button>
+        </template>
         <div class="card">
             <div>
                 <h2 class="text-gray-700"> {{ sprint.name }} </h2>
@@ -60,6 +66,11 @@
         components: {
             breadcrumbs: breadcrumbs,
             layout: layout,
+        },
+        methods: {
+            createInvoice() {
+                this.$inertia.post(route('sprint.invoice.store', this.sprint.id));
+            }
         },
     }
 </script>
