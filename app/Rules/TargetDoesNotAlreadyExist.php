@@ -25,16 +25,17 @@ class TargetDoesNotAlreadyExist implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     * @param mixed  $value
+     *
      * @return bool
      */
     public function passes($attribute, $value)
     {
         return !Target::where([
-            'duration' => $this->duration,
+            'duration'      => $this->duration,
             'duration_unit' => $this->duration_unit,
-            'starts_at' => $value,
+            'starts_at'     => $value,
         ])->exists();
     }
 

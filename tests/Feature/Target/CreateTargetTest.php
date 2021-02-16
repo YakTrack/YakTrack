@@ -4,7 +4,6 @@ namespace Tests\Feature\Target;
 
 use App\Models\Target;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class CreateTargetTest extends TestCase
@@ -29,12 +28,12 @@ class CreateTargetTest extends TestCase
         $this->actingAsUser();
 
         $response = $this->post(route('target.store', $targetDetails = [
-            'duration' => 1,
+            'duration'      => 1,
             'duration_unit' => Target::DURATION_UNITS['DAYS']['key'],
-            'value' => 8,
-            'value_unit' => Target::VALUE_UNITS['HOURS']['key'],
+            'value'         => 8,
+            'value_unit'    => Target::VALUE_UNITS['HOURS']['key'],
             'billable_only' => 1,
-            'starts_at' => '2020-01-01 00:00:00',
+            'starts_at'     => '2020-01-01 00:00:00',
         ]));
 
         $response->assertRedirect(route('target.index'));
@@ -48,12 +47,12 @@ class CreateTargetTest extends TestCase
         $this->actingAsUser();
 
         $existingTarget = Target::create($targetDetails = [
-            'duration' => 1,
+            'duration'      => 1,
             'duration_unit' => Target::DURATION_UNITS['DAYS']['key'],
-            'value' => 8,
-            'value_unit' => Target::VALUE_UNITS['HOURS']['key'],
+            'value'         => 8,
+            'value_unit'    => Target::VALUE_UNITS['HOURS']['key'],
             'billable_only' => 1,
-            'starts_at' => '2020-01-01 00:00:00',
+            'starts_at'     => '2020-01-01 00:00:00',
         ]);
 
         $response = $this->post(route('target.store', $targetDetails));
