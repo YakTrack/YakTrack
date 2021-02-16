@@ -43,7 +43,7 @@
                     <th class="text-gray-500"> Task </th>
                     <th class="text-gray-500"> Total Time </th>
                 </tr>
-                <tr v-for="task in tasks">
+                <tr v-for="task in tasks" :key="task.id">
                     <td class="p-2 text-gray-600"><span v-if="task.project"> {{ task.project.name }} </span></td>
                     <td class="p-2 text-gray-600"> {{ task.name }} </td>
                     <td class="p-2 text-gray-600"> {{ task.totalDurationInSprintForHumans }} </td>
