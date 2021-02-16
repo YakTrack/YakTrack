@@ -19,6 +19,6 @@ class ClientsTableSeeder extends Seeder
         ]);
         $edesapaAndSongs = factory(App\Models\Client::class)->states('with_invoices')->create([
             'name' => 'Edesapa and Sons',
-        ]); 
+        ]);
     }
 }

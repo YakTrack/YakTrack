@@ -50,7 +50,6 @@ abstract class TestCase extends BaseTestCase
         $this->assertIsArray($tested, "Failed asserting that $address is an array");
 
         foreach ($expected as $key => $value) {
-
             $compoundKey = $address ? "$address.$key" : $key;
             $this->assertArrayHasKey($key, $tested, "Failed asserting that array has key $compoundKey");
 

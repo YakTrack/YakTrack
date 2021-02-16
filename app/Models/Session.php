@@ -220,8 +220,8 @@ class Session extends Model
     }
 
     /**
-     * Deprecated in favour of whereThisWeek
-     * 
+     * Deprecated in favour of whereThisWeek.
+     *
      * @deprecated
      */
     public function scopeThisWeek($query)

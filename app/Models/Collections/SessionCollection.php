@@ -36,7 +36,7 @@ class SessionCollection extends EloquentCollection
     }
 
     /**
-     * Deprecated in favour of whereThisWeek
+     * Deprecated in favour of whereThisWeek.
      */
     public function thisWeek()
     {

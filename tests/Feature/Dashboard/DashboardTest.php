@@ -4,10 +4,9 @@ namespace Tests\Feature\DashboardTest;
 
 use App\Models\Client;
 use App\Models\Project;
-use App\Models\Task;
 use App\Models\Session;
 use App\Models\Sprint;
-use App\Support\DateTimeFormatter;
+use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -27,7 +26,7 @@ class DashboardTest extends TestCase
         ]);
         $clientZeroSprint = factory(Sprint::class)->create([
             'project_id' => $project->id,
-            'is_open' => 1,
+            'is_open'    => 1,
         ]);
 
         $task = factory(Task::class)->create([
@@ -41,9 +40,9 @@ class DashboardTest extends TestCase
 
         $session = factory(Session::class)->create([
             'task_id'    => $task->id,
-            'sprint_id' => $clientZeroSprint->id,
+            'sprint_id'  => $clientZeroSprint->id,
             'started_at' => '2018-01-01 13:00:00',
-            'ended_at' => null,
+            'ended_at'   => null,
         ]);
 
         Carbon::setTestNow(Carbon::parse('2018-01-02'));
@@ -59,8 +58,8 @@ class DashboardTest extends TestCase
         $this->assertArrayMatches([
             'clients' => [
                 [
-                    'id' => $client->id,
-                    'name' => $client->name,
+                    'id'        => $client->id,
+                    'name'      => $client->name,
                     'this_week' => [
                         'billable' => [
                             'actual' => $client->sessionsThisWeek->whereBillable()->totalDurationInSeconds(),
@@ -73,8 +72,8 @@ class DashboardTest extends TestCase
                     ],
                     'open_sprints' => [
                         [
-                            'id' => $clientZeroSprint->id,
-                            'name' => $clientZeroSprint->name,
+                            'id'        => $clientZeroSprint->id,
+                            'name'      => $clientZeroSprint->name,
                             'this_week' => [
                                 'billable' => [
                                     'actual' => $clientZeroSprint->sessions()
@@ -108,11 +107,11 @@ class DashboardTest extends TestCase
                 ],
                 'days' => [
                     'monday' => [
-                        'date' => '2018-01-01',
+                        'date'     => '2018-01-01',
                         'is_today' => false,
                         'billable' => [
-                            'actual' => $uncategorisedSession->durationInSeconds,
-                            'target' => 0,
+                            'actual'    => $uncategorisedSession->durationInSeconds,
+                            'target'    => 0,
                             'is_active' => false,
                         ],
                         'not_billable' => [
