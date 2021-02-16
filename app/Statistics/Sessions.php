@@ -3,10 +3,10 @@
 namespace App\Statistics;
 
 use App\Models\Session;
+use App\Models\Target;
 use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
 use Illuminate\Support\Carbon;
-use App\Models\Target;
 
 class Sessions
 {

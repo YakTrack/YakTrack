@@ -3,11 +3,10 @@
 namespace Tests\Feature\Sprint;
 
 use App\Models\Invoice;
-use App\Models\Sprint;
 use App\Models\Session;
+use App\Models\Sprint;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class CreateInvoiceSprintTest extends TestCase
@@ -24,9 +23,9 @@ class CreateInvoiceSprintTest extends TestCase
         $sprint = factory(Sprint::class)->create();
 
         $sessions = factory(Session::class, 3)->states('billable')->create([
-            'sprint_id' => $sprint->id,
+            'sprint_id'  => $sprint->id,
             'started_at' => Carbon::parse('Yesterday 9:00am'),
-            'ended_at' => Carbon::parse('Yesterday 10:00am'),
+            'ended_at'   => Carbon::parse('Yesterday 10:00am'),
         ]);
 
         $response = $this->post(route('sprint.invoice.store', [
@@ -40,7 +39,7 @@ class CreateInvoiceSprintTest extends TestCase
         ]);
 
         $response->assertRedirect(route('invoice.edit', [
-            'invoice' => $invoice = Invoice::latest()->first()
+            'invoice' => $invoice = Invoice::latest()->first(),
         ]));
 
         $this->assertDatabaseHas('invoices', [
