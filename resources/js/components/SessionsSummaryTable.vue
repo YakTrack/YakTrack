@@ -1,20 +1,26 @@
 <template>
     <div class="bg-white rounded shadow">
-        <div class="text-center w-full bg-gray-200" colspan="4">
+        <div class="text-center bg-gray-200" colspan="4">
             <h3 class="text-indigo-90 uppercase text-xl font-light"> This Week </h3>
         </div>
-        <div class="flex p-1">
-            <button class="px-3 py-1 rounded" @click="billableStatus = 'billable'" :class="billableStatus === 'billable' ? 'bg-gray-200' : 'text-gray-500'">
+        <div class="px-1 py-2">
+            <a href=""
+                @click.prevent="billableStatus = 'billable'"
+                class="mr-2 border-solid border-blue-700 leading-tight"
+                :class="billableStatus === 'billable' ? 'border-b text-blue-900' : 'text-gray-500'">
                 Billable
-            </button>
-            <button class="px-3 py-1 rounded" @click="billableStatus = 'not_billable'" :class="billableStatus === 'not_billable' ? 'bg-gray-200' : 'text-gray-500'">
+            </a>
+            <a href=""
+                @click.prevent="billableStatus = 'not_billable'"
+                class="border-solid border-blue-700 leading-tight"
+                :class="billableStatus === 'not_billable' ? 'border-b text-blue-900' : 'text-gray-500'">
                 Not Billable
-            </button>
+            </a>
         </div>
 
-        <div class="flex flex-wrap">
+        <div class="">
             
-            <table class="flex-1" :key="billableStatus">
+            <table class="" :key="billableStatus">
                 <thead>
                     <tr class="bg-indigo-100">
                         <td class="pl-1 sm:pr-2" colspan="4">
@@ -23,14 +29,17 @@
                     </tr>
                     <tr>
                         <th class="px-1 text-gray-500 font-light text-sm text-left"></th>
-                        <th class="px-1 text-gray-500 font-light text-sm text-right pr-6">
+                        <th class="px-1 text-gray-500 font-light text-sm text-right">
                             <span class="fa fa-bullseye mr-1"></span>
+                            <span> Target </span>
                         </th>
-                        <th class="px-1 text-gray-500 font-light text-sm text-right pr-6">
+                        <th class="px-1 text-gray-500 font-light text-sm text-right">
                             <pre>+/-</pre>
+                            <span> Remaining </span>
                         </th>
-                        <th class="px-1 text-gray-500 font-light text-sm text-right pr-6">
+                        <th class="px-1 text-gray-500 font-light text-sm text-right">
                             <span class="fa fa-stopwatch mr-1"></span>
+                            <span> Total </span>
                         </th>
                     </tr>
 
