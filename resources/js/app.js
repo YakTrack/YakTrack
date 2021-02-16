@@ -1,4 +1,4 @@
-import { InertiaApp } from '@inertiajs/inertia-vue'
+import { App, plugin } from '@inertiajs/inertia-vue'
 import PortalVue from 'portal-vue'
 import closeable from './directives/Closeable';
 import dateTime from './filters/DateTime.js';
@@ -19,7 +19,7 @@ Vue.mixin({
 })
 
 // Plugins
-Vue.use(InertiaApp)
+Vue.use(plugin)
 Vue.use(PortalVue)
 
 // Global filters
@@ -42,7 +42,7 @@ window.events = new Vue();
 let app = document.getElementById('app')
 
 new Vue({
-    render: h => h(InertiaApp, {
+    render: h => h(App, {
         props: {
             initialPage: JSON.parse(app.dataset.page),
             resolveComponent: name => import(`@/Pages/${name}`).then(module => module.default),

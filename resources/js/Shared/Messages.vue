@@ -23,16 +23,16 @@
             [
                 {
                     type: 'success',
-                    message: this.$page.flash.success,
+                    message: this.$page.props.flash.success,
                 },
                 {
                     type: 'error',
-                    message: this.$page.flash.error,
+                    message: this.$page.props.flash.error,
                 },
             ].filter(alert => alert.message)
             .forEach(alert => this.alerts.push(alert));
 
-            Object.keys(this.$page.errors).forEach(key => {
+            Object.keys(this.$page.props.errors).forEach(key => {
                 this.alerts.push({
                     type: 'error',
                     message: this.$page.errors[key].join("\n"),
