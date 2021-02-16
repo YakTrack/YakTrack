@@ -1,6 +1,6 @@
 <template>
     <duration
-        :duration-in-seconds="secondsElapsedSinceStartTime"
+        :duration-in-seconds="durationInSeconds"
         :color="textColor"
     ></duration>
 </template>
@@ -41,20 +41,20 @@
                 dateTime: DateTime,
                 createdAt: (new Date).getTime(),
                 now: (new Date).getTime(),
+                poller: null,
             }
         },
         computed: {
+            durationInSeconds() {
+                let offset = this.isRunning ? this.secondsElapsedSinceCreatedAt : 0;
+
+                return this.initialTime + offset * (this.countDown ? -1 : 1);
+            },
             endTime() {
                 return this.isRunning ? this.now : this.endedAt;
             },
-            secondsElapsedSinceStartTime() {
-                let secondsElapsedSinceLoaded = Math.floor((this.endTime - this.startedAt) / 1000);
-
-                if (this.countDown) {
-                    return this.initialTime - secondsElapsedSinceLoaded;
-                }
-
-                return this.initialTime + secondsElapsedSinceLoaded;
+            secondsElapsedSinceCreatedAt() {
+                return Math.floor((this.now - this.createdAt) / 1000);
             },
             isRunning() {
                 if (this.isPaused) {
@@ -85,8 +85,11 @@
                 return this.isRunning ? '' : 'font-base'
             },
         },
-        created() {
-            setInterval(() => this.$data.now = (new Date).getTime(), 1000);
-        }
+        mounted() {
+            this.poller = setInterval(() => this.$data.now = (new Date).getTime(), 1000);
+        },
+        destroyed() {
+            clearInterval(this.poller);  
+        },
     }
 </script>

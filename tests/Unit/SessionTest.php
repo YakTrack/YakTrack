@@ -90,6 +90,24 @@ class SessionTest extends BrowserKitTestCase
         );
     }
 
+    /** #@test */
+    public function the_where_on_day_this_week_scope_returns_sessions_which_started_on_the_expected_date()
+    {
+        $this->usingTestDisplayTimeZone();
+
+        Carbon::setTestNow('2020-11-12 09:40:00');
+
+        $session = Session::create(['started_at' => '2020-11-12 09:20:00']);
+
+        $this->assertTrue(
+            Session::whereOnDayThisWeek('thursday')
+                ->get()
+                ->contains(function ($foundSession) use ($session) {
+                    return $foundSession->id === $session->id;
+                })
+        );
+    }
+
     /** @test */
     public function duration_in_seconds_attribute_returns_expected_value()
     {
