@@ -1,20 +1,29 @@
 <template>
     <div class="bg-white rounded shadow">
-        <div class="text-center w-full bg-gray-200" colspan="4">
-            <h3 class="text-indigo-90 uppercase text-xl font-light"> This Week </h3>
+        <div class="text-center bg-gray-300" colspan="4">
+            <h3 class="text-indigo-90 uppercase text-xl font-medium"> This Week </h3>
         </div>
-        <div class="flex p-1">
-            <button class="px-3 py-1 rounded" @click="billableStatus = 'billable'" :class="billableStatus === 'billable' ? 'bg-gray-200' : 'text-gray-500'">
-                Billable
-            </button>
-            <button class="px-3 py-1 rounded" @click="billableStatus = 'not_billable'" :class="billableStatus === 'not_billable' ? 'bg-gray-200' : 'text-gray-500'">
-                Not Billable
-            </button>
+        <div class="px-1 py-2 text-lg flex">
+            <div class="mr-4">
+                <a href=""
+                    @click.prevent="billableStatus = 'billable'"
+                    class="border-solid border-blue-700 leading-tight"
+                    :class="billableStatus === 'billable' ? 'border-b text-indigo-800' : 'text-gray-500'">
+                    Billable
+                </a>
+            </div>
+            <div class="mr-4">
+                <a href=""
+                    @click.prevent="billableStatus = 'not_billable'"
+                    class="border-solid border-blue-700 leading-tight"
+                    :class="billableStatus === 'not_billable' ? 'border-b text-indigo-900' : 'text-gray-500'">
+                    Not Billable
+                </a>
+            </div>
         </div>
 
-        <div class="flex flex-wrap">
-            
-            <table class="flex-1" :key="billableStatus">
+        <div class="">
+            <table class="w-full" :key="billableStatus">
                 <thead>
                     <tr class="bg-indigo-100">
                         <td class="pl-1 sm:pr-2" colspan="4">
@@ -23,14 +32,17 @@
                     </tr>
                     <tr>
                         <th class="px-1 text-gray-500 font-light text-sm text-left"></th>
-                        <th class="px-1 text-gray-500 font-light text-sm text-right pr-6">
+                        <th class="pl-10 pr-3 sm:px-1 text-gray-500 font-light text-sm text-center sm:text-right">
                             <span class="fa fa-bullseye mr-1"></span>
+                            <span class="hidden sm:block"> Target </span>
                         </th>
-                        <th class="px-1 text-gray-500 font-light text-sm text-right pr-6">
+                        <th class="pl-10 pr-3 sm:px-1 text-gray-500 font-light text-sm text-center sm:text-right">
                             <pre>+/-</pre>
+                            <span class="hidden sm:block"> Remaining </span>
                         </th>
-                        <th class="px-1 text-gray-500 font-light text-sm text-right pr-6">
+                        <th class="pl-10 pr-3 sm:px-1 text-gray-500 font-light text-sm text-center sm:text-right">
                             <span class="fa fa-stopwatch mr-1"></span>
+                            <span class="hidden sm:block"> Total </span>
                         </th>
                     </tr>
 
@@ -87,19 +99,19 @@
 
                         <!-- Total Weekly Target -->
                         <th class="text-right text-sm sm:text-base p-0 bg-indigo-100">
-                            <duration :duration-in-seconds="thisWeek.billable.target"/>
+                            <duration :duration-in-seconds="thisWeek[billableStatus].target"/>
                         </th>
 
                         <!-- Total Remaining For Week -->
                         <th class="text-right text-sm sm:text-base p-0 bg-indigo-100">
-                            <timer v-if="currentlyWorking" :initial-time="totalSecondsRemainingForTargetsThisWeek" :count-down="true"></timer>
-                            <duration v-else :duration-in-seconds="totalSecondsRemainingForTargetsThisWeek"/>
+                            <timer v-if="currentlyWorking" :initial-time="thisWeek[billableStatus].target - thisWeek[billableStatus].actual" :count-down="true"></timer>
+                            <duration v-else :duration-in-seconds="thisWeek[billableStatus].target - thisWeek[billableStatus].actual"/>
                         </th>
 
                         <!-- Total Worked For Week -->
                         <th class="text-right text-sm sm:text-base p-0 pr-1 sm:pr-2 bg-indigo-100">
-                            <timer v-if="currentlyWorking" :initial-time="thisWeek.billable.actual" color="indigo"></timer>
-                            <strong v-else class="font-mono"> {{ thisWeeksTotal }} </strong>
+                            <timer v-if="currentlyWorking" :initial-time="thisWeek[billableStatus].actual" color="indigo"></timer>
+                            <strong v-else class="font-mono"> {{ thisWeek[billableStatus].actual | durationForHumans }} </strong>
                         </th>
                     </tr>
                 </tfoot>
