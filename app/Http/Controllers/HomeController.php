@@ -51,8 +51,8 @@ class HomeController extends Controller
                 return $client->sessionsThisWeek->count() > 0;
             })->map(function ($client) {
                 return [
-                    'id' => $client->id,
-                    'name' => $client->name,
+                    'id'        => $client->id,
+                    'name'      => $client->name,
                     'this_week' => [
                         'billable' => [
                             'actual' => $client->sessionsThisWeek->whereBillable()->totalDurationInSeconds(),
@@ -65,8 +65,8 @@ class HomeController extends Controller
                     ],
                     'open_sprints' => $client->openSprints->map(function ($sprint) {
                         return [
-                            'id' => $sprint->id,
-                            'name' => $sprint->name,
+                            'id'        => $sprint->id,
+                            'name'      => $sprint->name,
                             'this_week' => [
                                 'billable' => [
                                     'actual' => $sprint->sessions->whereBillable()->whereThisWeek()->totalDurationInSeconds(),
@@ -76,7 +76,7 @@ class HomeController extends Controller
                                     'actual' => $sprint->sessions->whereNotBillable()->whereThisWeek()->totalDurationInSeconds(),
                                     'target' => 0,
                                 ],
-                            ]
+                            ],
                         ];
                     }),
                 ];
@@ -93,28 +93,27 @@ class HomeController extends Controller
                     'target' => 0,
                 ],
                 'days' => collect($this->dateTimeFormatter::DAYS_OF_WEEK)->mapWithKeys(function ($day) use ($currentSession) {
-
                     $date = $this->dateTimeFormatter->dayThisWeek(strtolower($day));
 
                     return [
                         ($day = strtolower($day)) => [
-                            'date' => $date->format('Y-m-d'),
+                            'date'     => $date->format('Y-m-d'),
                             'is_today' => $date->isToday(),
                             'billable' => [
-                                'actual' => Session::whereOnDayThisWeek($day)->whereBillable()->get()->totalDurationInSeconds(),
-                                'target' => 0,
+                                'actual'    => Session::whereOnDayThisWeek($day)->whereBillable()->get()->totalDurationInSeconds(),
+                                'target'    => 0,
                                 'is_active' => $currentSession && $currentSession->is_billable && $date->isToday(),
                             ],
                             'not_billable' => [
-                                'actual' => Session::whereOnDayThisWeek($day)->whereNotBillable()->get()->totalDurationInSeconds(),
-                                'target' => 0,
+                                'actual'    => Session::whereOnDayThisWeek($day)->whereNotBillable()->get()->totalDurationInSeconds(),
+                                'target'    => 0,
                                 'is_active' => $currentSession && !$currentSession->is_billable && $date->isToday(),
                             ],
                         ],
                     ];
                 })->toArray(),
             ],
-            'thisWeeksTotal'        => ($thisWeeksSessions = Session::thisWeek()->get())->totalDurationForHumans(),
+            'thisWeeksTotal'                           => ($thisWeeksSessions = Session::thisWeek()->get())->totalDurationForHumans(),
             'totalSecondsRemainingForTargetsThisWeek'  => Target::whereForThisWeek()->get()->totalValueInSeconds() - $thisWeeksSessions->totalDurationInSeconds(),
             'clients'                                  => $noClientSessions->count() > 0 ? $clients->push($noClient) : $clients,
             'currentlyWorking'                         => $currentlyWorking = $this->sessions->currentlyWorking(),
