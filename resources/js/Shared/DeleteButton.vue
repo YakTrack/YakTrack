@@ -3,10 +3,11 @@
         <inertia-link
             :href="url"
             method="delete"
-            class="btn btn-red"
             v-if="confirmIsActive"
         >
-            Delete
+            <button class="btn btn-red">
+                Delete
+            </button>
         </inertia-link>
         <button class="btn btn-default" v-if="confirmIsActive" @click="toggleConfirm()">
             Cancel

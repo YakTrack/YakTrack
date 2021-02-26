@@ -21,7 +21,27 @@ class ShowProjectTest extends TestCase
 
         $response->assertSuccessful();
 
-        $response->assertSee($project->name);
+        // escape the apostrophe in the same manner as blade is
+        $response->assertSee(e($project->name));
+
+        $response->assertSee($project->description);
+        $response->assertSee($project->client->name);
+    }
+
+    /** @test */
+    public function a_logged_in_user_can_view_details_of_a_project_with_an_apostrophe_in_the_name()
+    {
+        $project = factory(Project::class)->create(['name' => 'Steve\'s Test Project']);
+
+        $this->actingAsUser();
+
+        $response = $this->get(route('project.show', ['project' => $project]));
+
+        $response->assertSuccessful();
+
+        // escape the apostrophe in the same manner as blade is
+        $response->assertSee(e($project->name));
+
         $response->assertSee($project->description);
         $response->assertSee($project->client->name);
     }

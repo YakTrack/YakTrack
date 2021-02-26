@@ -6,7 +6,7 @@
                 v-for="(menuItem, index) in menuItems"
                 :key="index"
             >
-                <li class="lg:mb-2 hover:bg-blue-400 px-4 py-1 rounded" :class="menuItem.active ? 'bg-grey-300' : ''">
+                <li class="lg:mb-2 hover:bg-blue-400 px-6 py-1 rounded" :class="menuItem.active ? 'bg-grey-300' : ''">
                     <inertia-link
                         class="no-underline text-gray-900"
                         :href="route(menuItem.route)"

@@ -163,5 +163,8 @@
                 billableStatus: 'billable',
             }
         },
+        mounted() {
+          document.title = 'YakTrack'
+        },
     }
 </script>

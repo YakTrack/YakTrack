@@ -4,8 +4,8 @@ namespace Tests\Feature\DashboardTest;
 
 use App\Models\Client;
 use App\Models\Project;
-use App\Models\Task;
 use App\Models\Session;
+use App\Models\Task;
 use App\Models\Sprint;
 use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
@@ -43,7 +43,7 @@ class DashboardTest extends TestCase
             'task_id'    => $task->id,
             'sprint_id' => $clientZeroSprint->id,
             'started_at' => '2018-01-01 13:00:00',
-            'ended_at' => null,
+            'ended_at'   => null,
         ]);
 
         Carbon::setTestNow(Carbon::parse('2018-01-02'));

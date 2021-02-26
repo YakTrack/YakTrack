@@ -10,6 +10,12 @@
             ></breadcrumbs>
         </template>
         <template slot="title"> {{ sprint.name }} </template>
+        <template slot="top-right-toolbar">
+            <button @click="createInvoice" class="btn btn-blue">
+                <i class="fa fa-plus text-blue-100 mr-2"></i>
+                Create Invoice
+            </button>
+        </template>
         <div class="card">
             <div>
                 <h2 class="text-gray-700"> {{ sprint.name }} </h2>
@@ -37,7 +43,7 @@
                     <th class="text-gray-500"> Task </th>
                     <th class="text-gray-500"> Total Time </th>
                 </tr>
-                <tr v-for="task in tasks">
+                <tr v-for="task in tasks" :key="task.id">
                     <td class="p-2 text-gray-600"><span v-if="task.project"> {{ task.project.name }} </span></td>
                     <td class="p-2 text-gray-600"> {{ task.name }} </td>
                     <td class="p-2 text-gray-600"> {{ task.totalDurationInSprintForHumans }} </td>
@@ -60,6 +66,11 @@
         components: {
             breadcrumbs: breadcrumbs,
             layout: layout,
+        },
+        methods: {
+            createInvoice() {
+                this.$inertia.post(route('sprint.invoice.store', this.sprint.id));
+            }
         },
     }
 </script>

@@ -116,11 +116,11 @@ class HomeController extends Controller
             ],
             'thisWeeksTotal'        => ($thisWeeksSessions = Session::thisWeek()->get())->totalDurationForHumans(),
             'totalSecondsRemainingForTargetsThisWeek'  => Target::whereForThisWeek()->get()->totalValueInSeconds() - $thisWeeksSessions->totalDurationInSeconds(),
-            'clients'               => $noClientSessions->count() > 0 ? $clients->push($noClient) : $clients,
-            'currentlyWorking'      => $currentlyWorking = $this->sessions->currentlyWorking(),
-            'currentSession'        => $currentSession = $this->sessions->currentSession(),
-            'totalSecondsThisWeek'  => $thisWeeksSessions->totalDurationInSeconds(),
-            'currentClientName'     => $currentlyWorking ? $currentSession->getClient()->name ?? 'No Client' : null,
+            'clients'                                  => $noClientSessions->count() > 0 ? $clients->push($noClient) : $clients,
+            'currentlyWorking'                         => $currentlyWorking = $this->sessions->currentlyWorking(),
+            'currentSession'                           => $currentSession = $this->sessions->currentSession(),
+            'totalSecondsThisWeek'                     => $thisWeeksSessions->totalDurationInSeconds(),
+            'currentClientName'                        => $currentlyWorking ? $currentSession->getClient()->name ?? 'No Client' : null,
         ]);
     }
 }

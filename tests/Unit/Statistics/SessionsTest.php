@@ -59,8 +59,8 @@ class SessionsTest extends TestCase
         ]);
 
         $target = factory(Target::class)->states('for_date', 'in_hours')->create([
-            'starts_at' => '2018-09-25 00:00:00',
-            'value' => 8,
+            'starts_at'     => '2018-09-25 00:00:00',
+            'value'         => 8,
             'billable_only' => 1,
         ]);
 

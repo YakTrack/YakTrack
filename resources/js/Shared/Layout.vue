@@ -48,7 +48,7 @@
         },
         computed: {
             hasTitleOrToolbar() {
-                return !!(this.$slots['footer'] || this.$slots['top-right-toolbar']);
+                return !!(this.$slots['title'] || this.$slots['top-right-toolbar']);
             }
         }
     }
