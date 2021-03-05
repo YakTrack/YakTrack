@@ -9,6 +9,7 @@ use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use App\Models\SessionCategory;
 
 class EditSessionTest extends TestCase
 {
@@ -61,32 +62,37 @@ class EditSessionTest extends TestCase
         $newTask = factory(Task::class)->create();
         $newInvoice = factory(Invoice::class)->create();
         $newSprint = factory(Sprint::class)->create();
+        $sessionCategory = factory(SessionCategory::class)->create();
 
         $this->actingAsUser();
 
         $response = $this->patch(route('session.update', ['session' => $session]), [
             // Started at and ended at times ae submitted in display timezone
-            'started_at' => '2018-01-01 12:00:00',
+            'started_at'            => '2018-01-01 12:00:00',
             // Started at and ended at times are submitted in display timezone
-            'ended_at'   => '2018-01-01 13:00:00',
-            'task_id'    => $newTask->id,
-            'invoice_id' => $newInvoice->id,
-            'sprint_id'  => $newSprint->id,
+            'ended_at'              => '2018-01-01 13:00:00',
+            'task_id'               => $newTask->id,
+            'invoice_id'            => $newInvoice->id,
+            'sprint_id'             => $newSprint->id,
+            'session_category_id'   => $sessionCategory->id,
+            'comment'               => $comment = str_random(10),
         ]);
 
         $response->assertRedirect(route('session.index'));
 
         $this->assertDatabaseHas('sessions', [
-            'id'         => $session->id,
+            'id'                    => $session->id,
             // Australia/Sydney offset is UTC+11 in January, meaning that the corresponding UTC time for 12:00pm in display timezone
             // will be 1:00am on the same date
-            'started_at' => '2018-01-01 01:00:00',
+            'started_at'            => '2018-01-01 01:00:00',
             // Australia/Sydney offset is UTC+11 in January, meaning that the corresponding UTC time for 1:00pm in display timezone
             // will be 2:00am on the same date
-            'ended_at'   => '2018-01-01 02:00:00',
-            'task_id'    => $newTask->id,
-            'invoice_id' => $newInvoice->id,
-            'sprint_id'  => $newSprint->id,
+            'ended_at'              => '2018-01-01 02:00:00',
+            'task_id'               => $newTask->id,
+            'invoice_id'            => $newInvoice->id,
+            'sprint_id'             => $newSprint->id,
+            'session_category_id'   => $sessionCategory->id,
+            'comment'               => $comment,
         ]);
     }
 
