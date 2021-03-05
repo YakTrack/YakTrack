@@ -19,6 +19,7 @@ class DashboardTest extends TestCase
     public function a_user_can_view_the_dashboard()
     {
         $this->withoutExceptionHandling();
+        $this->usingTestDisplayTimeZone();
 
         $client = factory(Client::class)->create();
         $project = factory(Project::class)->create([
