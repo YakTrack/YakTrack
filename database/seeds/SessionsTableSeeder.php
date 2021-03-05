@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Session;
+use App\Models\SessionCategory;
 use Illuminate\Database\Seeder;
 
 class SessionsTableSeeder extends Seeder
@@ -13,5 +14,6 @@ class SessionsTableSeeder extends Seeder
     public function run()
     {
         factory(Session::class, 100)->states('classified')->create();
+        factory(SessionCategory::class, 3)->create();
     }
 }

@@ -32,6 +32,17 @@
                 <invoice-select :invoices="invoices" :invoice="form.invoice_id" :on-change="selectInvoice"></invoice-select>
             </div>
             <div class="form-group">
+                <label for="invoice_id"> Session Category </label>
+                <session-category-select
+                    :session-categories="sessionCategories"
+                    v-model="form.session_category_id"
+                ></session-category-select>
+            </div>
+            <div class="form-group">
+                <label for="invoice_id"> Comment </label>
+                <input type="text" name="comment" v-model="form.comment" class="form-control" placeholder=""/>
+			</div>
+			<div class="form-group">
                 <label for="is_billable"> Is Billable </label>
                 <input type="checkbox" class="form-checkbox" name="is_billable" v-model="form.is_billable"/>
             </div>
@@ -54,6 +65,7 @@
     import taskSelect from '@/Shared/TaskSelect';
     import sprintSelect from '@/Shared/SprintSelect';
     import invoiceSelect from '@/Shared/InvoiceSelect';
+    import sessionCategorySelect from '@/Shared/SessionCategorySelect';
     import dateTime from '@/filters/DateTime';
 
     export default {
@@ -62,6 +74,7 @@
             'tasks',
             'invoices',
             'sprints', 
+            'sessionCategories',
         ],
         components: {
             breadcrumbs: breadcrumbs,
@@ -69,6 +82,7 @@
             taskSelect: taskSelect,
             sprintSelect: sprintSelect,
             invoiceSelect: invoiceSelect,
+            sessionCategorySelect: sessionCategorySelect,
         },
         data() {
             return {
@@ -78,6 +92,8 @@
                     task_id: this.session.task_id,
                     sprint_id: this.session.sprint_id,
                     invoice_id: this.session.invoice_id,
+                    comment: this.session.comment,
+                    session_category_id: this.session.session_category_id,
                 } : {}
             };
         },
@@ -93,7 +109,7 @@
             },
             submit() {
                 this.$inertia[this.isCreateForm ? 'post' : 'patch'](
-                    this.isCreateForm ? route('session.store') : route('session.update', this.session.id),
+                    this.isCreateForm ? route('session.store') : route('session.update', {session: this.session.id}),
                     this.form
                 );
             }
