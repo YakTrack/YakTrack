@@ -4,12 +4,12 @@ namespace Tests\Feature\Session;
 
 use App\Models\Invoice;
 use App\Models\Session;
+use App\Models\SessionCategory;
 use App\Models\Sprint;
 use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use App\Models\SessionCategory;
 
 class EditSessionTest extends TestCase
 {
