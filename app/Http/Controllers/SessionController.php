@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Invoice;
 use App\Models\Queries\IndexSessionQuery;
 use App\Models\Session;
+use App\Models\SessionCategory;
 use App\Models\Sprint;
 use App\Models\Task;
 use App\Models\ThirdPartyApplication;
@@ -59,9 +60,10 @@ class SessionController extends Controller
     public function create()
     {
         return Inertia::render('Session/Edit', [
-            'invoices' => Invoice::all(),
-            'sprints'  => Sprint::all(),
-            'tasks'    => Task::all(),
+            'invoices'          => Invoice::all(),
+            'sprints'           => Sprint::all(),
+            'sessionCategories' => SessionCategory::all(),
+            'tasks'             => Task::all(),
         ]);
     }
 
@@ -83,11 +85,13 @@ class SessionController extends Controller
         }
 
         $session = Session::create([
-            'started_at' => $this->dateTimeFormatter->utcFormat(request('started_at')),
-            'ended_at'   => request('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
-            'task_id'    => request('task_id') ?: null,
-            'invoice_id' => request('invoice_id') ?: null,
-            'sprint_id'  => request('sprint_id') ?: null,
+            'started_at'            => $this->dateTimeFormatter->utcFormat(request('started_at')),
+            'ended_at'              => request('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
+            'task_id'               => request('task_id') ?: null,
+            'invoice_id'            => request('invoice_id') ?: null,
+            'sprint_id'             => request('sprint_id') ?: null,
+            'session_category_id'   => request('session_category_id') ?: null,
+            'comment'               => request('comment') ?: null,
         ]);
 
         return redirect()
@@ -98,21 +102,24 @@ class SessionController extends Controller
     public function edit(Session $session)
     {
         return Inertia::render('Session/Edit', [
-            'session'  => $session,
-            'tasks'    => Task::orderBy('id', 'desc')->get(),
-            'invoices' => Invoice::orderBy('id', 'desc')->get(),
-            'sprints'  => Sprint::with('project.client')->orderBy('id', 'desc')->get(),
+            'session'           => $session,
+            'tasks'             => Task::orderBy('id', 'desc')->get(),
+            'invoices'          => Invoice::orderBy('id', 'desc')->get(),
+            'sprints'           => Sprint::with('project.client')->orderBy('id', 'desc')->get(),
+            'sessionCategories' => SessionCategory::all(),
         ]);
     }
 
     public function update(Session $session)
     {
         $session->update([
-            'started_at' => request('started_at') ? $this->dateTimeFormatter->utcFormat(request('started_at')) : null,
-            'ended_at'   => request('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
-            'task_id'    => request('task_id') ?: null,
-            'invoice_id' => request('invoice_id') ?: null,
-            'sprint_id'  => request('sprint_id') ?: null,
+            'started_at'            => request('started_at') ? $this->dateTimeFormatter->utcFormat(request('started_at')) : null,
+            'ended_at'              => request('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
+            'task_id'               => request('task_id') ?: null,
+            'invoice_id'            => request('invoice_id') ?: null,
+            'sprint_id'             => request('sprint_id') ?: null,
+            'session_category_id'   => request('session_category_id') ?: null,
+            'comment'               => request('comment') ?: null,
         ]);
 
         return redirect()
