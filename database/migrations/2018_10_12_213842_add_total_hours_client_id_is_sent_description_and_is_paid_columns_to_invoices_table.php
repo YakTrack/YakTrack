@@ -18,7 +18,7 @@ class AddTotalHoursClientIdIsSentDescriptionAndIsPaidColumnsToInvoicesTable exte
             $table->float('total_hours')->nullable();
             $table->unsignedInteger('client_id')->nullable();
             $table->foreign('client_id')->references('id')->on('clients');
-            $table->text('description')->default('');
+            $table->text('description')->nullable();
             $table->boolean('is_paid')->default(false);
             $table->boolean('is_sent')->default(false);
         });

@@ -93,11 +93,11 @@ class SprintController extends Controller
             'project_id' => 'exists:projects,id',
         ]);
 
-        $sprint->update($request->only([
-            'name',
-            'project_id',
-            'is_open',
-        ]) + ['is_open' => $request->is_open == 'is_open']);
+        $sprint->update([
+            'name' => $request->name,
+            'project_id' => $request->project_id,
+            'is_open' => $request->is_open == 'is_open' ? 1 : 0
+        ]);
 
         return redirect()
             ->route('sprint.index')

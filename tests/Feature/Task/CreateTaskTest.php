@@ -18,7 +18,7 @@ class CreateTaskTest extends TestCase
 
         $project = factory(Project::class)->create();
         $parentTask = factory(Task::class)->create([
-            'parent_id' => $project->id,
+            'project_id' => $project->id,
         ]);
 
         $response = $this->get(route('task.create'));
@@ -38,7 +38,7 @@ class CreateTaskTest extends TestCase
 
         $project = factory(Project::class)->create();
         $parentTask = factory(Task::class)->create([
-            'parent_id' => $project->id,
+            'project_id' => $project->id,
         ]);
 
         $response = $this->post(route('task.store'), [
@@ -67,7 +67,7 @@ class CreateTaskTest extends TestCase
 
         $project = factory(Project::class)->create();
         $parentTask = factory(Task::class)->create([
-            'parent_id' => $project->id,
+            'project_id' => $project->id,
         ]);
 
         $response = $this->post(route('task.store'), [
