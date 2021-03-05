@@ -50,7 +50,7 @@ class EditSprintTest extends TestCase
             array_merge(
                 $newSprintDetails,
                 [
-                    'id' => $sprint->id,
+                    'id'      => $sprint->id,
                     'is_open' => 1,
                 ],
             )
