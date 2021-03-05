@@ -92,7 +92,7 @@ class SessionController extends Controller
             'sprint_id'             => request('sprint_id') ?: null,
             'session_category_id'   => request('session_category_id') ?: null,
             'comment'               => request('comment') ?: null,
-			'is_billable'   		=> request('is_billable', 1),
+            'is_billable'   		      => request('is_billable', 1),
         ]);
 
         return redirect()
@@ -121,7 +121,7 @@ class SessionController extends Controller
             'sprint_id'             => request('sprint_id') ?: null,
             'session_category_id'   => request('session_category_id') ?: null,
             'comment'               => request('comment') ?: null,
-			'is_billable' => request('is_billable') ?: 0,
+            'is_billable'           => request('is_billable') ?: 0,
         ]);
 
         return redirect()
