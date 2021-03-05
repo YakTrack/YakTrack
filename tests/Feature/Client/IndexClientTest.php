@@ -21,6 +21,6 @@ class IndexClientTest extends TestCase
 
         $response->assertSuccessful();
 
-        $response->assertSee($client->name);
+        $response->assertSee(e($client->name));
     }
 }

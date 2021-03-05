@@ -25,7 +25,7 @@ class ShowProjectTest extends TestCase
         $response->assertSee(e($project->name));
 
         $response->assertSee($project->description);
-        $response->assertSee($project->client->name);
+        $response->assertSee(e($project->client->name));
     }
 
     /** @test */
@@ -43,6 +43,6 @@ class ShowProjectTest extends TestCase
         $response->assertSee(e($project->name));
 
         $response->assertSee($project->description);
-        $response->assertSee($project->client->name);
+        $response->assertSee(e($project->client->name));
     }
 }
