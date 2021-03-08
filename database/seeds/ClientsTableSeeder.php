@@ -11,6 +11,14 @@ class ClientsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Models\Client::class, 3)->states('with_invoices')->create();
+        $acme = factory(App\Models\Client::class)->states('with_invoices')->create([
+            'name' => 'Acme Inc.',
+        ]);
+        $bertrandCarroll = factory(App\Models\Client::class)->states('with_invoices')->create([
+            'name' => 'Bertrand Carroll',
+        ]);
+        $edesapaAndSongs = factory(App\Models\Client::class)->states('with_invoices')->create([
+            'name' => 'Edesapa and Sons',
+        ]);
     }
 }

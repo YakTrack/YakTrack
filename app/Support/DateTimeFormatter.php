@@ -133,6 +133,11 @@ class DateTimeFormatter
         return collect(self::DAYS_OF_WEEK);
     }
 
+    public function dayThisWeek($day)
+    {
+        return $this->daysThisWeek()[$this->daysOfWeek()->search(ucfirst(strtolower($day)))];
+    }
+
     public function daysThisWeek()
     {
         $startOfWeek = Carbon::now()->timezone($this->timezone())->startOfWeek();

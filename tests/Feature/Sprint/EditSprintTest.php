@@ -48,8 +48,11 @@ class EditSprintTest extends TestCase
         $this->assertDatabaseHas(
             'sprints',
             array_merge(
-                ['id' => $sprint->id],
-                $newSprintDetails
+                $newSprintDetails,
+                [
+                    'id'      => $sprint->id,
+                    'is_open' => 1,
+                ],
             )
         );
     }

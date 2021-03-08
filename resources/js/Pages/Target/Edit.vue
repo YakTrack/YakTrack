@@ -17,7 +17,7 @@
             </div>
             <div lass="form-group">
                 <label for="due_date"> Target Value (hours) </label>
-                <input type="number" name="due_date" v-model="form.value" class="form-control" required/>
+                <input type="number" name="due_date" v-model="form.value" class="form-control" step="0.25" required/>
             </div>
             <div class="flex mt-4">
                 <div class="flex-1 mt-2">

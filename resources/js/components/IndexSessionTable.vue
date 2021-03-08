@@ -87,6 +87,7 @@
                                             {{ session.invoice_number }}
                                         </inertia-link>
                                     </div>
+                                    <i v-if="session.is_billable" class="fas fa-money-bill-alt text-gray-400 mr-2"></i>
                                 </div>
                             </div>
                         </td>
@@ -96,7 +97,7 @@
                             <timestamp class="" :time="session.ended_at"></timestamp>
                         </td>
                         <td class="text-right">
-                            <timer :started-at="new Date(session.started_at).getTime()" :ended-at="session.isRunning ? null : new Date(session.ended_at)"></timer>
+                            <timer :initial-time="session.durationInSeconds" :is-paused="!session.isRunning"></timer>
                         </td>
                         <td class="text-right inline-flex pr-4 pb-4 float-right" :class="sessionIndex || 'pt-4' ">
                             <div class="btn-group float-right">

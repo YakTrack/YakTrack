@@ -172,9 +172,17 @@ class Session extends Model
         return $this->isRunning();
     }
 
-    public function scopeRunning($query)
+    public function scopeWhereIsRunning($query)
     {
         return $query->whereNull('ended_at');
+    }
+
+    /**
+     * @deprecated in favour of scopeWhereIsRunning
+     */
+    public function scopeRunning($query)
+    {
+        return $this->scopeWhereIsRunning($query);
     }
 
     public function scopeToday($query)
@@ -182,16 +190,43 @@ class Session extends Model
         return $query->onDate(app(DateTimeFormatter::class)->today());
     }
 
-    public function scopeOnDate($query, $date)
+    public function scopeWhereOnDate($query, $date)
     {
         return $query->where('started_at', '>=', (new DateTimeFormatter())->utcFormat($date))
             ->where('started_at', '<', (new DateTimeFormatter())->utcFormat((clone $date)->addDays(1)));
     }
 
-    public function scopeThisWeek($query)
+    /**
+     * @deprecated in favour of whereOnDate
+     */
+    public function scopeOnDate($query, $date)
+    {
+        return $this->scopeWhereOnDate($query, $date);
+    }
+
+    public function scopeWhereThisWeek($query)
     {
         return $query->where('started_at', '>=', (new DateTimeFormatter())->startOfWeek())
             ->where('started_at', '<', (new DateTimeFormatter())->endOfWeek());
+    }
+
+    public function scopeWhereOnDayThisWeek($query, $day)
+    {
+        $startOfDay = app(DateTimeFormatter::class)->dayThisWeek($day)->startOfDay()->utc()->toDateTimeString();
+        $endOfDay = app(DateTimeFormatter::class)->dayThisWeek($day)->endOfDay()->utc()->toDateTimeString();
+
+        return $query->where('started_at', '>=', $startOfDay)
+            ->where('started_at', '<', $endOfDay);
+    }
+
+    /**
+     * Deprecated in favour of whereThisWeek.
+     *
+     * @deprecated
+     */
+    public function scopeThisWeek($query)
+    {
+        return $this->scopeWhereThisWeek($query);
     }
 
     public function scopeFinished($query)

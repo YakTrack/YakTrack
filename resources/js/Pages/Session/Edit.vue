@@ -41,6 +41,10 @@
             <div class="form-group">
                 <label for="invoice_id"> Comment </label>
                 <input type="text" name="comment" v-model="form.comment" class="form-control" placeholder=""/>
+			</div>
+			<div class="form-group">
+                <label for="is_billable"> Is Billable </label>
+                <input type="checkbox" class="form-checkbox" name="is_billable" v-model="form.is_billable"/>
             </div>
             <div class="flex mt-4">
                 <div class="flex-1 mt-2">

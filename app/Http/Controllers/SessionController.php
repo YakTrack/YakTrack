@@ -92,6 +92,7 @@ class SessionController extends Controller
             'sprint_id'             => request('sprint_id') ?: null,
             'session_category_id'   => request('session_category_id') ?: null,
             'comment'               => request('comment') ?: null,
+            'is_billable'   		      => request('is_billable', 1),
         ]);
 
         return redirect()
@@ -103,7 +104,7 @@ class SessionController extends Controller
     {
         return Inertia::render('Session/Edit', [
             'session'           => $session,
-            'tasks'             => Task::orderBy('id', 'desc')->get(),
+            'tasks'             => Task::with('project.client')->orderBy('id', 'desc')->get(),
             'invoices'          => Invoice::orderBy('id', 'desc')->get(),
             'sprints'           => Sprint::with('project.client')->orderBy('id', 'desc')->get(),
             'sessionCategories' => SessionCategory::all(),
@@ -120,6 +121,7 @@ class SessionController extends Controller
             'sprint_id'             => request('sprint_id') ?: null,
             'session_category_id'   => request('session_category_id') ?: null,
             'comment'               => request('comment') ?: null,
+            'is_billable'           => request('is_billable') ?: 0,
         ]);
 
         return redirect()
@@ -133,7 +135,10 @@ class SessionController extends Controller
             $session->stop();
         });
 
-        Session::create(['started_at' => Carbon::now()]);
+        Session::create([
+            'started_at'  => Carbon::now(),
+            'is_billable' => 1,
+        ]);
 
         return redirect(route('session.index'));
     }
