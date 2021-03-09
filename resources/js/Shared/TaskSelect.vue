@@ -9,8 +9,8 @@
             <template slot="option" slot-scope="props">
                 <div class="option__desc">
                     <span class="option__title">{{ props.option.name }}</span>
-                    <span class="option__title text-sm pl-2 font-light">{{ props.option.project ? props.option.project.name : '' }}</span>
-                    <span class="option__title text-sm pl-2 font-thin">{{ props.option.project.client ? props.option.project.client.name : '' }}</span>
+                    <span class="option__title text-sm pl-2 font-light" v-if="props.option.project">{{ props.option.project ? props.option.project.name : '' }}</span>
+                    <span class="option__title text-sm pl-2 font-thin" v-if="props.option.project">{{ props.option.project.client ? props.option.project.client.name : '' }}</span>
                 </div>
             </template>
         </multi-select>
