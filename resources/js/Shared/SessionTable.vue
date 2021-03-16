@@ -22,7 +22,7 @@
             </thead>
             <tbody>
                 <tr
-                    v-for="session in sessions"
+                    v-for="session in sessions" :key="session.id"
                 >
                     <td class=""> <input type="checkbox" class="form-checkbox"/></td>
                     <td class="min-w-1 text-right font-mono">
