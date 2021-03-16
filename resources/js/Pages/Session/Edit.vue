@@ -95,6 +95,7 @@
                     sprint_id: this.session.sprint_id,
                     invoice_id: this.session.invoice_id,
                     comment: this.session.comment,
+                    is_billable: this.session.is_billable,
                     session_category_id: this.session.session_category_id,
                 } : {}
             };
