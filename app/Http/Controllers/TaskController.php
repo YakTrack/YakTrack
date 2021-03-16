@@ -57,7 +57,7 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         return Inertia::render('Task/Show', [
-            'task'                   => $task->load('project.client', 'sessions'),
+            'task'                   => $task->load('project.client', 'sessions.sessionCategory'),
             'totalDurationForHumans' => $task->sessions->totalDurationForHumans(),
             'thirdPartyApplications' => ThirdPartyApplication::all(),
         ]);

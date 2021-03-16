@@ -9,6 +9,7 @@
                     <th class="text-right pr-0"> Total Time </th>
                     <th v-if="!hideLinkedToColumn"> Linked To </th>
                     <th v-if="!hideInvoiceColumn"> Invoice </th>
+                    <th> Session Category </th>
                     <th class="text-right pr-0">
                         <dropdown :options="[
                             {
@@ -41,6 +42,10 @@
                     </td>
                     <td v-if="!hideInvoiceColumn">
                         <a v-if="session.invoice" class="no-underline text-xs" :href="route('invoice.show', session.invoice.id)"> {{ session.invoice.number }} </a>
+                    </td>
+                    <td class="px-6 py-3">
+                        <div>{{ session.session_category ? session.session_category.name : '' }}</div>
+                        <div class="text-sm font-light">{{ session.comment }}</div>
                     </td>
                     <td class="text-right inline-flex pb-2 @if($key == 0) pt-2 @endif float-right">
                         <div class="btn-group float-right">

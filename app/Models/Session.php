@@ -44,6 +44,11 @@ class Session extends Model
         return $this->belongsTo(Task::class);
     }
 
+    public function sessionCategory()
+    {
+        return $this->belongsTo(SessionCategory::class);
+    }
+
     public function thirdPartyApplicationSessions()
     {
         return $this->hasMany(ThirdPartyApplicationSession::class);
