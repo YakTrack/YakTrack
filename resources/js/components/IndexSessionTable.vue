@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="p-4 bg-white rounded shadow" v-if="searchParams.get('show-filters') == 'true'">
+        <div class="p-1 sm:p-4 bg-white rounded shadow" v-if="searchParams.get('show-filters') == 'true'">
             <h3> Filters </h3>
             <div class="flex-1 mt-2">
                 <div class="flex">
@@ -32,7 +32,7 @@
             <table class="table w-full table-hover bg-white">
                 <thead>
                     <tr>
-                        <th class="pl-4 pb-4">
+                        <th class="pl-1 sm:pl-4 pb-4">
                             <input v-model="selectAll" type="checkbox" class="form-checkbox" />
                         </th>
                         <th class="">  </th>
@@ -50,16 +50,16 @@
                         <td colspan="6"></td>
                     </tr>
                     <tr v-for="(session, sessionIndex) in day.sessions" :key="session.id" :class="session.rowClasses">
-                        <td class="pl-4">
+                        <td class="pl-1 sm:pl-4">
                             <input type="checkbox" class="form-checkbox " v-model="session.isSelected" :value="session.id"/>
                         </td>
-                        <td class="pl-4">
+                        <td class="pl-1 sm:pl-4">
                             <div class="overflow-auto h-full whitespace-no-wrap">
                                 <div v-if="session.task_id">
-                                    <inertia-link  class="no-underline hover:opacity-50 opacity-100" :href="route('task.show', session.task_id)">
+                                    <inertia-link  class="no-underline hover:opacity-50 opacity-100 max-w-xs inline-block truncate" :href="route('task.show', session.task_id)">
                                         <i class="fas fa-check-square text-gray-400 mr-2"></i>
-                                        <span class="font-semibold"> {{ taskPrefix(session.task_name) }} </span>
-                                        <span class="text-base"> {{ taskSuffix(session.task_name) }} </span>
+                                        <span class="text-sm sm:text-base font-semibold"> {{ taskPrefix(session.task_name) }} </span>
+                                        <span class="text-sm sm:text-base"> {{ taskSuffix(session.task_name) }} </span>
                                     </inertia-link>
                                 </div>
                                 <div class="flex items-center text-gray-500">
@@ -217,6 +217,16 @@
                         event: 'sessions.link-to-invoice',
                         disabled: () => this.selectedSessions.length > 0,
                     },
+                    {
+                        name: 'Mark as billable',
+                        event: 'sessions.mark-as-billable',
+                        disabled: () => this.selectedSessions.length > 0,
+                    },
+                    {
+                        name: 'Mark as non-billable',
+                        event: 'sessions.mark-as-non-billable',
+                        disabled: () => this.selectedSessions.length > 0,
+                    },
                 ],
                 dateFormat: DATE_FORMAT,
                 filters: {
@@ -326,6 +336,9 @@
                     preserveScroll: true,
                 });
             });
+
+            events.$on('sessions.mark-as-billable', () => this.updateSelectedSessions({ is_billable: 1 }))
+            events.$on('sessions.mark-as-non-billable', () => this.updateSelectedSessions({ is_billable: 0 }))
         },
         methods: {
             loadFilterPreset(presetKey) {
@@ -343,6 +356,18 @@
             },
             stopSession(session) {
                 this.$inertia.post(route('session.stop', session.id));
+            },
+            updateSelectedSessions(payload) {
+               this.$inertia.patch(
+                   route('sessions.update'),
+                   {
+                        sessions: this.selectedSessions.reduce((sessions, session) => {
+                            sessions[session.id] = payload
+
+                            return sessions
+                        }, {})
+                   }
+                )
             },
             getSessions() {
                 this.$inertia.get(`json/session`, searchParams)

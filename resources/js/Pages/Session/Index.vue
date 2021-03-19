@@ -17,8 +17,8 @@
                 <i class="fa fa-stopwatch"></i>
             </button-link>
             <button @click="startSession" class="btn btn-green">
-                <i class="fa fa-play pr-2"></i>
-                Start Session
+                <i class="fa fa-play sm:pr-2"></i>
+                <span class="hidden sm:inline"> Start Session </span>
             </button>
         </template>
 
