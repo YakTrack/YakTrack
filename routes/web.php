@@ -46,4 +46,5 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('session/stop', 'SessionController@stop')->name('session.stop');
 
     Route::resource('session', 'SessionController');
+    Route::patch('sessions', 'SessionsController@update')->name('sessions.update');
 });

@@ -217,6 +217,16 @@
                         event: 'sessions.link-to-invoice',
                         disabled: () => this.selectedSessions.length > 0,
                     },
+                    {
+                        name: 'Mark as billable',
+                        event: 'sessions.mark-as-billable',
+                        disabled: () => this.selectedSessions.length > 0,
+                    },
+                    {
+                        name: 'Mark as non-billable',
+                        event: 'sessions.mark-as-non-billable',
+                        disabled: () => this.selectedSessions.length > 0,
+                    },
                 ],
                 dateFormat: DATE_FORMAT,
                 filters: {
@@ -326,6 +336,9 @@
                     preserveScroll: true,
                 });
             });
+
+            events.$on('sessions.mark-as-billable', () => this.updateSelectedSessions({ is_billable: 1 }))
+            events.$on('sessions.mark-as-non-billable', () => this.updateSelectedSessions({ is_billable: 0 }))
         },
         methods: {
             loadFilterPreset(presetKey) {
@@ -343,6 +356,18 @@
             },
             stopSession(session) {
                 this.$inertia.post(route('session.stop', session.id));
+            },
+            updateSelectedSessions(payload) {
+               this.$inertia.patch(
+                   route('sessions.update'),
+                   {
+                        sessions: this.selectedSessions.reduce((sessions, session) => {
+                            sessions[session.id] = payload
+
+                            return sessions
+                        }, {})
+                   }
+                )
             },
             getSessions() {
                 this.$inertia.get(`json/session`, searchParams)
