@@ -40,7 +40,7 @@ class EditSessionsTest extends TestCase
             ]
         );
 
-        $response->assertSuccessful();
+        $response->assertRedirect('/');
 
         $this->assertDatabaseHas('sessions', [
             'id' => $sessions[0]->id,
