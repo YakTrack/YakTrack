@@ -86,7 +86,7 @@ class HomeController extends Controller
             'this_week' => [
                 'billable' => [
                     'actual' => Session::whereThisWeek()->whereBillable()->get()->totalDurationInSeconds(),
-                    'target' => 0,
+                    'target' => Target::whereForThisWeek()->get()->totalValueInSeconds(),
                 ],
                 'not_billable' => [
                     'actual' => Session::whereThisWeek()->whereNotBillable()->get()->totalDurationInSeconds(),
