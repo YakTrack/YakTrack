@@ -66,7 +66,7 @@ class EditTaskTest extends TestCase
         $response = $this->patch(route('task.update', ['task' => $task]), $updatedTaskDetails = [
             'name'        => 'Updated Task Name',
             'description' => 'Updated task description.',
-            'parent_id'   => null
+            'parent_id'   => null,
         ]);
 
         $response->assertRedirect(route('task.index'));
