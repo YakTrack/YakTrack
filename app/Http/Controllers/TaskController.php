@@ -91,7 +91,7 @@ class TaskController extends Controller
             'name'        => request('name', $task->name),
             'description' => request('description', $task->description),
             'project_id'  => request('project_id', $task->project_id),
-            'parent_id'   => request('parent_id', $task->parent_id),
+            'parent_id'   => request()->filled('parent_id') ? request('parent_id', $task->parent_id) : null,
         ]);
 
         return redirect()->route('task.index');
