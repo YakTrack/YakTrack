@@ -50,4 +50,27 @@ class EditTaskTest extends TestCase
 
         $this->assertDatabaseHas('tasks', $updatedTaskDetails);
     }
+
+    /** @test */
+    public function a_user_can_remove_a_parent_task_from_a_task_with_a_patch_request()
+    {
+        $this->withoutExceptionHandling();
+
+        $existingParentTask = factory(Task::class)->create();
+        $task = factory(Task::class)->create([
+            'parent_id' => $existingParentTask->id,
+        ]);
+
+        $this->actingAsUser();
+
+        $response = $this->patch(route('task.update', ['task' => $task]), $updatedTaskDetails = [
+            'name'        => 'Updated Task Name',
+            'description' => 'Updated task description.',
+            'parent_id'   => null,
+        ]);
+
+        $response->assertRedirect(route('task.index'));
+
+        $this->assertDatabaseHas('tasks', $updatedTaskDetails);
+    }
 }
