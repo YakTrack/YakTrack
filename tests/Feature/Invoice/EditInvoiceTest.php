@@ -39,6 +39,7 @@ class EditInvoiceTest extends TestCase
             $newInvoiceDetails = [
                 'number'      => 'New Number',
                 'date'        => '2018-01-01',
+                'due_date'    => '2018-01-02',
                 'amount'      => 123.45,
                 'total_hours' => 123,
                 'client_id'   => $newClient->id,

@@ -68,6 +68,7 @@ class InvoiceController extends Controller
         $invoice->update(array_merge($request->only([
             'number',
             'date',
+            'due_date',
             'total_hours',
             'client_id',
             'description',
