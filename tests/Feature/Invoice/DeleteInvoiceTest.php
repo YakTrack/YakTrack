@@ -31,7 +31,7 @@ class DeleteInvoiceTest extends TestCase
             'id' => $invoice->id,
         ]);
         $this->assertDatabaseMissing('sessions', [
-            'id' => $session->id,
+            'id'         => $session->id,
             'invoice_id' => $invoice->id,
         ]);
     }
