@@ -3,6 +3,7 @@
 namespace Tests\Feature\Invoice;
 
 use App\Models\Invoice;
+use App\Models\Session;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -16,6 +17,9 @@ class DeleteInvoiceTest extends TestCase
         $this->withoutExceptionHandling();
 
         $invoice = factory(Invoice::class)->create();
+        $session = factory(Session::class)->create([
+            'invoice_id' => $invoice->id,
+        ]);
 
         $this->actingAsUser();
 
@@ -25,6 +29,10 @@ class DeleteInvoiceTest extends TestCase
 
         $this->assertDatabaseMissing('invoices', [
             'id' => $invoice->id,
+        ]);
+        $this->assertDatabaseMissing('sessions', [
+            'id'         => $session->id,
+            'invoice_id' => $invoice->id,
         ]);
     }
 }

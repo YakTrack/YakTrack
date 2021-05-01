@@ -13,7 +13,10 @@ class CreateProjectTest extends TestCase
     /** @test */
     public function a_user_can_visit_the_create_project_page()
     {
-        $client = factory(Client::class)->create();
+        $client = factory(Client::class)->create([
+            'name' => 'O\'Reilly Apostropheson',
+        ]);
+
         $this->withoutExceptionHandling();
 
         $this->actingAsUser();
@@ -22,7 +25,7 @@ class CreateProjectTest extends TestCase
 
         $response->assertSuccessful();
 
-        $response->assertSee($client->name);
+        $response->assertSee(e($client->name));
     }
 
     /** @test */
