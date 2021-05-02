@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Task\Session;
 
-use App\Models\Invoice;
 use App\Models\Project;
 use App\Models\Session;
 use App\Models\Sprint;
@@ -27,11 +26,11 @@ class ContinueSessionTest extends TestCase
         $project = factory(Project::class)->create();
         $previousSprint = factory(Sprint::class)->create([
             'project_id' => $project->id,
-            'is_open' => 0,
+            'is_open'    => 0,
         ]);
         $currentSprint = factory(Sprint::class)->create([
             'project_id' => $project->id,
-            'is_open' => 1,
+            'is_open'    => 1,
         ]);
 
         $task = factory(Task::class)->create([
@@ -39,8 +38,8 @@ class ContinueSessionTest extends TestCase
         ]);
 
         $existingSession = factory(Session::class)->create([
-            'task_id' => $task->id,
-            'sprint_id' => $previousSprint->id,
+            'task_id'     => $task->id,
+            'sprint_id'   => $previousSprint->id,
             'is_billable' => 1,
         ]);
 
