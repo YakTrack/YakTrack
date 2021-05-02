@@ -36,7 +36,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('sprint.invoice', 'Sprint\InvoiceController');
     Route::resource('target', 'TargetController');
     Route::resource('task', 'TaskController');
-    Route::resource('task.session', 'Task\SessionController');
     Route::resource('third-party-application', 'ThirdPartyApplicationController');
     Route::resource('third-party-application-session', 'ThirdPartyApplicationSessionController');
     Route::resource('invoice', 'InvoiceController');
@@ -44,6 +43,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::post('session/start', 'SessionController@start')->name('session.start');
     Route::post('session/stop', 'SessionController@stop')->name('session.stop');
+    Route::post('session/{session}/continue', 'SessionController@continue')->name('session.continue');
 
     Route::resource('session', 'SessionController');
     Route::patch('sessions', 'SessionsController@update')->name('sessions.update');
