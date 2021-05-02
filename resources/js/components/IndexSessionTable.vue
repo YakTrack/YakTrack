@@ -38,7 +38,7 @@
                         <th class="">  </th>
                         <th class="">  </th>
                         <th class="text-right font-mono pr-2 font-thin text-base text-gray-500"> {{ totalDuration }} </th>
-                        <th class="text-right pr-4 pb-4">
+                        <th class="text-right pr-2 pb-2">
                             <dropdown :options="actionsDropdown"></dropdown>
                         </th>
                     </tr>
@@ -47,7 +47,6 @@
                     <tr class="bg-gray-200 text-gray-600 font-light text-xs uppercase">
                         <td class="px-3 py-1 border-solid" colspan="4"> {{ day.sessions[0].localStartedAtDateForHumans }} </td>
                         <td class="text-right pr-6 text-base font-thin font-mono text-gray-500"> {{ day.totalDurationForHumans }} </td>
-                        <td colspan="6"></td>
                     </tr>
                     <tr v-for="(session, sessionIndex) in day.sessions" :key="session.id" :class="session.rowClasses">
                         <td class="pl-1 sm:pl-4">
@@ -99,7 +98,7 @@
                         <td class="text-right">
                             <timer :initial-time="session.durationInSeconds" :is-paused="!session.isRunning"></timer>
                         </td>
-                        <td class="text-right inline-flex pr-4 pb-4 float-right" :class="sessionIndex || 'pt-4' ">
+                        <td class="text-right inline-flex pr-2 pb-1 pt-1 float-right" :class="sessionIndex || 'pt-2' ">
                             <div class="btn-group float-right">
                                 <button v-if="session.isRunning" class="btn text-gray-600 hover:text-red-600 hover:bg-red-100" @click="stopSession(session)">
                                     <i class="fa fa-stop fa-xs"></i>
