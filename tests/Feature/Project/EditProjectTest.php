@@ -25,7 +25,7 @@ class EditProjectTest extends TestCase
 
         $response->assertSee($project->name);
         $clients->each(function ($client) use ($response) {
-            $response->assertSee($client->name);
+            $response->assertSee(e($client->name));
         });
     }
 
