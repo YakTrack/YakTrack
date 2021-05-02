@@ -104,7 +104,7 @@
                                 <button v-if="session.isRunning" class="btn text-gray-600 hover:text-red-600 hover:bg-red-100" @click="stopSession(session)">
                                     <i class="fa fa-stop fa-xs"></i>
                                 </button>
-                                <button v-if="session.task_id && !session.isRunning" class="btn text-gray-600 hover:text-green-600 hover:bg-green-100" @click="createSessionForTask(session.task_id)">
+                                <button v-if="session.task_id && !session.isRunning" class="btn text-gray-600 hover:text-green-600 hover:bg-green-100" @click="continueSession(session)">
                                     <i class="fas fa-play fa-xs"></i>
                                 </button>
                                 <inertia-link
@@ -409,10 +409,8 @@
 
                 return classes.join(' ');
             },
-            createSessionForTask(taskId) {
-                this.$inertia.post(`task/${taskId}/session`, {
-                    started_at: (new Date),
-                });
+            continueSession(session) {
+                this.$inertia.post(`session/${session.id}/continue`)
             },
             setDateTimeFilters(startedAfter, startedBefore, reload = true) {
                 this.setStartedAfterFilter(startedAfter);

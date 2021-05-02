@@ -152,6 +152,22 @@ class SessionController extends Controller
         return redirect(route('session.index'));
     }
 
+    public function continue(Session $session)
+    {
+        Session::running()->get()->each(function ($session) {
+            $session->stop();
+        });
+
+        Session::create([
+            'started_at'  => Carbon::now(),
+            'is_billable' => $session->is_billable ?? 1,
+            'task_id'     => $session->task_id,
+            'sprint_id'   => $session->sprint_id ? $session->sprint->project->sprints()->open()->orderBy('id', 'desc')->first()->id : null,
+        ]);
+
+        return redirect(route('session.index'));
+    }
+
     public function destroy(Session $session)
     {
         $session->delete();
