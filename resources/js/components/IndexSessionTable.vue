@@ -48,7 +48,7 @@
                         <td class="px-3 py-1 border-solid" colspan="4"> {{ day.sessions[0].localStartedAtDateForHumans }} </td>
                         <td class="text-right pr-6 text-base font-thin font-mono text-gray-500"> {{ day.totalDurationForHumans }} </td>
                     </tr>
-                    <tr v-for="(session, sessionIndex) in day.sessions" :key="session.id" :class="session.rowClasses">
+                    <tr v-for="(session, sessionIndex) in day.sessions" :key="session.id" :class="rowClasses(session)">
                         <td class="pl-1 sm:pl-4">
                             <input type="checkbox" class="form-checkbox " v-model="session.isSelected" :value="session.id"/>
                         </td>
@@ -453,14 +453,6 @@
                 this.sessions.forEach((session) => {
                     session.isSelected = newValue;
                 });
-            },
-            sessions: {
-                deep: true,
-                handler(newValue) {
-                    newValue.forEach(session => {
-                        session.rowClasses = this.rowClasses(session);
-                    });
-                }
             },
             filters: {
                 deep: true,
