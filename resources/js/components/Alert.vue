@@ -24,6 +24,9 @@
             alertClass() {
                 return this.alert.type == 'success' ? 'bg-green-100 text-green-900' : 'bg-red-100 text-red-900';
             }
+        },
+        mounted() {
+            setTimeout(this.closeAlert, 10000);
         }
     }
 </script>
