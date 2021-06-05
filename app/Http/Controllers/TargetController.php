@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Target;
 use App\Rules\TargetDoesNotAlreadyExist;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class TargetController extends Controller
