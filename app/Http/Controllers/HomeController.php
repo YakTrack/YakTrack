@@ -86,11 +86,11 @@ class HomeController extends Controller
             'this_week' => [
                 'billable' => [
                     'actual' => Session::whereThisWeek()->whereBillable()->get()->totalDurationInSeconds(),
-                    'target' => Target::whereForThisWeek()->get()->totalValueInSeconds(),
+                    'target' => Target::whereForThisWeek()->whereBillableOnly()->get()->totalValueInSeconds(),
                 ],
                 'not_billable' => [
                     'actual' => Session::whereThisWeek()->whereNotBillable()->get()->totalDurationInSeconds(),
-                    'target' => 0,
+                    'target' => Target::whereForThisWeek()->whereNotBillableOnly()->get()->totalValueInSeconds(),
                 ],
                 'days' => collect($this->dateTimeFormatter::DAYS_OF_WEEK)->mapWithKeys(function ($day) use ($currentSession) {
                     $date = $this->dateTimeFormatter->dayThisWeek(strtolower($day));
@@ -101,12 +101,12 @@ class HomeController extends Controller
                             'is_today' => $date->isToday(),
                             'billable' => [
                                 'actual'    => Session::whereOnDayThisWeek($day)->whereBillable()->get()->totalDurationInSeconds(),
-                                'target'    => 0,
+                                'target'    => Target::whereForDate($date)->whereBillableOnly()->get()->totalValueInSeconds(),
                                 'is_active' => $currentSession && $currentSession->is_billable && $date->isToday(),
                             ],
                             'not_billable' => [
                                 'actual'    => Session::whereOnDayThisWeek($day)->whereNotBillable()->get()->totalDurationInSeconds(),
-                                'target'    => 0,
+                                'target'    => Target::whereForDate($date)->whereNotBillableOnly()->get()->totalValueInSeconds(),
                                 'is_active' => $currentSession && !$currentSession->is_billable && $date->isToday(),
                             ],
                         ],

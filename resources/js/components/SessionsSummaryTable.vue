@@ -63,7 +63,7 @@
                         <!-- TARGET COLUMN -->
                         <td class="text-sm sm:text-base">
                             <div class="text-right font-mono">
-                                <duration v-if="dayOfWeek.totalSecondsTarget" :duration-in-seconds="dayOfWeek.totalSecondsTarget" color="light-gray"></duration>
+                                <duration v-if="dayOfWeek[billableStatus].target" :duration-in-seconds="dayOfWeek[billableStatus].target" color="light-gray"></duration>
                                 <span v-else class="text-gray-300 "> --:--:-- </span>
                             </div>
                         </td>
@@ -71,8 +71,17 @@
                         <!-- TIME REMAINING COLUMN -->
                         <td class="text-sm sm:text-base">
                             <div class="text-right font-mono" :class="dayOfWeek.totalTimeRemainingForTarget != null ? 'text-gray-500' : ''">
-                                <duration v-if="dayOfWeek[billableStatus].totalSecondsTarget && !dayOfWeek.currentlyWorking" :duration-in-seconds="dayOfWeek.totalSecondsTarget - dayOfWeek.totalSecondsWorked" :color="dayOfWeek.totalSecondsWorked > dayOfWeek.totalSecondsTarget ? 'green' : 'light-gray'"></duration>
-                                <timer v-else-if="dayOfWeek.totalSecondsTarget" :initial-time="dayOfWeek.totalSecondsTarget - dayOfWeek.totalSecondsWorked" :color="dayOfWeek.totalSecondsWorked - dayOfWeek.totalSecondsTarget >= 0 ? 'green' : 'blue'" :count-down="true"/>
+                                <duration
+                                    v-if="dayOfWeek[billableStatus].target && !dayOfWeek[billableStatus].is_active"
+                                    :duration-in-seconds="dayOfWeek[billableStatus].target - dayOfWeek[billableStatus].actual"
+                                    :color="dayOfWeek[billableStatus].actual > dayOfWeek[billableStatus].target ? 'green' : 'light-gray'"
+                                ></duration>
+                                <timer
+                                    v-else-if="dayOfWeek[billableStatus].target"
+                                    :initial-time="dayOfWeek[billableStatus].target - dayOfWeek[billableStatus].actual"
+                                    :color="dayOfWeek[billableStatus].actual - dayOfWeek[billableStatus].target >= 0 ? 'green' : 'blue'"
+                                    :count-down="true"
+                                />
                                 <span v-else class="text-gray-300">--:--:--</span>
                             </div>
                         </td>

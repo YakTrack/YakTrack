@@ -44,6 +44,16 @@ class Target extends Model
         return new TargetCollection($models);
     }
 
+    public function scopeWhereBillableOnly($query)
+    {
+        $query->where('billable_only', 1);   
+    }
+
+    public function scopeWhereNotBillableOnly($query)
+    {
+        $query->where('billable_only', 0);   
+    }
+
     public function scopeWhereForDate($query, $date = null)
     {
         $query->whereDurationUnit(self::DURATION_UNITS['DAYS']['key'])
