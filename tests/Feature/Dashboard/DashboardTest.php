@@ -51,16 +51,16 @@ class DashboardTest extends TestCase
             ->states('for_date', 'in_hours')
             ->create([
                 'billable_only' => 1,
-                'starts_at' => '2018-01-01 00:00:00',
-                'value' => 5,
+                'starts_at'     => '2018-01-01 00:00:00',
+                'value'         => 5,
             ]);
 
         $mondayNonBillableTarget = factory(Target::class)
             ->states('for_date', 'in_hours')
             ->create([
                 'billable_only' => 0,
-                'starts_at' => '2018-01-01 00:00:00',
-                'value' => 1,
+                'starts_at'     => '2018-01-01 00:00:00',
+                'value'         => 1,
             ]);
 
         Carbon::setTestNow(Carbon::parse('2018-01-02'));
