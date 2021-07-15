@@ -124,18 +124,6 @@ class DashboardTest extends TestCase
             ],
         ], $response->props());
 
-        // $response->assertPropValue('clients', function ($clients) use ($client) {
-        //     $this->assertEquals($clients[0]['id'], $client->id);
-        //     $this->assertEquals($clients[0]['name'], $client->name);
-        //     $this->assertEquals($clients[0]['this_week']['billable'], $client->sessionsThisWeek->whereBillable()->totalDurationInSeconds());
-        //     $this->assertEquals($clients[0]['this_week']['not_billable'], $client->sessionsThisWeek->whereNotBillable()->totalDurationInSeconds());
-
-        //     $clientZeroOpenSprints = $clients[0]['open_sprints'];
-        //     $this->assertEquals(
-        //         $clientZeroOpenSprints[0]['this_week']['billable'],
-        //         $clientZeroSprint->sessionsThisWeek->whereBillable()->whereBillable);
-        // });
-
         $response->assertPropValues([
             'currentlyWorking'      => true,
             'currentClientName'     => $client->name,
