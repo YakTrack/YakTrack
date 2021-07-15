@@ -6,6 +6,7 @@ use App\Models\Client;
 use App\Models\Project;
 use App\Models\Session;
 use App\Models\Sprint;
+use App\Models\Target;
 use App\Models\Task;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -45,6 +46,22 @@ class DashboardTest extends TestCase
             'started_at' => '2018-01-01 13:00:00',
             'ended_at'   => null,
         ]);
+
+        $mondayBillableTarget = factory(Target::class)
+            ->states('for_date', 'in_hours')
+            ->create([
+                'billable_only' => 1,
+                'starts_at'     => '2018-01-01 00:00:00',
+                'value'         => 5,
+            ]);
+
+        $mondayNonBillableTarget = factory(Target::class)
+            ->states('for_date', 'in_hours')
+            ->create([
+                'billable_only' => 0,
+                'starts_at'     => '2018-01-01 00:00:00',
+                'value'         => 1,
+            ]);
 
         Carbon::setTestNow(Carbon::parse('2018-01-02'));
 
@@ -100,11 +117,11 @@ class DashboardTest extends TestCase
             'this_week' => [
                 'billable' => [
                     'actual' => $uncategorisedSession->durationInSeconds,
-                    'target' => 0,
+                    'target' => $mondayBillableTarget->valueInSeconds(),
                 ],
                 'not_billable' => [
                     'actual' => Session::whereThisWeek()->whereNotBillable()->get()->totalDurationInSeconds(),
-                    'target' => 0,
+                    'target' => $mondayNonBillableTarget->valueInSeconds(),
                 ],
                 'days' => [
                     'monday' => [
@@ -112,29 +129,17 @@ class DashboardTest extends TestCase
                         'is_today' => false,
                         'billable' => [
                             'actual'    => $uncategorisedSession->durationInSeconds,
-                            'target'    => 0,
+                            'target'    => $mondayBillableTarget->valueInSeconds(),
                             'is_active' => false,
                         ],
                         'not_billable' => [
                             'actual' => 0,
-                            'target' => 0,
+                            'target' => $mondayNonBillableTarget->valueInSeconds(),
                         ],
                     ],
                 ],
             ],
         ], $response->props());
-
-        // $response->assertPropValue('clients', function ($clients) use ($client) {
-        //     $this->assertEquals($clients[0]['id'], $client->id);
-        //     $this->assertEquals($clients[0]['name'], $client->name);
-        //     $this->assertEquals($clients[0]['this_week']['billable'], $client->sessionsThisWeek->whereBillable()->totalDurationInSeconds());
-        //     $this->assertEquals($clients[0]['this_week']['not_billable'], $client->sessionsThisWeek->whereNotBillable()->totalDurationInSeconds());
-
-        //     $clientZeroOpenSprints = $clients[0]['open_sprints'];
-        //     $this->assertEquals(
-        //         $clientZeroOpenSprints[0]['this_week']['billable'],
-        //         $clientZeroSprint->sessionsThisWeek->whereBillable()->whereBillable);
-        // });
 
         $response->assertPropValues([
             'currentlyWorking'      => true,
