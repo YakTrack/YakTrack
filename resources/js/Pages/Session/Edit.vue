@@ -13,12 +13,27 @@
         <div class="px-2 sm:px-0">
             <form @submit.prevent="submit">
                 <div class="form-group">
-                    <label for="name"> Started At </label>
-                    <input type="text" name="started_at" v-model="form.started_at" class="form-control" placeholder="YYYY-MM-DD HH:MM:SS">
+                    <label for="started_at"> Started At</label>
+                    <datepicker
+                        id="started_at"
+                        v-model="form.started_at"
+                        name="started_at"
+                        input-class="form-control"
+                        :format="datepickerFormatter"
+                        :use-utc="true"
+                        :required="true"
+                    ></datepicker>
                 </div>
                 <div class="form-group">
-                    <label for="ended_at"> Ended At </label>
-                    <input type="text" name="ended_at" v-model="form.ended_at" class="form-control" placeholder="YYYY-MM-DD HH:MM:SS">
+                    <label for="ended_at"> Ended At</label>
+                    <datepicker
+                        v-model="form.ended_at"
+                        name="ended_at"
+                        input-class="form-control"
+                        :format="datepickerFormatter"
+                        :use-utc="true"
+                        :required="true"
+                    ></datepicker>
                 </div>
                 <div class="form-group">
                     <label for="task_id"> Task </label>
@@ -69,6 +84,7 @@
     import invoiceSelect from '@/Shared/InvoiceSelect';
     import sessionCategorySelect from '@/Shared/SessionCategorySelect';
     import dateTime from '@/filters/DateTime';
+    import datepicker from 'vuejs-datepicker';
 
     export default {
         props: [
@@ -80,6 +96,7 @@
         ],
         components: {
             breadcrumbs: breadcrumbs,
+            datepicker: datepicker,
             layout: layout,
             taskSelect: taskSelect,
             sprintSelect: sprintSelect,
@@ -101,6 +118,17 @@
             };
         },
         methods: {
+            datepickerFormatter(date) {
+                if (!(date instanceof Date)) {
+                    date = new Date(date);
+                }
+                return date.toLocaleDateString('en-AU', {
+                    weekday: 'long',
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                });
+            },
             selectSprint(sprintId) {
                 this.form.sprint_id = sprintId;
             },
