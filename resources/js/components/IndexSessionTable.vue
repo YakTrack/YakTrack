@@ -388,8 +388,11 @@
                 });
             },
             linkSelectedSessionsToInvoice() {
+                events.$emit('sessions.linked-to-invoice');
+
                 this.$inertia.patch(route('invoice.update', this.selectedInvoiceId), {
                     sessions: this.selectedSessionIds,
+                    redirectToSessionsScreen: true,
                 });
             },
             selectInvoice(invoiceId) {
