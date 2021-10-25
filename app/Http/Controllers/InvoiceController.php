@@ -80,9 +80,20 @@ class InvoiceController extends Controller
 
         $invoice->sessions()->saveMany(Session::findMany($request->sessions));
 
+        $successMessage = 'Invoice '.$invoice->number.' updated.';
+
+        if (
+            $request->has('redirectToSessionsScreen') &&
+            $request->redirectToSessionsScreen
+        ) {
+            return redirect()
+                ->route('session.index')
+                ->with('success', $successMessage);
+        }
+
         return redirect()
             ->route('invoice.index')
-            ->with('success', 'Invoice '.$invoice->number.' updated.');
+            ->with('success', $successMessage);
     }
 
     public function show(Invoice $invoice)
