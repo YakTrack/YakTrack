@@ -11,30 +11,36 @@
         </template>
         <template slot="title"> Edit Session </template>
         <div class="px-2 sm:px-0">
-            <form @submit.prevent="submit">
+            <form @submit.prevent="submit" >
                 <div class="form-group">
                     <label for="started_at"> Started At</label>
-                    <datepicker
-                        id="started_at"
-                        v-model="form.started_at"
-                        name="started_at"
+                    <datetime-picker 
+                        class="form-control"
                         input-class="form-control"
-                        :format="datepickerFormatter"
-                        :use-utc="true"
-                        :required="true"
-                    ></datepicker>
+                        v-model="form.started_at" 
+                        :value="form.started_at"
+                        :timeStr="timeStr" 
+                        :dayStr="dayStr"
+                        :monthStr="monthStr"
+                        :btnStr="btnStr"
+                    />
                 </div>
+                
                 <div class="form-group">
                     <label for="ended_at"> Ended At</label>
-                    <datepicker
-                        v-model="form.ended_at"
-                        name="ended_at"
+                    <datetime-picker 
+                        class="form-control"
                         input-class="form-control"
-                        :format="datepickerFormatter"
-                        :use-utc="true"
-                        :required="true"
-                    ></datepicker>
+                        v-model="form.ended_at" 
+                        :value="form.ended_at"
+                        :timeStr="timeStr" 
+                        :dayStr="dayStr"
+                        :monthStr="monthStr"
+                        :btnStr="btnStr"
+                    />
                 </div>
+                
+                
                 <div class="form-group">
                     <label for="task_id"> Task </label>
                     <task-select :tasks="tasks" :task="form.task_id" :on-change="selectTask"></task-select>
@@ -84,7 +90,7 @@
     import invoiceSelect from '@/Shared/InvoiceSelect';
     import sessionCategorySelect from '@/Shared/SessionCategorySelect';
     import dateTime from '@/filters/DateTime';
-    import datepicker from 'vuejs-datepicker';
+    import {DatetimePicker} from '@livelybone/vue-datepicker';
 
     export default {
         props: [
@@ -96,7 +102,7 @@
         ],
         components: {
             breadcrumbs: breadcrumbs,
-            datepicker: datepicker,
+            DatetimePicker: DatetimePicker,
             layout: layout,
             taskSelect: taskSelect,
             sprintSelect: sprintSelect,
@@ -105,6 +111,10 @@
         },
         data() {
             return {
+                dayStr: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+                timeStr: ['Hour', 'Min', 'Sec'],
+                monthStr: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+                btnStr: 'Ok',
                 form: this.session ? {
                     started_at: dateTime.toDateTimeString(new Date(this.session.localStartedAt)),
                     ended_at: this.session.localEndedAt ? dateTime.toDateTimeString(new Date(this.session.localEndedAt)) : null,
