@@ -3,6 +3,7 @@
 namespace Tests\Feature\Invoice;
 
 use App\Models\Client;
+use App\Models\Invoice;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -54,5 +55,29 @@ class CreateInvoiceTest extends TestCase
             'is_sent'       => false,
             'is_paid'       => false,
         ]);
+    }
+
+    /** @test */
+    public function the_invoice_number_must_be_unique()
+    {
+        $client = factory(Client::class)->create();
+        factory(Invoice::class)->create([
+            'number' => 'INV-001',
+        ]);
+
+        $this->actingAsUser();
+
+        $response = $this->post(route('invoice.store'), [
+            'date'          => '2018-01-01',
+            'due_date'      => '2018-01-08',
+            'number'        => 'INV-001',
+            'amount'        => '123.45',
+            'client_id'     => $client->id,
+            'description'   => 'Test description',
+            'total_hours'   => 10,
+        ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHasErrors('number');
     }
 }

@@ -81,4 +81,34 @@ class EditInvoiceTest extends TestCase
             $this->assertTrue($session->fresh()->invoice_id == $invoice->id);
         });
     }
+
+    /** @test */
+    public function the_invoice_number_must_be_unique()
+    {
+        $client = factory(Client::class)->create();
+        factory(Invoice::class)->create([
+            'number' => 'INV-001',
+        ]);
+        $invoice = factory(Invoice::class)->create();
+
+        $this->actingAsUser();
+
+        $response = $this->patch(
+            route('invoice.update', ['invoice' => $invoice]),
+            [
+                'number'      => 'INV-001',
+                'date'        => '2018-01-01',
+                'due_date'    => '2018-01-02',
+                'amount'      => 123.45,
+                'total_hours' => 123,
+                'client_id'   => $client->id,
+                'description' => 'New description',
+                'is_paid'     => true,
+                'is_sent'     => true,
+            ]
+        );
+
+        $response->assertRedirect();
+        $response->assertSessionHasErrors('number');
+    }
 }
