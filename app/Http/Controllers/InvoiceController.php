@@ -7,6 +7,7 @@ use App\Models\Invoice;
 use App\Models\Session;
 use App\Models\ThirdPartyApplication;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class InvoiceController extends Controller
@@ -31,6 +32,10 @@ class InvoiceController extends Controller
 
     public function store()
     {
+        request()->validate([
+            'number' => 'unique:invoices,number',
+        ]);
+
         $invoice = Invoice::create([
             'number'          => request('number'),
             'date'            => request('date') ?: null,
@@ -60,7 +65,10 @@ class InvoiceController extends Controller
     public function update(Request $request, Invoice $invoice)
     {
         $this->validate($request, [
-            'number'      => 'string',
+            'number'      => [
+                'string',
+                Rule::unique('invoices')->ignore($invoice->id),
+            ],
             'client_id'   => 'exists:clients,id',
             'sessions.*'  => 'exists:sessions,id',
         ]);
