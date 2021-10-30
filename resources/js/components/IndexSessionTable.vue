@@ -103,7 +103,11 @@
                                 <button v-if="session.isRunning" class="text-gray-600 btn hover:text-red-600 hover:bg-red-100" @click="stopSession(session)">
                                     <i class="fa fa-stop fa-xs"></i>
                                 </button>
-                                <button v-if="session.task_id && !session.isRunning" class="text-gray-600 btn hover:text-green-600 hover:bg-green-100" @click="continueSession(session)">
+                                <button
+                                    v-if="!session.isRunning"
+                                    class="text-gray-600 btn hover:text-green-600 hover:bg-green-100"
+                                    @click="continueSession(session)"
+                                >
                                     <i class="fas fa-play fa-xs"></i>
                                 </button>
                                 <inertia-link
