@@ -49,6 +49,7 @@
             <div class="lg:w-0 xxl:w-full xxl:max-w-2xs">
             </div>
         </div>
+        <slot name="modals"></slot>
     </div>
 </template>
 
