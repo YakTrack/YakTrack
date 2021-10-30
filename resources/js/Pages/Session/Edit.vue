@@ -128,17 +128,6 @@
             };
         },
         methods: {
-            datepickerFormatter(date) {
-                if (!(date instanceof Date)) {
-                    date = new Date(date);
-                }
-                return date.toLocaleDateString('en-AU', {
-                    weekday: 'long',
-                    day: 'numeric',
-                    month: 'long',
-                    year: 'numeric',
-                });
-            },
             selectSprint(sprintId) {
                 this.form.sprint_id = sprintId;
             },
