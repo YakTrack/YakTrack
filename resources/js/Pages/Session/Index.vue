@@ -8,6 +8,26 @@
                 ]"
             ></breadcrumbs>
         </template>
+        <template slot="modals">
+          <modal
+              open-on="sessions.link-to-invoice"
+              close-on="sessions.linked-to-invoice"
+              :on-submit="linkSelectedSessionsToInvoice"
+          >
+              <template slot-scope="modal">
+                  <h3 class="text-center"> Link Selected Sessions To Invoice </h3>
+                  <div class="mt-8 form-group">
+                      {{ modal.payload }}
+                      <label for="invoice_id"> Select Invoice </label>
+                      <invoice-select
+                          :invoices="invoices"
+                          :on-change="selectInvoice"
+                          v-model="modal.payload"
+                      ></invoice-select>
+                  </div>
+              </template>
+          </modal>
+        </template>
         <template slot="title"> Sessions </template>
         <template slot="top-right-toolbar">
             <button type="button" class="btn" :class="(showFilters ? 'btn-blue' : 'btn-default') + ' mr-2'" @click="toggleShowFilters()">
@@ -31,6 +51,7 @@
             :total="total"
             :last-page="lastPage"
             :show-filters="showFilters"
+            :on-change-selected-session-ids="onChangeSelectedSessionIds"
         ></index-session-table>
 
     </layout>
@@ -43,6 +64,8 @@ import indexSessionTable from '@/components/IndexSessionTable'
 import layout from '@/Shared/Layout'
 import searchParams from '@/SearchParams'
 import urlParser from '@/UrlParser.js';
+import modal from '@/components/Modal'
+import invoiceSelect from '@/Shared/InvoiceSelect';
 
 export default {
     data() {
@@ -55,6 +78,8 @@ export default {
         breadcrumbs: breadcrumbs,
         indexSessionTable: indexSessionTable,
         layout: layout,
+        modal: modal,
+        invoiceSelect: invoiceSelect,
     },
     props: {
         days: Array,
@@ -72,6 +97,20 @@ export default {
         startSession() {
             this.$inertia.post(route('session.start'));
         },
+        linkSelectedSessionsToInvoice() {
+            events.$emit('sessions.linked-to-invoice');
+
+            this.$inertia.patch(route('invoice.update', this.selectedInvoiceId), {
+                sessions: this.selectedSessionIds,
+                redirectToSessionsScreen: true,
+            });
+        },
+        selectInvoice(invoiceId) {
+            this.selectedInvoiceId = invoiceId;
+        },
+        onChangeSelectedSessionIds(newValue) {
+          this.selectedSessionIds = newValue
+        }
     },
     created() {
         events.$on('toggle-show-filters', (perPage) => {
