@@ -158,10 +158,13 @@ class SessionController extends Controller
         });
 
         Session::create([
-            'started_at'  => Carbon::now(),
-            'is_billable' => $session->is_billable ?? 1,
-            'task_id'     => $session->task_id,
-            'sprint_id'   => $session->sprint_id ? $session->sprint->project->sprints()->open()->orderBy('id', 'desc')->first()->id : null,
+            'started_at'            => Carbon::now(),
+            'is_billable'           => $session->is_billable ?? 1,
+            'task_id'               => $session->task_id,
+            'sprint_id'             => $session->sprint_id
+                ? $session->sprint->project->sprints()->open()->orderBy('id', 'desc')->first()->id
+                : null,
+            'session_category_id' => $session->session_category_id,
         ]);
 
         return redirect(route('session.index'));

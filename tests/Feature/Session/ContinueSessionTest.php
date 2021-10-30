@@ -4,6 +4,7 @@ namespace Tests\Feature\Task\Session;
 
 use App\Models\Project;
 use App\Models\Session;
+use App\Models\SessionCategory;
 use App\Models\Sprint;
 use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -32,15 +33,17 @@ class ContinueSessionTest extends TestCase
             'project_id' => $project->id,
             'is_open'    => 1,
         ]);
+        $sessionCategory = factory(SessionCategory::class)->create();
 
         $task = factory(Task::class)->create([
             'project_id' => $project->id,
         ]);
 
         $existingSession = factory(Session::class)->create([
-            'task_id'     => $task->id,
-            'sprint_id'   => $previousSprint->id,
-            'is_billable' => 1,
+            'task_id'               => $task->id,
+            'sprint_id'             => $previousSprint->id,
+            'session_category_id'   => $sessionCategory->id,
+            'is_billable'           => 1,
         ]);
 
         $response = $this->post(route('session.continue', [
@@ -52,12 +55,13 @@ class ContinueSessionTest extends TestCase
         $session = Session::orderBy('id', 'desc')->first();
 
         $this->assertDatabaseHas('sessions', [
-            'id'          => $session->id,
-            'task_id'     => $existingSession->task->id,
-            'is_billable' => 1,
-            'started_at'  => $now,
-            'ended_at'    => null,
-            'sprint_id'   => $currentSprint->id,
+            'id'                    => $session->id,
+            'task_id'               => $existingSession->task->id,
+            'is_billable'           => 1,
+            'started_at'            => $now,
+            'ended_at'              => null,
+            'sprint_id'             => $currentSprint->id,
+            'session_category_id'   => $sessionCategory->id,
         ]);
     }
 }
