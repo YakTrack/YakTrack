@@ -10,7 +10,6 @@ use App\Models\Task;
 use App\Models\ThirdPartyApplication;
 use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class SessionController extends Controller
@@ -109,11 +108,11 @@ class SessionController extends Controller
     public function update(Session $session)
     {
         $session->update([
-            'started_at' => request('started_at') ? $this->dateTimeFormatter->utcFormat(request('started_at')) : null,
-            'ended_at'   => request('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
-            'task_id'    => request('task_id') ?: null,
-            'invoice_id' => request('invoice_id') ?: null,
-            'sprint_id'  => request('sprint_id') ?: null,
+            'started_at'  => request('started_at') ? $this->dateTimeFormatter->utcFormat(request('started_at')) : null,
+            'ended_at'    => request('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
+            'task_id'     => request('task_id') ?: null,
+            'invoice_id'  => request('invoice_id') ?: null,
+            'sprint_id'   => request('sprint_id') ?: null,
             'is_billable' => request('is_billable') ?: 0,
         ]);
 
@@ -129,7 +128,7 @@ class SessionController extends Controller
         });
 
         Session::create([
-            'started_at' => Carbon::now(),
+            'started_at'  => Carbon::now(),
             'is_billable' => 1,
         ]);
 

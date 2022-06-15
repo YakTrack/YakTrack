@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Session;
 use App\Models\Task;
 use App\Support\DateTimeFormatter;
-use Illuminate\Http\Request;
 
 class SessionController extends Controller
 {

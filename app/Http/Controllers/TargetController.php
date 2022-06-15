@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Target;
 use App\Rules\TargetDoesNotAlreadyExist;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class TargetController extends Controller
@@ -19,7 +18,7 @@ class TargetController extends Controller
     public function create()
     {
         return Inertia::render('Target/Edit', [
-            'target' => new Target,
+            'target' => new Target(),
         ]);
     }
 
@@ -29,15 +28,15 @@ class TargetController extends Controller
             'starts_at' => new TargetDoesNotAlreadyExist(request()->only([
                 'duration_unit',
                 'duration',
-            ]))
+            ])),
         ]);
 
         Target::create([
-            'value_unit' => request('value_unit'),
-            'value' => request('value'),
+            'value_unit'    => request('value_unit'),
+            'value'         => request('value'),
             'duration_unit' => request('duration_unit'),
-            'duration' => request('duration'),
-            'starts_at' => request('starts_at'),
+            'duration'      => request('duration'),
+            'starts_at'     => request('starts_at'),
             'billable_only' => request('billable_only'),
         ]);
 

@@ -4,18 +4,17 @@
 
 use App\Models\Target;
 use Faker\Generator as Faker;
-use Illuminate\Support\Carbon;
 
 $factory->define(Target::class, function (Faker $faker) {
     return [
-        'value_unit' => array_random(Target::VALUE_UNITS)['key'],
-        'value' => $faker->numberBetween(0, 100),
+        'value_unit'    => array_random(Target::VALUE_UNITS)['key'],
+        'value'         => $faker->numberBetween(0, 100),
         'billable_only' => 0,
     ];
 });
 
 $factory->state(Target::class, 'for_date', [
-    'duration' => 1,
+    'duration'      => 1,
     'duration_unit' => Target::DURATION_UNITS['DAYS']['key'],
 ]);
 
