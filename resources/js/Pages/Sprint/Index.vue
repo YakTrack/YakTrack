@@ -21,6 +21,7 @@
                     <th> Name </th>
                     <th> Project </th>
                     <th> Status </th>
+                    <th class="text-right"> Total Hours </th>
                     <th> <span class="float-right"> Actions </span> </th>
                     <tr
                         v-for="sprint in sprints"
@@ -41,6 +42,9 @@
                         </td>
                         <td>
                             <div class="text-green" v-if="sprint.is_open"> Open </div>
+                        </td>
+                        <td class="text-right font-mono">
+                            {{ sprint.totalDurationForHumans }} 
                         </td>
                         <td>
                             <div class="mx-auto btn-group float-right">

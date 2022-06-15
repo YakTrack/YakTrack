@@ -15,7 +15,15 @@ class SprintController extends Controller
     public function index()
     {
         return Inertia::render('Sprint/Index', [
-            'sprints' => Sprint::orderBy('id', 'desc')->with('project')->get(),
+            'sprints' => Sprint::orderBy('id', 'desc')
+                ->with('project', 'sessions')
+                ->get()
+                ->map(function ($sprint) {
+                    $sprint->totalDurationForHumans = $sprint->sessions->totalDurationForHumans();
+                    unset($sprint->sessions);
+
+                    return $sprint;
+                }),
         ]);
     }
 
