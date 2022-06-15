@@ -25,6 +25,7 @@ class IndexSprintTest extends TestCase
 
         $sprints->each(function ($sprint) use ($response) {
             $response->assertSee($sprint->name);
+            $response->assertSee($sprint->sessions->totalDurationForHumans());
         });
     }
 }
