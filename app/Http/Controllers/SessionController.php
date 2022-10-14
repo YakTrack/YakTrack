@@ -171,7 +171,7 @@ class SessionController extends Controller
             'is_billable'           => $session->is_billable ?? 1,
             'task_id'               => $session->task_id,
             'sprint_id'             => $newSprintId,
-            'session_category_id' => $session->session_category_id,
+            'session_category_id'   => $session->session_category_id,
         ]);
 
         return redirect(route('session.index'));
