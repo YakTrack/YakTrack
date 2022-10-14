@@ -64,4 +64,50 @@ class ContinueSessionTest extends TestCase
             'session_category_id'   => $sessionCategory->id,
         ]);
     }
+
+    /** @test */
+    public function a_user_can_create_a_new_session_with_the_same_details_as_an_existing_session_when_there_is_no_open_sprint()
+    {
+        $this->withoutExceptionHandling();
+        $this->usingTestDisplayTimeZone();
+        Carbon::setTestNow($now = '2021-01-01 00:00:00');
+
+        $this->actingAsUser();
+
+        $project = factory(Project::class)->create();
+        $previousSprint = factory(Sprint::class)->create([
+            'project_id' => $project->id,
+            'is_open'    => 0,
+        ]);
+        $sessionCategory = factory(SessionCategory::class)->create();
+
+        $task = factory(Task::class)->create([
+            'project_id' => $project->id,
+        ]);
+
+        $existingSession = factory(Session::class)->create([
+            'task_id'               => $task->id,
+            'sprint_id'             => $previousSprint->id,
+            'session_category_id'   => $sessionCategory->id,
+            'is_billable'           => 1,
+        ]);
+
+        $response = $this->post(route('session.continue', [
+            'session' => $existingSession,
+        ]));
+
+        $response->assertRedirect(route('session.index'));
+
+        $session = Session::orderBy('id', 'desc')->first();
+
+        $this->assertDatabaseHas('sessions', [
+            'id'                    => $session->id,
+            'task_id'               => $existingSession->task->id,
+            'is_billable'           => 1,
+            'started_at'            => $now,
+            'ended_at'              => null,
+            'sprint_id'             => $previousSprint->id,
+            'session_category_id'   => $sessionCategory->id,
+        ]);
+    }
 }
