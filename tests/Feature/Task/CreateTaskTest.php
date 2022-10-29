@@ -83,4 +83,29 @@ class CreateTaskTest extends TestCase
             'parent_id'   => null,
         ]);
     }
+
+    /** @test */
+    public function a_user_cannot_create_a_duplicate_named_task_for_a_project()
+    {
+        $this->actingAsUser();
+
+        $project = factory(Project::class)->create();
+        factory(Task::class)->create([
+            'name'       => 'Test Task',
+            'project_id' => $project->id,
+        ]);
+
+        $response = $this->post(route('task.store'), [
+            'name'        => 'Test Task',
+            'description' => 'Test task description.',
+            'project_id'  => $project->id,
+        ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHasErrorsIn('name');
+
+        $this->assertDatabaseMissing('tasks', [
+            'description' => 'Test task description.',
+        ]);
+    }
 }
