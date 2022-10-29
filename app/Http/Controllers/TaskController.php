@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\ThirdPartyApplication;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
 class TaskController extends Controller
@@ -38,6 +39,15 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request, [
+            'project_id' => 'exists:projects,id',
+            'name' => [
+                Rule::unique('tasks')->where(function ($query) {
+                    return $query->where('project_id', request('project_id'));
+                }),
+            ],
+        ]);
+
         $task = Task::create([
             'name'        => request('name'),
             'description' => request('description') ?? '',
