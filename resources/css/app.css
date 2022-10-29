@@ -7,6 +7,8 @@
 /* Utilities */
 @import "tailwindcss/utilities";
 
+@import '@livelybone/vue-datepicker/lib/css/index';
+
 .btn-height {
     height: 42px;
 }
@@ -95,9 +97,18 @@
     @apply text-gray-700 font-light mb-1 block
 }
 
-input.form-control, textarea.form-control, select.form-control, .form-group textarea {
+input.form-control, textarea.form-control, select.form-control, .form-group textarea, .datetime-picker.form-control {
     @apply rounded bg-white shadow h-12 w-full py-2 px-4 btn-height
 }
+
+.datetime-picker .input-wrapper {
+    border: 0;
+}
+
+.year-month-wrapper{
+    background-color: #ed4d00;
+    text-align: center;
+    }
 
 .form-group textarea {
     min-height: 200px;
