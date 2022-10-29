@@ -91,10 +91,9 @@ class CreateTaskTest extends TestCase
 
         $project = factory(Project::class)->create();
         factory(Task::class)->create([
-            'name' => 'Test Task',
+            'name'       => 'Test Task',
             'project_id' => $project->id,
         ]);
-
 
         $response = $this->post(route('task.store'), [
             'name'        => 'Test Task',

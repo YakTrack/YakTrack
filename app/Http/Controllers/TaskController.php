@@ -41,7 +41,7 @@ class TaskController extends Controller
     {
         $this->validate($request, [
             'project_id' => 'exists:projects,id',
-            'name' => [
+            'name'       => [
                 Rule::unique('tasks')->where(function ($query) {
                     return $query->where('project_id', request('project_id'));
                 }),
