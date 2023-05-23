@@ -13,7 +13,6 @@ class CreateProjectsTable extends Migration
     public function up()
     {
         Schema::create('projects', function (Blueprint $table) {
-
             // Add columns
             $table->increments('id');
             $table->string('name');
