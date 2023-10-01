@@ -13,7 +13,6 @@ class CreateSprintsTable extends Migration
     public function up()
     {
         Schema::create('sprints', function (Blueprint $table) {
-
             // Create tables
             $table->increments('id');
             $table->string('name');
