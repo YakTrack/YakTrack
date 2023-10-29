@@ -7,7 +7,7 @@ use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
 use DateTimeInterface;
- 
+
 class Session extends Model
 {
     use Concerns\CanBeBillable;
@@ -339,7 +339,8 @@ class Session extends Model
     /**
      * Prepare a date for array / JSON serialization.
      *
-     * @param  \DateTimeInterface  $date
+     * @param \DateTimeInterface $date
+     *
      * @return string
      */
     protected function serializeDate(DateTimeInterface $date)
