@@ -23,7 +23,7 @@ class ShowClientTest extends TestCase
 
         $response->assertSuccessful();
 
-        $response->assertSee(e($client->name));
+        $response->assertSee($client->name);
         $response->assertSee($client->email);
     }
 }
