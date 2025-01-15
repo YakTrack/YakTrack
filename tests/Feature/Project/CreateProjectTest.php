@@ -25,7 +25,7 @@ class CreateProjectTest extends TestCase
 
         $response->assertSuccessful();
 
-        $response->assertSee(e($client->name));
+        $response->assertSee($client->name);
     }
 
     /** @test */

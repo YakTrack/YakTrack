@@ -6,6 +6,7 @@ use App\Models\Collections\SessionCollection;
 use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
+use DateTimeInterface;
 
 class Session extends Model
 {
@@ -333,5 +334,17 @@ class Session extends Model
         }
 
         return $this->task->project->client;
+    }
+
+    /**
+     * Prepare a date for array / JSON serialization.
+     *
+     * @param \DateTimeInterface $date
+     *
+     * @return string
+     */
+    protected function serializeDate(DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d H:i:s');
     }
 }

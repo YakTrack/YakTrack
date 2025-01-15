@@ -22,7 +22,7 @@ class ShowProjectTest extends TestCase
         $response->assertSuccessful();
 
         // escape the apostrophe in the same manner as blade is
-        $response->assertSee(e($project->name));
+        $response->assertSee($project->name);
 
         $response->assertSee($project->description);
         $response->assertSee(e($project->client->name));
@@ -40,9 +40,9 @@ class ShowProjectTest extends TestCase
         $response->assertSuccessful();
 
         // escape the apostrophe in the same manner as blade is
-        $response->assertSee(e($project->name));
+        $response->assertSee($project->name);
 
         $response->assertSee($project->description);
-        $response->assertSee(e($project->client->name));
+        $response->assertSee($project->client->name);
     }
 }
