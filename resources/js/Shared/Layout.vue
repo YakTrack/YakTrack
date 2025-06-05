@@ -24,7 +24,7 @@
             >
                 <sidebar></sidebar>
             </div>
-            <div class="flex-1 container mx-auto">
+            <div class="flex-1 container mx-auto px-4">
                 <div id="content-wrapper" class="min-h-screen w-full lg:static lg:max-h-full lg:overflow-visible">
                     <main role="main" class="lg:sticky w-full py-24">
                         <div class="px-2 sm:px-0">
