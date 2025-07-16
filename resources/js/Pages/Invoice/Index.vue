@@ -18,7 +18,7 @@
 
 
         <div class="card">
-            <table v-if="invoices.length" class="table card-body table-hover">
+            <table v-if="invoices.data && invoices.data.length" class="table card-body table-hover">
                 <thead>
                     <tr>
                         <th> Number </th>
@@ -33,7 +33,7 @@
                 </thead>
                 <tbody>
                     <tr
-                        v-for="invoice in invoices"
+                        v-for="invoice in invoices.data"
                         :key="invoice.id"
                         class="item-container"
                     >
@@ -72,6 +72,17 @@
             <div v-else class="">
                 You have not created any invoices yet.
             </div>
+            
+            <div v-if="invoices.data && invoices.data.length" class="flex justify-center mt-4">
+                <page-selector
+                    :total="invoices.total"
+                    :last-page="invoices.last_page"
+                    :page="invoices.current_page"
+                    :per-page="invoices.per_page"
+                    :on-page-select="selectPage"
+                >
+                </page-selector>
+            </div>
         </div>
     </layout>
 </template>
@@ -81,6 +92,7 @@
 import breadcrumbs from '@/Shared/Breadcrumbs';
 import deleteButton from '@/Shared/DeleteButton';
 import layout from '@/Shared/Layout';
+import pageSelector from '@/components/PageSelector';
 
 export default {
     props: [
@@ -90,6 +102,14 @@ export default {
         breadcrumbs: breadcrumbs,
         deleteButton: deleteButton,
         layout: layout,
+        pageSelector: pageSelector,
+    },
+    methods: {
+        selectPage(page) {
+            this.$inertia.visit(route('invoice.index', {page: page}), {
+                preserveScroll: true,
+            });
+        },
     },
 }
 
