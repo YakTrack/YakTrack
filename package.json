@@ -17,7 +17,7 @@
     "@inertiajs/inertia-vue": "^0.5.5",
     "cross-env": "^5.2.1",
     "dayjs": "^1.8.29",
-    "eslint": "^5.16.0",
+    "eslint": "^9.0.0",
     "eslint-plugin-vue": "^5.2.3",
     "jest": "^25.5.4",
     "laravel-mix": "^5.0.1",
