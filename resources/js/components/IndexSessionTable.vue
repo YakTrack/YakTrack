@@ -172,6 +172,7 @@
     export default {
         props: [
             'invoices',
+            'sprints',
             'thirdPartyApplications',
             'days',
             'page',
@@ -198,6 +199,11 @@
                     {
                         name: 'Link to invoice',
                         event: 'sessions.link-to-invoice',
+                        disabled: () => this.selectedSessions.length > 0,
+                    },
+                    {
+                        name: 'Link to sprint',
+                        event: 'sessions.link-to-sprint',
                         disabled: () => this.selectedSessions.length > 0,
                     },
                     {

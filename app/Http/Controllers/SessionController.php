@@ -39,6 +39,7 @@ class SessionController extends Controller
         return Inertia::render('Session/Index', [
             'invoices'               => Invoice::all(),
             'thirdPartyApplications' => ThirdPartyApplication::all(),
+            'sprints'                => Sprint::with('project.client')->orderBy('id', 'desc')->get(),
             'days'                   => $sessions
                 ->groupBy(function ($session) {
                     return $session->localStartedAt->format('Y-m-d');
