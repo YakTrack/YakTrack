@@ -33,4 +33,18 @@ class CreateClientTest extends TestCase
 
         $this->assertDatabaseHas('clients', $newClientDetails);
     }
+
+    /** @test */
+    public function a_user_can_create_a_client_without_an_email_address()
+    {
+        $this->actingAsUser();
+
+        $response = $this->post(route('client.store'), $newClientDetails = [
+            'name' => 'Test Client Without Email',
+        ]);
+
+        $response->assertRedirect(route('client.index'));
+
+        $this->assertDatabaseHas('clients', $newClientDetails);
+    }
 }
