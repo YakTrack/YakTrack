@@ -43,7 +43,11 @@ class ProjectController extends Controller
             'client_id' => 'exists:clients,id',
         ]);
 
-        $project = factory(Project::class)->create($request->except('_token'));
+        $project = Project::create([
+            'name' => $request->input('name'),
+            'description' => $request->input('description'),
+            'client_id' => $request->input('client_id'),
+        ]);
 
         return redirect()
             ->route('project.index')
