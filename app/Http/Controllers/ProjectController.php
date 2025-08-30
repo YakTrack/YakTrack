@@ -44,9 +44,9 @@ class ProjectController extends Controller
         ]);
 
         $project = Project::create([
-            'name' => $request->input('name'),
+            'name'        => $request->input('name'),
             'description' => $request->input('description'),
-            'client_id' => $request->input('client_id'),
+            'client_id'   => $request->input('client_id'),
         ]);
 
         return redirect()
