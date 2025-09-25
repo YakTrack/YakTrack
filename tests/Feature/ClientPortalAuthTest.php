@@ -5,10 +5,9 @@ namespace Tests\Feature;
 use App\Models\Client;
 use App\Models\ClientUser;
 use App\Models\Project;
-use App\Models\Task;
 use App\Models\Session;
+use App\Models\Task;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class ClientPortalAuthTest extends TestCase
@@ -27,12 +26,12 @@ class ClientPortalAuthTest extends TestCase
         $client = Client::factory()->create();
         $clientUser = ClientUser::factory()->create([
             'client_id' => $client->id,
-            'email' => 'test@client.com',
-            'password' => bcrypt('password'),
+            'email'     => 'test@client.com',
+            'password'  => bcrypt('password'),
         ]);
 
         $response = $this->post('/client-portal/login', [
-            'email' => 'test@client.com',
+            'email'    => 'test@client.com',
             'password' => 'password',
         ]);
 
@@ -45,12 +44,12 @@ class ClientPortalAuthTest extends TestCase
         $client = Client::factory()->create();
         $clientUser = ClientUser::factory()->create([
             'client_id' => $client->id,
-            'email' => 'test@client.com',
-            'password' => bcrypt('password'),
+            'email'     => 'test@client.com',
+            'password'  => bcrypt('password'),
         ]);
 
         $response = $this->post('/client-portal/login', [
-            'email' => 'test@client.com',
+            'email'    => 'test@client.com',
             'password' => 'wrong-password',
         ]);
 
@@ -63,13 +62,13 @@ class ClientPortalAuthTest extends TestCase
         $client = Client::factory()->create();
         $clientUser = ClientUser::factory()->create([
             'client_id' => $client->id,
-            'email' => 'test@client.com',
-            'password' => bcrypt('password'),
+            'email'     => 'test@client.com',
+            'password'  => bcrypt('password'),
             'is_active' => false,
         ]);
 
         $response = $this->post('/client-portal/login', [
-            'email' => 'test@client.com',
+            'email'    => 'test@client.com',
             'password' => 'password',
         ]);
 
@@ -104,7 +103,8 @@ class ClientPortalAuthTest extends TestCase
             ->get('/client-portal/projects');
 
         $response->assertStatus(200);
-        $response->assertInertia(fn ($page) => $page
+        $response->assertInertia(
+            fn ($page) => $page
             ->component('ClientPortal/Projects/Index')
             ->has('projects', 1)
         );
@@ -122,7 +122,7 @@ class ClientPortalAuthTest extends TestCase
         ]);
 
         $response = $this->actingAs($clientUser, 'client')
-            ->get('/client-portal/projects/' . $project->id);
+            ->get('/client-portal/projects/'.$project->id);
 
         $response->assertStatus(403);
     }
@@ -144,7 +144,8 @@ class ClientPortalAuthTest extends TestCase
             ->get('/client-portal/tasks');
 
         $response->assertStatus(200);
-        $response->assertInertia(fn ($page) => $page
+        $response->assertInertia(
+            fn ($page) => $page
             ->component('ClientPortal/Tasks/Index')
             ->has('tasks', 1)
         );
@@ -163,7 +164,7 @@ class ClientPortalAuthTest extends TestCase
             'project_id' => $project->id,
         ]);
         $session = Session::factory()->create([
-            'task_id' => $task->id,
+            'task_id'     => $task->id,
             'is_billable' => true,
         ]);
 
@@ -171,7 +172,8 @@ class ClientPortalAuthTest extends TestCase
             ->get('/client-portal/sessions');
 
         $response->assertStatus(200);
-        $response->assertInertia(fn ($page) => $page
+        $response->assertInertia(
+            fn ($page) => $page
             ->component('ClientPortal/Sessions/Index')
             ->has('sessions.data', 1)
         );

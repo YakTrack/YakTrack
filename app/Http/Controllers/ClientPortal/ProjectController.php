@@ -4,7 +4,6 @@ namespace App\Http\Controllers\ClientPortal;
 
 use App\Http\Controllers\Controller;
 use App\Models\Project;
-use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
@@ -22,7 +21,7 @@ class ProjectController extends Controller
     public function index()
     {
         $clientUser = auth('client')->user();
-        
+
         $projects = $clientUser->client->projects()
             ->with(['tasks' => function ($query) {
                 $query->with(['sessions' => function ($sessionQuery) {
@@ -34,7 +33,7 @@ class ProjectController extends Controller
 
         return inertia('ClientPortal/Projects/Index', [
             'clientUser' => $clientUser,
-            'projects' => $projects,
+            'projects'   => $projects,
         ]);
     }
 
@@ -44,7 +43,7 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         $clientUser = auth('client')->user();
-        
+
         // Ensure the project belongs to the client
         if ($project->client_id !== $clientUser->client_id) {
             abort(403, 'Unauthorized access to project.');
@@ -60,7 +59,7 @@ class ProjectController extends Controller
 
         return inertia('ClientPortal/Projects/Show', [
             'clientUser' => $clientUser,
-            'project' => $project,
+            'project'    => $project,
         ]);
     }
 }

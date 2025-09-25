@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    use BelongsToProject, HasFactory;
+    use BelongsToProject;
+    use HasFactory;
 
     protected $guarded = [];
 

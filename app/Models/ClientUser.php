@@ -8,7 +8,8 @@ use Illuminate\Notifications\Notifiable;
 
 class ClientUser extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -40,7 +41,7 @@ class ClientUser extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'is_active' => 'boolean',
+        'is_active'         => 'boolean',
     ];
 
     /**

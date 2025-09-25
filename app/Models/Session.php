@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Session extends Model
 {
-    use Concerns\CanBeBillable, HasFactory;
+    use Concerns\CanBeBillable;
+    use HasFactory;
 
     protected $guarded = [];
 
