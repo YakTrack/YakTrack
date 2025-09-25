@@ -3,7 +3,6 @@
 namespace Tests\Feature\TaskStatus;
 
 use App\Models\Project;
-use App\Models\TaskStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -23,7 +22,7 @@ class CreateTaskStatusTest extends TestCase
         $response->assertStatus(200);
         $response->assertHasProp('projects');
         $response->assertHasProp('project');
-        
+
         $projectData = $response->props('project');
         $this->assertEquals($project->id, $projectData['id']);
     }

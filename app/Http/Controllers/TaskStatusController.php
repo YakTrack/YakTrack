@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TaskStatus;
 use App\Models\Project;
+use App\Models\TaskStatus;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -16,7 +16,7 @@ class TaskStatusController extends Controller
     {
         $projectId = $request->get('project_id');
         $project = null;
-        
+
         if ($projectId) {
             $project = Project::findOrFail($projectId);
             $statuses = TaskStatus::where('project_id', $projectId)
@@ -30,11 +30,11 @@ class TaskStatusController extends Controller
                 ->orderBy('sort_order')
                 ->get();
         }
-        
+
         return Inertia::render('TaskStatus/Index', [
             'taskStatuses' => $statuses,
-            'project' => $project,
-            'projects' => Project::orderBy('name')->get(),
+            'project'      => $project,
+            'projects'     => Project::orderBy('name')->get(),
         ]);
     }
 
@@ -45,10 +45,10 @@ class TaskStatusController extends Controller
     {
         $projectId = $request->get('project_id');
         $project = $projectId ? Project::findOrFail($projectId) : null;
-        
+
         return Inertia::render('TaskStatus/Edit', [
             'projects' => Project::orderBy('name')->get(),
-            'project' => $project,
+            'project'  => $project,
         ]);
     }
 
@@ -58,28 +58,28 @@ class TaskStatusController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'project_id' => 'required|exists:projects,id',
-            'color' => 'nullable|string|max:7',
-            'sort_order' => 'nullable|integer|min:0',
-            'is_default' => 'boolean',
+            'name'         => 'required|string|max:255',
+            'project_id'   => 'required|exists:projects,id',
+            'color'        => 'nullable|string|max:7',
+            'sort_order'   => 'nullable|integer|min:0',
+            'is_default'   => 'boolean',
             'is_completed' => 'boolean',
         ]);
 
         $maxSortOrder = TaskStatus::where('project_id', $request->project_id)->max('sort_order') ?? -1;
-        
+
         // Handle empty sort_order
         $sortOrder = $request->sort_order;
         if ($sortOrder === '' || $sortOrder === null) {
             $sortOrder = $maxSortOrder + 1;
         }
-        
+
         $taskStatus = TaskStatus::create([
-            'name' => $request->name,
-            'project_id' => $request->project_id,
-            'color' => $request->color ?? '#6B7280',
-            'sort_order' => $sortOrder,
-            'is_default' => $request->is_default ?? false,
+            'name'         => $request->name,
+            'project_id'   => $request->project_id,
+            'color'        => $request->color ?? '#6B7280',
+            'sort_order'   => $sortOrder,
+            'is_default'   => $request->is_default ?? false,
             'is_completed' => $request->is_completed ?? false,
         ]);
 
@@ -101,8 +101,8 @@ class TaskStatusController extends Controller
     {
         return Inertia::render('TaskStatus/Edit', [
             'taskStatus' => $taskStatus->load('project'),
-            'projects' => Project::orderBy('name')->get(),
-            'project' => $taskStatus->project,
+            'projects'   => Project::orderBy('name')->get(),
+            'project'    => $taskStatus->project,
         ]);
     }
 
@@ -112,17 +112,17 @@ class TaskStatusController extends Controller
     public function update(Request $request, TaskStatus $taskStatus)
     {
         $request->validate([
-            'name' => 'string|max:255',
-            'color' => 'nullable|string|max:7',
-            'sort_order' => 'nullable|integer|min:0',
-            'is_default' => 'boolean',
+            'name'         => 'string|max:255',
+            'color'        => 'nullable|string|max:7',
+            'sort_order'   => 'nullable|integer|min:0',
+            'is_default'   => 'boolean',
             'is_completed' => 'boolean',
         ]);
 
         $data = $request->only([
-            'name', 'color', 'is_default', 'is_completed'
+            'name', 'color', 'is_default', 'is_completed',
         ]);
-        
+
         // Handle empty sort_order
         if ($request->has('sort_order')) {
             $sortOrder = $request->sort_order;
