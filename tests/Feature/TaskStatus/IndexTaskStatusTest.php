@@ -21,20 +21,20 @@ class IndexTaskStatusTest extends TestCase
         $project2 = factory(Project::class)->create(['name' => 'Project Two']);
 
         $status1 = factory(TaskStatus::class)->create([
-            'name' => 'To Do',
+            'name'       => 'To Do',
             'project_id' => $project1->id,
             'sort_order' => 1,
         ]);
 
         $status2 = factory(TaskStatus::class)->create([
-            'name' => 'In Progress',
+            'name'       => 'In Progress',
             'project_id' => $project1->id,
             'sort_order' => 2,
         ]);
 
         // Status for different project
         $status3 = factory(TaskStatus::class)->create([
-            'name' => 'Done',
+            'name'       => 'Done',
             'project_id' => $project2->id,
             'sort_order' => 1,
         ]);
@@ -42,29 +42,29 @@ class IndexTaskStatusTest extends TestCase
         $response = $this->get(route('task-status.index', ['project_id' => $project1->id]));
 
         $response->assertStatus(200);
-        
+
         $response->assertPropCount('taskStatuses', 2); // Only 2 statuses for project1
-        
+
         $taskStatuses = $response->props('taskStatuses');
-        
+
         $this->assertArrayMatches([
             [
-                'id' => $status1->id,
-                'name' => 'To Do',
+                'id'         => $status1->id,
+                'name'       => 'To Do',
                 'project_id' => $project1->id,
                 'sort_order' => 1,
             ],
             [
-                'id' => $status2->id,
-                'name' => 'In Progress',
+                'id'         => $status2->id,
+                'name'       => 'In Progress',
                 'project_id' => $project1->id,
                 'sort_order' => 2,
-            ]
+            ],
         ], $taskStatuses);
-        
+
         // Ensure the other project's status is not included
         $foundStatus3 = collect($taskStatuses)->contains('id', $status3->id);
-        $this->assertFalse($foundStatus3, "Status from different project should not be included");
+        $this->assertFalse($foundStatus3, 'Status from different project should not be included');
     }
 
     /** @test */
@@ -75,19 +75,19 @@ class IndexTaskStatusTest extends TestCase
         $project = factory(Project::class)->create();
 
         factory(TaskStatus::class)->create([
-            'name' => 'Last',
+            'name'       => 'Last',
             'project_id' => $project->id,
             'sort_order' => 3,
         ]);
 
         factory(TaskStatus::class)->create([
-            'name' => 'First',
+            'name'       => 'First',
             'project_id' => $project->id,
             'sort_order' => 1,
         ]);
 
         factory(TaskStatus::class)->create([
-            'name' => 'Middle',
+            'name'       => 'Middle',
             'project_id' => $project->id,
             'sort_order' => 2,
         ]);
@@ -95,9 +95,9 @@ class IndexTaskStatusTest extends TestCase
         $response = $this->get(route('task-status.index', ['project_id' => $project->id]));
 
         $response->assertStatus(200);
-        
+
         $taskStatuses = $response->props('taskStatuses');
-        
+
         $this->assertEquals('First', $taskStatuses[0]['name']);
         $this->assertEquals('Middle', $taskStatuses[1]['name']);
         $this->assertEquals('Last', $taskStatuses[2]['name']);
@@ -112,23 +112,23 @@ class IndexTaskStatusTest extends TestCase
         $project2 = factory(Project::class)->create(['name' => 'Project Two']);
 
         factory(TaskStatus::class)->create([
-            'name' => 'Status 1',
+            'name'       => 'Status 1',
             'project_id' => $project1->id,
         ]);
 
         factory(TaskStatus::class)->create([
-            'name' => 'Status 2',
+            'name'       => 'Status 2',
             'project_id' => $project2->id,
         ]);
 
         $response = $this->get(route('task-status.index'));
 
         $response->assertStatus(200);
-        
+
         $response->assertPropCount('taskStatuses', 2); // Both statuses should be returned
-        
+
         $taskStatuses = $response->props('taskStatuses');
-        
+
         // Should include project relationship
         $this->assertArrayHasKey('id', $taskStatuses[0]);
         $this->assertArrayHasKey('name', $taskStatuses[0]);
@@ -148,7 +148,7 @@ class IndexTaskStatusTest extends TestCase
     public function unauthenticated_users_cannot_list_task_statuses()
     {
         $project = factory(Project::class)->create();
-        
+
         factory(TaskStatus::class)->create([
             'project_id' => $project->id,
         ]);
@@ -170,7 +170,7 @@ class IndexTaskStatusTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertPropCount('taskStatuses', 0);
-        
+
         $taskStatuses = $response->props('taskStatuses');
         $this->assertEquals([], $taskStatuses);
     }
