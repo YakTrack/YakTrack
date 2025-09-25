@@ -60,7 +60,12 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         return Inertia::render('Project/Show', [
-            'project' => $project->load('client'),
+            'project' => $project->load([
+                'client',
+                'taskStatuses' => function($query) {
+                    $query->withCount('tasks')->orderBy('sort_order');
+                }
+            ]),
         ]);
     }
 

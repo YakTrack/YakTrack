@@ -211,20 +211,3 @@ export default {
 }
 </script>
 
-<style>
-/* Ensure color input displays properly */
-input[type="color"] {
-    -webkit-appearance: none;
-    border: none;
-    cursor: pointer;
-}
-
-input[type="color"]::-webkit-color-swatch-wrapper {
-    padding: 0;
-}
-
-input[type="color"]::-webkit-color-swatch {
-    border: none;
-    border-radius: 4px;
-}
-</style>

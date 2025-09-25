@@ -61,18 +61,24 @@ class TaskStatusController extends Controller
             'name' => 'required|string|max:255',
             'project_id' => 'required|exists:projects,id',
             'color' => 'nullable|string|max:7',
-            'sort_order' => 'integer|min:0',
+            'sort_order' => 'nullable|integer|min:0',
             'is_default' => 'boolean',
             'is_completed' => 'boolean',
         ]);
 
         $maxSortOrder = TaskStatus::where('project_id', $request->project_id)->max('sort_order') ?? -1;
         
+        // Handle empty sort_order
+        $sortOrder = $request->sort_order;
+        if ($sortOrder === '' || $sortOrder === null) {
+            $sortOrder = $maxSortOrder + 1;
+        }
+        
         $taskStatus = TaskStatus::create([
             'name' => $request->name,
             'project_id' => $request->project_id,
             'color' => $request->color ?? '#6B7280',
-            'sort_order' => $request->sort_order ?? ($maxSortOrder + 1),
+            'sort_order' => $sortOrder,
             'is_default' => $request->is_default ?? false,
             'is_completed' => $request->is_completed ?? false,
         ]);
@@ -108,14 +114,26 @@ class TaskStatusController extends Controller
         $request->validate([
             'name' => 'string|max:255',
             'color' => 'nullable|string|max:7',
-            'sort_order' => 'integer|min:0',
+            'sort_order' => 'nullable|integer|min:0',
             'is_default' => 'boolean',
             'is_completed' => 'boolean',
         ]);
 
-        $taskStatus->update($request->only([
-            'name', 'color', 'sort_order', 'is_default', 'is_completed'
-        ]));
+        $data = $request->only([
+            'name', 'color', 'is_default', 'is_completed'
+        ]);
+        
+        // Handle empty sort_order
+        if ($request->has('sort_order')) {
+            $sortOrder = $request->sort_order;
+            if ($sortOrder === '' || $sortOrder === null) {
+                $data['sort_order'] = null;
+            } else {
+                $data['sort_order'] = $sortOrder;
+            }
+        }
+
+        $taskStatus->update($data);
 
         if ($request->is_default && $request->is_default === true) {
             TaskStatus::where('project_id', $taskStatus->project_id)

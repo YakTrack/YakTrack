@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('color')->nullable();
-            $table->integer('sort_order')->default(0);
+            $table->integer('sort_order')->nullable();
             $table->boolean('is_default')->default(false);
             $table->boolean('is_completed')->default(false);
             $table->unsignedInteger('project_id');
