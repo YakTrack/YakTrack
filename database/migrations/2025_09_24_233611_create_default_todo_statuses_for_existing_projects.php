@@ -1,12 +1,9 @@
 <?php
 
 use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,26 +11,26 @@ return new class extends Migration
     {
         // Create default "To Do" status for all existing projects
         $projects = DB::table('projects')->get();
-        
+
         foreach ($projects as $project) {
             // Check if project already has a "To Do" status
             $existingStatus = DB::table('task_statuses')
                 ->where('project_id', $project->id)
                 ->where('name', 'To Do')
                 ->first();
-                
+
             if (!$existingStatus) {
                 $statusId = DB::table('task_statuses')->insertGetId([
-                    'name' => 'To Do',
-                    'color' => '#6B7280', // Gray color
-                    'sort_order' => 0,
-                    'is_default' => true,
+                    'name'         => 'To Do',
+                    'color'        => '#6B7280', // Gray color
+                    'sort_order'   => 0,
+                    'is_default'   => true,
                     'is_completed' => false,
-                    'project_id' => $project->id,
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    'project_id'   => $project->id,
+                    'created_at'   => now(),
+                    'updated_at'   => now(),
                 ]);
-                
+
                 // Assign this status to all existing tasks in this project that don't have a status_id
                 DB::table('tasks')
                     ->where('project_id', $project->id)
@@ -41,13 +38,13 @@ return new class extends Migration
                     ->update(['status_id' => $statusId]);
             }
         }
-        
+
         // Handle tasks that don't belong to any project
         $orphanTasks = DB::table('tasks')
             ->whereNull('project_id')
             ->whereNull('status_id')
             ->get();
-            
+
         if ($orphanTasks->count() > 0) {
             // Create a default project for orphan tasks if needed
             // For now, we'll just leave them with status_id = null
