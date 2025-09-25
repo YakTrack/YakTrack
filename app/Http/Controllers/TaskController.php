@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\TaskStatus;
 use App\Models\ThirdPartyApplication;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -18,7 +19,7 @@ class TaskController extends Controller
     {
         return Inertia::render('Task/Index', [
             'tasks' => Task::orderBy('id', 'desc')
-                ->with('project.client', 'parent')
+                ->with('project.client', 'parent', 'taskStatus')
                 ->get(),
         ]);
     }
@@ -29,7 +30,7 @@ class TaskController extends Controller
     public function create()
     {
         return Inertia::render('Task/Edit', [
-            'projects' => Project::with(['sprints', 'tasks'])->orderBy('name')->get(),
+            'projects' => Project::with(['sprints', 'tasks', 'taskStatuses'])->orderBy('name')->get(),
             'tasks'    => Task::orderBy('id', 'desc')->get(),
         ]);
     }
@@ -48,11 +49,20 @@ class TaskController extends Controller
             ],
         ]);
 
+        $statusId = null;
+        if (request('project_id')) {
+            $defaultStatus = TaskStatus::where('project_id', request('project_id'))
+                ->where('is_default', true)
+                ->first();
+            $statusId = $defaultStatus ? $defaultStatus->id : null;
+        }
+
         $task = Task::create([
             'name'        => request('name'),
             'description' => request('description') ?? '',
             'project_id'  => request('project_id') ?? null,
             'parent_id'   => request('parent_id') ?? null,
+            'status_id'   => $statusId,
             'status'      => 'incomplete',
         ]);
 
@@ -79,9 +89,9 @@ class TaskController extends Controller
     public function edit(Task $task)
     {
         return Inertia::render('Task/Edit', [
-            'task'     => $task,
+            'task'     => $task->load('taskStatus'),
             'tasks'    => Task::all(),
-            'projects' => Project::all(),
+            'projects' => Project::with('taskStatuses')->get(),
         ]);
     }
 
@@ -95,6 +105,7 @@ class TaskController extends Controller
             'description' => 'string',
             'project_id'  => 'exists:projects,id',
             'parent_id'   => 'nullable|exists:tasks,id|not_in:'.$task->id,
+            'status_id'   => 'nullable|exists:task_statuses,id',
         ]);
 
         $task->update([
@@ -102,6 +113,7 @@ class TaskController extends Controller
             'description' => request('description', $task->description),
             'project_id'  => request('project_id', $task->project_id),
             'parent_id'   => request()->filled('parent_id') ? request('parent_id', $task->parent_id) : null,
+            'status_id'   => request('status_id', $task->status_id),
         ]);
 
         return redirect()->route('task.index');

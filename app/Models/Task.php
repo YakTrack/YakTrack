@@ -38,6 +38,11 @@ class Task extends Model
         return $this->belongsTo(self::class, 'parent_id');
     }
 
+    public function taskStatus()
+    {
+        return $this->belongsTo(TaskStatus::class, 'status_id');
+    }
+
     public function openSprint()
     {
         return $this->getProject()->sprints()->open()->orderBy('id', 'desc')->first() ?? new Sprint();

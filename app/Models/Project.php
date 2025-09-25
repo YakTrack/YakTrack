@@ -64,6 +64,14 @@ class Project extends Model
         return $this->hasMany(Task::class);
     }
 
+    /**
+     * The task statuses that belong to the project.
+     **/
+    public function taskStatuses()
+    {
+        return $this->hasMany(TaskStatus::class)->orderBy('sort_order');
+    }
+
     public function isDeletable()
     {
         if ($this->sprints->count() > 0) {

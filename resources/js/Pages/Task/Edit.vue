@@ -30,6 +30,26 @@
                 <label for="parent_id"> Parent Task </label>
                 <multi-select :options="selectableParentTasks" label="name" v-model="selectedParentTask"></multi-select>
             </div>
+
+            <div class="form-group" v-if="selectedProject && selectedProject.task_statuses">
+                <label for="status_id"> Status </label>
+                <multi-select :options="selectedProject.task_statuses" label="name" v-model="selectedStatus">
+                    <template slot="option" slot-scope="props">
+                        <div class="flex items-center">
+                            <div :style="{ backgroundColor: props.option.color }" 
+                                 class="w-3 h-3 rounded-full mr-2"></div>
+                            {{ props.option.name }}
+                        </div>
+                    </template>
+                    <template slot="singleLabel" slot-scope="props">
+                        <div class="flex items-center">
+                            <div :style="{ backgroundColor: props.option.color }" 
+                                 class="w-3 h-3 rounded-full mr-2"></div>
+                            {{ props.option.name }}
+                        </div>
+                    </template>
+                </multi-select>
+            </div>
             <div class="flex mt-4">
                 <div class="flex-1 mt-2">
                     <button-link :href="route('task.index')"> Cancel </button-link>
@@ -58,6 +78,7 @@
             return {
                 selectedProject: (this.task && this.task.project_id) ? this.projects.find(p => p.id == this.task.project_id) : null,
                 selectedParentTask: (this.task && this.task.parent_id) ? this.tasks.find(t => t.id == this.task.parent_id) : null,
+                selectedStatus: (this.task && this.task.status_id) ? this.findTaskStatus() : null,
                 form: this.task || {},
             }
         },
@@ -76,9 +97,16 @@
                         ...{
                             project_id: this.selectedProjectId,
                             parent_id: this.selectedParentTaskId,
+                            status_id: this.selectedStatusId,
                         }
                     }
                 );
+            },
+            findTaskStatus() {
+                if (!this.task || !this.task.status_id) return null;
+                const project = this.projects.find(p => p.id == this.task.project_id);
+                if (!project || !project.task_statuses) return null;
+                return project.task_statuses.find(s => s.id == this.task.status_id) || null;
             }
         },
         computed: {
@@ -91,12 +119,21 @@
             selectedParentTaskId() {
                 return this.selectedParentTask ? this.selectedParentTask.id : null;
             },
+            selectedStatusId() {
+                return this.selectedStatus ? this.selectedStatus.id : null;
+            },
             selectableParentTasks() {
                 var _this = this;
 
                 return this.selectedProject ? this.tasks.filter(function (task) {
                     return task.project_id === _this.selectedProjectId;
                 }) : this.tasks;
+            }
+        },
+        watch: {
+            selectedProject(newProject) {
+                // Reset status when project changes
+                this.selectedStatus = null;
             }
         }
     }

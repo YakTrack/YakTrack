@@ -22,6 +22,7 @@
                     <th> Parent </th>
                     <th> Project </th>
                     <th> Client </th>
+                    <th> Status </th>
                     <th> <span class="float-right"> Actions </span> </th>
                 </tr>
                 <tr
@@ -47,6 +48,16 @@
                         <inertia-link :href="route('client.show', task.project.client)" v-if="task.project && task.project.client">
                             {{ task.project.client.name }}
                         </inertia-link>
+                    </td>
+                    <td>
+                        <span v-if="task.task_status" 
+                              :style="{ backgroundColor: task.task_status.color }"
+                              class="px-2 py-1 text-xs rounded-full text-white inline-block">
+                            {{ task.task_status.name }}
+                        </span>
+                        <span v-else class="px-2 py-1 text-xs rounded-full bg-gray-300 text-gray-700 inline-block">
+                            No Status
+                        </span>
                     </td>
                     <td>
                         <div class="btn-group float-right">

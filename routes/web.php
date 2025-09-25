@@ -36,6 +36,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('sprint.invoice', 'Sprint\InvoiceController');
     Route::resource('target', 'TargetController');
     Route::resource('task', 'TaskController');
+    Route::resource('task-status', 'TaskStatusController');
     Route::resource('third-party-application', 'ThirdPartyApplicationController');
     Route::resource('third-party-application-session', 'ThirdPartyApplicationSessionController');
     Route::resource('invoice', 'InvoiceController');
