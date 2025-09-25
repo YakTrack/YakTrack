@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\ClientPortal;
 
 use App\Http\Controllers\Controller;
-use App\Models\ClientUser;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -22,7 +20,7 @@ class DashboardController extends Controller
     public function index()
     {
         $clientUser = auth('client')->user();
-        
+
         $projects = $clientUser->client->projects()
             ->with(['tasks' => function ($query) {
                 $query->with(['sessions' => function ($sessionQuery) {
@@ -42,10 +40,10 @@ class DashboardController extends Controller
             ->get();
 
         return inertia('ClientPortal/Dashboard', [
-            'clientUser' => $clientUser,
-            'projects' => $projects,
+            'clientUser'         => $clientUser,
+            'projects'           => $projects,
             'totalBillableHours' => round($totalBillableHours, 2),
-            'recentSessions' => $recentSessions,
+            'recentSessions'     => $recentSessions,
         ]);
     }
 }

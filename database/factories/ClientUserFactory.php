@@ -17,9 +17,9 @@ class ClientUserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => $this->faker->name(),
-            'email' => $this->faker->unique()->safeEmail(),
-            'password' => bcrypt('password'),
+            'name'      => $this->faker->name(),
+            'email'     => $this->faker->unique()->safeEmail(),
+            'password'  => bcrypt('password'),
             'client_id' => \App\Models\Client::factory(),
             'is_active' => true,
         ];

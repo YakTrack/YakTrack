@@ -4,7 +4,6 @@ namespace App\Http\Controllers\ClientPortal;
 
 use App\Http\Controllers\Controller;
 use App\Models\Session;
-use Illuminate\Http\Request;
 
 class SessionController extends Controller
 {
@@ -22,7 +21,7 @@ class SessionController extends Controller
     public function index()
     {
         $clientUser = auth('client')->user();
-        
+
         $sessions = Session::whereHas('task.project', function ($query) use ($clientUser) {
             $query->where('client_id', $clientUser->client_id);
         })
@@ -33,7 +32,7 @@ class SessionController extends Controller
 
         return inertia('ClientPortal/Sessions/Index', [
             'clientUser' => $clientUser,
-            'sessions' => $sessions,
+            'sessions'   => $sessions,
         ]);
     }
 
@@ -43,7 +42,7 @@ class SessionController extends Controller
     public function show(Session $session)
     {
         $clientUser = auth('client')->user();
-        
+
         // Ensure the session belongs to the client
         if ($session->task->project->client_id !== $clientUser->client_id) {
             abort(403, 'Unauthorized access to session.');
@@ -53,7 +52,7 @@ class SessionController extends Controller
 
         return inertia('ClientPortal/Sessions/Show', [
             'clientUser' => $clientUser,
-            'session' => $session,
+            'session'    => $session,
         ]);
     }
 }

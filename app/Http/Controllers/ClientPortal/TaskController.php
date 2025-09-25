@@ -4,7 +4,6 @@ namespace App\Http\Controllers\ClientPortal;
 
 use App\Http\Controllers\Controller;
 use App\Models\Task;
-use Illuminate\Http\Request;
 
 class TaskController extends Controller
 {
@@ -22,7 +21,7 @@ class TaskController extends Controller
     public function index()
     {
         $clientUser = auth('client')->user();
-        
+
         $tasks = Task::whereHas('project', function ($query) use ($clientUser) {
             $query->where('client_id', $clientUser->client_id);
         })
@@ -35,7 +34,7 @@ class TaskController extends Controller
 
         return inertia('ClientPortal/Tasks/Index', [
             'clientUser' => $clientUser,
-            'tasks' => $tasks,
+            'tasks'      => $tasks,
         ]);
     }
 
@@ -45,7 +44,7 @@ class TaskController extends Controller
     public function show(Task $task)
     {
         $clientUser = auth('client')->user();
-        
+
         // Ensure the task belongs to the client
         if ($task->project->client_id !== $clientUser->client_id) {
             abort(403, 'Unauthorized access to task.');
@@ -59,7 +58,7 @@ class TaskController extends Controller
 
         return inertia('ClientPortal/Tasks/Show', [
             'clientUser' => $clientUser,
-            'task' => $task,
+            'task'       => $task,
         ]);
     }
 }
