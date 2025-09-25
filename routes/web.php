@@ -49,3 +49,25 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('session', 'SessionController');
     Route::patch('sessions', 'SessionsController@update')->name('sessions.update');
 });
+
+// Client Portal Routes
+Route::prefix('client-portal')->name('client-portal.')->group(function () {
+    // Authentication routes
+    Route::get('login', 'ClientPortal\AuthController@showLoginForm')->name('login');
+    Route::post('login', 'ClientPortal\AuthController@login')->name('login.attempt');
+    Route::post('logout', 'ClientPortal\AuthController@logout')->name('logout');
+
+    // Protected routes
+    Route::middleware('auth:client')->group(function () {
+        Route::get('/', 'ClientPortal\DashboardController@index')->name('dashboard');
+        
+        Route::get('projects', 'ClientPortal\ProjectController@index')->name('projects.index');
+        Route::get('projects/{project}', 'ClientPortal\ProjectController@show')->name('projects.show');
+        
+        Route::get('tasks', 'ClientPortal\TaskController@index')->name('tasks.index');
+        Route::get('tasks/{task}', 'ClientPortal\TaskController@show')->name('tasks.show');
+        
+        Route::get('sessions', 'ClientPortal\SessionController@index')->name('sessions.index');
+        Route::get('sessions/{session}', 'ClientPortal\SessionController@show')->name('sessions.show');
+    });
+});

@@ -1,16 +1,37 @@
 <?php
 
+namespace Database\Factories;
+
 use App\Models\Client;
 use App\Models\Invoice;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Client::class, function (Faker $faker) {
-    return [
-        'name'  => $faker->name,
-        'email' => $faker->safeEmail,
-    ];
-});
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Client>
+ */
+class ClientFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'name' => $this->faker->name(),
+            'email' => $this->faker->safeEmail(),
+            'is_billable' => true,
+        ];
+    }
 
-$factory->afterCreatingState(Client::class, 'with_invoices', function ($client) {
-    factory(Invoice::class, 10)->create(['client_id' => $client->id]);
-});
+    /**
+     * Indicate that the client should have invoices.
+     */
+    public function withInvoices(): static
+    {
+        return $this->afterCreating(function (Client $client) {
+            Invoice::factory(10)->create(['client_id' => $client->id]);
+        });
+    }
+}

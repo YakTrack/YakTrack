@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Client extends Model
 {
+    use HasFactory;
+
     protected $guarded = [];
 
     public function invoices()
@@ -31,5 +34,10 @@ class Client extends Model
     public function getOpenSprintsAttribute()
     {
         return $this->sprints()->open()->with('sessions')->get();
+    }
+
+    public function clientUsers()
+    {
+        return $this->hasMany(ClientUser::class);
     }
 }

@@ -4,11 +4,12 @@ namespace App\Models;
 
 use App\Models\Collections\TaskCollection;
 use App\Models\Concerns\BelongsToProject;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Task extends Model
 {
-    use BelongsToProject;
+    use BelongsToProject, HasFactory;
 
     protected $guarded = [];
 

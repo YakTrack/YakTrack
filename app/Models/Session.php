@@ -7,10 +7,11 @@ use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
 use DateTimeInterface;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Session extends Model
 {
-    use Concerns\CanBeBillable;
+    use Concerns\CanBeBillable, HasFactory;
 
     protected $guarded = [];
 
