@@ -151,8 +151,11 @@
                                         {{ session.task.project.name }}
                                     </p>
                                     <p class="text-sm text-gray-500">
-                                        {{ formatDate(session.started_at) }} - {{ session.duration_for_humans }}
+                                        {{ formatDate(session.started_at) }} - {{ formatDate(session.ended_at) }}
                                     </p>
+                                    <div class="text-sm text-gray-600 font-mono">
+                                        {{ session.durationForHumans }}
+                                    </div>
                                 </div>
                                 <div class="flex-shrink-0 text-sm text-gray-500">
                                     <span v-if="session.session_category" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
@@ -160,8 +163,8 @@
                                     </span>
                                 </div>
                             </div>
-                            <div v-if="session.notes" class="mt-2">
-                                <p class="text-sm text-gray-600">{{ session.notes }}</p>
+                            <div v-if="session.comment" class="mt-2">
+                                <p class="text-sm text-gray-600">{{ session.comment }}</p>
                             </div>
                         </li>
                     </ul>
@@ -198,7 +201,9 @@ export default {
             let totalHours = 0
             project.tasks.forEach(task => {
                 task.sessions.forEach(session => {
-                    totalHours += session.duration_in_seconds / 3600
+                    if (session.duration_in_seconds && !isNaN(session.duration_in_seconds)) {
+                        totalHours += session.duration_in_seconds / 3600
+                    }
                 })
             })
             return Math.round(totalHours * 100) / 100

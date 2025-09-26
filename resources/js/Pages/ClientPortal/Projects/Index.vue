@@ -65,11 +65,11 @@
                                     </p>
                                 </div>
                             </div>
-                            
+
                             <div class="mt-4">
                                 <div class="flex items-center justify-between text-sm text-gray-500">
                                     <span>{{ project.tasks.length }} tasks</span>
-                                    <span>{{ getTotalBillableHours(project) }}h billable</span>
+                                    <span>{{ getTotalBillableHours(project) }}h</span>
                                 </div>
                             </div>
 
@@ -106,7 +106,9 @@ export default {
             let totalHours = 0
             project.tasks.forEach(task => {
                 task.sessions.forEach(session => {
-                    totalHours += session.duration_in_seconds / 3600
+                    if (session.durationInSeconds && !isNaN(session.durationInSeconds)) {
+                        totalHours += session.durationInSeconds / 3600
+                    }
                 })
             })
             return Math.round(totalHours * 100) / 100

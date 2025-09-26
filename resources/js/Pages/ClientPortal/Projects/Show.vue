@@ -146,7 +146,7 @@
                                     </a>
                                 </div>
                             </div>
-                            
+
                             <!-- Recent sessions for this task -->
                             <div v-if="task.sessions.length > 0" class="mt-3">
                                 <div class="text-xs text-gray-500 mb-2">Recent sessions:</div>
@@ -156,7 +156,7 @@
                                             <div class="flex-1 min-w-0">
                                                 <p class="text-sm text-gray-900">{{ formatDate(session.started_at) }}</p>
                                                 <p class="text-sm text-gray-500">{{ session.duration_for_humans }}</p>
-                                                <p v-if="session.notes" class="text-sm text-gray-600 mt-1">{{ session.notes }}</p>
+                                                <p v-if="session.comment" class="text-sm text-gray-600 mt-1">{{ session.comment }}</p>
                                             </div>
                                             <div class="flex-shrink-0">
                                                 <span v-if="session.session_category" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
@@ -195,7 +195,9 @@ export default {
             let totalHours = 0
             this.project.tasks.forEach(task => {
                 task.sessions.forEach(session => {
-                    totalHours += session.duration_in_seconds / 3600
+                    if (session.duration_in_seconds && !isNaN(session.duration_in_seconds)) {
+                        totalHours += session.duration_in_seconds / 3600
+                    }
                 })
             })
             return Math.round(totalHours * 100) / 100
@@ -206,7 +208,9 @@ export default {
         getTaskBillableHours(task) {
             let totalHours = 0
             task.sessions.forEach(session => {
-                totalHours += session.duration_in_seconds / 3600
+                if (session.duration_in_seconds && !isNaN(session.duration_in_seconds)) {
+                    totalHours += session.duration_in_seconds / 3600
+                }
             })
             return Math.round(totalHours * 100) / 100
         },

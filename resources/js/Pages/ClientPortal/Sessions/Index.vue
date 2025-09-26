@@ -47,8 +47,8 @@
             <div class="px-4 py-6 sm:px-0">
                 <!-- Header -->
                 <div class="mb-8">
-                    <h1 class="text-3xl font-bold text-gray-900">Billable Sessions</h1>
-                    <p class="mt-2 text-gray-600">View all billable work sessions across your projects.</p>
+                    <h1 class="text-3xl font-bold text-gray-900"> Work Sessions </h1>
+                    <p class="mt-2 text-gray-600">View all work sessions being done across your projects.</p>
                 </div>
 
                 <!-- Sessions list -->
@@ -71,8 +71,8 @@
                                     <p class="text-sm text-gray-500">
                                         {{ formatDate(session.started_at) }} • {{ session.duration_for_humans }}
                                     </p>
-                                    <p v-if="session.notes" class="mt-2 text-sm text-gray-600">
-                                        {{ session.notes }}
+                                    <p v-if="session.comment" class="mt-2 text-sm text-gray-600">
+                                        {{ session.comment }}
                                     </p>
                                 </div>
                                 <div class="flex-shrink-0">
@@ -128,7 +128,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                     <h3 class="mt-2 text-sm font-medium text-gray-900">No sessions</h3>
-                    <p class="mt-1 text-sm text-gray-500">You don't have any billable sessions yet.</p>
+                    <p class="mt-1 text-sm text-gray-500">You don't have any sessions yet.</p>
                 </div>
             </div>
         </main>

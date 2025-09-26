@@ -114,7 +114,7 @@
                             <div class="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                                 <dt class="text-sm font-medium text-gray-500">Notes</dt>
                                 <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                    <p v-if="session.notes" class="whitespace-pre-wrap">{{ session.notes }}</p>
+                                    <p v-if="session.comment" class="whitespace-pre-wrap">{{ session.comment }}</p>
                                     <p v-else class="text-gray-500">No notes provided</p>
                                 </dd>
                             </div>

@@ -124,8 +124,8 @@
                                     <p class="text-sm text-gray-500">
                                         Duration: {{ session.duration_for_humans }}
                                     </p>
-                                    <p v-if="session.notes" class="mt-2 text-sm text-gray-600">
-                                        {{ session.notes }}
+                                    <p v-if="session.comment" class="mt-2 text-sm text-gray-600">
+                                        {{ session.comment }}
                                     </p>
                                 </div>
                                 <div class="flex-shrink-0">
@@ -161,7 +161,9 @@ export default {
         getTaskBillableHours() {
             let totalHours = 0
             this.task.sessions.forEach(session => {
-                totalHours += session.duration_in_seconds / 3600
+                if (session.duration_in_seconds && !isNaN(session.duration_in_seconds)) {
+                    totalHours += session.duration_in_seconds / 3600
+                }
             })
             return Math.round(totalHours * 100) / 100
         },
