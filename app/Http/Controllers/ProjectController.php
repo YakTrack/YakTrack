@@ -65,6 +65,11 @@ class ProjectController extends Controller
             ->orderBy('ended_at', 'desc')
             ->paginate(15);
 
+        $tasks = $project->tasks()
+            ->with(['taskStatus', 'parent'])
+            ->orderBy('name')
+            ->paginate(15, ['*'], 'tasks_page');
+
         return Inertia::render('Project/Show', [
             'project' => $project->load([
                 'client',
@@ -73,6 +78,7 @@ class ProjectController extends Controller
                 },
             ]),
             'sessions' => $sessions,
+            'tasks' => $tasks,
         ]);
     }
 
