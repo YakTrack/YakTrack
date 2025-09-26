@@ -74,6 +74,14 @@ class Project extends Model
         return $this->hasMany(TaskStatus::class)->orderBy('sort_order');
     }
 
+    /**
+     * The sessions that belong to the project through tasks.
+     **/
+    public function sessions()
+    {
+        return $this->hasManyThrough(Session::class, Task::class);
+    }
+
     public function isDeletable()
     {
         if ($this->sprints->count() > 0) {

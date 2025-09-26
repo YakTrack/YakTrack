@@ -59,6 +59,12 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        $sessions = $project->sessions()
+            ->with(['task', 'sessionCategory'])
+            ->whereNotNull('ended_at')
+            ->orderBy('ended_at', 'desc')
+            ->paginate(15);
+
         return Inertia::render('Project/Show', [
             'project' => $project->load([
                 'client',
@@ -66,6 +72,7 @@ class ProjectController extends Controller
                     $query->withCount('tasks')->orderBy('sort_order');
                 },
             ]),
+            'sessions' => $sessions,
         ]);
     }
 
