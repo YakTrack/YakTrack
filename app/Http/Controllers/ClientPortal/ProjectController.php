@@ -88,11 +88,11 @@ class ProjectController extends Controller
         }]);
 
         $pdf = Pdf::loadView('client-portal.project-report', [
-            'project' => $project,
-            'clientUser' => $clientUser
+            'project'    => $project,
+            'clientUser' => $clientUser,
         ]);
 
-        return $pdf->download($project->name . ' - Project Report.pdf');
+        return $pdf->download($project->name.' - Project Report.pdf');
     }
 
     /**
@@ -117,8 +117,8 @@ class ProjectController extends Controller
         }]);
 
         return view('client-portal.project-report-html', [
-            'project' => $project,
-            'clientUser' => $clientUser
+            'project'    => $project,
+            'clientUser' => $clientUser,
         ]);
     }
 }
