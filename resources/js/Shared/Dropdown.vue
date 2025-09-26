@@ -7,7 +7,7 @@
             <span> {{ label || 'Actions' }} </span>
             <i class="fas fa-caret-down"></i>
         </button>
-        <div class="rounded shadow-md mt-2 absolute mt-12 -ml-1 mb-12 top-0 left-0 min-w-full bg-white text-left z-10" :class="isOpen || 'dropdown-closed'">
+        <div class="rounded shadow-md mt-2 absolute mt-12 mb-12 top-0 min-w-full bg-white text-left z-10" :class="[dropdownClasses, isOpen || 'dropdown-closed']">
             <ul class="list-reset w-max-content min-w-full p-1">
                 <li v-for="option in options" :key="option.name" class="clickable"> 
                     <a
@@ -26,6 +26,7 @@ export default {
         'options',
         'name',
         'selected-option',
+        'direction',
     ],
     data() {
         return {
@@ -49,6 +50,12 @@ export default {
     computed: {
         label() {
             return this.name;
+        },
+        dropdownClasses() {
+            if (this.direction === 'left') {
+                return 'right-0';
+            }
+            return 'left-0 -ml-1';
         }
     },
 }

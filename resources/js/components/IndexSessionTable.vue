@@ -39,7 +39,7 @@
                         <th class="">  </th>
                         <th class="pr-2 font-mono text-base font-thin text-right text-gray-500"> {{ totalDuration }} </th>
                         <th class="pb-2 pr-2 text-right">
-                            <dropdown :options="actionsDropdown"></dropdown>
+                            <dropdown :options="actionsDropdown" direction="left"></dropdown>
                         </th>
                     </tr>
                 </thead>
@@ -101,6 +101,7 @@
                         <td class="inline-flex float-right pt-1 pb-1 pr-2 text-right" :class="sessionIndex || 'pt-2' ">
                             <dropdown
                                 :options="getSessionActions(session)"
+                                direction="left"
                                 name="Actions"
                             ></dropdown>
                         </td>
