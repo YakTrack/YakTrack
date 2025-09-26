@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class SessionCategory extends Model
 {
     use HasFactory;
+    
+    protected $fillable = ['name', 'description'];
 
-    protected $fillable = ['name'];
+    public function sessions()
+    {
+        return $this->hasMany(Session::class);
+    }
 }

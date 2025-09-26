@@ -38,6 +38,12 @@
                         active: route().current('session.*'),
                     },
                     {
+                        name: 'Categories',
+                        route: 'session-category.index',
+                        icon: 'fas fa-tags fa-fw',
+                        active: route().current('session-category.*'),
+                    },
+                    {
                         name: 'Tasks',
                         route: 'task.index',
                         icon: 'fas fa-check-square fa-fw',
