@@ -74,7 +74,7 @@
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt class="text-sm font-medium text-gray-500 truncate">Billable Hours</dt>
+                                        <dt class="text-sm font-medium text-gray-500 truncate"> Hours </dt>
                                         <dd class="text-lg font-medium text-gray-900">{{ getTaskBillableHours() }}h</dd>
                                     </dl>
                                 </div>
@@ -106,26 +106,30 @@
                 <!-- Sessions -->
                 <div class="bg-white shadow overflow-hidden sm:rounded-md">
                     <div class="px-4 py-5 sm:px-6">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">Billable Sessions</h3>
-                        <p class="mt-1 max-w-2xl text-sm text-gray-500">All billable work sessions for this task</p>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Work Sessions</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500">All work sessions for this task</p>
                     </div>
                     <ul class="divide-y divide-gray-200">
                         <li v-for="session in task.sessions" :key="session.id" class="px-4 py-4 sm:px-6">
                             <div class="flex items-center justify-between">
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-center">
-                                        <p class="text-sm font-medium text-gray-900">
-                                            {{ formatDate(session.started_at) }}
-                                        </p>
+                                        <div class="text-sm font-medium text-gray-700 flex">
+                                            <div>{{ formatDate(session.started_at) }}</div>
+                                            <div class="px-2"> - </div>
+                                            <div>{{ session.ended_at ? formatDate(session.ended_at) : 'Now' }}</div>
+                                        </div>
                                         <span v-if="session.session_category" class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                                             {{ session.session_category.name }}
                                         </span>
                                     </div>
-                                    <p class="text-sm text-gray-500">
-                                        Duration: {{ session.duration_for_humans }}
-                                    </p>
                                     <p v-if="session.comment" class="mt-2 text-sm text-gray-600">
                                         {{ session.comment }}
+                                    </p>
+                                </div>
+                                <div class="flex-shrink-0 px-4">
+                                    <p class="text-sm text-gray-500">
+                                        {{ session.durationForHumans }}
                                     </p>
                                 </div>
                                 <div class="flex-shrink-0">
@@ -144,7 +148,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                     <h3 class="mt-2 text-sm font-medium text-gray-900">No sessions</h3>
-                    <p class="mt-1 text-sm text-gray-500">This task doesn't have any billable sessions yet.</p>
+                    <p class="mt-1 text-sm text-gray-500">This task doesn't have any sessions yet.</p>
                 </div>
             </div>
         </main>
@@ -161,8 +165,8 @@ export default {
         getTaskBillableHours() {
             let totalHours = 0
             this.task.sessions.forEach(session => {
-                if (session.duration_in_seconds && !isNaN(session.duration_in_seconds)) {
-                    totalHours += session.duration_in_seconds / 3600
+                if (session.durationInSeconds && !isNaN(session.durationInSeconds)) {
+                    totalHours += session.durationInSeconds / 3600
                 }
             })
             return Math.round(totalHours * 100) / 100

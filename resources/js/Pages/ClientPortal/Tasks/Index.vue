@@ -48,7 +48,7 @@
                 <!-- Header -->
                 <div class="mb-8">
                     <h1 class="text-3xl font-bold text-gray-900">Your Tasks</h1>
-                    <p class="mt-2 text-gray-600">View all your tasks and their billable sessions.</p>
+                    <p class="mt-2 text-gray-600">View all your tasks and their work sessions.</p>
                 </div>
 
                 <!-- Tasks list -->
@@ -57,23 +57,18 @@
                         <li v-for="task in tasks" :key="task.id" class="px-4 py-4 sm:px-6">
                             <div class="flex items-center justify-between">
                                 <div class="flex-1 min-w-0">
-                                    <p class="text-sm font-medium text-indigo-600 truncate">
+                                    <a :href="route('client-portal.tasks.show', task.id)" class="text-base font-medium text-blue-800 truncate hover:underline">
                                         {{ task.name }}
-                                    </p>
+                                    </a>
                                     <p class="text-sm text-gray-500 truncate">
                                         {{ task.project.name }}
                                     </p>
                                     <p class="text-sm text-gray-500">
-                                        {{ task.sessions.length }} billable sessions • {{ getTaskBillableHours(task) }}h total
+                                        {{ task.sessions.length }} sessions • {{ getTaskBillableHours(task) }}h total
                                     </p>
                                 </div>
-                                <div class="flex-shrink-0">
-                                    <a :href="route('client-portal.tasks.show', task.id)" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                        View Task
-                                    </a>
-                                </div>
                             </div>
-                            
+
                             <!-- Recent sessions for this task -->
                             <div v-if="task.sessions.length > 0" class="mt-3">
                                 <div class="text-xs text-gray-500 mb-2">Recent sessions:</div>
@@ -81,14 +76,22 @@
                                     <div v-for="session in task.sessions.slice(0, 2)" :key="session.id" class="bg-gray-50 rounded-md p-3">
                                         <div class="flex items-center justify-between">
                                             <div class="flex-1 min-w-0">
-                                                <p class="text-sm text-gray-900">{{ formatDate(session.started_at) }}</p>
-                                                <p class="text-sm text-gray-500">{{ session.duration_for_humans }}</p>
+                                                <div class="text-sm font-medium text-gray-700 flex">
+                                                    <div>{{ formatDate(session.started_at) }}</div>
+                                                    <div class="px-2"> - </div>
+                                                    <div>{{ session.ended_at ? formatDate(session.ended_at) : 'Now' }}</div>
+                                                </div>
                                                 <p v-if="session.comment" class="text-sm text-gray-600 mt-1">{{ session.comment }}</p>
                                             </div>
                                             <div class="flex-shrink-0">
-                                                <span v-if="session.session_category" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                <span v-if="session.session_category" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                                                     {{ session.session_category.name }}
                                                 </span>
+                                            </div>
+                                            <div class="flex-shrink-0 px-4">
+                                                <p class="text-sm text-gray-500">
+                                                    {{ session.durationForHumans }}
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -121,8 +124,8 @@ export default {
         getTaskBillableHours(task) {
             let totalHours = 0
             task.sessions.forEach(session => {
-                if (session.duration_in_seconds && !isNaN(session.duration_in_seconds)) {
-                    totalHours += session.duration_in_seconds / 3600
+                if (session.durationInSeconds && !isNaN(session.durationInSeconds)) {
+                    totalHours += session.durationInSeconds / 3600
                 }
             })
             return Math.round(totalHours * 100) / 100

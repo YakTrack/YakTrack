@@ -58,27 +58,30 @@
                             <div class="flex items-center justify-between">
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-center">
-                                        <p class="text-sm font-medium text-indigo-600 truncate">
+                                        <a
+                                            :href="route('client-portal.sessions.show', session.id)"
+                                            class="text-base font-medium text-blue-800 truncate"
+                                        >
                                             {{ session.task.name }}
-                                        </p>
-                                        <span v-if="session.session_category" class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                            {{ session.session_category.name }}
-                                        </span>
+                                        </a>
                                     </div>
                                     <p class="text-sm text-gray-500 truncate">
                                         {{ session.task.project.name }}
                                     </p>
                                     <p class="text-sm text-gray-500">
-                                        {{ formatDate(session.started_at) }} • {{ session.duration_for_humans }}
+                                        {{ formatDate(session.started_at) }} - {{ formatDate(session.ended_at) }}
                                     </p>
                                     <p v-if="session.comment" class="mt-2 text-sm text-gray-600">
                                         {{ session.comment }}
                                     </p>
                                 </div>
-                                <div class="flex-shrink-0">
-                                    <a :href="route('client-portal.sessions.show', session.id)" class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                                        View Session
-                                    </a>
+                                <div class="flex-shrink-0 pr-4">
+                                    <span v-if="session.session_category" class="ml-2 inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        {{ session.session_category.name }}
+                                    </span>
+                                </div>
+                                <div class="flex-shrink-0 font-mono text-gray-600 text-sm">
+                                    {{ session.durationForHumans }}
                                 </div>
                             </div>
                         </li>

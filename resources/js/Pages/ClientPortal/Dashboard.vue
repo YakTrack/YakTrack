@@ -48,7 +48,7 @@
                 <!-- Welcome section -->
                 <div class="mb-8">
                     <h1 class="text-3xl font-bold text-gray-900">Welcome to your Client Portal</h1>
-                    <p class="mt-2 text-gray-600">View your projects, tasks, and billable sessions.</p>
+                    <p class="mt-2 text-gray-600">View your projects, tasks, and work sessions.</p>
                 </div>
 
                 <!-- Stats cards -->
@@ -105,7 +105,7 @@
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt class="text-sm font-medium text-gray-500 truncate">Billable Hours</dt>
+                                        <dt class="text-sm font-medium text-gray-500 truncate">Total Hours</dt>
                                         <dd class="text-lg font-medium text-gray-900">{{ totalBillableHours }}h</dd>
                                     </dl>
                                 </div>
@@ -137,8 +137,8 @@
                 <!-- Recent sessions -->
                 <div class="bg-white shadow overflow-hidden sm:rounded-md">
                     <div class="px-4 py-5 sm:px-6">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Billable Sessions</h3>
-                        <p class="mt-1 max-w-2xl text-sm text-gray-500">Your most recent billable work sessions</p>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Sessions</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500">Your most recent work sessions</p>
                     </div>
                     <ul class="divide-y divide-gray-200">
                         <li v-for="session in recentSessions" :key="session.id" class="px-4 py-4 sm:px-6">
@@ -153,14 +153,16 @@
                                     <p class="text-sm text-gray-500">
                                         {{ formatDate(session.started_at) }} - {{ formatDate(session.ended_at) }}
                                     </p>
+                                </div>
+                                <div class="flex-shrink-0 text-sm text-gray-500 pr-4">
+                                    <span v-if="session.session_category" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        {{ session.session_category.name }}
+                                    </span>
+                                </div>
+                                <div class="flex-shrink-0 text-sm text-gray-500">
                                     <div class="text-sm text-gray-600 font-mono">
                                         {{ session.durationForHumans }}
                                     </div>
-                                </div>
-                                <div class="flex-shrink-0 text-sm text-gray-500">
-                                    <span v-if="session.session_category" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
-                                        {{ session.session_category.name }}
-                                    </span>
                                 </div>
                             </div>
                             <div v-if="session.comment" class="mt-2">
@@ -201,8 +203,8 @@ export default {
             let totalHours = 0
             project.tasks.forEach(task => {
                 task.sessions.forEach(session => {
-                    if (session.duration_in_seconds && !isNaN(session.duration_in_seconds)) {
-                        totalHours += session.duration_in_seconds / 3600
+                    if (session.durationInSeconds && !isNaN(session.durationInSeconds)) {
+                        totalHours += session.durationInSeconds / 3600
                     }
                 })
             })
