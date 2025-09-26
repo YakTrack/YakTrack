@@ -84,6 +84,8 @@
             border: 1px solid #e5e7eb;
             border-radius: 8px;
             background-color: #ffffff;
+            page-break-inside: avoid;
+            break-inside: avoid;
         }
         .task-header {
             display: table;
