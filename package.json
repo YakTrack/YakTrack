@@ -8,7 +8,10 @@
     "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
     "prod": "npm run production",
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-    "test": "jest"
+    "test": "jest",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:e2e:headed": "playwright test --headed"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.13.1",
@@ -33,6 +36,7 @@
     "vue-template-compiler": "^2.6.11"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.1",
     "@tailwindcss/custom-forms": "^0.2.1"
   }
 }

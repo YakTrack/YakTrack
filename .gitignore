@@ -11,3 +11,5 @@ public/mix-manifest.json
 public/css
 public/webfonts/
 .phpunit.cache
+playwright-report
+test-results
