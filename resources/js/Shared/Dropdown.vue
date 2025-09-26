@@ -1,13 +1,13 @@
 <template>
-    <div class="relative float-right text-right" v-closeable="{
+    <div class="relative text-right shadow rounded p-2" v-closeable="{
         exclude: ['button'],
         handler: 'onClose'
     }">
-        <button class="btn float-right" @click="toggleIsOpen()">
+        <button class="" @click="toggleIsOpen()">
             <span> {{ label || 'Actions' }} </span>
             <i class="fas fa-caret-down"></i>
         </button>
-        <div class="rounded shadow-md mt-2 absolute mt-12 -ml-1 mb-12 top-0 left-0 min-w-full bg-white text-left" :class="isOpen || 'dropdown-closed'">
+        <div class="rounded shadow-md mt-2 absolute mt-12 -ml-1 mb-12 top-0 left-0 min-w-full bg-white text-left z-10" :class="isOpen || 'dropdown-closed'">
             <ul class="list-reset w-max-content min-w-full p-1">
                 <li v-for="option in options" :key="option.name" class="clickable"> 
                     <a
@@ -48,7 +48,7 @@ export default {
     },
     computed: {
         label() {
-            return this.selected ? this.selected.name : this.name;
+            return this.name;
         }
     },
 }

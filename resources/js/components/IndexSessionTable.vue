@@ -99,37 +99,10 @@
                             <timer :initial-time="session.durationInSeconds" :is-paused="!session.isRunning"></timer>
                         </td>
                         <td class="inline-flex float-right pt-1 pb-1 pr-2 text-right" :class="sessionIndex || 'pt-2' ">
-                            <div class="float-right btn-group">
-                                <button v-if="session.isRunning" class="text-gray-600 btn hover:text-red-600 hover:bg-red-100" @click="stopSession(session)">
-                                    <i class="fa fa-stop fa-xs"></i>
-                                </button>
-                                <button
-                                    v-if="!session.isRunning"
-                                    class="text-gray-600 btn hover:text-green-600 hover:bg-green-100"
-                                    @click="continueSession(session)"
-                                >
-                                    <i class="fas fa-play fa-xs"></i>
-                                </button>
-                                <button
-                                    v-if="!session.isRunning && session.ended_at"
-                                    class="text-gray-600 btn hover:text-blue-600 hover:bg-blue-100"
-                                    @click="splitSession(session)"
-                                    title="Split Session"
-                                >
-                                    <i class="fas fa-cut fa-xs"></i>
-                                </button>
-                                <inertia-link
-                                    :href="session.editUrl"
-                                    class="py-2 btn btn-default"
-                                >
-                                    <i class="text-gray-600 fa fa-edit fa-xs"></i>
-                                </inertia-link>
-                                <delete-button
-                                    :url="route('session.destroy', session.id)"
-                                >
-                                    <i class="text-gray-600 fa fa-trash fa-xs"></i>
-                                </delete-button>
-                            </div>
+                            <dropdown
+                                :options="getSessionActions(session)"
+                                name="Actions"
+                            ></dropdown>
                         </td>
                     </tr>
                 </tbody>
@@ -159,6 +132,35 @@
         <div v-else>
             You have not created any sessions yet.
         </div>
+
+        <!-- Delete Confirmation Modal -->
+        <modal
+            open-on="confirm-delete-session"
+            close-on="close-delete-modal"
+            primary-button-text="Delete"
+            cancel-button-text="Cancel"
+            :on-submit="confirmDeleteSession"
+        >
+            <template #default="{ payload }">
+                <div v-if="payload" class="mb-4">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Delete Session</h3>
+                    <p class="text-sm text-gray-500 mb-4">
+                        Are you sure you want to delete this session? This action cannot be undone.
+                    </p>
+                    <div class="bg-gray-50 p-3 rounded text-sm">
+                        <div v-if="payload.task_name" class="mb-2">
+                            <strong>Task:</strong> {{ payload.task_name }}
+                        </div>
+                        <div class="mb-2">
+                            <strong>Duration:</strong> {{ payload.durationForHumans }}
+                        </div>
+                        <div v-if="payload.comment" class="mb-2">
+                            <strong>Comment:</strong> {{ payload.comment }}
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </modal>
     </div>
 </template>
 
@@ -204,6 +206,7 @@
                 dayjs: dayjs,
                 selectAll: false,
                 selectedInvoiceId: null,
+                sessionToDelete: null,
                 actionsDropdown: [
                     {
                         name: 'Link to invoice',
@@ -337,6 +340,15 @@
 
             events.$on('sessions.mark-as-billable', () => this.updateSelectedSessions({ is_billable: 1 }))
             events.$on('sessions.mark-as-non-billable', () => this.updateSelectedSessions({ is_billable: 0 }))
+            
+            // Session action events
+            events.$on('stop-session', (session) => this.stopSession(session))
+            events.$on('continue-session', (session) => this.continueSession(session))
+            events.$on('split-session', (session) => this.splitSession(session))
+            events.$on('edit-session', (session) => this.$inertia.visit(session.editUrl))
+            events.$on('confirm-delete-session', (session) => {
+                this.sessionToDelete = session;
+            })
         },
         methods: {
             loadFilterPreset(presetKey) {
@@ -442,6 +454,61 @@
                 if (this.onSplitSession) {
                     this.onSplitSession(session);
                 }
+            },
+            getSessionActions(session) {
+                const actions = [];
+                
+                if (session.isRunning) {
+                    actions.push({
+                        name: 'Stop Session',
+                        event: {
+                            name: 'stop-session',
+                            args: session
+                        }
+                    });
+                } else {
+                    actions.push({
+                        name: 'Continue Session',
+                        event: {
+                            name: 'continue-session',
+                            args: session
+                        }
+                    });
+                    
+                    if (session.ended_at) {
+                        actions.push({
+                            name: 'Split Session',
+                            event: {
+                                name: 'split-session',
+                                args: session
+                            }
+                        });
+                    }
+                }
+                
+                actions.push({
+                    name: 'Edit Session',
+                    event: {
+                        name: 'edit-session',
+                        args: session
+                    }
+                });
+                
+                actions.push({
+                    name: 'Delete Session',
+                    event: {
+                        name: 'confirm-delete-session',
+                        args: session
+                    }
+                });
+                
+                return actions;
+            },
+            confirmDeleteSession(session) {
+                if (session) {
+                    this.$inertia.delete(route('session.destroy', session.id));
+                }
+                events.$emit('close-delete-modal');
             },
         },
         watch: {
