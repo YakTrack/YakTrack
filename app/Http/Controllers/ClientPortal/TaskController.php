@@ -30,6 +30,7 @@ class TaskController extends Controller
                 ->with('sessionCategory')
                 ->orderBy('started_at', 'desc');
         }])
+        ->orderBy('name')
         ->get();
 
         return inertia('ClientPortal/Tasks/Index', [

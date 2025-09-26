@@ -64,6 +64,7 @@ Route::prefix('client-portal')->name('client-portal.')->group(function () {
 
         Route::get('projects', 'ClientPortal\ProjectController@index')->name('projects.index');
         Route::get('projects/{project}', 'ClientPortal\ProjectController@show')->name('projects.show');
+        Route::get('projects/{project}/report', 'ClientPortal\ProjectController@downloadReport')->name('projects.report');
 
         Route::get('tasks', 'ClientPortal\TaskController@index')->name('tasks.index');
         Route::get('tasks/{task}', 'ClientPortal\TaskController@show')->name('tasks.show');

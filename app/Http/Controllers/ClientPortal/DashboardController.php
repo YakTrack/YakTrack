@@ -26,7 +26,8 @@ class DashboardController extends Controller
                 $query->with(['taskStatus', 'sessions' => function ($sessionQuery) {
                     $sessionQuery->whereBillable()
                         ->with('sessionCategory');
-                }]);
+                }])
+                ->orderBy('name');
             }])
             ->get();
 
