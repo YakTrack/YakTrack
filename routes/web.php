@@ -45,6 +45,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('session/start', 'SessionController@start')->name('session.start');
     Route::post('session/stop', 'SessionController@stop')->name('session.stop');
     Route::post('session/{session}/continue', 'SessionController@continue')->name('session.continue');
+    Route::post('session/{session}/split', 'SessionController@split')->name('session.split');
 
     Route::resource('session', 'SessionController');
     Route::patch('sessions', 'SessionsController@update')->name('sessions.update');

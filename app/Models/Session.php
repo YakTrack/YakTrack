@@ -30,6 +30,8 @@ class Session extends Model
         'localStartedAtDateForHumans',
         'localStartedAtTimeForHumans',
         'stopUrl',
+        'startedAtInputFormat',
+        'endedAtInputFormat',
     ];
 
     public function invoice()
@@ -261,6 +263,24 @@ class Session extends Model
     public function getStopUrlAttribute()
     {
         return route('session.stop');
+    }
+
+    public function getStartedAtInputFormatAttribute()
+    {
+        if (!$this->started_at) {
+            return null;
+        }
+        
+        return $this->localStartedAt->format('Y-m-d\TH:i');
+    }
+
+    public function getEndedAtInputFormatAttribute()
+    {
+        if (!$this->ended_at) {
+            return null;
+        }
+        
+        return $this->localEndedAt->format('Y-m-d\TH:i');
     }
 
     /**

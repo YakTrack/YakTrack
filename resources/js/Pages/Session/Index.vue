@@ -44,6 +44,33 @@
                   </div>
               </template>
           </modal>
+          <modal
+              open-on="session.split"
+              close-on="session.split-cancelled"
+              :on-submit="splitSession"
+              primary-button-text="Split Session"
+              cancel-button-text="Cancel"
+          >
+              <template slot-scope="modal">
+                  <h3 class="text-center mb-6"> Split Session </h3>
+                  <div class="mb-4">
+                      <p class="text-sm text-gray-600 mb-4">
+                          Enter the time when you want to split this session. The original session will end at this time, and a new session will start from this time.
+                      </p>
+                      <div class="form-group">
+                          <label for="split_time" class="block text-sm font-medium text-gray-700 mb-2"> Split Time </label>
+                          <input
+                              id="split_time"
+                              type="datetime-local"
+                              v-model="splitTime"
+                              class="form-input w-full"
+                              :min="sessionToSplit ? sessionToSplit.startedAtInputFormat : ''"
+                              :max="sessionToSplit ? sessionToSplit.endedAtInputFormat : ''"
+                          />
+                      </div>
+                  </div>
+              </template>
+          </modal>
         </template>
         <template slot="title"> Sessions </template>
         <template slot="top-right-toolbar">
@@ -70,6 +97,7 @@
             :last-page="lastPage"
             :show-filters="showFilters"
             :on-change-selected-session-ids="onChangeSelectedSessionIds"
+            :on-split-session="openSplitSessionModal"
         ></index-session-table>
 
     </layout>
@@ -92,6 +120,8 @@ export default {
             showFilters: searchParams.get('show-filters') == 'true',
             urlParser: urlParser,
             selectedSprintId: null,
+            sessionToSplit: null,
+            splitTime: null,
         }
     },
     components: {
@@ -145,6 +175,40 @@ export default {
         },
         onChangeSelectedSessionIds(newValue) {
           this.selectedSessionIds = newValue
+        },
+        openSplitSessionModal(session) {
+            this.sessionToSplit = session;
+            this.splitTime = this.calculateDefaultSplitTime(session);
+            events.$emit('session.split');
+        },
+        calculateDefaultSplitTime(session) {
+            if (!session.started_at || !session.ended_at) {
+                return null;
+            }
+            
+            const startTime = new Date(session.started_at);
+            const endTime = new Date(session.ended_at);
+            const midPoint = new Date((startTime.getTime() + endTime.getTime()) / 2);
+            
+            // Format for datetime-local input
+            const year = midPoint.getFullYear();
+            const month = String(midPoint.getMonth() + 1).padStart(2, '0');
+            const day = String(midPoint.getDate()).padStart(2, '0');
+            const hours = String(midPoint.getHours()).padStart(2, '0');
+            const minutes = String(midPoint.getMinutes()).padStart(2, '0');
+            
+            return `${year}-${month}-${day}T${hours}:${minutes}`;
+        },
+        splitSession() {
+            if (!this.sessionToSplit || !this.splitTime) {
+                return;
+            }
+
+            events.$emit('session.split-cancelled');
+
+            this.$inertia.post(route('session.split', this.sessionToSplit.id), {
+                split_time: this.splitTime
+            });
         }
     },
     created() {

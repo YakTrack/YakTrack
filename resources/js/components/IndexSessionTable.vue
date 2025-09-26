@@ -110,6 +110,14 @@
                                 >
                                     <i class="fas fa-play fa-xs"></i>
                                 </button>
+                                <button
+                                    v-if="!session.isRunning && session.ended_at"
+                                    class="text-gray-600 btn hover:text-blue-600 hover:bg-blue-100"
+                                    @click="splitSession(session)"
+                                    title="Split Session"
+                                >
+                                    <i class="fas fa-cut fa-xs"></i>
+                                </button>
                                 <inertia-link
                                     :href="session.editUrl"
                                     class="py-2 btn btn-default"
@@ -180,6 +188,7 @@
             'total',
             'lastPage',
             'onChangeSelectedSessionIds',
+            'onSplitSession',
         ],
         components: {
             deleteButton: deleteButton,
@@ -428,6 +437,11 @@
                 let suffix = name.split(':')[1];
 
                 return suffix ? ':' + suffix : '';
+            },
+            splitSession(session) {
+                if (this.onSplitSession) {
+                    this.onSplitSession(session);
+                }
             },
         },
         watch: {

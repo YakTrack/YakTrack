@@ -178,6 +178,48 @@ class SessionController extends Controller
         return redirect(route('session.index'));
     }
 
+    public function split(Session $session)
+    {
+        // Ensure we're not trying to split a running session
+        if ($session->isRunning()) {
+            return redirect()
+                ->route('session.index')
+                ->with('error', 'Cannot split a running session. Please stop the session first.');
+        }
+
+        request()->validate([
+            'split_time' => [
+                'required',
+                'date',
+                'after:' . $session->localStartedAt->format('Y-m-d H:i:s'),
+                'before:' . $session->localEndedAt->format('Y-m-d H:i:s')
+            ]
+        ]);
+
+        $splitTime = $this->dateTimeFormatter->utcFormat(request('split_time'));
+
+        // Create the new session (second half)
+        $newSession = Session::create([
+            'started_at'            => $splitTime,
+            'ended_at'              => $session->ended_at,
+            'task_id'               => $session->task_id,
+            'invoice_id'            => $session->invoice_id,
+            'sprint_id'             => $session->sprint_id,
+            'session_category_id'   => $session->session_category_id,
+            'comment'               => $session->comment,
+            'is_billable'           => $session->is_billable,
+        ]);
+
+        // Update the original session (first half)
+        $session->update([
+            'ended_at' => $splitTime
+        ]);
+
+        return redirect()
+            ->route('session.index')
+            ->with('success', "Session split successfully. Session {$session->id} ends at split time, new session {$newSession->id} starts from split time.");
+    }
+
     public function destroy(Session $session)
     {
         $session->delete();

@@ -98,6 +98,18 @@ class DateTimeFormatter
         return $this->format($dateTime->timezone($this->timezone()), $format);
     }
 
+    public function inputFormat($dateTime)
+    {
+        if (is_null($dateTime)) {
+            return null;
+        }
+        
+        $dateTime = $dateTime instanceof Carbon ? $dateTime : Carbon::parse($dateTime);
+        $localDateTime = $dateTime->timezone($this->timezone());
+        
+        return $localDateTime->format('Y-m-d\TH:i');
+    }
+
     public function timezone()
     {
         return config('app.display_timezone', config('app.timezone'));
