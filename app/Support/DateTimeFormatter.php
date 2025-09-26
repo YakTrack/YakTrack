@@ -103,10 +103,10 @@ class DateTimeFormatter
         if (is_null($dateTime)) {
             return null;
         }
-        
+
         $dateTime = $dateTime instanceof Carbon ? $dateTime : Carbon::parse($dateTime);
         $localDateTime = $dateTime->timezone($this->timezone());
-        
+
         return $localDateTime->format('Y-m-d\TH:i');
     }
 

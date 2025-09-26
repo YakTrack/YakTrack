@@ -33,7 +33,7 @@ class InvoiceFactory extends Factory
     private function generateUniqueInvoiceNumber(): string
     {
         do {
-            $invoiceNumber = strtoupper($this->faker->word) . '-' . $this->faker->randomNumber(3);
+            $invoiceNumber = strtoupper($this->faker->word).'-'.$this->faker->randomNumber(3);
         } while (Invoice::where('number', $invoiceNumber)->exists());
 
         return $invoiceNumber;

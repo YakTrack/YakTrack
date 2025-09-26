@@ -11,7 +11,7 @@ use Illuminate\Support\Carbon;
 class Target extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = [];
 
     const DURATION_UNITS = [

@@ -20,7 +20,7 @@ class SessionFactory extends Factory
     public function definition(): array
     {
         $startedAt = Carbon::instance($this->faker->dateTimeThisYear());
-        
+
         return [
             'started_at' => $startedAt,
             'ended_at'   => (clone $startedAt)->addSeconds($this->faker->randomNumber(4)),

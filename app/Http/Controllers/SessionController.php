@@ -191,9 +191,9 @@ class SessionController extends Controller
             'split_time' => [
                 'required',
                 'date',
-                'after:' . $session->localStartedAt->format('Y-m-d H:i:s'),
-                'before:' . $session->localEndedAt->format('Y-m-d H:i:s')
-            ]
+                'after:'.$session->localStartedAt->format('Y-m-d H:i:s'),
+                'before:'.$session->localEndedAt->format('Y-m-d H:i:s'),
+            ],
         ]);
 
         $splitTime = $this->dateTimeFormatter->utcFormat(request('split_time'));
@@ -212,7 +212,7 @@ class SessionController extends Controller
 
         // Update the original session (first half)
         $session->update([
-            'ended_at' => $splitTime
+            'ended_at' => $splitTime,
         ]);
 
         return redirect()
