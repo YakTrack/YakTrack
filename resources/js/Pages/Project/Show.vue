@@ -279,7 +279,10 @@
                                     {{ formatDate(session.ended_at) }}
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ session.task ? session.task.name : '-' }}
+                                    <a v-if="session.task" :href="route('task.show', session.task.id)" class="text-blue-600 hover:text-blue-900 text-sm font-medium">
+                                        {{ session.task.name }}
+                                    </a>
+                                    <span v-else class="text-sm text-gray-500"> - </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                     {{ session.session_category ? session.session_category.name : '-' }}
