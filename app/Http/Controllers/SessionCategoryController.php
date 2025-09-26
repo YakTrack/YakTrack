@@ -27,12 +27,12 @@ class SessionCategoryController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:session_categories,name',
+            'name'        => 'required|string|max:255|unique:session_categories,name',
             'description' => 'nullable|string',
         ]);
 
         $sessionCategory = SessionCategory::create([
-            'name' => $request->name,
+            'name'        => $request->name,
             'description' => $request->description,
         ]);
 
@@ -60,12 +60,12 @@ class SessionCategoryController extends Controller
     public function update(Request $request, SessionCategory $sessionCategory)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:session_categories,name,' . $sessionCategory->id,
+            'name'        => 'required|string|max:255|unique:session_categories,name,'.$sessionCategory->id,
             'description' => 'nullable|string',
         ]);
 
         $sessionCategory->update([
-            'name' => $request->name,
+            'name'        => $request->name,
             'description' => $request->description,
         ]);
 
