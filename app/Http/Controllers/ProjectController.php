@@ -78,7 +78,7 @@ class ProjectController extends Controller
                 },
             ]),
             'sessions' => $sessions,
-            'tasks' => $tasks,
+            'tasks'    => $tasks,
         ]);
     }
 
