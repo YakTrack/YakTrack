@@ -15,11 +15,11 @@ class ThirdPartyApplicationTest extends TestCase
     /** @test */
     public function the_total_linked_session_duration_for_task_for_humans_method_returns_expected_results()
     {
-        $thirdPartyApplication = factory(ThirdPartyApplication::class)->states(['wrike'])->create();
+        $thirdPartyApplication = ThirdPartyApplication::factory()->wrike()->create();
 
-        $task = factory(Task::class)->create();
+        $task = Task::factory()->create();
 
-        factory(Session::class, 2)->create([
+        Session::factory()->count(2)->create([
             'task_id'    => $task->id,
             'started_at' => '2018-01-01 00:00:00',
             'ended_at'   => '2018-01-01 00:01:00',

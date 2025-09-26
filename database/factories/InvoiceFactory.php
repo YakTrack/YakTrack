@@ -1,24 +1,41 @@
 <?php
 
+namespace Database\Factories;
+
 use App\Models\Client;
 use App\Models\Invoice;
 use Carbon\Carbon;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Invoice::class, function (Faker $faker) {
-    return [
-        'date'      => Carbon::today()->format('Y-m-d H:i:s'),
-        'due_date'  => Carbon::today()->addDays(7)->format('Y-m-d H:i:s'),
-        'number'    => function () use ($faker) {
-            while (true) {
-                $invoiceNumber = strtoupper($faker->word).'-'.$faker->randomNumber(3);
-                if (!Invoice::where('number', $invoiceNumber)->exists()) {
-                    return $invoiceNumber;
-                }
-            }
-        },
-        'client_id' => function () {
-            return factory(Client::class)->create()->id;
-        },
-    ];
-});
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Invoice>
+ */
+class InvoiceFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'date'      => Carbon::today()->format('Y-m-d H:i:s'),
+            'due_date'  => Carbon::today()->addDays(7)->format('Y-m-d H:i:s'),
+            'number'    => $this->generateUniqueInvoiceNumber(),
+            'client_id' => Client::factory(),
+        ];
+    }
+
+    /**
+     * Generate a unique invoice number.
+     */
+    private function generateUniqueInvoiceNumber(): string
+    {
+        do {
+            $invoiceNumber = strtoupper($this->faker->word) . '-' . $this->faker->randomNumber(3);
+        } while (Invoice::where('number', $invoiceNumber)->exists());
+
+        return $invoiceNumber;
+    }
+}

@@ -18,7 +18,7 @@ class EndSessionTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        $session = factory(Session::class)->create([
+        $session = Session::factory()->create([
             'started_at' => '2018-01-01 00:00:00',
             'ended_at'   => null,
         ]);

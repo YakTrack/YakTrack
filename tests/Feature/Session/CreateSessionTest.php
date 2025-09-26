@@ -17,9 +17,9 @@ class CreateSessionTest extends TestCase
     /** @test */
     public function a_user_can_view_the_page_to_create_a_session()
     {
-        $invoice = factory(Invoice::class)->create();
-        $sprint = factory(Sprint::class)->create();
-        $task = factory(Task::class)->create();
+        $invoice = Invoice::factory()->create();
+        $sprint = Sprint::factory()->create();
+        $task = Task::factory()->create();
 
         $this->withoutExceptionHandling();
 
@@ -37,9 +37,9 @@ class CreateSessionTest extends TestCase
     /** @test */
     public function a_user_can_create_a_session_with_a_post_request()
     {
-        $invoice = factory(Invoice::class)->create();
-        $sprint = factory(Sprint::class)->create();
-        $task = factory(Task::class)->create();
+        $invoice = Invoice::factory()->create();
+        $sprint = Sprint::factory()->create();
+        $task = Task::factory()->create();
 
         $this->withoutExceptionHandling();
 
@@ -67,7 +67,7 @@ class CreateSessionTest extends TestCase
     /** @test */
     public function a_user_can_create_a_session_with_a_post_request_with_the_minimum_required_fields()
     {
-        $previouslyRunningSession = factory(Session::class)->states('is_running')->create();
+        $previouslyRunningSession = Session::factory()->running()->create();
 
         $this->withoutExceptionHandling();
 

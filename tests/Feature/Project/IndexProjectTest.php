@@ -15,7 +15,7 @@ class IndexProjectTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $invoice = factory(Project::class)->create();
+        $invoice = Project::factory()->create();
 
         $this->actingAsUser();
 

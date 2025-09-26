@@ -14,9 +14,9 @@ class CreateThirdPartyApplicationSessionTest extends TestCase
     /** @test */
     public function a_session_can_be_exported_to_a_third_party_application_with_sessions()
     {
-        $thirdPartyApplication = factory(ThirdPartyApplication::class)->states(['wrike'])->create();
+        $thirdPartyApplication = ThirdPartyApplication::factory()->wrike()->create();
 
-        $session = factory(Session::class)->create();
+        $session = Session::factory()->create();
 
         $session->exportToThirdPartyApplication($thirdPartyApplication);
 
@@ -30,9 +30,9 @@ class CreateThirdPartyApplicationSessionTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $thirdPartyApplication = factory(ThirdPartyApplication::class)->states(['wrike'])->create();
+        $thirdPartyApplication = ThirdPartyApplication::factory()->wrike()->create();
 
-        $session = factory(Session::class)->create();
+        $session = Session::factory()->create();
 
         $this->actingAsUser();
 

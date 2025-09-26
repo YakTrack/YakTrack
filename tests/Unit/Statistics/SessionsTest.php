@@ -20,7 +20,7 @@ class SessionsTest extends TestCase
 
         $this->usingTestDisplayTimezone();
 
-        $session = factory(Session::class)->create([
+        $session = Session::factory()->create([
             'started_at' => '2018-09-25 22:32:56',
             'ended_at'   => '2018-09-25 23:32:56',
         ]);
@@ -53,12 +53,12 @@ class SessionsTest extends TestCase
 
         $this->usingTestDisplayTimezone();
 
-        $session = factory(Session::class)->states('billable')->create([
+        $session = Session::factory()->billable()->create([
             'started_at' => '2018-09-25 20:00:00',
             'ended_at'   => '2018-09-25 21:00:00',
         ]);
 
-        $target = factory(Target::class)->states('for_date', 'in_hours')->create([
+        $target = Target::factory()->forDate()->inHours()->create([
             'starts_at'     => '2018-09-25 00:00:00',
             'value'         => 8,
             'billable_only' => 1,

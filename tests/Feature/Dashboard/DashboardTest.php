@@ -22,41 +22,41 @@ class DashboardTest extends TestCase
         $this->withoutExceptionHandling();
         $this->usingTestDisplayTimeZone();
 
-        $client = factory(Client::class)->create();
-        $project = factory(Project::class)->create([
+        $client = Client::factory()->create();
+        $project = Project::factory()->create([
             'client_id' => $client->id,
         ]);
-        $clientZeroSprint = factory(Sprint::class)->create([
+        $clientZeroSprint = Sprint::factory()->create([
             'project_id' => $project->id,
             'is_open'    => 1,
         ]);
 
-        $task = factory(Task::class)->create([
+        $task = Task::factory()->create([
             'project_id' => $project->id,
         ]);
 
-        $uncategorisedSession = factory(Session::class)->state('billable')->create([
+        $uncategorisedSession = Session::factory()->billable()->create([
             'started_at' => '2018-01-01 12:00:00',
             'ended_at'   => '2018-01-01 13:00:00',
         ]);
 
-        $session = factory(Session::class)->create([
+        $session = Session::factory()->create([
             'task_id'    => $task->id,
             'sprint_id'  => $clientZeroSprint->id,
             'started_at' => '2018-01-01 13:00:00',
             'ended_at'   => null,
         ]);
 
-        $mondayBillableTarget = factory(Target::class)
-            ->states('for_date', 'in_hours')
+        $mondayBillableTarget = Target::factory()
+            ->forDate()->inHours()
             ->create([
                 'billable_only' => 1,
                 'starts_at'     => '2018-01-01 00:00:00',
                 'value'         => 5,
             ]);
 
-        $mondayNonBillableTarget = factory(Target::class)
-            ->states('for_date', 'in_hours')
+        $mondayNonBillableTarget = Target::factory()
+            ->forDate()->inHours()
             ->create([
                 'billable_only' => 0,
                 'starts_at'     => '2018-01-01 00:00:00',

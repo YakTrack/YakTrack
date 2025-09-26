@@ -20,7 +20,7 @@ class EditSessionTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $session = factory(Session::class)->create();
+        $session = Session::factory()->create();
 
         $this->actingAsUser();
 
@@ -34,7 +34,7 @@ class EditSessionTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $session = factory(Session::class)->create([
+        $session = Session::factory()->create([
             'ended_at' => null,
         ]);
 
@@ -54,15 +54,15 @@ class EditSessionTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        $session = factory(Session::class)->create([
+        $session = Session::factory()->create([
             'started_at' => '2018-01-01 00:00:00',
             'ended_at'   => '2018-01-01 01:00:00',
         ]);
 
-        $newTask = factory(Task::class)->create();
-        $newInvoice = factory(Invoice::class)->create();
-        $newSprint = factory(Sprint::class)->create();
-        $sessionCategory = factory(SessionCategory::class)->create();
+        $newTask = Task::factory()->create();
+        $newInvoice = Invoice::factory()->create();
+        $newSprint = Sprint::factory()->create();
+        $sessionCategory = SessionCategory::factory()->create();
 
         $this->actingAsUser();
 
@@ -102,12 +102,12 @@ class EditSessionTest extends TestCase
         $this->usingTestDisplayTimezone('UTC');
         $this->withoutExceptionHandling();
 
-        $session = factory(Session::class)->create([
+        $session = Session::factory()->create([
             'started_at' => '2018-01-01 00:00:00',
             'ended_at'   => null,
         ]);
 
-        $newTask = factory(Task::class)->create();
+        $newTask = Task::factory()->create();
 
         $this->actingAsUser();
 
@@ -134,7 +134,7 @@ class EditSessionTest extends TestCase
         $this->usingTestDisplayTimeZone('UTC');
         $this->withoutExceptionHandling();
 
-        $session = factory(Session::class)->create([
+        $session = Session::factory()->create([
             'started_at' => '2018-01-01 00:00:00',
             'ended_at'   => null,
         ]);

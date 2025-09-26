@@ -15,7 +15,7 @@ class EditInvoiceTest extends TestCase
     /** @test */
     public function a_user_can_view_the_edit_invoice_view()
     {
-        $invoice = factory(Invoice::class)->create([
+        $invoice = Invoice::factory()->create([
             'amount' => 12345,
         ]);
 
@@ -29,8 +29,8 @@ class EditInvoiceTest extends TestCase
     /** @test */
     public function a_user_can_edit_an_invoice()
     {
-        $invoice = factory(Invoice::class)->create();
-        $newClient = factory(Client::class)->create();
+        $invoice = Invoice::factory()->create();
+        $newClient = Client::factory()->create();
 
         $this->actingAsUser();
 
@@ -63,9 +63,9 @@ class EditInvoiceTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $invoice = factory(Invoice::class)->create();
+        $invoice = Invoice::factory()->create();
 
-        $sessions = factory(Session::class, 2)->create();
+        $sessions = Session::factory()->count(2)->create();
 
         $this->actingAsUser();
 
@@ -85,11 +85,11 @@ class EditInvoiceTest extends TestCase
     /** @test */
     public function the_invoice_number_must_be_unique()
     {
-        $client = factory(Client::class)->create();
-        factory(Invoice::class)->create([
+        $client = Client::factory()->create();
+        Invoice::factory()->create([
             'number' => 'INV-001',
         ]);
-        $invoice = factory(Invoice::class)->create();
+        $invoice = Invoice::factory()->create();
 
         $this->actingAsUser();
 

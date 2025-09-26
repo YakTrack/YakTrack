@@ -17,23 +17,23 @@ class IndexTaskStatusTest extends TestCase
         $this->withoutExceptionHandling();
         $this->actingAsUser();
 
-        $project1 = factory(Project::class)->create(['name' => 'Project One']);
-        $project2 = factory(Project::class)->create(['name' => 'Project Two']);
+        $project1 = Project::factory()->create(['name' => 'Project One']);
+        $project2 = Project::factory()->create(['name' => 'Project Two']);
 
-        $status1 = factory(TaskStatus::class)->create([
+        $status1 = TaskStatus::factory()->create([
             'name'       => 'To Do',
             'project_id' => $project1->id,
             'sort_order' => 1,
         ]);
 
-        $status2 = factory(TaskStatus::class)->create([
+        $status2 = TaskStatus::factory()->create([
             'name'       => 'In Progress',
             'project_id' => $project1->id,
             'sort_order' => 2,
         ]);
 
         // Status for different project
-        $status3 = factory(TaskStatus::class)->create([
+        $status3 = TaskStatus::factory()->create([
             'name'       => 'Done',
             'project_id' => $project2->id,
             'sort_order' => 1,
@@ -72,21 +72,21 @@ class IndexTaskStatusTest extends TestCase
     {
         $this->actingAsUser();
 
-        $project = factory(Project::class)->create();
+        $project = Project::factory()->create();
 
-        factory(TaskStatus::class)->create([
+        TaskStatus::factory()->create([
             'name'       => 'Last',
             'project_id' => $project->id,
             'sort_order' => 3,
         ]);
 
-        factory(TaskStatus::class)->create([
+        TaskStatus::factory()->create([
             'name'       => 'First',
             'project_id' => $project->id,
             'sort_order' => 1,
         ]);
 
-        factory(TaskStatus::class)->create([
+        TaskStatus::factory()->create([
             'name'       => 'Middle',
             'project_id' => $project->id,
             'sort_order' => 2,
@@ -108,15 +108,15 @@ class IndexTaskStatusTest extends TestCase
     {
         $this->actingAsUser();
 
-        $project1 = factory(Project::class)->create(['name' => 'Project One']);
-        $project2 = factory(Project::class)->create(['name' => 'Project Two']);
+        $project1 = Project::factory()->create(['name' => 'Project One']);
+        $project2 = Project::factory()->create(['name' => 'Project Two']);
 
-        factory(TaskStatus::class)->create([
+        TaskStatus::factory()->create([
             'name'       => 'Status 1',
             'project_id' => $project1->id,
         ]);
 
-        factory(TaskStatus::class)->create([
+        TaskStatus::factory()->create([
             'name'       => 'Status 2',
             'project_id' => $project2->id,
         ]);
@@ -147,9 +147,9 @@ class IndexTaskStatusTest extends TestCase
     /** @test */
     public function unauthenticated_users_cannot_list_task_statuses()
     {
-        $project = factory(Project::class)->create();
+        $project = Project::factory()->create();
 
-        factory(TaskStatus::class)->create([
+        TaskStatus::factory()->create([
             'project_id' => $project->id,
         ]);
 
@@ -164,7 +164,7 @@ class IndexTaskStatusTest extends TestCase
     {
         $this->actingAsUser();
 
-        $project = factory(Project::class)->create();
+        $project = Project::factory()->create();
 
         $response = $this->get(route('task-status.index', ['project_id' => $project->id]));
 

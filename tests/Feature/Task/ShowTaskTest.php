@@ -16,9 +16,9 @@ class ShowTaskTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $task = factory(Task::class)->create();
+        $task = Task::factory()->create();
 
-        $session = factory(Session::class)->create([
+        $session = Session::factory()->create([
             'task_id' => $task->id,
         ]);
 

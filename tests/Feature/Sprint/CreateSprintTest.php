@@ -13,7 +13,7 @@ class CreateSprintTest extends TestCase
     /** @test */
     public function a_user_can_view_the_form_to_create_a_sprint()
     {
-        $project = factory(Project::class)->create();
+        $project = Project::factory()->create();
 
         $this->actingAsUser();
 
@@ -27,7 +27,7 @@ class CreateSprintTest extends TestCase
     /** @test */
     public function a_user_can_store_a_new_sprint_with_a_post_request()
     {
-        $project = factory(Project::class)->create();
+        $project = Project::factory()->create();
 
         $this->actingAsUser();
 

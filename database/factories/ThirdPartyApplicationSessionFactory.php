@@ -1,9 +1,24 @@
 <?php
 
-use Faker\Generator as Faker;
+namespace Database\Factories;
 
-$factory->define(App\Models\ThirdPartyApplicationSession::class, function (Faker $faker) {
-    return [
-        //
-    ];
-});
+use App\Models\ThirdPartyApplicationSession;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ThirdPartyApplicationSession>
+ */
+class ThirdPartyApplicationSessionFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            // TODO: Define attributes for ThirdPartyApplicationSession
+        ];
+    }
+}

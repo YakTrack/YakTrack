@@ -13,7 +13,7 @@ class IndexClientTest extends TestCase
     /** @test */
     public function a_user_can_see_a_list_of_clients()
     {
-        $client = factory(Client::class)->create();
+        $client = Client::factory()->create();
 
         $this->actingAsUser();
 

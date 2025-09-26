@@ -14,9 +14,9 @@ class EditTaskTest extends TestCase
     /** @test */
     public function a_user_can_load_the_page_to_edit_a_task()
     {
-        $task = factory(Task::class)->create();
-        $newParentTask = factory(Task::class)->create();
-        $newProject = factory(Project::class)->create();
+        $task = Task::factory()->create();
+        $newParentTask = Task::factory()->create();
+        $newProject = Project::factory()->create();
 
         $this->actingAsUser();
 
@@ -33,9 +33,9 @@ class EditTaskTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $task = factory(Task::class)->create();
-        $newParentTask = factory(Task::class)->create();
-        $newProject = factory(Project::class)->create();
+        $task = Task::factory()->create();
+        $newParentTask = Task::factory()->create();
+        $newProject = Project::factory()->create();
 
         $this->actingAsUser();
 
@@ -56,8 +56,8 @@ class EditTaskTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $existingParentTask = factory(Task::class)->create();
-        $task = factory(Task::class)->create([
+        $existingParentTask = Task::factory()->create();
+        $task = Task::factory()->create([
             'parent_id' => $existingParentTask->id,
         ]);
 

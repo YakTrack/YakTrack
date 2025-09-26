@@ -27,7 +27,7 @@ class LoginTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'email'    => 'test@domain.com',
             'password' => Hash::make('password'),
         ]);

@@ -13,7 +13,7 @@ class DeleteSessionTest extends TestCase
     /** @test */
     public function a_user_can_delete_a_session()
     {
-        $session = factory(Session::class)->create();
+        $session = Session::factory()->create();
 
         $this->actingAsUser();
 

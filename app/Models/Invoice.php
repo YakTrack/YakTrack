@@ -3,10 +3,11 @@
 namespace App\Models;
 
 use App\Models\Concerns\BelongsToClient;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Invoice extends Model
 {
-    use BelongsToClient;
+    use BelongsToClient, HasFactory;
 
     protected $guarded = [];
 

@@ -14,7 +14,7 @@ class EditSprintTest extends TestCase
     /** @test */
     public function a_user_can_view_the_page_to_edit_a_sprint()
     {
-        $sprint = factory(Sprint::class)->create();
+        $sprint = Sprint::factory()->create();
 
         $this->actingAsUser();
 
@@ -29,11 +29,11 @@ class EditSprintTest extends TestCase
     public function a_user_can_submit_a_patch_request_to_update_a_sprint()
     {
         $this->withoutExceptionHandling();
-        $sprint = factory(Sprint::class)->create([
+        $sprint = Sprint::factory()->create([
             'is_open' => 0,
         ]);
 
-        $newProject = factory(Project::class)->create();
+        $newProject = Project::factory()->create();
 
         $this->actingAsUser();
 

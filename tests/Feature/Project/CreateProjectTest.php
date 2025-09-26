@@ -13,7 +13,7 @@ class CreateProjectTest extends TestCase
     /** @test */
     public function a_user_can_visit_the_create_project_page()
     {
-        $client = factory(Client::class)->create([
+        $client = Client::factory()->create([
             'name' => 'O\'Reilly Apostropheson',
         ]);
 
@@ -31,7 +31,7 @@ class CreateProjectTest extends TestCase
     /** @test */
     public function a_user_can_submit_a_post_request_to_create_a_project()
     {
-        $client = factory(Client::class)->create();
+        $client = Client::factory()->create();
 
         $this->withoutExceptionHandling();
 

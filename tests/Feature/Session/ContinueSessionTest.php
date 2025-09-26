@@ -24,22 +24,22 @@ class ContinueSessionTest extends TestCase
 
         $this->actingAsUser();
 
-        $project = factory(Project::class)->create();
-        $previousSprint = factory(Sprint::class)->create([
+        $project = Project::factory()->create();
+        $previousSprint = Sprint::factory()->create([
             'project_id' => $project->id,
             'is_open'    => 0,
         ]);
-        $currentSprint = factory(Sprint::class)->create([
+        $currentSprint = Sprint::factory()->create([
             'project_id' => $project->id,
             'is_open'    => 1,
         ]);
-        $sessionCategory = factory(SessionCategory::class)->create();
+        $sessionCategory = SessionCategory::factory()->create();
 
-        $task = factory(Task::class)->create([
+        $task = Task::factory()->create([
             'project_id' => $project->id,
         ]);
 
-        $existingSession = factory(Session::class)->create([
+        $existingSession = Session::factory()->create([
             'task_id'               => $task->id,
             'sprint_id'             => $previousSprint->id,
             'session_category_id'   => $sessionCategory->id,
@@ -74,18 +74,18 @@ class ContinueSessionTest extends TestCase
 
         $this->actingAsUser();
 
-        $project = factory(Project::class)->create();
-        $previousSprint = factory(Sprint::class)->create([
+        $project = Project::factory()->create();
+        $previousSprint = Sprint::factory()->create([
             'project_id' => $project->id,
             'is_open'    => 0,
         ]);
-        $sessionCategory = factory(SessionCategory::class)->create();
+        $sessionCategory = SessionCategory::factory()->create();
 
-        $task = factory(Task::class)->create([
+        $task = Task::factory()->create([
             'project_id' => $project->id,
         ]);
 
-        $existingSession = factory(Session::class)->create([
+        $existingSession = Session::factory()->create([
             'task_id'               => $task->id,
             'sprint_id'             => $previousSprint->id,
             'session_category_id'   => $sessionCategory->id,

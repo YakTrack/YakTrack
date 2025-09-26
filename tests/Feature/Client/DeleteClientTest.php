@@ -13,7 +13,7 @@ class DeleteClientTest extends TestCase
     /** @test */
     public function a_user_can_delete_a_client()
     {
-        $client = factory(Client::class)->create();
+        $client = Client::factory()->create();
 
         $this->actingAsUser();
 

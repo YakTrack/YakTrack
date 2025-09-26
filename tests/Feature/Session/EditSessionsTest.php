@@ -15,7 +15,7 @@ class EditSessionsTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $sessions = factory(Session::class, 2)->create([
+        $sessions = Session::factory()->count(2)->create([
             'is_billable' => 0,
         ]);
 

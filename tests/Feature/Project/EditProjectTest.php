@@ -14,8 +14,8 @@ class EditProjectTest extends TestCase
     /** @test */
     public function a_user_can_view_the_page_to_edit_a_project()
     {
-        $clients = factory(Client::class, 2)->create();
-        $project = factory(Project::class)->create(['client_id' => $clients[0]->id]);
+        $clients = Client::factory()->count(2)->create();
+        $project = Project::factory()->create(['client_id' => $clients[0]->id]);
 
         $this->actingAsUser();
 
@@ -32,8 +32,8 @@ class EditProjectTest extends TestCase
     /** @test */
     public function a_user_can_update_a_project_with_a_patch_request()
     {
-        $clients = factory(Client::class, 2)->create();
-        $project = factory(Project::class)->create(['client_id' => $clients[0]->id]);
+        $clients = Client::factory()->count(2)->create();
+        $project = Project::factory()->create(['client_id' => $clients[0]->id]);
 
         $this->actingAsUser();
 

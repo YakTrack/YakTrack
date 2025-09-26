@@ -1,17 +1,29 @@
 <?php
 
+namespace Database\Factories;
+
 use App\Models\Project;
 use App\Models\Task;
 use App\Support\FactoryGenerator;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Task::class, function (Faker $faker) {
-    return [
-        'name'          => ucfirst(app(FactoryGenerator::class)->taskName()),
-        'description'   => $faker->paragraph,
-        'status'        => $faker->word,
-        'project_id'    => function () {
-            return factory(Project::class)->create()->id;
-        },
-    ];
-});
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Task>
+ */
+class TaskFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'name'          => ucfirst(app(FactoryGenerator::class)->taskName()),
+            'description'   => $this->faker->paragraph,
+            'status'        => $this->faker->word,
+            'project_id'    => Project::factory(),
+        ];
+    }
+}

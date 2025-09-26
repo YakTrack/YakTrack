@@ -14,7 +14,7 @@ class StartSessionTest extends TestCase
     /** @test */
     public function a_user_can_start_a_session_from_now_with_a_post_request()
     {
-        $previouslyRunningSession = factory(Session::class)->states('is_running')->create();
+        $previouslyRunningSession = Session::factory()->running()->create();
 
         $this->actingAsUser();
 

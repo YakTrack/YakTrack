@@ -15,7 +15,7 @@ class DeleteProjectTest extends TestCase
     /** @test */
     public function a_user_can_delete_a_project()
     {
-        $project = factory(Project::class)->create(['name' => 'Test Project']);
+        $project = Project::factory()->create(['name' => 'Test Project']);
 
         $this->actingAsUser();
 
@@ -33,8 +33,8 @@ class DeleteProjectTest extends TestCase
     /** @test */
     public function a_user_cannot_delete_a_project_with_sprints()
     {
-        $project = factory(Project::class)->create(['name' => 'Test Project']);
-        $sprint = factory(Sprint::class)->create(['project_id' => $project->id]);
+        $project = Project::factory()->create(['name' => 'Test Project']);
+        $sprint = Sprint::factory()->create(['project_id' => $project->id]);
 
         $this->actingAsUser();
 
@@ -48,8 +48,8 @@ class DeleteProjectTest extends TestCase
     /** @test */
     public function a_user_cannot_delete_a_project_with_tasks()
     {
-        $project = factory(Project::class)->create(['name' => 'Test Project']);
-        $task = factory(Task::class)->create(['project_id' => $project->id]);
+        $project = Project::factory()->create(['name' => 'Test Project']);
+        $task = Task::factory()->create(['project_id' => $project->id]);
 
         $this->actingAsUser();
 

@@ -14,7 +14,7 @@ class TargetTest extends TestCase
     /** @test */
     public function find_for_date_static_method_returns_expected_target()
     {
-        $target = factory(Target::class)->states('for_date')->create([
+        $target = Target::factory()->forDate()->create([
             'starts_at' => '2020-01-01 00:00:00',
         ]);
 
@@ -24,7 +24,7 @@ class TargetTest extends TestCase
     /** @test */
     public function hours_remaining_method_returns_the_number_of_hours_remaining_for_the_target()
     {
-        $target = factory(Target::class)->states('for_date', 'in_hours')->create([
+        $target = Target::factory()->forDate()->inHours()->create([
             'starts_at' => '2020-01-01 00:00:00',
             'value'     => 8,
         ]);
@@ -35,12 +35,12 @@ class TargetTest extends TestCase
     /** @test */
     public function hours_remaining_method_returns_the_number_of_hours_remaining_for_the_target_less_any_sessions()
     {
-        $target = factory(Target::class)->states('for_date', 'in_hours')->create([
+        $target = Target::factory()->forDate()->inHours()->create([
             'starts_at' => '2020-01-01 00:00:00',
             'value'     => 8,
         ]);
 
-        $session = factory(Session::class)->create([
+        $session = Session::factory()->create([
             'started_at' => '2020-01-01 00:00:00',
             'ended_at'   => '2020-01-01 01:00:00',
         ]);
@@ -51,13 +51,13 @@ class TargetTest extends TestCase
     /** @test */
     public function hours_remaining_method_excludes_non_billable_hours_method_if_billable_only_is_selected()
     {
-        $target = factory(Target::class)->states('for_date', 'in_hours')->create([
+        $target = Target::factory()->forDate()->inHours()->create([
             'starts_at'     => '2020-01-01 00:00:00',
             'value'         => 8,
             'billable_only' => 1,
         ]);
 
-        $session = factory(Session::class)->create([
+        $session = Session::factory()->create([
             'started_at'  => '2020-01-01 00:00:00',
             'ended_at'    => '2020-01-01 01:00:00',
             'is_billable' => 0,

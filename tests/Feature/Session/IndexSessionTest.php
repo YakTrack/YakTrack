@@ -43,15 +43,15 @@ class IndexSessionTest extends TestCase
 
         Carbon::setTestNow(Carbon::parse('2019-01-08 00:00:00'));
 
-        $tooEarlyForFilter = factory(Session::class)->create([
+        $tooEarlyForFilter = Session::factory()->create([
             'started_at' => '2019-01-01 00:00:00',
         ]);
 
-        $recentEnoughForFilter = factory(Session::class)->create([
+        $recentEnoughForFilter = Session::factory()->create([
             'started_at' => '2019-01-02 00:00:00',
         ]);
 
-        $tooLateForFilter = factory(Session::class)->create([
+        $tooLateForFilter = Session::factory()->create([
             'started_at' => '2019-01-03 00:00:00',
         ]);
 

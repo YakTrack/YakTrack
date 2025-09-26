@@ -13,7 +13,7 @@ class DeleteTaskTest extends TestCase
     /** @test */
     public function a_user_can_delete_a_task()
     {
-        $task = factory(Task::class)->create(['name' => 'Test Task']);
+        $task = Task::factory()->create(['name' => 'Test Task']);
 
         $this->actingAsUser();
 

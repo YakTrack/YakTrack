@@ -13,7 +13,7 @@ class ShowClientTest extends TestCase
     /** @test */
     public function a_user_can_see_a_single_client()
     {
-        $client = factory(Client::class)->create([
+        $client = Client::factory()->create([
             'name' => 'Joseph O\'Conner',
         ]);
 

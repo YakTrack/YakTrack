@@ -20,9 +20,9 @@ class CreateInvoiceSprintTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        $sprint = factory(Sprint::class)->create();
+        $sprint = Sprint::factory()->create();
 
-        $sessions = factory(Session::class, 3)->states('billable')->create([
+        $sessions = Session::factory()->count(3)->billable()->create([
             'sprint_id'  => $sprint->id,
             'started_at' => Carbon::parse('Yesterday 9:00am'),
             'ended_at'   => Carbon::parse('Yesterday 10:00am'),

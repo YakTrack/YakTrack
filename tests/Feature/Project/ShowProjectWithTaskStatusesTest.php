@@ -16,15 +16,15 @@ class ShowProjectWithTaskStatusesTest extends TestCase
     {
         $this->actingAsUser();
 
-        $project = factory(Project::class)->create(['name' => 'Test Project']);
+        $project = Project::factory()->create(['name' => 'Test Project']);
 
-        $status1 = factory(TaskStatus::class)->create([
+        $status1 = TaskStatus::factory()->create([
             'name'       => 'To Do',
             'project_id' => $project->id,
             'sort_order' => 1,
         ]);
 
-        $status2 = factory(TaskStatus::class)->create([
+        $status2 = TaskStatus::factory()->create([
             'name'       => 'Done',
             'project_id' => $project->id,
             'sort_order' => 2,
@@ -61,7 +61,7 @@ class ShowProjectWithTaskStatusesTest extends TestCase
     {
         $this->actingAsUser();
 
-        $project = factory(Project::class)->create(['name' => 'Empty Project']);
+        $project = Project::factory()->create(['name' => 'Empty Project']);
 
         $response = $this->get(route('project.show', $project));
 

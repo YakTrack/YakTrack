@@ -13,7 +13,7 @@ class SessionTest extends BrowserKitTestCase
     {
         Carbon::setTestNow(Carbon::parse('2018-01-01 00:10:00'));
 
-        $session = factory(Session::class)->create([
+        $session = Session::factory()->create([
             'started_at' => '2018-01-01 00:00:00',
             'ended_at'   => null,
         ]);
@@ -38,22 +38,22 @@ class SessionTest extends BrowserKitTestCase
     {
         $this->usingTestDisplayTimeZone();
 
-        $startsAndEndsOnDate = factory(Session::class)->create([
+        $startsAndEndsOnDate = Session::factory()->create([
             'started_at' => '2018-01-01 12:00:00',
             'ended_at'   => '2018-01-01 13:00:00',
         ]);
 
-        $startsOnDateOnly = factory(Session::class)->create([
+        $startsOnDateOnly = Session::factory()->create([
             'started_at' => '2018-01-01 12:00:00',
             'ended_at'   => '2018-01-02 12:30:00',
         ]);
 
-        $endsOnDateOnly = factory(Session::class)->create([
+        $endsOnDateOnly = Session::factory()->create([
             'started_at' => '2017-12-12 23:55:00',
             'ended_at'   => '2018-01-01 12:30:00',
         ]);
 
-        $neitherStartsNorEndsOnDate = factory(Session::class)->create([
+        $neitherStartsNorEndsOnDate = Session::factory()->create([
             'started_at' => '2017-01-01 11:00:00',
             'ended_at'   => '2017-01-01 11:30:00',
         ]);
@@ -111,7 +111,7 @@ class SessionTest extends BrowserKitTestCase
     /** @test */
     public function duration_in_seconds_attribute_returns_expected_value()
     {
-        $session = factory(Session::class)->create([
+        $session = Session::factory()->create([
             'started_at' => '2018-01-01 12:00:00',
             'ended_at'   => '2018-01-01 13:00:00',
         ]);

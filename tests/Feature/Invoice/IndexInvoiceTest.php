@@ -15,7 +15,7 @@ class IndexInvoiceTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $invoice = factory(Invoice::class)->create();
+        $invoice = Invoice::factory()->create();
 
         $this->actingAsUser();
 

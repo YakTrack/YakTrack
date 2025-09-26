@@ -13,7 +13,7 @@ class EditClientTest extends TestCase
     /** @test */
     public function a_user_can_see_the_page_to_edit_a_client()
     {
-        $client = factory(Client::class)->create();
+        $client = Client::factory()->create();
 
         $this->actingAsUser();
 
@@ -25,7 +25,7 @@ class EditClientTest extends TestCase
     /** @test */
     public function a_user_can_submit_a_put_request_to_update_a_client()
     {
-        $client = factory(Client::class)->create();
+        $client = Client::factory()->create();
 
         $this->actingAsUser();
 

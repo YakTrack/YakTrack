@@ -16,8 +16,8 @@ class CreateTaskTest extends TestCase
     {
         $this->actingAsUser();
 
-        $project = factory(Project::class)->create();
-        $parentTask = factory(Task::class)->create([
+        $project = Project::factory()->create();
+        $parentTask = Task::factory()->create([
             'project_id' => $project->id,
         ]);
 
@@ -36,8 +36,8 @@ class CreateTaskTest extends TestCase
 
         $this->actingAsUser();
 
-        $project = factory(Project::class)->create();
-        $parentTask = factory(Task::class)->create([
+        $project = Project::factory()->create();
+        $parentTask = Task::factory()->create([
             'project_id' => $project->id,
         ]);
 
@@ -65,8 +65,8 @@ class CreateTaskTest extends TestCase
 
         $this->actingAsUser();
 
-        $project = factory(Project::class)->create();
-        $parentTask = factory(Task::class)->create([
+        $project = Project::factory()->create();
+        $parentTask = Task::factory()->create([
             'project_id' => $project->id,
         ]);
 
@@ -89,8 +89,8 @@ class CreateTaskTest extends TestCase
     {
         $this->actingAsUser();
 
-        $project = factory(Project::class)->create();
-        factory(Task::class)->create([
+        $project = Project::factory()->create();
+        Task::factory()->create([
             'name'       => 'Test Task',
             'project_id' => $project->id,
         ]);

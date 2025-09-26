@@ -14,8 +14,8 @@ class IndexSprintTest extends TestCase
     /** @test */
     public function a_user_can_view_a_list_of_sprints()
     {
-        $project = factory(Project::class)->create();
-        $sprints = factory(Sprint::class)->create(['project_id' => $project->id]);
+        $project = Project::factory()->create();
+        $sprints = Sprint::factory()->create(['project_id' => $project->id]);
 
         $this->actingAsUser();
 

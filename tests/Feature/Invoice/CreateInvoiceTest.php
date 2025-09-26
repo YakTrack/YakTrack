@@ -28,7 +28,7 @@ class CreateInvoiceTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $client = factory(Client::class)->create();
+        $client = Client::factory()->create();
 
         $this->actingAsUser();
 
@@ -60,8 +60,8 @@ class CreateInvoiceTest extends TestCase
     /** @test */
     public function the_invoice_number_must_be_unique()
     {
-        $client = factory(Client::class)->create();
-        factory(Invoice::class)->create([
+        $client = Client::factory()->create();
+        Invoice::factory()->create([
             'number' => 'INV-001',
         ]);
 

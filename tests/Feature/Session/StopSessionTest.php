@@ -13,7 +13,7 @@ class StopSessionTest extends TestCase
     /** @test */
     public function a_user_can_stop_a_session_from_now_with_a_post_request()
     {
-        $session = factory(Session::class)->states('is_running')->create();
+        $session = Session::factory()->running()->create();
 
         $this->actingAsUser();
 

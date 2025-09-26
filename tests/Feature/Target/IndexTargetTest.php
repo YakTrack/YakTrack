@@ -13,7 +13,7 @@ class IndexTargetTest extends TestCase
     /** @test */
     public function a_user_can_load_the_target_index_page()
     {
-        $target = factory(Target::class)->create();
+        $target = Target::factory()->create();
 
         $this->withoutExceptionHandling();
 

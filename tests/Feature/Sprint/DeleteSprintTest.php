@@ -13,7 +13,7 @@ class DeleteSprintTest extends TestCase
     /** @test */
     public function a_user_can_delete_a_sprint()
     {
-        $sprint = factory(Sprint::class)->create();
+        $sprint = Sprint::factory()->create();
 
         $this->actingAsUser();
 

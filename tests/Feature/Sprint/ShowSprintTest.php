@@ -18,18 +18,18 @@ class ShowSprintTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $project = factory(Project::class)->create();
-        $sprint = factory(Sprint::class)->create(['project_id' => $project->id]);
-        $task = factory(Task::class)->create([
+        $project = Project::factory()->create();
+        $sprint = Sprint::factory()->create(['project_id' => $project->id]);
+        $task = Task::factory()->create([
             'project_id' => $project->id,
         ]);
-        $session1 = factory(Session::class)->create([
+        $session1 = Session::factory()->create([
             'sprint_id'  => $sprint->id,
             'task_id'    => $task->id,
             'started_at' => '2019-01-01 00:00:00',
             'ended_at'   => '2019-01-01 00:01:00',
         ]);
-        $session2 = factory(Session::class)->create([
+        $session2 = Session::factory()->create([
             'sprint_id'  => $sprint->id,
             'task_id'    => $task->id,
             'started_at' => '2019-01-01 00:01:00',

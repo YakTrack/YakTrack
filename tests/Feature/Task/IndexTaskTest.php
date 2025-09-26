@@ -13,8 +13,8 @@ class IndexTaskTest extends TestCase
     /** @test */
     public function a_user_can_see_a_list_of_tasks()
     {
-        $parentTask = factory(Task::class)->create();
-        $task = factory(Task::class)->create(['parent_id' => $parentTask->id]);
+        $parentTask = Task::factory()->create();
+        $task = Task::factory()->create(['parent_id' => $parentTask->id]);
 
         $this->actingAsUser();
 

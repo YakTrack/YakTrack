@@ -1,24 +1,42 @@
 <?php
 
+namespace Database\Factories;
+
 use App\Models\Project;
 use App\Models\Sprint;
-use Faker\Generator as Faker;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
-$factory->define(Sprint::class, function (Faker $faker) {
-    return [
-        'name'       => $faker->word(),
-        'project_id' => function () {
-            return factory(Project::class)->create();
-        },
-    ];
-});
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Sprint>
+ */
+class SprintFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'name'       => $this->faker->word(),
+            'project_id' => Project::factory(),
+        ];
+    }
 
-$factory->afterCreating(Sprint::class, function ($sprint) {
-    $sprint->name = implode(' ', [
-        $sprint->project->name,
-        '-',
-        'Sprint',
-        ($sprint->id % $sprint->project->sprints()->count()) + 1,
-    ]);
-    $sprint->save();
-});
+    /**
+     * Configure the model factory.
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (Sprint $sprint) {
+            $sprint->name = implode(' ', [
+                $sprint->project->name,
+                '-',
+                'Sprint',
+                ($sprint->id % $sprint->project->sprints()->count()) + 1,
+            ]);
+            $sprint->save();
+        });
+    }
+}

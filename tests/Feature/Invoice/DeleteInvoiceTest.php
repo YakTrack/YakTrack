@@ -16,8 +16,8 @@ class DeleteInvoiceTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $invoice = factory(Invoice::class)->create();
-        $session = factory(Session::class)->create([
+        $invoice = Invoice::factory()->create();
+        $session = Session::factory()->create([
             'invoice_id' => $invoice->id,
         ]);
 

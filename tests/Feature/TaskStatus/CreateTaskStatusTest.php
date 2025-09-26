@@ -15,7 +15,7 @@ class CreateTaskStatusTest extends TestCase
     {
         $this->actingAsUser();
 
-        $project = factory(Project::class)->create();
+        $project = Project::factory()->create();
 
         $response = $this->get(route('task-status.create', ['project_id' => $project->id]));
 

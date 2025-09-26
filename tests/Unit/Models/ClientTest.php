@@ -19,10 +19,10 @@ class ClientTest extends TestCase
     {
         Carbon::setTestNow('2018-01-02 12:00:00');
 
-        $client = factory(Client::class)->create();
-        $project = factory(Project::class)->create(['client_id' => $client->id]);
-        $task = factory(Task::class)->create(['project_id' => $project->id]);
-        $session = factory(Session::class)->create([
+        $client = Client::factory()->create();
+        $project = Project::factory()->create(['client_id' => $client->id]);
+        $task = Task::factory()->create(['project_id' => $project->id]);
+        $session = Session::factory()->create([
             'started_at' => Carbon::now(),
             'ended_at'   => Carbon::now(),
             'task_id'    => $task->id,
