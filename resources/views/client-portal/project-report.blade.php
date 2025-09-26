@@ -108,6 +108,7 @@
             font-size: 10px;
             font-weight: bold;
             color: white;
+            white-space: nowrap;
         }
         .task-stats {
             font-size: 11px;
