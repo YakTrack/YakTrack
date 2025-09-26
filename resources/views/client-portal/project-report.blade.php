@@ -250,7 +250,7 @@
             <div class="stat-label">Total Sessions</div>
         </div>
         <div class="stat-item">
-            <span class="stat-value">{{ number_format($project->tasks->sum(function($task) { return $task->sessions->sum('duration_in_seconds') / 3600; }), 1) }}h</span>
+            <span class="stat-value">{{ number_format($project->tasks->sum(function($task) { return $task->sessions->sum('duration_in_seconds') / 3600; }), 2) }}h</span>
             <div class="stat-label">Total Hours</div>
         </div>
         <div class="stat-item">
@@ -276,15 +276,15 @@
         <h3>Billing Summary</h3>
         <div class="invoice-stats">
             <div class="invoice-stat">
-                <div class="invoice-stat-value">{{ number_format($totalHours, 1) }}h</div>
+                <div class="invoice-stat-value">{{ number_format($totalHours, 2) }}h</div>
                 <div class="invoice-stat-label">Total Hours</div>
             </div>
             <div class="invoice-stat">
-                <div class="invoice-stat-value">{{ number_format($invoicedHours, 1) }}h</div>
+                <div class="invoice-stat-value">{{ number_format($invoicedHours, 2) }}h</div>
                 <div class="invoice-stat-label">Invoiced Hours</div>
             </div>
             <div class="invoice-stat">
-                <div class="invoice-stat-value">{{ number_format($uninvoicedHours, 1) }}h</div>
+                <div class="invoice-stat-value">{{ number_format($uninvoicedHours, 2) }}h</div>
                 <div class="invoice-stat-label">Uninvoiced Hours</div>
             </div>
             <div class="invoice-stat">
@@ -311,7 +311,7 @@
                 </div>
 
                 <div class="task-stats">
-                    {{ $task->sessions->count() }} sessions • {{ number_format($task->sessions->sum('duration_in_seconds') / 3600, 1) }}h total
+                    {{ $task->sessions->count() }} sessions • {{ number_format($task->sessions->sum('duration_in_seconds') / 3600, 2) }}h total
                 </div>
 
                 @if($task->sessions->count() > 0)
@@ -391,7 +391,7 @@
                         @endif
                     </div>
                     <div style="font-size: 11px; color: #6b7280;">
-                        {{ number_format($invoiceHours, 1) }} hours • {{ $invoiceSessions->count() }} sessions
+                        {{ number_format($invoiceHours, 2) }} hours • {{ $invoiceSessions->count() }} sessions
                         @if(isset($invoice->created_at))
                             • {{ Carbon\Carbon::parse($invoice->date)->format('M j, Y') }}
                         @endif
