@@ -25,7 +25,7 @@ class TaskController extends Controller
         $tasks = Task::whereHas('project', function ($query) use ($clientUser) {
             $query->where('client_id', $clientUser->client_id);
         })
-        ->with(['project', 'sessions' => function ($query) {
+        ->with(['project', 'taskStatus', 'sessions' => function ($query) {
             $query->whereBillable()
                 ->with('sessionCategory')
                 ->orderBy('started_at', 'desc');
@@ -50,7 +50,7 @@ class TaskController extends Controller
             abort(403, 'Unauthorized access to task.');
         }
 
-        $task->load(['project', 'sessions' => function ($query) {
+        $task->load(['project', 'taskStatus', 'sessions' => function ($query) {
             $query->whereBillable()
                 ->with('sessionCategory')
                 ->orderBy('started_at', 'desc');

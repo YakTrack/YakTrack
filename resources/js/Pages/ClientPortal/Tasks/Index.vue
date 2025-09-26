@@ -57,9 +57,18 @@
                         <li v-for="task in tasks" :key="task.id" class="px-4 py-4 sm:px-6">
                             <div class="flex items-center justify-between">
                                 <div class="flex-1 min-w-0">
-                                    <a :href="route('client-portal.tasks.show', task.id)" class="text-base font-medium text-blue-800 truncate hover:underline">
-                                        {{ task.name }}
-                                    </a>
+                                    <div class="flex items-center space-x-2">
+                                        <div class="flex-1">
+                                            <a :href="route('client-portal.tasks.show', task.id)" class="text-base font-medium text-blue-800 hover:underline">
+                                                {{ task.name }}
+                                            </a>
+                                        </div>
+                                        <div>
+                                            <span v-if="task.task_status" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium whitespace-no-wrap" :style="{ backgroundColor: task.task_status.color + '20', color: task.task_status.color }">
+                                                {{ task.task_status.name }}
+                                            </span>
+                                        </div>
+                                    </div>
                                     <p class="text-sm text-gray-500 truncate">
                                         {{ task.project.name }}
                                     </p>

@@ -24,7 +24,7 @@ class ProjectController extends Controller
 
         $projects = $clientUser->client->projects()
             ->with(['tasks' => function ($query) {
-                $query->with(['sessions' => function ($sessionQuery) {
+                $query->with(['taskStatus', 'sessions' => function ($sessionQuery) {
                     $sessionQuery->whereBillable()
                         ->with('sessionCategory');
                 }]);
@@ -50,7 +50,7 @@ class ProjectController extends Controller
         }
 
         $project->load(['tasks' => function ($query) {
-            $query->with(['sessions' => function ($sessionQuery) {
+            $query->with(['taskStatus', 'sessions' => function ($sessionQuery) {
                 $sessionQuery->whereBillable()
                     ->with('sessionCategory')
                     ->orderBy('started_at', 'desc');

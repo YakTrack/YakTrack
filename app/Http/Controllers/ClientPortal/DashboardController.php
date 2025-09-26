@@ -23,7 +23,7 @@ class DashboardController extends Controller
 
         $projects = $clientUser->client->projects()
             ->with(['tasks' => function ($query) {
-                $query->with(['sessions' => function ($sessionQuery) {
+                $query->with(['taskStatus', 'sessions' => function ($sessionQuery) {
                     $sessionQuery->whereBillable()
                         ->with('sessionCategory');
                 }]);

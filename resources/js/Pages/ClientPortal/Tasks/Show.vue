@@ -49,7 +49,12 @@
                 <div class="mb-8">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h1 class="text-3xl font-bold text-gray-900">{{ task.name }}</h1>
+                            <div class="flex items-center space-x-3">
+                                <h1 class="text-3xl font-bold text-gray-900">{{ task.name }}</h1>
+                                <span v-if="task.task_status" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium" :style="{ backgroundColor: task.task_status.color + '20', color: task.task_status.color }">
+                                    {{ task.task_status.name }}
+                                </span>
+                            </div>
                             <p class="mt-2 text-gray-600">Project: {{ task.project.name }}</p>
                         </div>
                         <div class="flex space-x-3">
