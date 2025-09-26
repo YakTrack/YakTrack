@@ -152,6 +152,7 @@
             font-size: 10px;
             color: #374151;
             margin-left: 10px;
+            vertical-align: middle;
         }
         .session-comment {
             margin-top: 5px;
@@ -218,12 +219,14 @@
             color: #059669;
             margin-left: 10px;
             font-weight: bold;
+            vertical-align: middle;
         }
         .session-uninvoiced {
             font-size: 10px;
             color: #059669;
             margin-left: 10px;
             font-weight: bold;
+            vertical-align: middle;
         }
     </style>
 </head>
@@ -281,7 +284,7 @@
                 <div class="invoice-stat-label">Invoiced Hours</div>
             </div>
             <div class="invoice-stat">
-                <div class="invoice-stat-value" style="color: #dc2626;">{{ number_format($uninvoicedHours, 1) }}h</div>
+                <div class="invoice-stat-value">{{ number_format($uninvoicedHours, 1) }}h</div>
                 <div class="invoice-stat-label">Uninvoiced Hours</div>
             </div>
             <div class="invoice-stat">
@@ -378,6 +381,11 @@
                 <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; background-color: #ffffff;">
                     <div style="font-weight: bold; font-size: 12px; color: #1f2937; margin-bottom: 5px;">
                         {{ $invoice->number }}
+                        @if($invoice->is_paid)
+                            <span style="background-color: #10b981; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 8px;">PAID</span>
+                        @else
+                            <span style="background-color: #f59e0b; color: white; padding: 2px 6px; border-radius: 4px; font-size: 10px; margin-left: 8px;">UNPAID</span>
+                        @endif
                         @if(isset($invoice->amount))
                             <span style="float: right; color: #059669;">${{ number_format($invoice->amount / 100, 2) }}</span>
                         @endif

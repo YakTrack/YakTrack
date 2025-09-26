@@ -176,6 +176,7 @@
             font-size: 11px;
             color: #374151;
             margin-left: 10px;
+            vertical-align: middle;
         }
         .session-invoice {
             font-size: 11px;
@@ -185,6 +186,7 @@
             background-color: #d1fae5;
             padding: 2px 6px;
             border-radius: 4px;
+            vertical-align: middle;
         }
         .session-uninvoiced {
             font-size: 11px;
@@ -194,6 +196,7 @@
             background-color: #fef3c7;
             padding: 2px 6px;
             border-radius: 4px;
+            vertical-align: middle;
         }
         .session-comment {
             margin-top: 8px;
@@ -228,6 +231,20 @@
         .invoice-details {
             font-size: 12px;
             color: #6b7280;
+        }
+        .payment-status {
+            font-size: 10px;
+            font-weight: bold;
+            padding: 3px 8px;
+            border-radius: 4px;
+            color: white;
+            margin-left: 10px;
+        }
+        .payment-paid {
+            background-color: #10b981;
+        }
+        .payment-unpaid {
+            background-color: #f59e0b;
         }
         .footer {
             margin-top: 40px;
@@ -349,7 +366,7 @@
                         <div class="invoice-stat-label">Invoiced Hours</div>
                     </div>
                     <div class="invoice-stat">
-                        <div class="invoice-stat-value" style="color: #dc2626;">{{ number_format($uninvoicedHours, 1) }}h</div>
+                        <div class="invoice-stat-value">{{ number_format($uninvoicedHours, 1) }}h</div>
                         <div class="invoice-stat-label">Uninvoiced Hours</div>
                     </div>
                     <div class="invoice-stat">
@@ -445,7 +462,14 @@
                         @endphp
                         <div class="invoice-item">
                             <div class="invoice-header">
-                                <span>{{ $invoice->number }}</span>
+                                <span>
+                                    {{ $invoice->number }}
+                                    @if($invoice->is_paid)
+                                        <span class="payment-status payment-paid">PAID</span>
+                                    @else
+                                        <span class="payment-status payment-unpaid">UNPAID</span>
+                                    @endif
+                                </span>
                                 @if(isset($invoice->amount))
                                     <span style="color: #059669;">${{ number_format($invoice->amount / 100, 2) }}</span>
                                 @endif
