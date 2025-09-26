@@ -81,7 +81,7 @@ class ProjectController extends Controller
         $project->load(['tasks' => function ($query) {
             $query->with(['taskStatus', 'sessions' => function ($sessionQuery) {
                 $sessionQuery->whereBillable()
-                    ->with('sessionCategory')
+                    ->with(['sessionCategory', 'invoice'])
                     ->orderBy('started_at', 'desc');
             }])
             ->orderBy('name');
@@ -93,5 +93,32 @@ class ProjectController extends Controller
         ]);
 
         return $pdf->download($project->name . ' - Project Report.pdf');
+    }
+
+    /**
+     * View HTML report for the specified project.
+     */
+    public function viewReport(Project $project)
+    {
+        $clientUser = auth('client')->user();
+
+        // Ensure the project belongs to the client
+        if ($project->client_id !== $clientUser->client_id) {
+            abort(403, 'Unauthorized access to project.');
+        }
+
+        $project->load(['tasks' => function ($query) {
+            $query->with(['taskStatus', 'sessions' => function ($sessionQuery) {
+                $sessionQuery->whereBillable()
+                    ->with(['sessionCategory', 'invoice'])
+                    ->orderBy('started_at', 'desc');
+            }])
+            ->orderBy('name');
+        }]);
+
+        return view('client-portal.project-report-html', [
+            'project' => $project,
+            'clientUser' => $clientUser
+        ]);
     }
 }

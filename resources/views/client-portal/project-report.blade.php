@@ -170,6 +170,61 @@
         .page-break {
             page-break-before: always;
         }
+        .invoice-info {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9fafb;
+            border-radius: 6px;
+            border-left: 4px solid #3b82f6;
+        }
+        .invoice-summary {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #fef3c7;
+            border-radius: 8px;
+            border-left: 4px solid #f59e0b;
+        }
+        .invoice-summary h3 {
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            color: #92400e;
+            font-weight: bold;
+        }
+        .invoice-stats {
+            display: table;
+            width: 100%;
+        }
+        .invoice-stat {
+            display: table-cell;
+            padding: 5px 10px;
+            text-align: center;
+            border-right: 1px solid #d1d5db;
+        }
+        .invoice-stat:last-child {
+            border-right: none;
+        }
+        .invoice-stat-value {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        .invoice-stat-label {
+            font-size: 11px;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+        .session-invoice {
+            font-size: 10px;
+            color: #059669;
+            margin-left: 10px;
+            font-weight: bold;
+        }
+        .session-uninvoiced {
+            font-size: 10px;
+            color: #059669;
+            margin-left: 10px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -198,6 +253,41 @@
         <div class="stat-item">
             <span class="stat-value">{{ $project->tasks->where('taskStatus.is_completed', true)->count() }}</span>
             <div class="stat-label">Completed Tasks</div>
+        </div>
+    </div>
+
+    <!-- Invoice Summary -->
+    @php
+        $allSessions = $project->tasks->flatMap(function($task) { return $task->sessions; });
+        $invoicedSessions = $allSessions->whereNotNull('invoice_id');
+        $uninvoicedSessions = $allSessions->whereNull('invoice_id');
+
+        $totalHours = $allSessions->sum('duration_in_seconds') / 3600;
+        $invoicedHours = $invoicedSessions->sum('duration_in_seconds') / 3600;
+        $uninvoicedHours = $uninvoicedSessions->sum('duration_in_seconds') / 3600;
+
+        $uniqueInvoices = $invoicedSessions->pluck('invoice')->whereNotNull()->unique('id');
+    @endphp
+
+    <div class="invoice-summary">
+        <h3>Billing Summary</h3>
+        <div class="invoice-stats">
+            <div class="invoice-stat">
+                <div class="invoice-stat-value">{{ number_format($totalHours, 1) }}h</div>
+                <div class="invoice-stat-label">Total Hours</div>
+            </div>
+            <div class="invoice-stat">
+                <div class="invoice-stat-value">{{ number_format($invoicedHours, 1) }}h</div>
+                <div class="invoice-stat-label">Invoiced Hours</div>
+            </div>
+            <div class="invoice-stat">
+                <div class="invoice-stat-value" style="color: #dc2626;">{{ number_format($uninvoicedHours, 1) }}h</div>
+                <div class="invoice-stat-label">Uninvoiced Hours</div>
+            </div>
+            <div class="invoice-stat">
+                <div class="invoice-stat-value">{{ $uniqueInvoices->count() }}</div>
+                <div class="invoice-stat-label">Total Invoices</div>
+            </div>
         </div>
     </div>
 
@@ -251,6 +341,11 @@
                                         @if($session->sessionCategory)
                                             <span class="session-category">{{ $session->sessionCategory->name }}</span>
                                         @endif
+                                        @if($session->invoice)
+                                            <span class="session-invoice">Invoiced</span>
+                                        @else
+                                            <span class="session-uninvoiced">Not Invoiced</span>
+                                        @endif
                                     </div>
                                     <div class="session-duration">{{ $session->duration_for_humans }}</div>
                                 </div>
@@ -270,6 +365,33 @@
             </div>
         @endforelse
     </div>
+
+    <!-- Invoice Details -->
+    @if($uniqueInvoices->count() > 0)
+        <div class="invoice-info">
+            <h2 class="section-title">Associated Invoices</h2>
+            @foreach($uniqueInvoices as $invoice)
+                @php
+                    $invoiceSessions = $allSessions->where('invoice_id', $invoice->id);
+                    $invoiceHours = $invoiceSessions->sum('duration_in_seconds') / 3600;
+                @endphp
+                <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; background-color: #ffffff;">
+                    <div style="font-weight: bold; font-size: 12px; color: #1f2937; margin-bottom: 5px;">
+                        {{ $invoice->number }}
+                        @if(isset($invoice->amount))
+                            <span style="float: right; color: #059669;">${{ number_format($invoice->amount / 100, 2) }}</span>
+                        @endif
+                    </div>
+                    <div style="font-size: 11px; color: #6b7280;">
+                        {{ number_format($invoiceHours, 1) }} hours • {{ $invoiceSessions->count() }} sessions
+                        @if(isset($invoice->created_at))
+                            • {{ Carbon\Carbon::parse($invoice->date)->format('M j, Y') }}
+                        @endif
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    @endif
 
     <div class="footer">
         <p>Generated by YakTrack Client Portal for {{ $clientUser->name }}</p>
