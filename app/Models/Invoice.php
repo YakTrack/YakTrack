@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Invoice extends Model
 {
-    use BelongsToClient, HasFactory;
+    use BelongsToClient;
+    use HasFactory;
 
     protected $guarded = [];
 

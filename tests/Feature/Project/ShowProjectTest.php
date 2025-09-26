@@ -52,7 +52,7 @@ class ShowProjectTest extends TestCase
     public function project_show_page_includes_paginated_tasks_data()
     {
         $project = Project::factory()->create();
-        
+
         // Create some tasks for the project
         $tasks = Task::factory()->count(3)->create(['project_id' => $project->id]);
 
@@ -82,13 +82,13 @@ class ShowProjectTest extends TestCase
         $taskStatus = TaskStatus::factory()->create(['project_id' => $project->id]);
         $parentTask = Task::factory()->create([
             'project_id' => $project->id,
-            'name' => 'Parent Task',
+            'name'       => 'Parent Task',
         ]);
         $childTask = Task::factory()->create([
             'project_id' => $project->id,
-            'name' => 'Child Task',
-            'parent_id' => $parentTask->id,
-            'status_id' => $taskStatus->id,
+            'name'       => 'Child Task',
+            'parent_id'  => $parentTask->id,
+            'status_id'  => $taskStatus->id,
         ]);
 
         $this->actingAsUser();
@@ -99,7 +99,7 @@ class ShowProjectTest extends TestCase
 
         // Assert task data structure includes relationships
         $taskData = $response->props()['tasks']['data'];
-        
+
         $childTaskData = collect($taskData)->firstWhere('name', 'Child Task');
         $this->assertNotNull($childTaskData);
         $this->assertEquals('Child Task', $childTaskData['name']);
@@ -128,7 +128,7 @@ class ShowProjectTest extends TestCase
     public function project_show_page_paginates_tasks_correctly()
     {
         $project = Project::factory()->create();
-        
+
         // Create more than one page worth of tasks (15 per page)
         $tasks = Task::factory()->count(20)->create(['project_id' => $project->id]);
 
@@ -142,7 +142,7 @@ class ShowProjectTest extends TestCase
         $response->assertPropCount('tasks.data', 15);
 
         // Test second page with tasks_page parameter
-        $response = $this->get(route('project.show', $project) . '?tasks_page=2');
+        $response = $this->get(route('project.show', $project).'?tasks_page=2');
         $response->assertSuccessful();
         $response->assertPropValue('tasks.current_page', 2);
         $response->assertPropValue('tasks.total', 20);
@@ -153,7 +153,7 @@ class ShowProjectTest extends TestCase
     public function project_show_page_orders_tasks_by_name()
     {
         $project = Project::factory()->create();
-        
+
         // Create tasks with specific names to test ordering
         Task::factory()->create(['project_id' => $project->id, 'name' => 'Z Task']);
         Task::factory()->create(['project_id' => $project->id, 'name' => 'A Task']);
@@ -167,7 +167,7 @@ class ShowProjectTest extends TestCase
 
         $taskData = $response->props()['tasks']['data'];
         $taskNames = collect($taskData)->pluck('name')->toArray();
-        
+
         $this->assertEquals(['A Task', 'M Task', 'Z Task'], $taskNames);
     }
 
@@ -176,7 +176,7 @@ class ShowProjectTest extends TestCase
     {
         $project1 = Project::factory()->create();
         $project2 = Project::factory()->create();
-        
+
         $project1Tasks = Task::factory()->count(2)->create(['project_id' => $project1->id]);
         $project2Tasks = Task::factory()->count(3)->create(['project_id' => $project2->id]);
 
@@ -186,7 +186,7 @@ class ShowProjectTest extends TestCase
 
         $response->assertSuccessful();
         $response->assertPropValue('tasks.total', 2);
-        
+
         $taskData = $response->props()['tasks']['data'];
         foreach ($taskData as $task) {
             $this->assertEquals($project1->id, $task['project_id']);
@@ -199,12 +199,12 @@ class ShowProjectTest extends TestCase
         $project = Project::factory()->create();
         $taskStatus = TaskStatus::factory()->create([
             'project_id' => $project->id,
-            'name' => 'In Progress',
-            'color' => '#ff6b6b'
+            'name'       => 'In Progress',
+            'color'      => '#ff6b6b',
         ]);
         $task = Task::factory()->create([
             'project_id' => $project->id,
-            'status_id' => $taskStatus->id
+            'status_id'  => $taskStatus->id,
         ]);
 
         $this->actingAsUser();
@@ -225,7 +225,7 @@ class ShowProjectTest extends TestCase
         $project = Project::factory()->create();
         $task = Task::factory()->create([
             'project_id' => $project->id,
-            'status_id' => null
+            'status_id'  => null,
         ]);
 
         $this->actingAsUser();

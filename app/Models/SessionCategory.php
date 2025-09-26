@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class SessionCategory extends Model
 {
     use HasFactory;
-    
+
     protected $fillable = ['name'];
 }

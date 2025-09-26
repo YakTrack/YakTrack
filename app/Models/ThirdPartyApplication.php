@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ThirdPartyApplication extends Model
 {
     use HasFactory;
-    
+
     protected $guarded = [];
 
     public function totalLinkedSessionDurationForTaskForHumans(Task $task)

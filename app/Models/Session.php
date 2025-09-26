@@ -270,7 +270,7 @@ class Session extends Model
         if (!$this->started_at) {
             return null;
         }
-        
+
         return $this->localStartedAt->format('Y-m-d\TH:i');
     }
 
@@ -279,7 +279,7 @@ class Session extends Model
         if (!$this->ended_at) {
             return null;
         }
-        
+
         return $this->localEndedAt->format('Y-m-d\TH:i');
     }
 
