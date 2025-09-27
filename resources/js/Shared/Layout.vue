@@ -30,12 +30,12 @@
                             <messages></messages>
                             <div
                                 class="flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3"
-                                v-if="hasTitleOrToolbar"
+                                v-if="$slots.title || $slots['top-right-toolbar']"
                             >
-                                <div class="flex-1">
+                                <div class="flex-1" v-if="$slots.title">
                                     <h1 class="text-3xl font-normal"><slot name="title"></slot></h1>
                                 </div>
-                                <div class="btn-toolbar mb-2 mb-md-0 flex-1 flex justify-end items-center">
+                                <div class="btn-toolbar mb-2 mb-md-0 flex-1 flex justify-end items-center" v-if="$slots['top-right-toolbar']">
                                     <slot name="top-right-toolbar"></slot>
                                 </div>
                             </div>
@@ -67,8 +67,14 @@
             sidebar: Sidebar,
         },
         computed: {
+            hasTitle() {
+                return this.$slots.title && this.$slots.title().length > 0;
+            },
+            hasToolbar() {
+                return this.$slots['top-right-toolbar'] && this.$slots['top-right-toolbar']().length > 0;
+            },
             hasTitleOrToolbar() {
-                return !!(this.$slots['title'] || this.$slots['top-right-toolbar']);
+                return this.hasTitle || this.hasToolbar;
             }
         }
     }

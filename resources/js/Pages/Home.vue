@@ -1,13 +1,13 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs
                 :breadcrumbs="[
                     {title: 'Home'},
                 ]"
             ></breadcrumbs>
         </template>
-        <template slot="title"> Home </template>
+        <template #title> Home </template>
 
         <sessions-summary-table
             :this-week="this_week"

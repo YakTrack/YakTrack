@@ -1,6 +1,6 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs
                 :breadcrumbs="[
                     {title: 'Home',         url: route('home')},
@@ -9,8 +9,8 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <template slot="title"> {{ sprint.name }} </template>
-        <template slot="top-right-toolbar">
+        <template #title> {{ sprint.name }} </template>
+        <template #top-right-toolbar>
             <button @click="createInvoice" class="btn btn-blue">
                 <i class="fa fa-plus text-blue-100 mr-2"></i>
                 Create Invoice

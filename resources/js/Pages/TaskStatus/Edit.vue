@@ -1,6 +1,6 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs
                 :breadcrumbs="[
                     {title: 'Home', url: route('home')},
@@ -11,7 +11,7 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <template slot="title">
+        <template #title>
             {{ isCreateForm ? 'Create Task Status' : 'Edit Task Status' }}
         </template>
 

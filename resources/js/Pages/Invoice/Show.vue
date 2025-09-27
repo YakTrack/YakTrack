@@ -1,6 +1,6 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs
                 :breadcrumbs="[
                     {title: 'Home',         url: route('home')},
@@ -9,8 +9,8 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <template slot="title"> Invoice {{ invoice.number }} </template>
-        <template slot="top-right-toolbar"> 
+        <template #title> Invoice {{ invoice.number }} </template>
+        <template #top-right-toolbar> 
         </template>
         <div>
             <div class="card">

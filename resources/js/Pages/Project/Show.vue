@@ -1,6 +1,6 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs :breadcrumbs="[
                 {title: 'Home',         url: route('home')},
                 {title: 'Projects',     url: route('project.index')},

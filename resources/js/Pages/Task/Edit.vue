@@ -1,6 +1,6 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs
                 :breadcrumbs="[
                     {title: 'Home',         url: route('home')},
@@ -9,7 +9,7 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <template slot="title"> Edit Task </template>
+        <template #title> Edit Task </template>
         <form @submit.prevent="submit" class="mt-2">
             <div class="form-group">
                 <label for="name"> Task Name </label>

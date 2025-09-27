@@ -1,6 +1,6 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs
                 :breadcrumbs="[
                     {title: 'Home',         url: route('home')},
@@ -9,8 +9,8 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <template slot="title"> {{ form.id ? 'Update' : 'Create' }} Sprint </template>
-        <template slot="top-right-toolbar"> 
+        <template #title> {{ form.id ? 'Update' : 'Create' }} Sprint </template>
+        <template #top-right-toolbar> 
         </template>
         <form @submit.prevent="submit" class="mt-2">
             <div class="form-group">

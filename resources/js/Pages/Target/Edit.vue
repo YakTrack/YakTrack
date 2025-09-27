@@ -1,6 +1,6 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs
                 :breadcrumbs="[
                     {title: 'Home',         url: route('home')},
@@ -9,7 +9,7 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <template slot="title"> {{ form.id ? 'Update' : 'Create' }} Daily Target </template>
+        <template #title> {{ form.id ? 'Update' : 'Create' }} Daily Target </template>
         <form :action="route('target.store')" method="post" @submit.prevent="submit">
             <div class="form-group">
                 <label for="starts_at"> Date </label>

@@ -1,6 +1,6 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs
                 :breadcrumbs="[
                     {title: 'Home',     url: route('home')},
@@ -8,8 +8,8 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <template slot="title"> Invoices </template>
-        <template slot="top-right-toolbar"> 
+        <template #title> Invoices </template>
+        <template #top-right-toolbar> 
             <button-link :href="route('invoice.create')" color="blue">
                 <i class="fa fa-plus text-blue-100 mr-2"></i>
                 Create Invoice

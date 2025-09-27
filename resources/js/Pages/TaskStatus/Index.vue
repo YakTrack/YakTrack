@@ -1,12 +1,12 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs :breadcrumbs="breadcrumbItems"></breadcrumbs>
         </template>
-        <template slot="title">
+        <template #title>
             {{ project ? project.name + ' - Task Statuses' : 'All Task Statuses' }}
         </template>
-        <template slot="top-right-toolbar">
+        <template #top-right-toolbar>
             <div class="flex space-x-2">
                 <div v-if="!project" class="form-group">
                     <select v-model="selectedProjectId" @change="filterByProject" class="form-control">

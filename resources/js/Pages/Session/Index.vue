@@ -1,6 +1,6 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs
                 :breadcrumbs="[
                     {title: 'Home',     url: route('home')},
@@ -72,8 +72,8 @@
               </template>
           </modal>
         </template>
-        <template slot="title"> Sessions </template>
-        <template slot="top-right-toolbar">
+        <template #title> Sessions </template>
+        <template #top-right-toolbar>
             <button type="button" class="btn" :class="(showFilters ? 'btn-blue' : 'btn-default') + ' mr-2'" @click="toggleShowFilters()">
                 <i class="fa fa-filter"></i>
             </button>

@@ -1,6 +1,6 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs
                 :breadcrumbs="[
                     {title: 'Home', url: route('home')},
@@ -9,7 +9,7 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <template slot="title">{{ isCreateForm ? 'Create' : 'Edit' }} Session Category</template>
+        <template #title>{{ isCreateForm ? 'Create' : 'Edit' }} Session Category</template>
         <form @submit.prevent="submit" class="mt-2">
             <div class="form-group">
                 <label for="name">Category Name</label>

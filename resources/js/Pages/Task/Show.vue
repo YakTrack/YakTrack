@@ -1,13 +1,13 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs :breadcrumbs="[
                 {title: 'Home',     url: route('home')},
                 {title: 'Tasks',    url: route('task.index')},
                 {title: task.name},
             ]" ></breadcrumbs>
         </template>
-        <template slot="title"> {{ task.name }} </template>
+        <template #title> {{ task.name }} </template>
         <div class="card">
             <h1 class="font-medium text-gray-dark"> {{ task.name }} </h1>
             <div class="p4 mt-4" v-if="task.project">

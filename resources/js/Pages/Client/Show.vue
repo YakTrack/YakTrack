@@ -1,6 +1,6 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs
                 :breadcrumbs="[
                     {title: 'Home',         url: route('home')},
@@ -9,7 +9,7 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <template slot="title"> {{ client.name }} </template>
+        <template #title> {{ client.name }} </template>
         <div class="card box-default">
             <div class="card-body">
                 <div class="row">

@@ -20,6 +20,11 @@ createInertiaApp({
     // Install Pinia
     app.use(createPinia())
 
+    // Configure Vue to treat XML namespace elements as custom elements
+    app.config.compilerOptions.isCustomElement = (tag) => {
+      return tag.includes(':') // Treat any tag with colons as custom elements
+    }
+
     // Global directives
     app.directive('closeable', closeable)
 

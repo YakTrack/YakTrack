@@ -1,6 +1,6 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs
                 :breadcrumbs="[
                     {title: 'Home', url: route('home')},
@@ -9,8 +9,8 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <template slot="title">{{ sessionCategory.name }}</template>
-        <template slot="top-right-toolbar">
+        <template #title>{{ sessionCategory.name }}</template>
+        <template #top-right-toolbar>
             <button-link :href="route('session-category.edit', sessionCategory)" color="blue">
                 <i class="fa fa-edit text-blue-100 mr-2"></i>
                 Edit Category

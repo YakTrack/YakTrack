@@ -1,6 +1,6 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs
                 :breadcrumbs="[
                     {title: 'Home',         url: route('home')},
@@ -9,7 +9,7 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <template slot="title"> {{ isCreateForm ? 'Create' : 'Edit' }} Client </template>
+        <template #title> {{ isCreateForm ? 'Create' : 'Edit' }} Client </template>
         <form :action="route('client.store')" method="post" @submit.prevent="submit">
             <div class="form-group">
                 <label for="name"> Name </label>

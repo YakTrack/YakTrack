@@ -1,6 +1,6 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs
                 :breadcrumbs="[
                     {title: 'Home', url: route('home')},
@@ -8,8 +8,8 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <template slot="title">Session Categories</template>
-        <template slot="top-right-toolbar">
+        <template #title>Session Categories</template>
+        <template #top-right-toolbar>
             <button-link :href="route('session-category.create')" color="blue">
                 <i class="fa fa-plus text-blue-100 mr-2"></i>
                 Create Session Category

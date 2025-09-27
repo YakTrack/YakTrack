@@ -1,6 +1,6 @@
 <template>
     <layout>
-        <template slot="breadcrumbs">
+        <template #breadcrumbs>
             <breadcrumbs
                 :breadcrumbs="[
                     {title: 'Home',     url: route('home')},
@@ -8,8 +8,8 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <template slot="title"> Projects </template>
-        <template slot="top-right-toolbar">
+        <template #title> Projects </template>
+        <template #top-right-toolbar>
             <button-link :href="route('project.create')" color="blue">
                 <i class="fa fa-plus mr-2 text-blue-100"></i>
                 Create Project
