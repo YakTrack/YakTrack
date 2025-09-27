@@ -88,7 +88,6 @@ class ProjectController extends Controller
      * Show the form for editing the specified project.
      *
      * @param Project $project
-     *
      */
     public function edit(Project $project): Response
     {
@@ -103,7 +102,6 @@ class ProjectController extends Controller
      *
      * @param \Illuminate\Http\Request $request
      * @param Project                  $project
-     *
      */
     public function update(Request $request, Project $project): RedirectResponse
     {
@@ -123,7 +121,6 @@ class ProjectController extends Controller
      * Remove the specified project from storage.
      *
      * @param Project $project
-     *
      */
     public function destroy(Project $project): RedirectResponse
     {

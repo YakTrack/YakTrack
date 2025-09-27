@@ -8,6 +8,7 @@ trait CanBeBillable
 {
     /**
      * @param Builder<\App\Models\Session> $query
+     *
      * @return Builder<\App\Models\Session>
      */
     public function scopeWhereBillable(Builder $query): Builder
@@ -17,6 +18,7 @@ trait CanBeBillable
 
     /**
      * @param Builder<\App\Models\Session> $query
+     *
      * @return Builder<\App\Models\Session>
      */
     public function scopeWhereNotBillable(Builder $query): Builder

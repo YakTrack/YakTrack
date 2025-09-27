@@ -2,8 +2,6 @@
 
 namespace App\Support;
 
-use Illuminate\Support\Collection;
-
 class FactoryGenerator
 {
     public function projectName(): string

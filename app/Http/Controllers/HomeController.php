@@ -44,11 +44,11 @@ class HomeController extends Controller
             'name'      => 'No Client',
             'this_week' => [
                 'billable' => [
-                    'actual' => $noClientSessions->filter(fn($session) => $session->is_billable)->sum('durationInSeconds'),
+                    'actual' => $noClientSessions->filter(fn ($session) => $session->is_billable)->sum('durationInSeconds'),
                     'target' => 0,
                 ],
                 'not_billable' => [
-                    'actual' => $noClientSessions->filter(fn($session) => !$session->is_billable)->sum('durationInSeconds'),
+                    'actual' => $noClientSessions->filter(fn ($session) => !$session->is_billable)->sum('durationInSeconds'),
                     'target' => 0,
                 ],
             ],

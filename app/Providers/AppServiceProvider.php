@@ -26,7 +26,6 @@ class AppServiceProvider extends ServiceProvider
 
     /**
      * Register any application services.
-     *
      */
     public function register(): void
     {
@@ -41,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
             ],
             'auth' => function () {
                 $user = Auth::user();
+
                 return [
                     'user' => $user instanceof User ? [
                         'id'         => $user->id,

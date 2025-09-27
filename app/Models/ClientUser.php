@@ -58,6 +58,7 @@ class ClientUser extends Authenticatable
 
     /**
      * Get all projects for this client user.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Project>
      */
     public function projects(): \Illuminate\Database\Eloquent\Relations\HasMany
@@ -67,6 +68,7 @@ class ClientUser extends Authenticatable
 
     /**
      * Get all tasks for this client user's projects.
+     *
      * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Task>
      */
     public function tasks(): \Illuminate\Database\Eloquent\Builder
@@ -78,6 +80,7 @@ class ClientUser extends Authenticatable
 
     /**
      * Get all billable sessions for this client user's tasks.
+     *
      * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Session>
      */
     public function billableSessions(): \Illuminate\Database\Eloquent\Builder

@@ -118,7 +118,6 @@ class SprintController extends Controller
      * Remove the specified sprint from storage.
      *
      * @param Sprint $sprint
-     *
      */
     public function destroy(Sprint $sprint): RedirectResponse
     {
