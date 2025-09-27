@@ -42,6 +42,7 @@ class TaskController extends Controller
     {
         $this->validate($request, [
             'project_id' => 'exists:projects,id',
+            'status_id'  => 'nullable|exists:task_statuses,id',
             'name'       => [
                 Rule::unique('tasks')->where(function ($query) {
                     return $query->where('project_id', request('project_id'));
@@ -49,8 +50,10 @@ class TaskController extends Controller
             ],
         ]);
 
-        $statusId = null;
-        if (request('project_id')) {
+        $statusId = request('status_id');
+        
+        // If no status_id provided, try to get the default status for the project
+        if (!$statusId && request('project_id')) {
             $defaultStatus = TaskStatus::where('project_id', request('project_id'))
                 ->where('is_default', true)
                 ->first();
