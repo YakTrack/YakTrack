@@ -3,12 +3,13 @@
 namespace App\Models\Concerns;
 
 use App\Models\Client;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait BelongsToClient
 {
     use HasRelations;
 
-    public function client()
+    public function client(): BelongsTo
     {
         if ($this->parent) {
             return $this->parent->client();
@@ -17,7 +18,7 @@ trait BelongsToClient
         return $this->belongsTo(Client::class);
     }
 
-    public function getClient()
+    public function getClient(): Client
     {
         return $this->getRelation(Client::class);
     }

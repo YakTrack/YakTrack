@@ -6,7 +6,8 @@ use App\Models\Collections\TaskCollection;
 use App\Models\Concerns\BelongsToProject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 class Task extends Model
 {
     use BelongsToProject;
@@ -30,17 +31,17 @@ class Task extends Model
         return new TaskCollection($models);
     }
 
-    public function sessions()
+    public function sessions(): HasMany
     {
         return $this->hasMany(Session::class);
     }
 
-    public function parent()
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id');
     }
 
-    public function taskStatus()
+    public function taskStatus(): BelongsTo
     {
         return $this->belongsTo(TaskStatus::class, 'status_id');
     }

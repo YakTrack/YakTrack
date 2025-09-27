@@ -12,6 +12,10 @@ use Inertia\Inertia;
 
 class HomeController extends Controller
 {
+    private DateTimeFormatter $dateTimeFormatter;
+    private DateIntervalFormatter $dateIntervalFormatter;
+    private Sessions $sessions;
+
     /**
      * Create a new controller instance.
      */

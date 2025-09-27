@@ -15,6 +15,9 @@ use Inertia\Inertia;
 
 class SessionController extends Controller
 {
+    private IndexSessionQuery $indexSessionQuery;
+    private DateTimeFormatter $dateTimeFormatter;
+
     public function __construct(DateTimeFormatter $dateTimeFormatter, IndexSessionQuery $indexSessionQuery)
     {
         $this->indexSessionQuery = $indexSessionQuery;

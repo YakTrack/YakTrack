@@ -9,8 +9,7 @@ class SessionsController extends Controller
     public function update()
     {
         request()->validate([
-            'sessions.*' => 'required|exists:sessions,id',
-            'sessions.*' => 'array',
+            'sessions.*' => 'required|array|exists:sessions,id',
         ]);
 
         $sessions = collect(request('sessions'))

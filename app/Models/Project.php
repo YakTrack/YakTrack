@@ -5,7 +5,9 @@ namespace App\Models;
 use App\Models\Collections\ProjectCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 class Project extends Model
 {
     use HasFactory;
@@ -30,7 +32,7 @@ class Project extends Model
     /**
      * The client that the project belongs to.
      **/
-    public function client()
+    public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
     }
@@ -53,15 +55,15 @@ class Project extends Model
     /**
      * The sprints that belong to the project.
      **/
-    public function sprints()
+    public function sprints(): HasMany
     {
-        return $this->hasMany('App\Models\Sprint');
+        return $this->hasMany(Sprint::class);
     }
 
     /**
      * The tasks that belong to the project.
      **/
-    public function tasks()
+    public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
     }
@@ -69,7 +71,7 @@ class Project extends Model
     /**
      * The task statuses that belong to the project.
      **/
-    public function taskStatuses()
+    public function taskStatuses(): HasMany
     {
         return $this->hasMany(TaskStatus::class)->orderBy('sort_order');
     }
@@ -77,7 +79,7 @@ class Project extends Model
     /**
      * The sessions that belong to the project through tasks.
      **/
-    public function sessions()
+    public function sessions(): HasManyThrough
     {
         return $this->hasManyThrough(Session::class, Task::class);
     }

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\BelongsToClient;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Database\Eloquent\Relations\HasMany;
 class Invoice extends Model
 {
     use BelongsToClient;
@@ -26,7 +26,7 @@ class Invoice extends Model
         return $this->sessions->totalDurationForHumans();
     }
 
-    public function sessions()
+    public function sessions(): HasMany
     {
         return $this->hasMany(Session::class);
     }

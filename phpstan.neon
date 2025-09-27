@@ -1,0 +1,15 @@
+includes:
+    - ./vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 0
+    paths:
+        - app/
+
+    excludePaths:
+        - */node_modules/*
+        - */vendor/*
+        - */storage/*
+        - */bootstrap/cache/*
+
+    ignoreErrors: []

@@ -8,7 +8,8 @@ use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 class Session extends Model
 {
     use Concerns\CanBeBillable;
@@ -34,27 +35,27 @@ class Session extends Model
         'endedAtInputFormat',
     ];
 
-    public function invoice()
+    public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class);
     }
 
-    public function sprint()
+    public function sprint(): BelongsTo
     {
         return $this->belongsTo(Sprint::class);
     }
 
-    public function task()
+    public function task(): BelongsTo
     {
         return $this->belongsTo(Task::class);
     }
 
-    public function sessionCategory()
+    public function sessionCategory(): BelongsTo
     {
         return $this->belongsTo(SessionCategory::class);
     }
 
-    public function thirdPartyApplicationSessions()
+    public function thirdPartyApplicationSessions(): HasMany
     {
         return $this->hasMany(ThirdPartyApplicationSession::class);
     }
