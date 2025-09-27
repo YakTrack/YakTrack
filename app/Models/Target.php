@@ -94,7 +94,7 @@ class Target extends Model
 
     public function valueInSeconds(): int
     {
-        return $this->valueInHours() * 3600;
+        return (int) ($this->valueInHours() * 3600);
     }
 
     public function hoursRemaining(): float

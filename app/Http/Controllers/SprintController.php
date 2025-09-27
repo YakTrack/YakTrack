@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\Sprint;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -94,7 +95,7 @@ class SprintController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Sprint $sprint)
+    public function update(Request $request, Sprint $sprint): RedirectResponse
     {
         $this->validate($request, [
             'name'       => 'required|unique:sprints,name,'.$sprint->id,
@@ -117,9 +118,8 @@ class SprintController extends Controller
      *
      * @param Sprint $sprint
      *
-     * @return \Illuminate\Http\Response
      */
-    public function destroy(Sprint $sprint)
+    public function destroy(Sprint $sprint): RedirectResponse
     {
         $sprint->delete();
 

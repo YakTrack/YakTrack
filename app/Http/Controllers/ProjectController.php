@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Client;
 use App\Models\Project;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ProjectController extends Controller
 {
@@ -87,9 +89,8 @@ class ProjectController extends Controller
      *
      * @param Project $project
      *
-     * @return \Illuminate\Http\Response
      */
-    public function edit(Project $project)
+    public function edit(Project $project): Response
     {
         return Inertia::render('Project/Edit', [
             'project' => $project,
@@ -103,9 +104,8 @@ class ProjectController extends Controller
      * @param \Illuminate\Http\Request $request
      * @param Project                  $project
      *
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Project $project)
+    public function update(Request $request, Project $project): RedirectResponse
     {
         $this->validate($request, [
             'name'      => 'required',
@@ -124,9 +124,8 @@ class ProjectController extends Controller
      *
      * @param Project $project
      *
-     * @return \Illuminate\Http\Response
      */
-    public function destroy(Project $project)
+    public function destroy(Project $project): RedirectResponse
     {
         if (!$project->isDeletable()) {
             abort(422, 'Project is unable to be deleted');
