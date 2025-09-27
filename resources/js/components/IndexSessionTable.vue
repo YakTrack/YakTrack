@@ -177,11 +177,10 @@
                                 
                                 <!-- Actions Column -->
                                 <td class="px-6 py-2 text-right w-16 transition-colors duration-150" rowspan="2">
-                                    <dropdown
+                                    <actions-dropdown
                                         :options="getSessionActions(session)"
                                         direction="left"
-                                        name="Actions"
-                                    ></dropdown>
+                                    ></actions-dropdown>
                                 </td>
                             </tr>
                             
@@ -378,11 +377,10 @@
                                 
                                 <!-- Actions -->
                                 <div class="flex-shrink-0">
-                                    <dropdown
+                                    <actions-dropdown
                                         :options="getSessionActions(session)"
                                         direction="left"
-                                        name="Actions"
-                                    ></dropdown>
+                                    ></actions-dropdown>
                                 </div>
                             </div>
                         </div>
@@ -465,6 +463,7 @@
 <script>
     import { Link } from '@inertiajs/vue3'
     import dropdown from '@/Shared/Dropdown';
+    import actionsDropdown from '@/Shared/ActionsDropdown';
     import deleteButton from '@/Shared/DeleteButton';
     import timestamp from '@/Shared/Timestamp';
     import modal from './Modal';
@@ -495,6 +494,7 @@
             Link,
             deleteButton: deleteButton,
             dropdown: dropdown,
+            actionsDropdown: actionsDropdown,
             modal: modal,
             timer: timer,
             timestamp: timestamp,
