@@ -9,6 +9,7 @@ use App\Statistics\Sessions;
 use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class HomeController extends Controller
 {
@@ -30,10 +31,8 @@ class HomeController extends Controller
 
     /**
      * Show the application dashboard.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): Response
     {
         $currentSession = Session::whereIsRunning()->first();
 

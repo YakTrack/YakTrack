@@ -3,17 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ClientController extends Controller
 {
     /**
      * Display a listing of clients.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): Response
     {
         return Inertia::render('Client/Index', [
             'clients' => \App\Models\Client::orderBy('name')->get(),
@@ -22,22 +22,16 @@ class ClientController extends Controller
 
     /**
      * Show the form for creating a new client.
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): Response
     {
         return Inertia::render('Client/Edit');
     }
 
     /**
      * Store a newly created form in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $client = Client::create($request->validate([
             'name'  => 'required',
@@ -51,24 +45,16 @@ class ClientController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function show(Client $client)
+    public function show(Client $client): Response
     {
         return Inertia::render('Client/Show', ['client' => $client]);
     }
 
     /**
      * Show the form for editing the specified client.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function edit(Client $client)
+    public function edit(Client $client): Response
     {
         return Inertia::render('Client/Edit', [
             'client' => $client,
@@ -77,13 +63,8 @@ class ClientController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int                      $id
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Client $client)
+    public function update(Request $request, Client $client): RedirectResponse
     {
         $this->validate($request, [
             'name'  => 'required',
@@ -101,12 +82,8 @@ class ClientController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param Client $client
-     *
-     * @return \Illuminate\Http\Response
      */
-    public function destroy(Client $client)
+    public function destroy(Client $client): RedirectResponse
     {
         $client->delete();
 

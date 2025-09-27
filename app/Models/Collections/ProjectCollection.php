@@ -2,6 +2,7 @@
 
 namespace App\Models\Collections;
 
+use App\Models\Collections\TaskCollection;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 
 class ProjectCollection extends EloquentCollection

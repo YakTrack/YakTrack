@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -12,10 +13,8 @@ class AppServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap any application services.
-     *
-     * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         /*
          * Enforce foreign key constraints if testing with sqlite
@@ -28,9 +27,8 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      *
-     * @return void
      */
-    public function register()
+    public function register(): void
     {
         Inertia::version(function () {
             return md5_file(public_path('mix-manifest.json'));
@@ -42,11 +40,12 @@ class AppServiceProvider extends ServiceProvider
                 'csrfToken' => csrf_token(),
             ],
             'auth' => function () {
+                $user = Auth::user();
                 return [
-                    'user' => Auth::user() ? [
-                        'id'         => Auth::user()->id,
-                        'name'       => Auth::user()->name,
-                        'email'      => Auth::user()->email,
+                    'user' => $user instanceof User ? [
+                        'id'         => $user->id,
+                        'name'       => $user->name,
+                        'email'      => $user->email,
                     ] : null,
                 ];
             },

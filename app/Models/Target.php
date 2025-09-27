@@ -29,7 +29,7 @@ class Target extends Model
         ],
     ];
 
-    public static function findForDate($date)
+    public static function findForDate($date): ?self
     {
         return self::whereForDate(Carbon::parse($date)->format('Y-m-d'))
             ->first();
@@ -37,12 +37,8 @@ class Target extends Model
 
     /**
      * Create a new Eloquent Collection instance.
-     *
-     * @param array $models
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function newCollection(array $models = [])
+    public function newCollection(array $models = []): TargetCollection
     {
         return new TargetCollection($models);
     }
@@ -86,27 +82,27 @@ class Target extends Model
         return $sessionsQuery->get();
     }
 
-    public function endsAt()
+    public function endsAt(): Carbon
     {
         return Carbon::parse($this->starts_at)->add($this->duration_unit, $this->duration);
     }
 
-    public function secondsRemaining()
+    public function secondsRemaining(): int
     {
         return $this->valueInSeconds() - $this->sessions()->totalDurationInSeconds();
     }
 
-    public function valueInSeconds()
+    public function valueInSeconds(): int
     {
         return $this->valueInHours() * 3600;
     }
 
-    public function hoursRemaining()
+    public function hoursRemaining(): float
     {
         return $this->valueInHours() - $this->sessions()->totalDurationInHours();
     }
 
-    public function valueInHours()
+    public function valueInHours(): float
     {
         return $this->value;
     }

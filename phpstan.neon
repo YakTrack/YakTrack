@@ -2,7 +2,7 @@ includes:
     - ./vendor/larastan/larastan/extension.neon
 
 parameters:
-    level: 1
+    level: 2
     paths:
         - app/
 
@@ -12,4 +12,16 @@ parameters:
         - */storage/*
         - */bootstrap/cache/*
 
-    ignoreErrors: []
+    ignoreErrors:
+        # Ignore collection method calls that exist on custom collections but PHPStan doesn't understand
+        - '#Call to an undefined method.*Collection.*::(totalDurationInSeconds|totalDurationInHours|totalDurationForHumans|totalValueInSeconds|sessionsThisWeek)\(\)#'
+        # Ignore higher order collection proxy issues with model attributes
+        - '#Access to an undefined property.*HigherOrderCollectionProxy.*::\$(durationInSeconds|durationInHours|is_billable)#'
+        # Ignore model method calls that exist but PHPStan doesn't understand
+        - '#Call to an undefined method.*Model::isThisWeek\(\)#'
+        - '#Call to an undefined method.*HigherOrderCollectionProxy.*::valueInSeconds\(\)#'
+        # Ignore property access on models in collections
+        - '#Access to an undefined property.*Model::\$(sessions|totalDurationForHumans|totalDurationInSprintForHumans|is_billable|tasks)#'
+        # Ignore property access on specific model classes
+        - '#Access to an undefined property App\\Models\\Sprint::\$totalDurationForHumans#'
+        - '#Access to an undefined property App\\Models\\Task::\$totalDurationInSprintForHumans#'

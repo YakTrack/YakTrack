@@ -59,6 +59,16 @@ class DateTimeFormatter
         return $this->localFormat($dateTime, self::DATE_FOR_HUMANS_FORMAT);
     }
 
+    public function date($dateTime)
+    {
+        return $this->dateForHumans($dateTime);
+    }
+
+    public function localDate($dateTime)
+    {
+        return $this->localDateForHumans($dateTime);
+    }
+
     public function timeForHumans($dateTime)
     {
         return $this->format($dateTime, self::TIME_FOR_HUMANS_FORMAT);

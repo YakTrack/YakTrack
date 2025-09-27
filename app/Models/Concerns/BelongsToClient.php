@@ -11,7 +11,7 @@ trait BelongsToClient
 
     public function client(): BelongsTo
     {
-        if ($this->parent) {
+        if (property_exists($this, 'parent') && $this->parent) {
             return $this->parent->client();
         }
 

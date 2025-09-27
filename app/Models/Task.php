@@ -21,12 +21,8 @@ class Task extends Model
 
     /**
      * Create a new Eloquent Collection instance.
-     *
-     * @param array $models
-     *
-     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function newCollection(array $models = [])
+    public function newCollection(array $models = []): TaskCollection
     {
         return new TaskCollection($models);
     }
@@ -46,27 +42,27 @@ class Task extends Model
         return $this->belongsTo(TaskStatus::class, 'status_id');
     }
 
-    public function openSprint()
+    public function openSprint(): Sprint
     {
         return $this->getProject()->sprints()->open()->orderBy('id', 'desc')->first() ?? new Sprint();
     }
 
-    public function getClient()
+    public function getClient(): Client
     {
         return $this->getProject()->getClient();
     }
 
-    public function getProject()
+    public function getProject(): Project
     {
         return $this->getRelation(Project::class);
     }
 
-    public function getParent()
+    public function getParent(): self
     {
         return $this->parent ?? new self();
     }
 
-    public function getShortNameAttribute()
+    public function getShortNameAttribute(): string
     {
         return substr($this->name, 0, $shortNameLength = 50).(strlen($this->name) > $shortNameLength ? '...' : '');
     }

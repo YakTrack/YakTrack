@@ -7,9 +7,17 @@ use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
 use DateTimeInterface;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+
+/**
+ * @method static \Illuminate\Database\Eloquent\Builder whereThisWeek()
+ * @method static \Illuminate\Database\Eloquent\Builder whereBillable()
+ * @method static \Illuminate\Database\Eloquent\Builder whereNotBillable()
+ * @method static \Illuminate\Database\Eloquent\Builder whereOnDayThisWeek(string $day)
+ */
 class Session extends Model
 {
     use Concerns\CanBeBillable;
@@ -183,7 +191,7 @@ class Session extends Model
         return $this->isRunning();
     }
 
-    public function scopeWhereIsRunning($query)
+    public function scopeWhereIsRunning(Builder $query): Builder
     {
         return $query->whereNull('ended_at');
     }
@@ -191,17 +199,17 @@ class Session extends Model
     /**
      * @deprecated in favour of scopeWhereIsRunning
      */
-    public function scopeRunning($query)
+    public function scopeRunning(Builder $query): Builder
     {
         return $this->scopeWhereIsRunning($query);
     }
 
-    public function scopeToday($query)
+    public function scopeToday(Builder $query): Builder
     {
-        return $query->onDate(app(DateTimeFormatter::class)->today());
+        return $this->scopeWhereOnDate($query, app(DateTimeFormatter::class)->today());
     }
 
-    public function scopeWhereOnDate($query, $date)
+    public function scopeWhereOnDate(Builder $query, $date): Builder
     {
         return $query->where('started_at', '>=', (new DateTimeFormatter())->utcFormat($date))
             ->where('started_at', '<', (new DateTimeFormatter())->utcFormat((clone $date)->addDays(1)));
@@ -210,18 +218,18 @@ class Session extends Model
     /**
      * @deprecated in favour of whereOnDate
      */
-    public function scopeOnDate($query, $date)
+    public function scopeOnDate(Builder $query, $date): Builder
     {
         return $this->scopeWhereOnDate($query, $date);
     }
 
-    public function scopeWhereThisWeek($query)
+    public function scopeWhereThisWeek(Builder $query): Builder
     {
         return $query->where('started_at', '>=', (new DateTimeFormatter())->startOfWeek())
             ->where('started_at', '<', (new DateTimeFormatter())->endOfWeek());
     }
 
-    public function scopeWhereOnDayThisWeek($query, $day)
+    public function scopeWhereOnDayThisWeek(Builder $query, string $day): Builder
     {
         $startOfDay = app(DateTimeFormatter::class)->dayThisWeek($day)->startOfDay()->utc()->toDateTimeString();
         $endOfDay = app(DateTimeFormatter::class)->dayThisWeek($day)->endOfDay()->utc()->toDateTimeString();
