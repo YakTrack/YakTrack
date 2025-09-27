@@ -1,14 +1,12 @@
 <template>
-    <div class="inline-block">
-        <Link
-            :href="href"
-            :class="['btn', 'btn-default', !color || `btn-${color}`]"
-            :method="method || 'get'"
-            :as="(method && method !== 'get') ? 'button' : 'a'"
-        >
-            <slot></slot>
-        </Link>
-    </div>
+    <Link
+        :href="href"
+        :class="['btn', 'btn-default', '!inline-flex', 'items-center', !color || `btn-${color}`]"
+        :method="method || 'get'"
+        :as="(method && method !== 'get') ? 'button' : 'a'"
+    >
+        <slot></slot>
+    </Link>
 </template>
 
 <script>
