@@ -21,22 +21,32 @@ class Task extends Model
 
     /**
      * Create a new Eloquent Collection instance.
+     * @param array<int, \App\Models\Task> $models
      */
     public function newCollection(array $models = []): TaskCollection
     {
         return new TaskCollection($models);
     }
 
+    /**
+     * @return HasMany<Session>
+     */
     public function sessions(): HasMany
     {
         return $this->hasMany(Session::class);
     }
 
+    /**
+     * @return BelongsTo<Task, Task>
+     */
     public function parent(): BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id');
     }
 
+    /**
+     * @return BelongsTo<TaskStatus, Task>
+     */
     public function taskStatus(): BelongsTo
     {
         return $this->belongsTo(TaskStatus::class, 'status_id');
@@ -57,9 +67,9 @@ class Task extends Model
         return $this->getRelation(Project::class);
     }
 
-    public function getParent(): self
+    public function getParent(): Task
     {
-        return $this->parent ?? new self();
+        return $this->parent ?? new Task();
     }
 
     public function getShortNameAttribute(): string

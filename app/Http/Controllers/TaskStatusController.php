@@ -4,15 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\TaskStatus;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class TaskStatusController extends Controller
 {
     /**
      * Display a listing of task statuses.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $projectId = $request->get('project_id');
         $project = null;
@@ -41,7 +43,7 @@ class TaskStatusController extends Controller
     /**
      * Show the form for creating a new task status.
      */
-    public function create(Request $request)
+    public function create(Request $request): Response
     {
         $projectId = $request->get('project_id');
         $project = $projectId ? Project::findOrFail($projectId) : null;
@@ -55,7 +57,7 @@ class TaskStatusController extends Controller
     /**
      * Store a newly created task status.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name'         => 'required|string|max:255',
@@ -97,7 +99,7 @@ class TaskStatusController extends Controller
     /**
      * Show the form for editing the specified task status.
      */
-    public function edit(TaskStatus $taskStatus)
+    public function edit(TaskStatus $taskStatus): Response
     {
         return Inertia::render('TaskStatus/Edit', [
             'taskStatus' => $taskStatus->load('project'),
@@ -109,7 +111,7 @@ class TaskStatusController extends Controller
     /**
      * Update the specified task status.
      */
-    public function update(Request $request, TaskStatus $taskStatus)
+    public function update(Request $request, TaskStatus $taskStatus): RedirectResponse
     {
         $request->validate([
             'name'         => 'string|max:255',
@@ -149,7 +151,7 @@ class TaskStatusController extends Controller
     /**
      * Remove the specified task status.
      */
-    public function destroy(TaskStatus $taskStatus)
+    public function destroy(TaskStatus $taskStatus): RedirectResponse
     {
         if ($taskStatus->tasks()->count() > 0) {
             return redirect()

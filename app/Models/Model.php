@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model as BaseModel;
 
 abstract class Model extends BaseModel
 {
-    public function __construct($params = [])
+    /**
+     * @param array<string, mixed> $params
+     */
+    public function __construct(array $params = [])
     {
         parent::__construct($params);
 
@@ -17,14 +20,14 @@ abstract class Model extends BaseModel
         ]);
     }
 
-    public function getEditUrlAttribute()
+    public function getEditUrlAttribute(): string
     {
         return route($this->resourceName().'.edit', [
             $this->resourceName() => $this,
         ]);
     }
 
-    public function getShowUrlAttribute()
+    public function getShowUrlAttribute(): string
     {
         return route($this->resourceName().'.show', [
             $this->resourceName() => $this,
@@ -32,14 +35,14 @@ abstract class Model extends BaseModel
         ]);
     }
 
-    public function getDestroyUrlAttribute()
+    public function getDestroyUrlAttribute(): string
     {
         return route($this->resourceName().'.destroy', [
             $this->resourceName() => $this,
         ]);
     }
 
-    protected function resourceName()
+    protected function resourceName(): string
     {
         return strtolower(class_basename(static::class));
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ClientPortal;
 
 use App\Http\Controllers\Controller;
 use App\Models\Session;
+use Inertia\Response;
 
 class SessionController extends Controller
 {
@@ -18,7 +19,7 @@ class SessionController extends Controller
     /**
      * Display a listing of the client's billable sessions.
      */
-    public function index()
+    public function index(): Response
     {
         $clientUser = auth('client')->user();
 
@@ -39,7 +40,7 @@ class SessionController extends Controller
     /**
      * Display the specified session.
      */
-    public function show(Session $session)
+    public function show(Session $session): Response
     {
         $clientUser = auth('client')->user();
 

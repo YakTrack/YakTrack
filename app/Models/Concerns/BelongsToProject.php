@@ -9,6 +9,9 @@ trait BelongsToProject
 {
     use HasRelations;
 
+    /**
+     * @return BelongsTo<Project, static>
+     */
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);

@@ -16,16 +16,19 @@ class Invoice extends Model
         'amountForHumans',
     ];
 
-    public function getAmountForHumansAttribute()
+    public function getAmountForHumansAttribute(): string
     {
         return number_format($this->amount / 100, 2);
     }
 
-    public function getTotalDurationForHumansAttribute()
+    public function getTotalDurationForHumansAttribute(): string
     {
         return $this->sessions->totalDurationForHumans();
     }
 
+    /**
+     * @return HasMany<Session>
+     */
     public function sessions(): HasMany
     {
         return $this->hasMany(Session::class);

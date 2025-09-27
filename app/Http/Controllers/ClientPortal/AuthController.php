@@ -4,17 +4,19 @@ namespace App\Http\Controllers\ClientPortal;
 
 use App\Http\Controllers\Controller;
 use App\Models\ClientUser;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Inertia\Response;
 
 class AuthController extends Controller
 {
     /**
      * Show the client portal login form.
      */
-    public function showLoginForm()
+    public function showLoginForm(): Response
     {
         return inertia('ClientPortal/Auth/Login');
     }
@@ -22,7 +24,7 @@ class AuthController extends Controller
     /**
      * Handle client portal login.
      */
-    public function login(Request $request)
+    public function login(Request $request): RedirectResponse
     {
         $request->validate([
             'email'    => 'required|email',
@@ -49,7 +51,7 @@ class AuthController extends Controller
     /**
      * Handle client portal logout.
      */
-    public function logout(Request $request)
+    public function logout(Request $request): RedirectResponse
     {
         Auth::guard('client')->logout();
 

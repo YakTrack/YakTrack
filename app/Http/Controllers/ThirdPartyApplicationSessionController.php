@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Session;
 use App\Models\ThirdPartyApplication;
+use Illuminate\Http\RedirectResponse;
 
 class ThirdPartyApplicationSessionController extends Controller
 {
-    public function store()
+    public function store(): RedirectResponse
     {
         request()->validate([
             'session_id'                 => 'required|exists:sessions,id',

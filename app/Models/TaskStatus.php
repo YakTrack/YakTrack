@@ -25,11 +25,17 @@ class TaskStatus extends Model
         'is_completed' => 'boolean',
     ];
 
+    /**
+     * @return BelongsTo<Project, TaskStatus>
+     */
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
     }
 
+    /**
+     * @return HasMany<Task>
+     */
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class, 'status_id');

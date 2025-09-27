@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\ThirdPartyApplication;
+use Illuminate\Http\RedirectResponse;
 
 class ThirdPartyApplicationController extends Controller
 {
-    public function store()
+    public function store(): RedirectResponse
     {
         ThirdPartyApplication::create([
             'type' => request('type'),

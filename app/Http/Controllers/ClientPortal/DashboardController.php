@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\ClientPortal;
 
 use App\Http\Controllers\Controller;
+use Inertia\Response;
 
 class DashboardController extends Controller
 {
@@ -17,7 +18,7 @@ class DashboardController extends Controller
     /**
      * Show the client portal dashboard.
      */
-    public function index()
+    public function index(): Response
     {
         $clientUser = auth('client')->user();
 

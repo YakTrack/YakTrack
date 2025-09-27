@@ -25,6 +25,9 @@ class Session extends Model
 
     protected $guarded = [];
 
+    /**
+     * @var array<string>
+     */
     protected $dates = ['started_at', 'ended_at'];
 
     protected $appends = [
@@ -43,154 +46,173 @@ class Session extends Model
         'endedAtInputFormat',
     ];
 
+    /**
+     * @return BelongsTo<Invoice, Session>
+     */
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class);
     }
 
+    /**
+     * @return BelongsTo<Sprint, Session>
+     */
     public function sprint(): BelongsTo
     {
         return $this->belongsTo(Sprint::class);
     }
 
+    /**
+     * @return BelongsTo<Task, Session>
+     */
     public function task(): BelongsTo
     {
         return $this->belongsTo(Task::class);
     }
 
+    /**
+     * @return BelongsTo<SessionCategory, Session>
+     */
     public function sessionCategory(): BelongsTo
     {
         return $this->belongsTo(SessionCategory::class);
     }
 
+    /**
+     * @return HasMany<ThirdPartyApplicationSession>
+     */
     public function thirdPartyApplicationSessions(): HasMany
     {
         return $this->hasMany(ThirdPartyApplicationSession::class);
     }
 
-    public function getStartedAtAttribute()
+    public function getStartedAtAttribute(): Carbon
     {
         return Carbon::parse($this->attributes['started_at']);
     }
 
-    public function getLocalStartedAtAttribute()
+    public function getLocalStartedAtAttribute(): Carbon
     {
         return $this->startedAt->timezone(app(DateTimeFormatter::class)->timezone());
     }
 
-    public function getEndedAtAttribute()
+    public function getEndedAtAttribute(): ?Carbon
     {
         if (!isset($this->attributes['ended_at'])) {
-            return;
+            return null;
         }
 
         return Carbon::parse($this->attributes['ended_at']);
     }
 
-    public function getLocalEndedAtAttribute()
+    public function getLocalEndedAtAttribute(): ?Carbon
     {
         if (is_null($this->endedAt)) {
-            return;
+            return null;
         }
 
         return $this->endedAt->timezone(app(DateTimeFormatter::class)->timezone());
     }
 
-    public function getStartedAtDateAttribute()
+    public function getStartedAtDateAttribute(): string
     {
         return app(DateTimeFormatter::class)->date($this->startedAt);
     }
 
-    public function getLocalStartedAtDateAttribute()
+    public function getLocalStartedAtDateAttribute(): string
     {
         return app(DateTimeFormatter::class)->localDate($this->startedAt);
     }
 
-    public function getLocalStartedAtDateForHumansAttribute()
+    public function getLocalStartedAtDateForHumansAttribute(): string
     {
         return app(DateTimeFormatter::class)->localDateForHumans($this->startedAt);
     }
 
-    public function getEndedAtDateAttribute()
+    public function getEndedAtDateAttribute(): ?string
     {
         return app(DateTimeFormatter::class)->date($this->endedAt);
     }
 
-    public function getLocalEndedAtDateAttribute()
+    public function getLocalEndedAtDateAttribute(): ?string
     {
         return app(DateTimeFormatter::class)->localDate($this->endedAt);
     }
 
-    public function getLocalEndedAtDateForHumansAttribute()
+    public function getLocalEndedAtDateForHumansAttribute(): ?string
     {
         return app(DateTimeFormatter::class)->localDateForHumans($this->endedAt);
     }
 
-    public function getDurationForHumansAttribute()
+    public function getDurationForHumansAttribute(): string
     {
         return app(DateIntervalFormatter::class)->forHumans($this->duration);
     }
 
-    public function getDurationAttribute()
+    public function getDurationAttribute(): \DateInterval
     {
         return ($this->ended_at ?? Carbon::now())->diff(Carbon::parse($this->started_at));
     }
 
-    public function getDurationInSecondsAttribute()
+    public function getDurationInSecondsAttribute(): int
     {
         return $this->duration->days * 86400 + $this->duration->h * 3600 + $this->duration->i * 60 + $this->duration->s;
     }
 
-    public function getDurationInHoursAttribute()
+    public function getDurationInHoursAttribute(): float
     {
         return $this->durationInSeconds / 3600;
     }
 
-    public function getEndedAtTimeForHumansAttribute()
+    public function getEndedAtTimeForHumansAttribute(): ?string
     {
         return (new DateTimeFormatter())->timeForHumans($this->ended_at);
     }
 
-    public function getLocalEndedAtTimeForHumansAttribute()
+    public function getLocalEndedAtTimeForHumansAttribute(): ?string
     {
         return (new DateTimeFormatter())->localTimeForHumans($this->ended_at);
     }
 
-    public function getStartedAtTimeForHumansAttribute()
+    public function getStartedAtTimeForHumansAttribute(): string
     {
         return (new DateTimeFormatter())->timeForHumans($this->started_at);
     }
 
-    public function getLocalStartedAtTimeForHumansAttribute()
+    public function getLocalStartedAtTimeForHumansAttribute(): string
     {
         return (new DateTimeFormatter())->localTimeForHumans($this->started_at);
     }
 
-    public function getEndedAtDateTimeForHumansAttribute()
+    public function getEndedAtDateTimeForHumansAttribute(): ?string
     {
         return (new DateTimeFormatter())->dateTimeForHumans($this->ended_at);
     }
 
-    public function getLocalEndedAtDateTimeForHumansAttribute()
+    public function getLocalEndedAtDateTimeForHumansAttribute(): ?string
     {
         return (new DateTimeFormatter())->localDateTimeForHumans($this->ended_at);
     }
 
-    public function getStartedAtDateTimeForHumansAttribute()
+    public function getStartedAtDateTimeForHumansAttribute(): string
     {
         return (new DateTimeFormatter())->dateTimeForHumans($this->started_at);
     }
 
-    public function isRunning()
+    public function isRunning(): bool
     {
         return is_null($this->ended_at);
     }
 
-    public function getIsRunningAttribute()
+    public function getIsRunningAttribute(): bool
     {
         return $this->isRunning();
     }
 
+    /**
+     * @param Builder<\App\Models\Session> $query
+     * @return Builder<\App\Models\Session>
+     */
     public function scopeWhereIsRunning(Builder $query): Builder
     {
         return $query->whereNull('ended_at');
@@ -198,37 +220,58 @@ class Session extends Model
 
     /**
      * @deprecated in favour of scopeWhereIsRunning
+     * @param Builder<\App\Models\Session> $query
+     * @return Builder<\App\Models\Session>
      */
     public function scopeRunning(Builder $query): Builder
     {
         return $this->scopeWhereIsRunning($query);
     }
 
+    /**
+     * @param Builder<\App\Models\Session> $query
+     * @return Builder<\App\Models\Session>
+     */
     public function scopeToday(Builder $query): Builder
     {
         return $this->scopeWhereOnDate($query, app(DateTimeFormatter::class)->today());
     }
 
-    public function scopeWhereOnDate(Builder $query, $date): Builder
+    /**
+     * @param Builder<\App\Models\Session> $query
+     * @return Builder<\App\Models\Session>
+     */
+    public function scopeWhereOnDate(Builder $query, DateTimeInterface $date): Builder
     {
+        $carbonDate = $date instanceof \Carbon\Carbon ? $date : \Carbon\Carbon::parse($date);
         return $query->where('started_at', '>=', (new DateTimeFormatter())->utcFormat($date))
-            ->where('started_at', '<', (new DateTimeFormatter())->utcFormat((clone $date)->addDays(1)));
+            ->where('started_at', '<', (new DateTimeFormatter())->utcFormat($carbonDate->addDays(1)));
     }
 
     /**
      * @deprecated in favour of whereOnDate
+     * @param Builder<\App\Models\Session> $query
+     * @return Builder<\App\Models\Session>
      */
-    public function scopeOnDate(Builder $query, $date): Builder
+    public function scopeOnDate(Builder $query, DateTimeInterface $date): Builder
     {
         return $this->scopeWhereOnDate($query, $date);
     }
 
+    /**
+     * @param Builder<\App\Models\Session> $query
+     * @return Builder<\App\Models\Session>
+     */
     public function scopeWhereThisWeek(Builder $query): Builder
     {
         return $query->where('started_at', '>=', (new DateTimeFormatter())->startOfWeek())
             ->where('started_at', '<', (new DateTimeFormatter())->endOfWeek());
     }
 
+    /**
+     * @param Builder<\App\Models\Session> $query
+     * @return Builder<\App\Models\Session>
+     */
     public function scopeWhereOnDayThisWeek(Builder $query, string $day): Builder
     {
         $startOfDay = app(DateTimeFormatter::class)->dayThisWeek($day)->startOfDay()->utc()->toDateTimeString();
@@ -242,48 +285,62 @@ class Session extends Model
      * Deprecated in favour of whereThisWeek.
      *
      * @deprecated
+     * @param Builder<\App\Models\Session> $query
+     * @return Builder<\App\Models\Session>
      */
-    public function scopeThisWeek($query)
+    public function scopeThisWeek(Builder $query): Builder
     {
         return $this->scopeWhereThisWeek($query);
     }
 
-    public function scopeFinished($query)
+    /**
+     * @param Builder<\App\Models\Session> $query
+     * @return Builder<\App\Models\Session>
+     */
+    public function scopeFinished(Builder $query): Builder
     {
         return $query->whereNotNull('ended_at');
     }
 
-    public function scopeStartedAfter($query, $date)
+    /**
+     * @param Builder<\App\Models\Session> $query
+     * @return Builder<\App\Models\Session>
+     */
+    public function scopeStartedAfter(Builder $query, DateTimeInterface $date): Builder
     {
         return $query->where('started_at', '>=', $date);
     }
 
-    public function scopeStartedBefore($query, $date)
+    /**
+     * @param Builder<\App\Models\Session> $query
+     * @return Builder<\App\Models\Session>
+     */
+    public function scopeStartedBefore(Builder $query, DateTimeInterface $date): Builder
     {
         return $query->where('started_at', '<=', $date);
     }
 
-    public function stop($endedAt = null)
+    public function stop(?DateTimeInterface $endedAt = null): void
     {
-        $this->ended_at = $endedAt ?? Carbon::now();
+        $this->ended_at = $endedAt ? Carbon::parse($endedAt) : Carbon::now();
         $this->save();
     }
 
-    public function getStopUrlAttribute()
+    public function getStopUrlAttribute(): string
     {
         return route('session.stop');
     }
 
-    public function getStartedAtInputFormatAttribute()
+    public function getStartedAtInputFormatAttribute(): ?string
     {
-        if (!$this->started_at) {
+        if (!$this->attributes['started_at']) {
             return null;
         }
 
         return $this->localStartedAt->format('Y-m-d\TH:i');
     }
 
-    public function getEndedAtInputFormatAttribute()
+    public function getEndedAtInputFormatAttribute(): ?string
     {
         if (!$this->ended_at) {
             return null;
@@ -295,16 +352,16 @@ class Session extends Model
     /**
      * Create a new Eloquent Collection instance.
      *
-     * @param array $models
+     * @param array<int, \App\Models\Session> $models
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \App\Models\Collections\SessionCollection
      */
-    public function newCollection(array $models = [])
+    public function newCollection(array $models = []): SessionCollection
     {
         return new SessionCollection($models);
     }
 
-    public function exportToThirdPartyApplication(ThirdPartyApplication $thirdPartyApplication)
+    public function exportToThirdPartyApplication(ThirdPartyApplication $thirdPartyApplication): ThirdPartyApplicationSession
     {
         return ThirdPartyApplicationSession::create([
             'session_id'                 => $this->id,
@@ -312,14 +369,18 @@ class Session extends Model
         ]);
     }
 
-    public function scopeLinkedTo($sessions, ThirdPartyApplication $app)
+    /**
+     * @param Builder<\App\Models\Session> $sessions
+     * @return Builder<\App\Models\Session>
+     */
+    public function scopeLinkedTo(Builder $sessions, ThirdPartyApplication $app): Builder
     {
         return $sessions->whereHas('thirdPartyApplicationSessions', function ($thirdPartyApplicationSession) use ($app) {
             return $thirdPartyApplicationSession->whereThirdPartyApplicationId($app->id);
         });
     }
 
-    public function isLinkedTo(ThirdPartyApplication $app)
+    public function isLinkedTo(ThirdPartyApplication $app): bool
     {
         return $this->thirdPartyApplicationSessions()
             ->get()
@@ -328,7 +389,7 @@ class Session extends Model
             })->count() > 0;
     }
 
-    public function linkTo(ThirdPartyApplication $app)
+    public function linkTo(ThirdPartyApplication $app): ThirdPartyApplicationSession
     {
         return ThirdPartyApplicationSession::create([
             'session_id'                 => $this->id,
@@ -336,32 +397,32 @@ class Session extends Model
         ]);
     }
 
-    public function isThisWeek()
+    public function isThisWeek(): bool
     {
         return $this->startedAt >= (new DateTimeFormatter())->startOfWeek()
             && $this->startedAt < (new DateTimeFormatter())->endOfWeek();
     }
 
-    public function attachToInvoice(Invoice $invoice)
+    public function attachToInvoice(Invoice $invoice): bool
     {
         return $this->update([
             'invoice_id' => $invoice->id,
         ]);
     }
 
-    public function hasNoClient()
+    public function hasNoClient(): bool
     {
         return $this->getClient() === null;
     }
 
-    public function getClient()
+    public function getClient(): ?Client
     {
         if ($this->task === null) {
-            return;
+            return null;
         }
 
         if ($this->task->project === null) {
-            return;
+            return null;
         }
 
         return $this->task->project->client;

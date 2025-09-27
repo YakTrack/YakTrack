@@ -12,31 +12,49 @@ class Client extends Model
 
     protected $guarded = [];
 
+    /**
+     * @return HasMany<Invoice>
+     */
     public function invoices(): HasMany
     {
         return $this->hasMany(Invoice::class);
     }
 
+    /**
+     * @return HasMany<Project>
+     */
     public function projects(): HasMany
     {
         return $this->hasMany(Project::class);
     }
 
+    /**
+     * @return HasManyThrough<Sprint>
+     */
     public function sprints(): HasManyThrough
     {
         return $this->hasManyThrough(Sprint::class, Project::class);
     }
 
-    public function getSessionsThisWeekAttribute()
+    /**
+     * @return \App\Models\Collections\SessionCollection
+     */
+    public function getSessionsThisWeekAttribute(): \App\Models\Collections\SessionCollection
     {
-        return $this->projects->sessionsThisWeek()->values();
+        return $this->projects->sessionsThisWeek();
     }
 
-    public function getOpenSprintsAttribute()
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\Sprint>
+     */
+    public function getOpenSprintsAttribute(): \Illuminate\Database\Eloquent\Collection
     {
         return $this->sprints()->open()->with('sessions')->get();
     }
 
+    /**
+     * @return HasMany<ClientUser>
+     */
     public function clientUsers(): HasMany
     {
         return $this->hasMany(ClientUser::class);

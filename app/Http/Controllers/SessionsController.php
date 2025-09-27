@@ -23,9 +23,10 @@ class SessionsController extends Controller
             }
         }
 
+        /** @var \Illuminate\Support\Collection<string, mixed> $sessionData */
         $sessions = collect($sessionData)
             ->keys()
-            ->map(function ($id) {
+            ->map(function (string $id) {
                 return Session::find($id);
             })->each(function ($session) use ($sessionData) {
                 $session->update($sessionData[$session->id]);

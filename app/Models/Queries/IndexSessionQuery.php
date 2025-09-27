@@ -3,16 +3,22 @@
 namespace App\Models\Queries;
 
 use App\Models\Session;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Builder;
 
 class IndexSessionQuery
 {
-    protected $paginate = false;
+    protected bool $paginate = false;
 
-    protected $perPage = null;
+    protected ?int $perPage = null;
 
-    protected $offset = null;
+    protected ?int $offset = null;
 
-    public function execute()
+    /**
+     * @return Collection<int, \App\Models\Session>|LengthAwarePaginator<\App\Models\Session>
+     */
+    public function execute(): Collection|LengthAwarePaginator
     {
         $query = Session::orderBy('started_at', 'desc')
             ->addSelect([
@@ -76,7 +82,7 @@ class IndexSessionQuery
         return $this->paginate ? $query->paginate($this->perPage) : $query->get();
     }
 
-    public function paginate($perPage = null)
+    public function paginate(?int $perPage = null): self
     {
         $this->paginate = !is_null($perPage);
 
@@ -85,20 +91,26 @@ class IndexSessionQuery
         return $this;
     }
 
-    public function offset($offset = null)
+    public function offset(?int $offset = null): self
     {
         $this->offset = $offset;
 
         return $this;
     }
 
-    public function startedAfter($query, $dateTime)
+    /**
+     * @param Builder<\App\Models\Session> $query
+     */
+    public function startedAfter(Builder $query, string $dateTime): void
     {
-        $query->startedAfter($dateTime);
+        $query->startedAfter(\Carbon\Carbon::parse($dateTime));
     }
 
-    public function startedBefore($query, $dateTime)
+    /**
+     * @param Builder<\App\Models\Session> $query
+     */
+    public function startedBefore(Builder $query, string $dateTime): void
     {
-        $query->startedBefore($dateTime);
+        $query->startedBefore(\Carbon\Carbon::parse($dateTime));
     }
 }

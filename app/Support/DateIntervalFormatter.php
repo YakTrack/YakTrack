@@ -9,12 +9,12 @@ class DateIntervalFormatter
 {
     const FOR_HUMANS_FORMAT = ':%I:%S';
 
-    public function forHumans(DateInterval $interval)
+    public function forHumans(DateInterval $interval): string
     {
         return $interval->format($this->numberOfHours($interval).self::FOR_HUMANS_FORMAT);
     }
 
-    public function createFromSeconds($seconds)
+    public function createFromSeconds(int $seconds): DateInterval
     {
         $now = new DateTime();
         $afterNumberOfSeconds = new DateTime();
@@ -23,7 +23,7 @@ class DateIntervalFormatter
         return $afterNumberOfSeconds->diff($now);
     }
 
-    protected function numberOfHours(DateInterval $interval)
+    protected function numberOfHours(DateInterval $interval): int
     {
         return $interval->days * 24 + $interval->h;
     }

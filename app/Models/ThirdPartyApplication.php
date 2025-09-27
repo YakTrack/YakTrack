@@ -11,12 +11,15 @@ class ThirdPartyApplication extends Model
 
     protected $guarded = [];
 
-    public function totalLinkedSessionDurationForTaskForHumans(Task $task)
+    public function totalLinkedSessionDurationForTaskForHumans(Task $task): string
     {
         return $this->linkedSessionsForTask($task)->totalDurationForHumans();
     }
 
-    public function linkedSessionsForTask(Task $task)
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\Session>
+     */
+    public function linkedSessionsForTask(Task $task): \Illuminate\Database\Eloquent\Collection
     {
         return $task->sessions()->linkedTo($this)->get();
     }

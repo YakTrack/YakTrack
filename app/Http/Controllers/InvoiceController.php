@@ -6,13 +6,15 @@ use App\Models\Client;
 use App\Models\Invoice;
 use App\Models\Session;
 use App\Models\ThirdPartyApplication;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class InvoiceController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
         return Inertia::render('Invoice/Index', [
             'invoices' => Invoice::with(['client', 'sessions'])
@@ -23,14 +25,14 @@ class InvoiceController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(): Response
     {
         return Inertia::render('Invoice/Edit', [
             'clients' => Client::all(),
         ]);
     }
 
-    public function store()
+    public function store(): RedirectResponse
     {
         request()->validate([
             'number' => 'unique:invoices,number',
@@ -52,7 +54,7 @@ class InvoiceController extends Controller
             ->with('success', 'You have created invoice "'.$invoice->number.'"');
     }
 
-    public function edit(Invoice $invoice)
+    public function edit(Invoice $invoice): Response
     {
         return Inertia::render('Invoice/Edit', [
             'invoice'  => array_merge($invoice->toArray(), [
@@ -62,7 +64,7 @@ class InvoiceController extends Controller
         ]);
     }
 
-    public function update(Request $request, Invoice $invoice)
+    public function update(Request $request, Invoice $invoice): RedirectResponse
     {
         $this->validate($request, [
             'number'      => [
@@ -104,7 +106,7 @@ class InvoiceController extends Controller
             ->with('success', $successMessage);
     }
 
-    public function show(Invoice $invoice)
+    public function show(Invoice $invoice): Response
     {
         return Inertia::render('Invoice/Show', [
             'invoice'                => $invoice->load(['client', 'sessions.task.project.client']),
@@ -112,7 +114,7 @@ class InvoiceController extends Controller
         ]);
     }
 
-    public function destroy(Invoice $invoice)
+    public function destroy(Invoice $invoice): RedirectResponse
     {
         $invoice->delete();
 

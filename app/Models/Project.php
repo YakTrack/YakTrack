@@ -20,11 +20,11 @@ class Project extends Model
     /**
      * Create a new Eloquent Collection instance.
      *
-     * @param array $models
+     * @param array<int, \App\Models\Project> $models
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @return \App\Models\Collections\ProjectCollection
      */
-    public function newCollection(array $models = [])
+    public function newCollection(array $models = []): ProjectCollection
     {
         return new ProjectCollection($models);
     }
@@ -32,6 +32,9 @@ class Project extends Model
     /**
      * The client that the project belongs to.
      **/
+    /**
+     * @return BelongsTo<Client, Project>
+     */
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
@@ -43,7 +46,7 @@ class Project extends Model
      *
      * @return \App\Models\Client
      **/
-    public function getClient()
+    public function getClient(): Client
     {
         if (is_null($this->client)) {
             return new Client();
@@ -55,6 +58,9 @@ class Project extends Model
     /**
      * The sprints that belong to the project.
      **/
+    /**
+     * @return HasMany<Sprint>
+     */
     public function sprints(): HasMany
     {
         return $this->hasMany(Sprint::class);
@@ -63,6 +69,9 @@ class Project extends Model
     /**
      * The tasks that belong to the project.
      **/
+    /**
+     * @return HasMany<Task>
+     */
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
@@ -71,6 +80,9 @@ class Project extends Model
     /**
      * The task statuses that belong to the project.
      **/
+    /**
+     * @return HasMany<TaskStatus>
+     */
     public function taskStatuses(): HasMany
     {
         return $this->hasMany(TaskStatus::class)->orderBy('sort_order');
@@ -79,12 +91,15 @@ class Project extends Model
     /**
      * The sessions that belong to the project through tasks.
      **/
+    /**
+     * @return HasManyThrough<Session>
+     */
     public function sessions(): HasManyThrough
     {
         return $this->hasManyThrough(Session::class, Task::class);
     }
 
-    public function isDeletable()
+    public function isDeletable(): bool
     {
         if ($this->sprints->count() > 0) {
             return false;
@@ -97,7 +112,7 @@ class Project extends Model
         return true;
     }
 
-    public function getIsDeletableAttribute()
+    public function getIsDeletableAttribute(): bool
     {
         return $this->isDeletable();
     }

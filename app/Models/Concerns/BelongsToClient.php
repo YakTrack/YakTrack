@@ -9,6 +9,9 @@ trait BelongsToClient
 {
     use HasRelations;
 
+    /**
+     * @return BelongsTo<Client, static>
+     */
     public function client(): BelongsTo
     {
         if (property_exists($this, 'parent') && $this->parent) {

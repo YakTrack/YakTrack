@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Collections\TargetCollection;
 use App\Support\DateTimeFormatter;
+use DateTimeInterface;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -29,7 +31,7 @@ class Target extends Model
         ],
     ];
 
-    public static function findForDate($date): ?self
+    public static function findForDate(DateTimeInterface|string $date): ?self
     {
         return self::whereForDate(Carbon::parse($date)->format('Y-m-d'))
             ->first();
@@ -37,23 +39,36 @@ class Target extends Model
 
     /**
      * Create a new Eloquent Collection instance.
+     * @param array<int, \App\Models\Target> $models
      */
     public function newCollection(array $models = []): TargetCollection
     {
         return new TargetCollection($models);
     }
 
-    public function scopeWhereBillableOnly($query)
+    /**
+     * @param Builder<\App\Models\Target> $query
+     * @return Builder<\App\Models\Target>
+     */
+    public function scopeWhereBillableOnly(Builder $query): Builder
     {
-        $query->where('billable_only', 1);
+        return $query->where('billable_only', 1);
     }
 
-    public function scopeWhereNotBillableOnly($query)
+    /**
+     * @param Builder<\App\Models\Target> $query
+     * @return Builder<\App\Models\Target>
+     */
+    public function scopeWhereNotBillableOnly(Builder $query): Builder
     {
-        $query->where('billable_only', 0);
+        return $query->where('billable_only', 0);
     }
 
-    public function scopeWhereForDate($query, $date = null)
+    /**
+     * @param Builder<\App\Models\Target> $query
+     * @return Builder<\App\Models\Target>
+     */
+    public function scopeWhereForDate(Builder $query, ?string $date = null): Builder
     {
         $query->whereDurationUnit(self::DURATION_UNITS['DAYS']['key'])
             ->whereDuration(1);
@@ -61,18 +76,27 @@ class Target extends Model
         if ($date) {
             $query->whereStartsAt(Carbon::parse($date)->toDateTimeString());
         }
+
+        return $query;
     }
 
-    public function scopeWhereForThisWeek($query)
+    /**
+     * @param Builder<\App\Models\Target> $query
+     * @return Builder<\App\Models\Target>
+     */
+    public function scopeWhereForThisWeek(Builder $query): Builder
     {
         $query->whereForDate();
 
-        $query->whereIn('starts_at', app(DateTimeFormatter::class)->daysThisWeek()->map->toDateTimeString());
+        return $query->whereIn('starts_at', app(DateTimeFormatter::class)->daysThisWeek()->map->toDateTimeString());
     }
 
-    public function sessions()
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\Session>
+     */
+    public function sessions(): \Illuminate\Database\Eloquent\Collection
     {
-        $sessionsQuery = Session::startedAfter($this->starts_at)
+        $sessionsQuery = Session::startedAfter(\Carbon\Carbon::parse($this->starts_at))
             ->startedBefore($this->endsAt());
 
         if ($this->billable_only) {
@@ -105,5 +129,13 @@ class Target extends Model
     public function valueInHours(): float
     {
         return $this->value;
+    }
+
+    public function isThisWeek(): bool
+    {
+        $startOfWeek = app(DateTimeFormatter::class)->startOfWeek();
+        $endOfWeek = app(DateTimeFormatter::class)->endOfWeek();
+        
+        return Carbon::parse($this->starts_at)->between($startOfWeek, $endOfWeek);
     }
 }

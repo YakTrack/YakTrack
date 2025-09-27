@@ -4,6 +4,7 @@ namespace App\Http\Controllers\ClientPortal;
 
 use App\Http\Controllers\Controller;
 use App\Models\Task;
+use Inertia\Response;
 
 class TaskController extends Controller
 {
@@ -18,7 +19,7 @@ class TaskController extends Controller
     /**
      * Display a listing of the client's tasks.
      */
-    public function index()
+    public function index(): Response
     {
         $clientUser = auth('client')->user();
 
@@ -42,7 +43,7 @@ class TaskController extends Controller
     /**
      * Display the specified task.
      */
-    public function show(Task $task)
+    public function show(Task $task): Response
     {
         $clientUser = auth('client')->user();
 

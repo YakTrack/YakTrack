@@ -5,10 +5,11 @@ namespace App\Http\Controllers\Sprint;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
 use App\Models\Sprint;
+use Illuminate\Http\RedirectResponse;
 
 class InvoiceController extends Controller
 {
-    public function store(Sprint $sprint)
+    public function store(Sprint $sprint): RedirectResponse
     {
         $billableSessions = $sprint->sessions()->whereBillable()->get();
 

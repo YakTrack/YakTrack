@@ -6,12 +6,14 @@ use App\Models\Session;
 use App\Models\Target;
 use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
+use DateInterval;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
 
 class Sessions
 {
-    protected $dateIntervalFormatter;
-    protected $dateTimeFormatter;
+    protected DateIntervalFormatter $dateIntervalFormatter;
+    protected DateTimeFormatter $dateTimeFormatter;
 
     public function __construct(DateTimeFormatter $dateTimeFormatter, DateIntervalFormatter $dateIntervalFormatter)
     {
@@ -19,17 +21,20 @@ class Sessions
         $this->dateTimeFormatter = $dateTimeFormatter;
     }
 
-    public function totalTimeOnDate($date)
+    public function totalTimeOnDate(\Carbon\Carbon $date): DateInterval
     {
         return $this->dateIntervalFormatter->createFromSeconds($this->totalSecondsOnDate($date));
     }
 
-    public function totalSecondsOnDate($date)
+    public function totalSecondsOnDate(\Carbon\Carbon $date): int
     {
         return $this->sessionsOnDate($date)->totalDurationInSeconds();
     }
 
-    public function thisWeeksWorkSessions()
+    /**
+     * @return \Illuminate\Support\Collection<int, array{date: \Carbon\Carbon, totalSecondsWorked: int, totalSecondsTarget: int, currentlyWorking: bool, isToday: bool}>
+     */
+    public function thisWeeksWorkSessions(): \Illuminate\Support\Collection
     {
         return $this->dateTimeFormatter->daysThisWeek()->map(function ($date) {
             $target = Target::findForDate($date->format('Y-m-d'));
@@ -46,17 +51,20 @@ class Sessions
         });
     }
 
-    public function currentlyWorking()
+    public function currentlyWorking(): bool
     {
         return $this->currentSession() != null;
     }
 
-    public function currentSession()
+    public function currentSession(): ?Session
     {
         return Session::whereNull('ended_at')->first();
     }
 
-    public function sessionsOnDate($date)
+    /**
+     * @return Collection<int, Session>
+     */
+    public function sessionsOnDate(\Carbon\Carbon $date): Collection
     {
         return Session::onDate($date)->get();
     }

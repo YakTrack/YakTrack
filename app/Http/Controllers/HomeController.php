@@ -37,18 +37,18 @@ class HomeController extends Controller
             ->get()
             ->filter(function ($session) {
                 return $session->hasNoClient();
-            })->values();
+            });
 
         $noClient = [
             'id'        => 0,
             'name'      => 'No Client',
             'this_week' => [
                 'billable' => [
-                    'actual' => $noClientSessions->filter(fn($session) => $session->is_billable)->totalDurationInSeconds(),
+                    'actual' => $noClientSessions->filter(fn($session) => $session->is_billable)->sum('durationInSeconds'),
                     'target' => 0,
                 ],
                 'not_billable' => [
-                    'actual' => $noClientSessions->filter(fn($session) => !$session->is_billable)->totalDurationInSeconds(),
+                    'actual' => $noClientSessions->filter(fn($session) => !$session->is_billable)->sum('durationInSeconds'),
                     'target' => 0,
                 ],
             ],
@@ -104,7 +104,7 @@ class HomeController extends Controller
                     'actual' => Session::whereThisWeek()->whereNotBillable()->get()->totalDurationInSeconds(),
                     'target' => Target::whereForThisWeek()->whereNotBillableOnly()->get()->totalValueInSeconds(),
                 ],
-                'days' => collect($this->dateTimeFormatter::DAYS_OF_WEEK)->mapWithKeys(function ($day) use ($currentSession) {
+                'days' => collect($this->dateTimeFormatter::DAYS_OF_WEEK)->mapWithKeys(function (string $day) use ($currentSession) {
                     $date = $this->dateTimeFormatter->dayThisWeek(strtolower($day));
 
                     return [
@@ -127,7 +127,7 @@ class HomeController extends Controller
             ],
             'thisWeeksTotal'                           => ($thisWeeksSessions = Session::thisWeek()->get())->totalDurationForHumans(),
             'totalSecondsRemainingForTargetsThisWeek'  => Target::whereForThisWeek()->get()->totalValueInSeconds() - $thisWeeksSessions->totalDurationInSeconds(),
-            'clients'                                  => $noClientSessions->count() > 0 ? $clients->push($noClient) : $clients,
+            'clients'                                  => $noClientSessions->count() > 0 ? $clients->push($noClient)->values() : $clients,
             'currentlyWorking'                         => $currentlyWorking = $this->sessions->currentlyWorking(),
             'currentSession'                           => $currentSession = $this->sessions->currentSession(),
             'totalSecondsThisWeek'                     => $thisWeeksSessions->totalDurationInSeconds(),

@@ -48,6 +48,9 @@ class ClientUser extends Authenticatable
     /**
      * Get the client that this user belongs to.
      */
+    /**
+     * @return BelongsTo<Client, ClientUser>
+     */
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
@@ -55,16 +58,18 @@ class ClientUser extends Authenticatable
 
     /**
      * Get all projects for this client user.
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Project>
      */
-    public function projects()
+    public function projects(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->client()->first()->projects();
     }
 
     /**
      * Get all tasks for this client user's projects.
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Task>
      */
-    public function tasks()
+    public function tasks(): \Illuminate\Database\Eloquent\Builder
     {
         return Task::whereHas('project', function ($query) {
             $query->where('client_id', $this->client_id);
@@ -73,8 +78,9 @@ class ClientUser extends Authenticatable
 
     /**
      * Get all billable sessions for this client user's tasks.
+     * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Session>
      */
-    public function billableSessions()
+    public function billableSessions(): \Illuminate\Database\Eloquent\Builder
     {
         return Session::whereHas('task.project', function ($query) {
             $query->where('client_id', $this->client_id);

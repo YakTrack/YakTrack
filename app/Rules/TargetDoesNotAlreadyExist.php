@@ -7,14 +7,14 @@ use Illuminate\Contracts\Validation\Rule;
 
 class TargetDoesNotAlreadyExist implements Rule
 {
-    protected $duration;
+    protected mixed $duration;
 
-    protected $duration_unit;
+    protected mixed $duration_unit;
 
     /**
      * Create a new rule instance.
      *
-     * @return void
+     * @param array<string, mixed> $requestedTargetDetails
      */
     public function __construct(array $requestedTargetDetails)
     {

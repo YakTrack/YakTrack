@@ -2,9 +2,11 @@
 
 namespace App\Support;
 
+use Illuminate\Support\Collection;
+
 class FactoryGenerator
 {
-    public function projectName()
+    public function projectName(): string
     {
         return collect([
             $this->projectVerb(),
@@ -12,7 +14,7 @@ class FactoryGenerator
         ])->implode(' ');
     }
 
-    public function taskName()
+    public function taskName(): string
     {
         return collect([
             $this->storyUser(),
@@ -21,7 +23,7 @@ class FactoryGenerator
         ])->implode(' ');
     }
 
-    protected function projectVerb()
+    protected function projectVerb(): string
     {
         return collect([
             'build',
@@ -41,7 +43,7 @@ class FactoryGenerator
         ])->random();
     }
 
-    protected function taskVerb()
+    protected function taskVerb(): string
     {
         return collect([
             'click',
@@ -67,9 +69,9 @@ class FactoryGenerator
         ])->random();
     }
 
-    protected function nounAndArticle()
+    protected function nounAndArticle(): string
     {
-        $isPlural = array_random([true, false]);
+        $isPlural = collect([true, false])->random();
         $noun = $isPlural ? $this->pluralNoun() : $this->noun();
         $article = $isPlural ? $this->pluralArticle() : $this->article();
 
@@ -79,7 +81,7 @@ class FactoryGenerator
         ])->implode(' ');
     }
 
-    protected function article()
+    protected function article(): string
     {
         return collect([
             'the',
@@ -94,7 +96,7 @@ class FactoryGenerator
         ])->random();
     }
 
-    protected function pluralArticle()
+    protected function pluralArticle(): string
     {
         return collect([
             'the',
@@ -110,7 +112,7 @@ class FactoryGenerator
         ])->random();
     }
 
-    protected function noun()
+    protected function noun(): string
     {
         return collect([
             'app',
@@ -136,12 +138,12 @@ class FactoryGenerator
         ])->random();
     }
 
-    protected function pluralNoun()
+    protected function pluralNoun(): string
     {
         return str_plural($this->noun());
     }
 
-    protected function storyUser()
+    protected function storyUser(): string
     {
         return collect([
             'as a user I can',

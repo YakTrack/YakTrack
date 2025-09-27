@@ -7,13 +7,14 @@ use App\Models\Sprint;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class SprintController extends Controller
 {
     /**
      * Display a list of sprints.
      */
-    public function index()
+    public function index(): Response
     {
         return Inertia::render('Sprint/Index', [
             'sprints' => Sprint::orderBy('id', 'desc')
@@ -31,7 +32,7 @@ class SprintController extends Controller
     /**
      * Show the form for creating a new sprint.
      */
-    public function create()
+    public function create(): Response
     {
         return Inertia::render('Sprint/Edit', ['projects' => Project::all()]);
     }
@@ -39,7 +40,7 @@ class SprintController extends Controller
     /**
      * Save a new sprint to the database.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $this->validate($request, [
             'name'       => 'required|unique:sprints,name',
@@ -61,14 +62,14 @@ class SprintController extends Controller
     /**
      * Display a single sprint.
      */
-    public function show(Sprint $sprint)
+    public function show(Sprint $sprint): Response
     {
         return Inertia::render('Sprint/Show', [
             'sprint' => $sprint->load('project', 'sessions.task.project'),
             'tasks'  => $sprint->sessions->groupBy('task_id')->map(function ($sessionsForTask) {
                 $task = $sessionsForTask->first()->task;
 
-                $task->totalDurationInSprintForHumans = $sessionsForTask->totalDurationForHumans();
+                $task->totalDurationInSprintForHumans = $sessionsForTask->sum('durationInSeconds');
 
                 return $task;
             }),
@@ -79,7 +80,7 @@ class SprintController extends Controller
     /**
      * Show the form for editing the specified sprint.
      */
-    public function edit(Sprint $sprint)
+    public function edit(Sprint $sprint): Response
     {
         return Inertia::render('Sprint/Edit', [
             'projects' => Project::all(),

@@ -5,6 +5,9 @@ namespace App\Http\Controllers\ClientPortal;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Response as HttpResponse;
+use Illuminate\View\View;
+use Inertia\Response;
 
 class ProjectController extends Controller
 {
@@ -19,7 +22,7 @@ class ProjectController extends Controller
     /**
      * Display a listing of the client's projects.
      */
-    public function index()
+    public function index(): Response
     {
         $clientUser = auth('client')->user();
 
@@ -42,7 +45,7 @@ class ProjectController extends Controller
     /**
      * Display the specified project.
      */
-    public function show(Project $project)
+    public function show(Project $project): Response
     {
         $clientUser = auth('client')->user();
 
@@ -69,7 +72,7 @@ class ProjectController extends Controller
     /**
      * Download PDF report for the specified project.
      */
-    public function downloadReport(Project $project)
+    public function downloadReport(Project $project): HttpResponse
     {
         $clientUser = auth('client')->user();
 
@@ -98,7 +101,7 @@ class ProjectController extends Controller
     /**
      * View HTML report for the specified project.
      */
-    public function viewReport(Project $project)
+    public function viewReport(Project $project): View
     {
         $clientUser = auth('client')->user();
 

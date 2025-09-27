@@ -14,7 +14,7 @@ class ProjectController extends Controller
     /**
      * Show a list of projects.
      */
-    public function index()
+    public function index(): Response
     {
         return Inertia::render('Project/Index', [
             'projects' => Project::orderBy('name')
@@ -28,7 +28,7 @@ class ProjectController extends Controller
     /**
      * Show the form for creating a new project.
      **/
-    public function create()
+    public function create(): Response
     {
         return Inertia::render('Project/Edit', [
             'clients' => Client::all(),
@@ -38,7 +38,7 @@ class ProjectController extends Controller
     /**
      * Save a new project.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $this->validate($request, [
             'name'      => 'required',
@@ -59,7 +59,7 @@ class ProjectController extends Controller
     /**
      * Show a single project.
      */
-    public function show(Project $project)
+    public function show(Project $project): Response
     {
         $sessions = $project->sessions()
             ->with(['task', 'sessionCategory'])

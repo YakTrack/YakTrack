@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class LoginController extends Controller
 {
@@ -29,12 +31,12 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/';
 
-    public function showLoginForm()
+    public function showLoginForm(): Response
     {
         return Inertia::render('Auth/Login');
     }
 
-    public function logout()
+    public function logout(): RedirectResponse
     {
         $this->guard()->logout();
 

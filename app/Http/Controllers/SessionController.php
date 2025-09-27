@@ -11,7 +11,9 @@ use App\Models\Task;
 use App\Models\ThirdPartyApplication;
 use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class SessionController extends Controller
 {
@@ -24,7 +26,7 @@ class SessionController extends Controller
         $this->dateTimeFormatter = $dateTimeFormatter;
     }
 
-    public function index()
+    public function index(): RedirectResponse|Response
     {
         if (!request()->has('per-page')) {
             request()->session()->reflash();
@@ -39,20 +41,25 @@ class SessionController extends Controller
             ->paginate(request('per-page'))
             ->execute();
 
+        /** @var \Illuminate\Support\Collection<string, \Illuminate\Support\Collection<int, \App\Models\Session>> $groupedSessions */
+        $groupedSessions = $sessions->groupBy(function ($session) {
+            return $session->localStartedAt->format('Y-m-d');
+        });
+
+        /** @var \Illuminate\Support\Collection<int, array{date: string, sessions: \Illuminate\Support\Collection<int, \App\Models\Session>, totalDurationForHumans: string}> $days */
+        $days = $groupedSessions->map(function ($sessionsOnDay, $date) {
+            return [
+                'date'                   => $date,
+                'sessions'               => $sessionsOnDay,
+                'totalDurationForHumans' => $sessionsOnDay->totalDurationForHumans(),
+            ];
+        })->values();
+
         return Inertia::render('Session/Index', [
             'invoices'               => Invoice::all(),
             'thirdPartyApplications' => ThirdPartyApplication::all(),
             'sprints'                => Sprint::with('project.client')->orderBy('id', 'desc')->get(),
-            'days'                   => $sessions
-                ->groupBy(function ($session) {
-                    return $session->localStartedAt->format('Y-m-d');
-                })->map(function ($sessionsOnDay, $date) {
-                    return [
-                        'date'                   => $date,
-                        'sessions'               => $sessionsOnDay,
-                        'totalDurationForHumans' => $sessionsOnDay->totalDurationForHumans(),
-                    ];
-                })->values(),
+            'days'                   => $days,
             'total'       => (int) $total = Session::count(),
             'perPage'     => (int) request('per-page'),
             'page'        => (int) $page,
@@ -60,7 +67,7 @@ class SessionController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(): Response
     {
         return Inertia::render('Session/Edit', [
             'invoices'          => Invoice::all(),
@@ -70,7 +77,7 @@ class SessionController extends Controller
         ]);
     }
 
-    public function store()
+    public function store(): RedirectResponse
     {
         request()->validate([
             'started_at' => 'date|required',
@@ -103,7 +110,7 @@ class SessionController extends Controller
             ->with('success', "Session $session->id created");
     }
 
-    public function edit(Session $session)
+    public function edit(Session $session): Response
     {
         return Inertia::render('Session/Edit', [
             'session'           => $session,
@@ -114,7 +121,7 @@ class SessionController extends Controller
         ]);
     }
 
-    public function update(Session $session)
+    public function update(Session $session): RedirectResponse
     {
         $session->update([
             'started_at'            => request('started_at') ? $this->dateTimeFormatter->utcFormat(request('started_at')) : null,
@@ -132,7 +139,7 @@ class SessionController extends Controller
             ->with('success', "Session $session->id updated");
     }
 
-    public function start()
+    public function start(): RedirectResponse
     {
         Session::running()->get()->each(function ($session) {
             $session->stop();
@@ -146,7 +153,7 @@ class SessionController extends Controller
         return redirect(route('session.index'));
     }
 
-    public function stop()
+    public function stop(): RedirectResponse
     {
         Session::running()->get()->each(function ($session) {
             $session->stop();
@@ -155,7 +162,7 @@ class SessionController extends Controller
         return redirect(route('session.index'));
     }
 
-    public function continue(Session $session)
+    public function continue(Session $session): RedirectResponse
     {
         Session::running()->get()->each(function ($session) {
             $session->stop();
@@ -181,7 +188,7 @@ class SessionController extends Controller
         return redirect(route('session.index'));
     }
 
-    public function split(Session $session)
+    public function split(Session $session): RedirectResponse
     {
         // Ensure we're not trying to split a running session
         if ($session->isRunning()) {
@@ -223,7 +230,7 @@ class SessionController extends Controller
             ->with('success', "Session split successfully. Session {$session->id} ends at split time, new session {$newSession->id} starts from split time.");
     }
 
-    public function destroy(Session $session)
+    public function destroy(Session $session): RedirectResponse
     {
         $session->delete();
 

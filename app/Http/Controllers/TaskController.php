@@ -6,16 +6,18 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\ThirdPartyApplication;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class TaskController extends Controller
 {
     /**
      * Show a list of tasks.
      */
-    public function index()
+    public function index(): Response
     {
         return Inertia::render('Task/Index', [
             'tasks' => Task::orderBy('id', 'desc')
@@ -27,7 +29,7 @@ class TaskController extends Controller
     /**
      * Show the form for creating a new task.
      */
-    public function create()
+    public function create(): Response
     {
         return Inertia::render('Task/Edit', [
             'projects' => Project::with(['sprints', 'tasks', 'taskStatuses'])->orderBy('name')->get(),
@@ -38,7 +40,7 @@ class TaskController extends Controller
     /**
      * Store a new task in the database.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $this->validate($request, [
             'project_id' => 'exists:projects,id',
@@ -77,7 +79,7 @@ class TaskController extends Controller
     /**
      * Show a single task.
      */
-    public function show(Task $task)
+    public function show(Task $task): Response
     {
         return Inertia::render('Task/Show', [
             'task'                   => $task->load('project.client', 'sessions.sessionCategory'),
@@ -89,7 +91,7 @@ class TaskController extends Controller
     /**
      * Edit a task.
      */
-    public function edit(Task $task)
+    public function edit(Task $task): Response
     {
         return Inertia::render('Task/Edit', [
             'task'     => $task->load('taskStatus'),
@@ -101,7 +103,7 @@ class TaskController extends Controller
     /**
      * Update the task in the database.
      */
-    public function update(Task $task)
+    public function update(Task $task): RedirectResponse
     {
         request()->validate([
             'name'        => 'string',
@@ -125,7 +127,7 @@ class TaskController extends Controller
     /**
      * Delete a task from the database.
      */
-    public function destroy(Task $task)
+    public function destroy(Task $task): RedirectResponse
     {
         $task->delete();
 

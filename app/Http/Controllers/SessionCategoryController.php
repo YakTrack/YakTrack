@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\SessionCategory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class SessionCategoryController extends Controller
 {
-    public function index()
+    public function index(): Response
     {
         $sessionCategories = SessionCategory::withCount('sessions')
             ->orderBy('name')
@@ -19,12 +21,12 @@ class SessionCategoryController extends Controller
         ]);
     }
 
-    public function create()
+    public function create(): Response
     {
         return Inertia::render('SessionCategory/Edit');
     }
 
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name'        => 'required|string|max:255|unique:session_categories,name',
@@ -41,7 +43,7 @@ class SessionCategoryController extends Controller
             ->with('success', "Session category '{$sessionCategory->name}' created successfully");
     }
 
-    public function show(SessionCategory $sessionCategory)
+    public function show(SessionCategory $sessionCategory): Response
     {
         $sessionCategory->loadCount('sessions');
 
@@ -50,14 +52,14 @@ class SessionCategoryController extends Controller
         ]);
     }
 
-    public function edit(SessionCategory $sessionCategory)
+    public function edit(SessionCategory $sessionCategory): Response
     {
         return Inertia::render('SessionCategory/Edit', [
             'sessionCategory' => $sessionCategory,
         ]);
     }
 
-    public function update(Request $request, SessionCategory $sessionCategory)
+    public function update(Request $request, SessionCategory $sessionCategory): RedirectResponse
     {
         $request->validate([
             'name'        => 'required|string|max:255|unique:session_categories,name,'.$sessionCategory->id,
@@ -74,7 +76,7 @@ class SessionCategoryController extends Controller
             ->with('success', "Session category '{$sessionCategory->name}' updated successfully");
     }
 
-    public function destroy(SessionCategory $sessionCategory)
+    public function destroy(SessionCategory $sessionCategory): RedirectResponse
     {
         $sessionCount = $sessionCategory->sessions()->count();
 
