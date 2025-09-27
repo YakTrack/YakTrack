@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -47,7 +48,7 @@ class ClientUser extends Authenticatable
     /**
      * Get the client that this user belongs to.
      */
-    public function client()
+    public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
     }
@@ -57,7 +58,7 @@ class ClientUser extends Authenticatable
      */
     public function projects()
     {
-        return $this->client->projects();
+        return $this->client()->first()->projects();
     }
 
     /**
