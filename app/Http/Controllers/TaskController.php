@@ -51,7 +51,7 @@ class TaskController extends Controller
         ]);
 
         $statusId = request('status_id');
-        
+
         // If no status_id provided, try to get the default status for the project
         if (!$statusId && request('project_id')) {
             $defaultStatus = TaskStatus::where('project_id', request('project_id'))
