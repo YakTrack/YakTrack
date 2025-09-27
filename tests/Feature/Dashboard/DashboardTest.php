@@ -43,7 +43,7 @@ class DashboardTest extends TestCase
         $session = Session::factory()->create([
             'task_id'    => $task->id,
             'sprint_id'  => $clientZeroSprint->id,
-            'started_at' => '2018-01-01 13:00:00',
+            'started_at' => '2018-01-01 01:00:00',
             'ended_at'   => null,
         ]);
 
@@ -133,7 +133,7 @@ class DashboardTest extends TestCase
                             'is_active' => false,
                         ],
                         'not_billable' => [
-                            'actual' => 0,
+                            'actual' => $session->durationInSeconds,
                             'target' => $mondayNonBillableTarget->valueInSeconds(),
                         ],
                     ],

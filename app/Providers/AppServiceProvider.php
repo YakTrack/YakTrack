@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
          * Enforce foreign key constraints if testing with sqlite
          */
         if (DB::connection() instanceof \Illuminate\Database\SQLiteConnection) {
-            DB::statement(DB::raw('PRAGMA foreign_keys=1'));
+            DB::statement('PRAGMA foreign_keys=1');
         }
     }
 

@@ -33,14 +33,26 @@ class HomeController extends Controller
     {
         $currentSession = Session::whereIsRunning()->first();
 
-        $noClient = (object) [
-            'name'             => 'No Client',
-            'sessionsThisWeek' => $noClientSessions = Session::thisWeek()
-                ->get()
-                ->filter(function ($session) {
-                    return $session->hasNoClient();
-                })->values(),
-            'openSprints' => [],
+        $noClientSessions = Session::thisWeek()
+            ->get()
+            ->filter(function ($session) {
+                return $session->hasNoClient();
+            })->values();
+
+        $noClient = [
+            'id'        => 0,
+            'name'      => 'No Client',
+            'this_week' => [
+                'billable' => [
+                    'actual' => $noClientSessions->filter(fn($session) => $session->is_billable)->totalDurationInSeconds(),
+                    'target' => 0,
+                ],
+                'not_billable' => [
+                    'actual' => $noClientSessions->filter(fn($session) => !$session->is_billable)->totalDurationInSeconds(),
+                    'target' => 0,
+                ],
+            ],
+            'open_sprints' => [],
         ];
 
         $clients = Client::with(['projects.tasks.sessions'])
