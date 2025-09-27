@@ -1,137 +1,434 @@
 <template>
-    <div>
-        <div class="p-1 bg-white rounded shadow sm:p-4" v-if="searchParams.get('show-filters') == 'true'">
-            <h3> Filters </h3>
-            <div class="flex-1 mt-2">
-                <div class="flex">
-                    <div class="btn-group">
-                        <button class="btn" :class="filterPresetIsSelected('thisMonth') ? 'btn-gray-300' : ''" @click="loadFilterPreset('thisMonth')"> This Month </button>
-                        <button class="btn" :class="filterPresetIsSelected('lastMonth') ? 'btn-gray-300' : ''" @click="loadFilterPreset('lastMonth')"> Last Month </button>
-                        <button class="btn" :class="filterPresetIsSelected('thisWeek') ? 'btn-gray-300' : ''" @click="loadFilterPreset('thisWeek')"> This Week </button>
-                        <button class="btn" :class="filterPresetIsSelected('lastWeek') ? 'btn-gray-300' : ''" @click="loadFilterPreset('lastWeek')"> Last Week </button>
-                    </div>
+    <div class="space-y-6">
+        <!-- Filters Section -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 transition-all duration-300" v-if="searchParams.get('show-filters') == 'true'">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-gray-900">Filters</h3>
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-500">Quick filters:</span>
                 </div>
-                <div class="flex mt-2">
-                    <div class="flex-1">
-                        <label> Started After </label>
+                    </div>
+            
+            <div class="space-y-4">
+                <!-- Quick Filter Buttons -->
+                <div class="flex flex-wrap gap-2">
+                    <button 
+                        class="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200"
+                        :class="filterPresetIsSelected('thisMonth') 
+                            ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                            : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'"
+                        @click="loadFilterPreset('thisMonth')"
+                    >
+                        This Month
+                    </button>
+                    <button 
+                        class="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200"
+                        :class="filterPresetIsSelected('lastMonth') 
+                            ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                            : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'"
+                        @click="loadFilterPreset('lastMonth')"
+                    >
+                        Last Month
+                    </button>
+                    <button 
+                        class="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200"
+                        :class="filterPresetIsSelected('thisWeek') 
+                            ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                            : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'"
+                        @click="loadFilterPreset('thisWeek')"
+                    >
+                        This Week
+                    </button>
+                    <button 
+                        class="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200"
+                        :class="filterPresetIsSelected('lastWeek') 
+                            ? 'bg-blue-100 text-blue-700 border border-blue-200' 
+                            : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'"
+                        @click="loadFilterPreset('lastWeek')"
+                    >
+                        Last Week
+                    </button>
+                </div>
+                
+                <!-- Date Range Inputs -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700">Started After</label>
                         <datetime-input
                             v-model="filters.startedAfter"
+                            class="w-full"
                         />
                     </div>
-                    <div class="flex-1 ml-2">
-                        <label> Started Before </label>
+                    <div class="space-y-2">
+                        <label class="block text-sm font-medium text-gray-700">Started Before</label>
                         <datetime-input
                             v-model="filters.startedBefore"
+                            class="w-full"
                         />
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="pt-4 pb-4 mt-4 bg-white rounded shadow" v-if="true"> <!--days.length > 0">-->
-            <table class="table w-full bg-white table-hover">
-                <thead>
-                    <tr>
-                        <th class="pb-4 pl-1 sm:pl-4">
-                            <input v-model="selectAll" type="checkbox" class="form-checkbox" />
-                        </th>
-                        <th class="">  </th>
-                        <th class="">  </th>
-                        <th class="pr-2 font-mono text-base font-thin text-right text-gray-500"> {{ totalDuration }} </th>
-                        <th class="pb-2 pr-2 text-right">
+        <!-- Sessions Table -->
+        <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden transition-all duration-300" v-if="true">
+            <!-- Table Header with Summary -->
+            <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex items-center space-x-2">
+                            <input 
+                                v-model="selectAll" 
+                                type="checkbox" 
+                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" 
+                            />
+                            <span class="text-sm font-medium text-gray-700">Select All</span>
+                        </div>
+                        <div class="text-sm text-gray-500">
+                            {{ sessions.length }} session{{ sessions.length !== 1 ? 's' : '' }}
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <div class="text-right">
+                            <div class="text-sm text-gray-500">Total Duration</div>
+                            <div class="text-lg font-mono font-semibold text-gray-900">{{ totalDuration }}</div>
+                        </div>
                             <dropdown :options="actionsDropdown" direction="left"></dropdown>
-                        </th>
-                    </tr>
-                </thead>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sessions Table - Desktop View -->
+            <div class="hidden lg:block overflow-x-auto">
+                <table class="w-full">
                 <tbody v-for="(day, dayIndex) in filteredDays" :key="dayIndex">
-                    <tr class="text-xs font-light text-gray-600 uppercase bg-gray-200">
-                        <td class="px-3 py-1 border-solid" colspan="4"> {{ day.sessions[0].localStartedAtDateForHumans }} </td>
-                        <td class="pr-6 font-mono text-base font-thin text-right text-gray-500"> {{ day.totalDurationForHumans }} </td>
-                    </tr>
-                    <tr v-for="(session, sessionIndex) in day.sessions" :key="session.id" :class="rowClasses(session)">
-                        <td class="pl-1 sm:pl-4">
-                            <input type="checkbox" class="form-checkbox " v-model="session.isSelected" :value="session.id"/>
-                        </td>
-                        <td class="pl-1 sm:pl-4">
-                            <div class="h-full overflow-auto whitespace-nowrap">
-                                <div v-if="session.task_id">
-                                    <Link  class="inline-block max-w-xs no-underline truncate opacity-100 hover:opacity-50" :href="route('task.show', session.task_id)">
-                                        <i class="mr-2 text-gray-400 fas fa-check-square"></i>
-                                        <span class="text-sm font-semibold sm:text-base"> {{ taskPrefix(session.task_name) }} </span>
-                                        <span class="text-sm sm:text-base"> {{ taskSuffix(session.task_name) }} </span>
-                                    </Link>
+                        <!-- Day Header Row -->
+                        <tr class="bg-gray-100 border-b border-gray-300">
+                            <td class="px-6 py-3 text-sm font-medium text-gray-600 uppercase tracking-wide" colspan="6">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-2">
+                                        <i class="fas fa-calendar-day text-gray-400"></i>
+                                        <span>{{ day.sessions[0].localStartedAtDateForHumans }}</span>
+                                    </div>
+                                    <div class="text-sm font-mono font-semibold text-gray-900">
+                                        {{ day.totalDurationForHumans }}
+                                    </div>
                                 </div>
-                                <div class="flex items-center text-gray-500">
-                                    <div class="w-32">
-                                        <Link v-if="session.client_id != null" class="text-xs text-blue-700 no-underline opacity-50 hover:opacity-100" :href="route('client.show', session.client_id)">
-                                            <i class="mr-2 text-blue-700 opacity-50 fas fa-users"></i>
-                                            {{ session.client_name }}
+                            </td>
+                            <td class="px-6 py-3 text-sm font-medium text-gray-600 uppercase tracking-wide">
+                            </td>
+                        </tr>
+                        
+                        <!-- Session Rows -->
+                        <template v-for="(session, sessionIndex) in day.sessions" :key="session.id">
+                            <!-- First Row: Task Name -->
+                            <tr 
+                                :class="[rowClasses(session), 'session-row transition-colors duration-150', { 'bg-gray-50': hoveredSessionId === session.id }]"
+                                :data-session-id="session.id"
+                                @mouseenter="hoveredSessionId = session.id"
+                                @mouseleave="hoveredSessionId = null"
+                            >
+                                <!-- Checkbox Column -->
+                                <td class="px-6 py-2 w-12 transition-colors duration-150 border-l border-transparent" rowspan="2">
+                                    <input 
+                                        type="checkbox" 
+                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" 
+                                        v-model="session.isSelected" 
+                                        :value="session.id"
+                                    />
+                                </td>
+                                
+                                <!-- Task Name Column -->
+                                <td class="px-6 py-2 min-w-0 transition-colors duration-150" colspan="3">
+                                    <div v-if="session.task_id" class="flex items-start">
+                                        <Link 
+                                            class="group flex-1 min-w-0" 
+                                            :href="route('task.show', session.task_id)"
+                                        >
+                                            <div class="flex items-center space-x-2 min-w-0">
+                                                <span class="text-sm font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-150 truncate">
+                                                    {{ taskPrefix(session.task_name) }}
+                                                </span>
+                                                <span class="text-sm text-gray-600 truncate">
+                                                    {{ taskSuffix(session.task_name) }}
+                                                </span>
+                                            </div>
                                         </Link>
                                     </div>
-                                    <div class="w-32">
-                                        <Link v-if="session.project_id != null" class="text-xs text-indigo-700 no-underline opacity-50 hover:opacity-100" :href="route('project.show', session.project_id)">
-                                            <i class="mr-2 text-indigo-700 opacity-50 fas fa-briefcase"></i>
-                                            {{ session.project_name }}
-                                        </Link>
+                                </td>
+                                
+                                <!-- Time Range Column -->
+                                <td class="px-6 py-2 text-right transition-colors duration-150" rowspan="2">
+                                    <div class="text-sm text-gray-600">
+                                        <div class="flex items-center justify-end space-x-2">
+                                            <timestamp class="font-mono" :time="session.started_at"></timestamp>
+                                            <i class="fas fa-arrow-right text-gray-400 text-xs"></i>
+                                            <timestamp class="font-mono" :time="session.ended_at"></timestamp>
+                                        </div>
                                     </div>
-                                    <div class="w-32">
-                                        <Link v-if="session.sprint_id != null" class="text-xs text-purple-700 no-underline opacity-50 hover:opacity-100" :href="route('sprint.show', session.sprint_id)">
-                                            <i class="mr-2 text-purple-700 opacity-50 fas fa-calendar-times"></i>
-                                            {{ session.sprint_name }}
-                                        </Link>
+                                </td>
+                                
+                                <!-- Duration Column -->
+                                <td class="px-6 py-2 text-right transition-colors duration-150" rowspan="2">
+                                    <div class="text-sm font-mono font-semibold text-gray-900">
+                                        <timer :initial-time="session.durationInSeconds" :is-paused="!session.isRunning"></timer>
                                     </div>
-                                    <div class="w-32">
-                                        <Link v-if="session.invoice_id != null" class="text-xs text-teal-700 no-underline opacity-50 hover:opacity-100" :href="route('invoice.show', session.invoice_id)">
-                                            <i class="mr-2 text-teal-700 opacity-50 fas fa-file-invoice-dollar"></i>
-                                            {{ session.invoice_number }}
-                                        </Link>
+                                </td>
+                                
+                                <!-- Actions Column -->
+                                <td class="px-6 py-2 text-right w-16 transition-colors duration-150" rowspan="2">
+                                    <dropdown
+                                        :options="getSessionActions(session)"
+                                        direction="left"
+                                        name="Actions"
+                                    ></dropdown>
+                                </td>
+                            </tr>
+                            
+                            <!-- Second Row: Context Links -->
+                            <tr 
+                                :class="[rowClasses(session), 'border-b border-gray-200 session-row transition-colors duration-150', { 'bg-gray-50': hoveredSessionId === session.id }]"
+                                :data-session-id="session.id"
+                                @mouseenter="hoveredSessionId = session.id"
+                                @mouseleave="hoveredSessionId = null"
+                            >
+                                <!-- Context Links Column -->
+                                <td class="px-6 py-1 text-xs transition-colors duration-150" colspan="3">
+                                    <div class="flex items-center whitespace-nowrap gap-1">
+                                        <!-- Client -->
+                                        <div class="w-1/5 min-w-0">
+                                            <Link 
+                                                v-if="session.client_id != null" 
+                                                class="text-blue-600 hover:text-blue-800 transition-colors duration-150 min-w-0" 
+                                                :href="route('client.show', session.client_id)"
+                                            >
+                                                <span class="truncate text-xs">{{ session.client_name }}</span>
+                                            </Link>
+                                        </div>
+                                        
+                                        <!-- Project -->
+                                        <div class="w-1/5 min-w-0">
+                                            <Link 
+                                                v-if="session.project_id != null" 
+                                                class="text-indigo-600 hover:text-indigo-800 transition-colors duration-150 min-w-0" 
+                                                :href="route('project.show', session.project_id)"
+                                            >
+                                                <span class="truncate text-xs">{{ session.project_name }}</span>
+                                            </Link>
+                                        </div>
+                                        
+                                        <!-- Sprint -->
+                                        <div class="w-1/5 min-w-0">
+                                            <Link 
+                                                v-if="session.sprint_id != null" 
+                                                class="text-purple-600 hover:text-purple-800 transition-colors duration-150 min-w-0" 
+                                                :href="route('sprint.show', session.sprint_id)"
+                                            >
+                                                <span class="truncate text-xs">{{ session.sprint_name }}</span>
+                                            </Link>
+                                        </div>
+                                        
+                                        <!-- Invoice -->
+                                        <div class="w-1/5 min-w-0">
+                                            <Link 
+                                                v-if="session.invoice_id != null" 
+                                                class="text-teal-600 hover:text-teal-800 transition-colors duration-150 min-w-0" 
+                                                :href="route('invoice.show', session.invoice_id)"
+                                            >
+                                                <span class="truncate text-xs">{{ session.invoice_number }}</span>
+                                            </Link>
+                                        </div>
+                                        
+                                        <!-- Billable -->
+                                        <div class="w-1/5 min-w-0">
+                                            <div v-if="session.is_billable" class="text-green-600 min-w-0">
+                                                <span class="truncate text-xs">Billable</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <i v-if="session.is_billable" class="mr-2 text-gray-400 fas fa-money-bill-alt"></i>
-                                </div>
-                            </div>
-                        </td>
-                        <td class="text-right">
-                            <timestamp class="mr-2" :time="session.started_at"></timestamp>
-                            <span class="font-mono text-gray-400"> to </span>
-                            <timestamp class="" :time="session.ended_at"></timestamp>
-                        </td>
-                        <td class="text-right">
-                            <timer :initial-time="session.durationInSeconds" :is-paused="!session.isRunning"></timer>
-                        </td>
-                        <td class="inline-flex float-right pt-1 pb-1 pr-2 text-right" :class="sessionIndex || 'pt-2' ">
-                            <dropdown
-                                :options="getSessionActions(session)"
-                                direction="left"
-                                name="Actions"
-                            ></dropdown>
-                        </td>
-                    </tr>
+                                </td>
+                            </tr>
+                        </template>
                 </tbody>
             </table>
+            </div>
 
-            <div class="flex justify-center mt-10">
-                <div class="flex">
+            <!-- Mobile/Tablet Card View -->
+            <div class="lg:hidden">
+                <div v-for="(day, dayIndex) in filteredDays" :key="dayIndex" class="mb-6">
+                    <!-- Day Header -->
+                    <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-calendar-day text-gray-400"></i>
+                                <span class="text-sm font-medium text-gray-600 uppercase tracking-wide">
+                                    {{ day.sessions[0].localStartedAtDateForHumans }}
+                                </span>
+                            </div>
+                            <div class="text-sm font-mono font-semibold text-gray-900">
+                                {{ day.totalDurationForHumans }}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Session Cards -->
+                    <div class="divide-y divide-gray-100">
+                        <div 
+                            v-for="(session, sessionIndex) in day.sessions" 
+                            :key="session.id" 
+                            :class="rowClasses(session)"
+                            class="p-4 hover:bg-gray-50 transition-colors duration-150"
+                        >
+                            <div class="flex items-start justify-between space-x-3">
+                                <!-- Checkbox and Main Content -->
+                                <div class="flex-1 min-w-0">
+                                    <div class="flex items-start space-x-3">
+                                        <input 
+                                            type="checkbox" 
+                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 mt-1 flex-shrink-0" 
+                                            v-model="session.isSelected" 
+                                            :value="session.id"
+                                        />
+                                        
+                                        <div class="flex-1 min-w-0">
+                                            <!-- Task Name -->
+                                            <div v-if="session.task_id" class="mb-2">
+                                                <Link 
+                                                    class="group flex items-start" 
+                                                    :href="route('task.show', session.task_id)"
+                                                >
+                                                    <div class="min-w-0 flex-1">
+                                                        <div class="text-sm font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-150">
+                                                            {{ taskPrefix(session.task_name) }}{{ taskSuffix(session.task_name) }}
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            </div>
+                                            
+                                            <!-- Context Links -->
+                                            <div class="flex flex-wrap gap-1 text-xs mb-2">
+                                                <!-- Client -->
+                                                <div class="flex-shrink-0">
+                                                    <Link 
+                                                        v-if="session.client_id != null" 
+                                                        class="text-blue-600 hover:text-blue-800 transition-colors duration-150" 
+                                                        :href="route('client.show', session.client_id)"
+                                                    >
+                                                        <span class="truncate max-w-16">{{ session.client_name }}</span>
+                                                    </Link>
+                                                </div>
+                                                
+                                                <!-- Project -->
+                                                <div class="flex-shrink-0">
+                                                    <Link 
+                                                        v-if="session.project_id != null" 
+                                                        class="text-indigo-600 hover:text-indigo-800 transition-colors duration-150" 
+                                                        :href="route('project.show', session.project_id)"
+                                                    >
+                                                        <span class="truncate max-w-16">{{ session.project_name }}</span>
+                                                    </Link>
+                                                </div>
+                                                
+                                                <!-- Sprint -->
+                                                <div class="flex-shrink-0">
+                                                    <Link 
+                                                        v-if="session.sprint_id != null" 
+                                                        class="text-purple-600 hover:text-purple-800 transition-colors duration-150" 
+                                                        :href="route('sprint.show', session.sprint_id)"
+                                                    >
+                                                        <span class="truncate max-w-16">{{ session.sprint_name }}</span>
+                                                    </Link>
+                                                </div>
+                                                
+                                                <!-- Invoice -->
+                                                <div class="flex-shrink-0">
+                                                    <Link 
+                                                        v-if="session.invoice_id != null" 
+                                                        class="text-teal-600 hover:text-teal-800 transition-colors duration-150" 
+                                                        :href="route('invoice.show', session.invoice_id)"
+                                                    >
+                                                        <span class="truncate max-w-16">{{ session.invoice_number }}</span>
+                                                    </Link>
+                                                </div>
+                                                
+                                                <!-- Billable -->
+                                                <div class="flex-shrink-0">
+                                                    <div v-if="session.is_billable" class="text-green-600">
+                                                        <span>Billable</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Time and Duration -->
+                                            <div class="flex items-center justify-between text-sm">
+                                                <div class="text-gray-600">
+                                                    <div class="flex items-center space-x-2">
+                                                        <timestamp class="font-mono" :time="session.started_at"></timestamp>
+                                                        <i class="fas fa-arrow-right text-gray-400 text-xs"></i>
+                                                        <timestamp class="font-mono" :time="session.ended_at"></timestamp>
+                                                    </div>
+                                                </div>
+                                                <div class="font-mono font-semibold text-gray-900">
+                                                    <timer :initial-time="session.durationInSeconds" :is-paused="!session.isRunning"></timer>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Actions -->
+                                <div class="flex-shrink-0">
+                                    <dropdown
+                                        :options="getSessionActions(session)"
+                                        direction="left"
+                                        name="Actions"
+                                    ></dropdown>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div class="px-4 lg:px-6 py-4 bg-gray-50 border-t border-gray-200">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0">
+                    <div class="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                     <dropdown
                         :options="perPageOptions"
                         :selected-option="selectedPerPageOption"
-                        class=""
                         name="Per Page"
                     ></dropdown>
+                        <span class="text-sm text-gray-500">
+                            Showing {{ (page - 1) * perPage + 1 }} to {{ Math.min(page * perPage, total) }} of {{ total }} sessions
+                        </span>
+                    </div>
                     <page-selector
                         :total="total"
                         :last-page="lastPage"
                         :page="page"
                         :per-page="perPage"
                         :on-page-select="selectPage"
-                    >
-                    </page-selector>
+                    ></page-selector>
                 </div>
             </div>
-
-
         </div>
-        <div v-else>
-            You have not created any sessions yet.
+        
+        <!-- Empty State -->
+        <div v-else class="text-center py-16">
+            <div class="mx-auto w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mb-6 shadow-sm">
+                <i class="fas fa-clock text-gray-400 text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-semibold text-gray-900 mb-3">No sessions found</h3>
+            <p class="text-gray-500 max-w-md mx-auto leading-relaxed">
+                You haven't created any sessions yet. Start tracking your time to see them appear here.
+            </p>
+            <div class="mt-6">
+                <button class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors duration-200">
+                    <i class="fas fa-plus mr-2"></i>
+                    Start Tracking Time
+                </button>
+            </div>
         </div>
 
         <!-- Delete Confirmation Modal -->
@@ -210,6 +507,7 @@
                 selectAll: false,
                 selectedInvoiceId: null,
                 sessionToDelete: null,
+                hoveredSessionId: null,
                 actionsDropdown: [
                     {
                         name: 'Link to invoice',
@@ -405,11 +703,11 @@
                 var classes = [];
 
                 if (session.isRunning) {
-                    classes.push('bg-green-100');
+                    classes.push('bg-green-50 border-l-4 border-l-green-400');
                 };
 
                 if (session.isSelected) {
-                    classes.push('bg-blue-100');
+                    classes.push('bg-blue-50 border-l-4 border-l-blue-400');
                 }
 
                 return classes.join(' ');
@@ -533,3 +831,4 @@
         },
     }
 </script>
+
