@@ -36,7 +36,7 @@ export default {
     },
     methods: {
         optionWasClicked(option) {
-            typeof option.event == 'string' ? events.$emit(option.event) : events.$emit(option.event.name, option.event.args);
+            typeof option.event == 'string' ? events.emit(option.event) : events.emit(option.event.name, option.event.args);
             this.selected = option;
             this.isOpen = false;
         },

@@ -144,13 +144,13 @@ export default {
     },
     methods: {
         toggleShowFilters() {
-            events.$emit('toggle-show-filters');
+            events.emit('toggle-show-filters');
         },
         startSession() {
             this.$inertia.post(route('session.start'));
         },
         linkSelectedSessionsToInvoice() {
-            events.$emit('sessions.linked-to-invoice');
+            events.emit('sessions.linked-to-invoice');
 
             this.$inertia.patch(route('invoice.update', this.selectedInvoiceId), {
                 sessions: this.selectedSessionIds,
@@ -161,7 +161,7 @@ export default {
             this.selectedInvoiceId = invoiceId;
         },
         linkSelectedSessionsToSprint() {
-            events.$emit('sessions.linked-to-sprint');
+            events.emit('sessions.linked-to-sprint');
 
             this.$inertia.patch(route('sessions.update'), {
                 sessions: this.selectedSessionIds.reduce((sessions, sessionId) => {
@@ -179,7 +179,7 @@ export default {
         openSplitSessionModal(session) {
             this.sessionToSplit = session;
             this.splitTime = this.calculateDefaultSplitTime(session);
-            events.$emit('session.split');
+            events.emit('session.split');
         },
         calculateDefaultSplitTime(session) {
             if (!session.started_at || !session.ended_at) {
@@ -204,7 +204,7 @@ export default {
                 return;
             }
 
-            events.$emit('session.split-cancelled');
+            events.emit('session.split-cancelled');
 
             this.$inertia.post(route('session.split', this.sessionToSplit.id), {
                 split_time: this.splitTime
@@ -212,7 +212,7 @@ export default {
         }
     },
     created() {
-        events.$on('toggle-show-filters', (perPage) => {
+        events.on('toggle-show-filters', (perPage) => {
             this.$inertia.visit(this.urlParser.current({
                 showFilters: !this.showFilters,
             }), {

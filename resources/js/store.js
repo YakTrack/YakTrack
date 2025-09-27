@@ -1,40 +1,36 @@
+import { defineStore } from 'pinia'
 import camelToKebab from './filters/String.js';
-import Vue from 'vue'
-import Vuex from 'vuex'
 
-Vue.use(Vuex);
+export const useQueryParamsStore = defineStore('queryParams', {
+  state: () => ({
+    queryParams: {
+      page: null,
+      perPage: null,
+      startedBefore: null,
+      startedAfter: null,
+      showFilters: false,
+    },
+  }),
 
-const store = new Vuex.Store({
-    state: {
-        queryParams: {
-            page: null,
-            perPage: null,
-            startedBefore: null,
-            startedAfter: null,
-            showFilters: false,
-        },
+  actions: {
+    setQueryParam(payload) {
+      this.queryParams[payload.key] = payload.value;
+      // Note: router needs to be imported where this is used
+      if (window.router) {
+        window.router.setQueryParam(camelToKebab(payload.key), payload.value);
+      }
     },
-    mutations: {
-        setQueryParam: (state, payload) => {
-            state.queryParams[payload.key] = payload.value;
-        },
-    },
-    actions: {
-        setQueryParam: (context, payload) => {
-            context.commit('setQueryParam', payload);
-            router.setQueryParam(camelToKebab(payload.key), payload.value);
-        },
-        setQueryParamsFromUrl: (context) => {
-            let urlParams = router.getQueryParams();
-            Object.keys(context.state.queryParams)
-                .forEach(key => {
-                    context.commit('setQueryParam', {
-                        key: key,
-                        value: urlParams.get(camelToKebab(key)),
-                    });
-                });
-        }
+
+    setQueryParamsFromUrl() {
+      if (window.router) {
+        let urlParams = window.router.getQueryParams();
+        Object.keys(this.queryParams).forEach(key => {
+          this.setQueryParam({
+            key: key,
+            value: urlParams.get(camelToKebab(key)),
+          });
+        });
+      }
     }
-})
-
-export default store;
+  }
+});

@@ -15,9 +15,9 @@ const tailwindcss = require('tailwindcss')
  |
  */
 
-// Javascript with Vue 2 support
+// Javascript with Vue 3 support
 mix.js('resources/js/app.js', 'public/js')
-    .vue({ version: 2 });
+    .vue({ version: 3 });
 
 // CSS
 mix.css('node_modules/@fortawesome/fontawesome-free/css/all.css', 'public/css/fontawesome.css');
@@ -36,7 +36,7 @@ mix.webpackConfig({
     resolve: {
         extensions: ['*', '.wasm', '.mjs', '.js', '.jsx', '.json', '.vue'],
         alias: {
-            vue$: 'vue/dist/vue.runtime.esm.js',
+            vue$: 'vue/dist/vue.esm-bundler.js',
             '@': path.resolve('resources/js'),
         },
     },

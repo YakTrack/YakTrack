@@ -166,7 +166,7 @@
 </template>
 
 <script>
-    import { Link } from '@inertiajs/vue2'
+    import { Link } from '@inertiajs/vue3'
     import dropdown from '@/Shared/Dropdown';
     import deleteButton from '@/Shared/DeleteButton';
     import timestamp from '@/Shared/Timestamp';
@@ -332,7 +332,7 @@
                 false
             );
 
-            events.$on('set-per-page', (perPage) => {
+            events.on('set-per-page', (perPage) => {
                 this.$inertia.visit(this.urlParser.current({
                     perPage: perPage,
                 }), {
@@ -341,15 +341,15 @@
                 });
             });
 
-            events.$on('sessions.mark-as-billable', () => this.updateSelectedSessions({ is_billable: 1 }))
-            events.$on('sessions.mark-as-non-billable', () => this.updateSelectedSessions({ is_billable: 0 }))
+            events.on('sessions.mark-as-billable', () => this.updateSelectedSessions({ is_billable: 1 }))
+            events.on('sessions.mark-as-non-billable', () => this.updateSelectedSessions({ is_billable: 0 }))
             
             // Session action events
-            events.$on('stop-session', (session) => this.stopSession(session))
-            events.$on('continue-session', (session) => this.continueSession(session))
-            events.$on('split-session', (session) => this.splitSession(session))
-            events.$on('edit-session', (session) => this.$inertia.visit(session.editUrl))
-            events.$on('confirm-delete-session', (session) => {
+            events.on('stop-session', (session) => this.stopSession(session))
+            events.on('continue-session', (session) => this.continueSession(session))
+            events.on('split-session', (session) => this.splitSession(session))
+            events.on('edit-session', (session) => this.$inertia.visit(session.editUrl))
+            events.on('confirm-delete-session', (session) => {
                 this.sessionToDelete = session;
             })
         },
@@ -511,7 +511,7 @@
                 if (session) {
                     this.$inertia.delete(route('session.destroy', session.id));
                 }
-                events.$emit('close-delete-modal');
+                events.emit('close-delete-modal');
             },
         },
         watch: {

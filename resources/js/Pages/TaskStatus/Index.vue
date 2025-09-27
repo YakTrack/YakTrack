@@ -25,69 +25,73 @@
 
         <div class="card" v-if="taskStatuses.length">
             <table class="table card-body">
-                <tr>
-                    <th>Status Name</th>
-                    <th v-if="!project">Project</th>
-                    <th>Color</th>
-                    <th>Order</th>
-                    <th>Default</th>
-                    <th>Completed</th>
-                    <th>Task Count</th>
-                    <th><span class="float-right">Actions</span></th>
-                </tr>
-                <tr v-for="status in taskStatuses" :key="status.id" class="item-container">
-                    <td>
-                        <div class="flex items-center">
-                            <div 
-                                :style="{ backgroundColor: status.color }"
-                                class="w-3 h-3 rounded-full mr-2"
-                            ></div>
-                            {{ status.name }}
-                        </div>
-                    </td>
-                    <td v-if="!project">
-                        <Link 
-                            v-if="status.project"
-                            :href="route('project.show', status.project.id)"
-                        >
-                            {{ status.project.name }}
-                        </Link>
-                    </td>
-                    <td>
-                        <span 
-                            :style="{ backgroundColor: status.color }"
-                            class="px-2 py-1 text-xs rounded text-white inline-block"
-                        >
-                            {{ status.color }}
-                        </span>
-                    </td>
-                    <td>{{ status.sort_order }}</td>
-                    <td>
-                        <i v-if="status.is_default" class="fa fa-check text-green-500"></i>
-                        <span v-else class="text-gray-400">-</span>
-                    </td>
-                    <td>
-                        <i v-if="status.is_completed" class="fa fa-check text-green-500"></i>
-                        <span v-else class="text-gray-400">-</span>
-                    </td>
-                    <td>
-                        {{ status.tasks_count || 0 }}
-                    </td>
-                    <td>
-                        <div class="btn-group float-right">
-                            <button-link :href="route('task-status.edit', status.id)">
-                                <i class="fa fa-edit text-gray-600 text-xs"></i>
-                            </button-link>
-                            <delete-button 
-                                :url="route('task-status.destroy', status.id)"
-                                :disabled="status.tasks_count > 0"
-                                :title="status.tasks_count > 0 ? 'Cannot delete status with assigned tasks' : 'Delete status'"
+                <thead>
+                    <tr>
+                        <th>Status Name</th>
+                        <th v-if="!project">Project</th>
+                        <th>Color</th>
+                        <th>Order</th>
+                        <th>Default</th>
+                        <th>Completed</th>
+                        <th>Task Count</th>
+                        <th><span class="float-right">Actions</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="status in taskStatuses" :key="status.id" class="item-container">
+                        <td>
+                            <div class="flex items-center">
+                                <div
+                                    :style="{ backgroundColor: status.color }"
+                                    class="w-3 h-3 rounded-full mr-2"
+                                ></div>
+                                {{ status.name }}
+                            </div>
+                        </td>
+                        <td v-if="!project">
+                            <Link
+                                v-if="status.project"
+                                :href="route('project.show', status.project.id)"
                             >
-                                <i class="fa fa-trash text-gray-600 text-xs"></i>
-                            </delete-button>
-                        </div>
-                    </td>
-                </tr>
+                                {{ status.project.name }}
+                            </Link>
+                        </td>
+                        <td>
+                            <span
+                                :style="{ backgroundColor: status.color }"
+                                class="px-2 py-1 text-xs rounded text-white inline-block"
+                            >
+                                {{ status.color }}
+                            </span>
+                        </td>
+                        <td>{{ status.sort_order }}</td>
+                        <td>
+                            <i v-if="status.is_default" class="fa fa-check text-green-500"></i>
+                            <span v-else class="text-gray-400">-</span>
+                        </td>
+                        <td>
+                            <i v-if="status.is_completed" class="fa fa-check text-green-500"></i>
+                            <span v-else class="text-gray-400">-</span>
+                        </td>
+                        <td>
+                            {{ status.tasks_count || 0 }}
+                        </td>
+                        <td>
+                            <div class="btn-group float-right">
+                                <button-link :href="route('task-status.edit', status.id)">
+                                    <i class="fa fa-edit text-gray-600 text-xs"></i>
+                                </button-link>
+                                <delete-button
+                                    :url="route('task-status.destroy', status.id)"
+                                    :disabled="status.tasks_count > 0"
+                                    :title="status.tasks_count > 0 ? 'Cannot delete status with assigned tasks' : 'Delete status'"
+                                >
+                                    <i class="fa fa-trash text-gray-600 text-xs"></i>
+                                </delete-button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
 
@@ -107,7 +111,7 @@
 </template>
 
 <script>
-import { Link } from '@inertiajs/vue2';
+import { Link } from '@inertiajs/vue3';
 import breadcrumbs from '@/Shared/Breadcrumbs';
 import deleteButton from '@/Shared/DeleteButton';
 import layout from '@/Shared/Layout';

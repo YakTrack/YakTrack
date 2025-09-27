@@ -38,23 +38,27 @@
                 <h3 class="text-gray-700"> Sprint Sessions </h3>
             </div>
             <table class="table rounded p-4 bg-white">
-                <tr>
-                    <th class="text-gray-500"> Project </th>
-                    <th class="text-gray-500"> Task </th>
-                    <th class="text-gray-500"> Total Time </th>
-                </tr>
-                <tr v-for="task in tasks" :key="task.id">
-                    <td class="p-2 text-gray-600"><span v-if="task.project"> {{ task.project.name }} </span></td>
-                    <td class="p-2 text-gray-600"> {{ task.name }} </td>
-                    <td class="p-2 text-gray-600"> {{ task.totalDurationInSprintForHumans }} </td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th class="text-gray-500"> Project </th>
+                        <th class="text-gray-500"> Task </th>
+                        <th class="text-gray-500"> Total Time </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="task in tasks" :key="task.id">
+                        <td class="p-2 text-gray-600"><span v-if="task.project"> {{ task.project.name }} </span></td>
+                        <td class="p-2 text-gray-600"> {{ task.name }} </td>
+                        <td class="p-2 text-gray-600"> {{ task.totalDurationInSprintForHumans }} </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </layout>
 </template>
 
 <script>
-    import { Link } from '@inertiajs/vue2';
+    import { Link } from '@inertiajs/vue3';
     import breadcrumbs from '@/Shared/Breadcrumbs';
     import layout from '@/Shared/Layout';
 

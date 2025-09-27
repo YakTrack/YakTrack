@@ -1,7 +1,7 @@
 <template>
     <div class="inline-block btn-height font-light font-mono" :class="classes">
         <div class="flex h-full">
-            <div class="self-center whitespace-pre">{{ durationInSeconds | durationForHumans }}</div>
+            <div class="self-center whitespace-pre">{{ $filters.durationForHumans(durationInSeconds) }}</div>
         </div>
     </div>
 </template>

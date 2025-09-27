@@ -22,7 +22,7 @@
         created() {
             this.showFlashMessages();
 
-            window.events.$on('notify', (notification) => {
+            window.events.on('notify', (notification) => {
                 this.alerts.push(notification);
             });  
         },

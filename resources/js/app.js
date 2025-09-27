@@ -1,41 +1,10 @@
-import { createInertiaApp } from '@inertiajs/vue2'
-import PortalVue from 'portal-vue'
+import { createApp, h } from 'vue'
+import { createInertiaApp } from '@inertiajs/vue3'
+import { createPinia } from 'pinia'
+import mitt from 'mitt'
 import closeable from './directives/Closeable';
 import dateTime from './filters/DateTime.js';
-import Vue from 'vue'
 import buttonLink from '@/Shared/ButtonLink';
-
-// Global directives
-Vue.directive('closeable', closeable);
-
-// Global config
-Vue.config.productionTip = false
-
-// Global mixins
-Vue.mixin({
-    methods: {
-        route: window.route,
-    }
-})
-
-// Plugins
-Vue.use(PortalVue)
-
-// Global filters
-Vue.filter('dateForHumans', dateTime.dateForHumans);
-Vue.filter('durationForHumans', dateTime.durationForHumans);
-Vue.filter('fromNow', dateTime.fromNow);
-Vue.filter('isToday', dateTime.isToday);
-Vue.filter('secondsSince', dateTime.secondsSince);
-Vue.filter('toDateTimeForHumans', dateTime.toDateTimeForHumans);
-Vue.filter('toDateTimeString', dateTime.toDateTimeString);
-Vue.filter('totalDuration', dateTime.totalDuration);
-
-// Global components
-Vue.component('buttonLink', buttonLink);
-
-// Events Bus
-window.events = new Vue();
 
 createInertiaApp({
   resolve: name => {
@@ -43,10 +12,40 @@ createInertiaApp({
     return pages(`./` + name + '.vue').default
   },
   setup({ el, App, props, plugin }) {
-    Vue.use(plugin)
+    const app = createApp({ render: () => h(App, props) })
 
-    new Vue({
-      render: h => h(App, props),
-    }).$mount(el)
+    // Install Inertia plugin
+    app.use(plugin)
+
+    // Install Pinia
+    app.use(createPinia())
+
+    // Global directives
+    app.directive('closeable', closeable)
+
+    // Global properties (replaces Vue 2 mixins)
+    app.config.globalProperties.route = window.route
+
+    // Global properties for filters (Vue 3 doesn't have filters)
+    app.config.globalProperties.$filters = {
+      dateForHumans: dateTime.dateForHumans,
+      durationForHumans: dateTime.durationForHumans,
+      fromNow: dateTime.fromNow,
+      isToday: dateTime.isToday,
+      secondsSince: dateTime.secondsSince,
+      toDateTimeForHumans: dateTime.toDateTimeForHumans,
+      toDateTimeString: dateTime.toDateTimeString,
+      totalDuration: dateTime.totalDuration,
+    }
+
+    // Global components
+    app.component('buttonLink', buttonLink)
+
+    // Events Bus using mitt (Vue 3 alternative)
+    const emitter = mitt()
+    app.config.globalProperties.$events = emitter
+    window.events = emitter
+
+    app.mount(el)
   },
 })

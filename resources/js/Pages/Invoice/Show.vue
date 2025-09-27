@@ -25,14 +25,14 @@
                     </div>
                 </div>
                 <div class="mt-6">
-                    <div class="text-lg font-light"> {{ invoice.date | dateForHumans }} </div>
+                    <div class="text-lg font-light"> {{ $filters.dateForHumans(invoice.date) }} </div>
                     <i class="fa fa-calendar-alt text-sm text-gray-300"></i>
-                    <span class="text-sm font-light ml-1 text-gray-600"> Issued <span class="text-gray-500">{{ invoice.date | fromNow }}</span></span>
+                    <span class="text-sm font-light ml-1 text-gray-600"> Issued <span class="text-gray-500">{{ $filters.fromNow(invoice.date) }}</span></span>
                 </div>
                 <div class="mt-6">
-                    <div class="text-lg font-light"> {{ invoice.due_date | dateForHumans }} </div>
+                    <div class="text-lg font-light"> {{ $filters.dateForHumans(invoice.due_date) }} </div>
                     <i class="fa fa-calendar-check text-sm text-gray-300"></i>
-                    <span class="text-sm font-light ml-1 text-gray-600"> Due <span class="text-gray-500">{{ invoice.due_date | fromNow }}</span></span>
+                    <span class="text-sm font-light ml-1 text-gray-600"> Due <span class="text-gray-500">{{ $filters.fromNow(invoice.due_date) }}</span></span>
                 </div>
                 <div class="mt-6">
                     <div class="text-lg font-light"> {{ invoice.totalDurationForHumans }} </div>

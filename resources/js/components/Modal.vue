@@ -50,11 +50,11 @@
             }
         },
         created() {
-            events.$on(this.openOn, (payload) => {
+            events.on(this.openOn, (payload) => {
                 this.payload = payload;
                 this.modalIsOpen = true
             });
-            events.$on(this.closeOn, () => this.modalIsOpen = false);
+            events.on(this.closeOn, () => this.modalIsOpen = false);
         },
         methods: {
             toggleModal() {

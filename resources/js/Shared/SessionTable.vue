@@ -118,8 +118,8 @@
         },
         mounted() {
             // Session action events
-            events.$on('edit-session', (session) => this.$inertia.visit(route('session.edit', session.id)))
-            events.$on('confirm-delete-session', (session) => {
+            events.on('edit-session', (session) => this.$inertia.visit(route('session.edit', session.id)))
+            events.on('confirm-delete-session', (session) => {
                 this.sessionToDelete = session;
             })
         },
@@ -146,7 +146,7 @@
                 if (session) {
                     this.$inertia.delete(route('session.destroy', session.id));
                 }
-                events.$emit('close-delete-modal');
+                events.emit('close-delete-modal');
             }
         }
     }

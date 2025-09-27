@@ -17,10 +17,14 @@
         </template>
         <div class="card">
             <table class="table card-body" v-if="projects.length">
-                <tr>
-                    <th> Name </th>
-                    <th> Client </th>
-                    <th> <span class="float-right"> Actions </span> </th>
+                <thead>
+                    <tr>
+                        <th> Name </th>
+                        <th> Client </th>
+                        <th> <span class="float-right"> Actions </span> </th>
+                    </tr>
+                </thead>
+                <tbody>
                     <tr
                         v-for="project in projects"
                         :key="project.id"
@@ -53,7 +57,8 @@
                             </delete-button>
                         </div>
                     </td>
-                </tr>
+                    </tr>
+                </tbody>
             </table>
             <div class="card-body" v-else>
                 You have not created any projects yet.
@@ -64,7 +69,7 @@
 
 <script>
 
-import { Link } from '@inertiajs/vue2';
+import { Link } from '@inertiajs/vue3';
 import breadcrumbs from '@/Shared/Breadcrumbs';
 import deleteButton from '@/Shared/DeleteButton';
 import layout from '@/Shared/Layout';

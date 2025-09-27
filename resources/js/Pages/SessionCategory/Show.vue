@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { Link } from '@inertiajs/vue2'
+import { Link } from '@inertiajs/vue3'
 import Layout from '../../Shared/Layout.vue'
 import Breadcrumbs from '../../Shared/Breadcrumbs.vue'
 import ButtonLink from '../../Shared/ButtonLink.vue'

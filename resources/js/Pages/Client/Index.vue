@@ -17,10 +17,14 @@
         </template>
         <div class="card item-type-container" data-item-type="client">
             <table class="table w-full card-body" v-if="clients.length">
-                <tr>
-                    <th> Name </th>
-                    <th> Email </th>
-                    <th> <span class="float-right"> Actions </span> </th>
+                <thead>
+                    <tr>
+                        <th> Name </th>
+                        <th> Email </th>
+                        <th> <span class="float-right"> Actions </span> </th>
+                    </tr>
+                </thead>
+                <tbody>
                     <tr
                         v-for="client in clients"
                         :key="client.id"
@@ -49,6 +53,7 @@
                             </div>
                         </td>
                     </tr>
+                </tbody>
             </table>
             <div class="card-body" v-else>
                 You have not created any clients yet.
@@ -58,7 +63,7 @@
 </template>
 
 <script>
-    import { Link } from '@inertiajs/vue2'
+    import { Link } from '@inertiajs/vue3'
     import breadcrumbs from '@/Shared/Breadcrumbs';
     import deleteButton from '@/Shared/DeleteButton';
     import layout from '@/Shared/Layout';

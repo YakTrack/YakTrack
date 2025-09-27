@@ -120,7 +120,7 @@
                         <!-- Total Worked For Week -->
                         <th class="text-right text-sm sm:text-base p-0 pr-1 sm:pr-2 bg-indigo-100">
                             <timer v-if="currentlyWorking" :initial-time="thisWeek[billableStatus].actual" color="indigo"></timer>
-                            <strong v-else class="font-mono"> {{ thisWeek[billableStatus].actual | durationForHumans }} </strong>
+                            <strong v-else class="font-mono"> {{ $filters.durationForHumans(thisWeek[billableStatus].actual) }} </strong>
                         </th>
                     </tr>
                 </tfoot>

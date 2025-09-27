@@ -17,41 +17,45 @@
         </template>
         <div class="card" v-if="targets.length">
             <table class="table card-body">
-                <tr>
-                    <th> Date </th>
-                    <th> Target </th>
-                    <th> <span class="float-right"> Actions </span> </th>
-                </tr>
-                <tr
-                    v-for="target in targets"
-                    :key="target.id"
-                    class="item-container"
-                >
-                    <td>
-                        <Link :href="route('target.show', target)">
-                            {{ target.starts_at | dateForHumans }}
-                        </Link>
-                    </td>
-                    <td>
-                        <Link :href="route('target.show', target)">
-                            {{ target.value }} {{ target.value_unit }}
-                        </Link>
-                    </td>
-                    <td>
-                        <div class="btn-group float-right">
-                            <button-link
-                                :href="route('target.edit', target)"
-                            >
-                                <i class="fa fa-edit text-gray-600 text-xs"></i>
-                            </button-link>
-                            <delete-button
-                                :url="route('target.destroy', target.id)"
-                            >
-                                <i class="fa fa-trash text-gray-600 text-xs"></i>
-                            </delete-button>
-                        </div>
-                    </td>
-                </tr>
+                <thead>
+                    <tr>
+                        <th> Date </th>
+                        <th> Target </th>
+                        <th> <span class="float-right"> Actions </span> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        v-for="target in targets"
+                        :key="target.id"
+                        class="item-container"
+                    >
+                        <td>
+                            <Link :href="route('target.show', target)">
+                                {{ $filters.dateForHumans(target.starts_at) }}
+                            </Link>
+                        </td>
+                        <td>
+                            <Link :href="route('target.show', target)">
+                                {{ target.value }} {{ target.value_unit }}
+                            </Link>
+                        </td>
+                        <td>
+                            <div class="btn-group float-right">
+                                <button-link
+                                    :href="route('target.edit', target)"
+                                >
+                                    <i class="fa fa-edit text-gray-600 text-xs"></i>
+                                </button-link>
+                                <delete-button
+                                    :url="route('target.destroy', target.id)"
+                                >
+                                    <i class="fa fa-trash text-gray-600 text-xs"></i>
+                                </delete-button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
         <div class="card-body" v-else>
@@ -62,7 +66,7 @@
 
 <script>
 
-    import { Link } from '@inertiajs/vue2';
+    import { Link } from '@inertiajs/vue3';
     import breadcrumbs from '@/Shared/Breadcrumbs';
     import deleteButton from '@/Shared/DeleteButton';
     import layout from '@/Shared/Layout';

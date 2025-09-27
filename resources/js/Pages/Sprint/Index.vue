@@ -17,12 +17,16 @@
         </template>
         <div class="card item-type-container" data-item-type="sprint">
             <table class="table card-body" v-if="sprints.length">
-                <tr>
-                    <th> Name </th>
-                    <th> Project </th>
-                    <th> Status </th>
-                    <th class="text-right"> Total Hours </th>
-                    <th> <span class="float-right"> Actions </span> </th>
+                <thead>
+                    <tr>
+                        <th> Name </th>
+                        <th> Project </th>
+                        <th> Status </th>
+                        <th class="text-right"> Total Hours </th>
+                        <th> <span class="float-right"> Actions </span> </th>
+                    </tr>
+                </thead>
+                <tbody>
                     <tr
                         v-for="sprint in sprints"
                         :key="sprint.id"
@@ -61,6 +65,7 @@
                             </div>
                         </td>
                     </tr>
+                </tbody>
             </table>
             <div class="card-body" v-else>
                 You have not created any sprints yet.
@@ -70,7 +75,7 @@
 </template>
 
 <script>
-    import { Link } from '@inertiajs/vue2';
+    import { Link } from '@inertiajs/vue3';
     import breadcrumbs from '@/Shared/Breadcrumbs';
     import deleteButton from '@/Shared/DeleteButton';
     import layout from '@/Shared/Layout';

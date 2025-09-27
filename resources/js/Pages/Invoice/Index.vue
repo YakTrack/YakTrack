@@ -89,7 +89,7 @@
 
 <script>
 
-import { Link } from '@inertiajs/vue2';
+import { Link } from '@inertiajs/vue3';
 import breadcrumbs from '@/Shared/Breadcrumbs';
 import deleteButton from '@/Shared/DeleteButton';
 import layout from '@/Shared/Layout';
