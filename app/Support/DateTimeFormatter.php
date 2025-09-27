@@ -95,13 +95,14 @@ class DateTimeFormatter
 
         try {
             $dateTime = Carbon::parse($dateTime);
+
             return $dateTime->format($format);
         } catch (\Exception $e) {
             return null;
         }
     }
 
-    public function localFormat(DateTimeInterface|null $dateTime, ?string $format = null): ?string
+    public function localFormat(?DateTimeInterface $dateTime, ?string $format = null): ?string
     {
         $dateTime = is_null($dateTime) ? Carbon::now() : Carbon::parse($dateTime);
 

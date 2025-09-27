@@ -211,6 +211,7 @@ class Session extends Model
 
     /**
      * @param Builder<\App\Models\Session> $query
+     *
      * @return Builder<\App\Models\Session>
      */
     public function scopeWhereIsRunning(Builder $query): Builder
@@ -220,7 +221,9 @@ class Session extends Model
 
     /**
      * @deprecated in favour of scopeWhereIsRunning
+     *
      * @param Builder<\App\Models\Session> $query
+     *
      * @return Builder<\App\Models\Session>
      */
     public function scopeRunning(Builder $query): Builder
@@ -230,6 +233,7 @@ class Session extends Model
 
     /**
      * @param Builder<\App\Models\Session> $query
+     *
      * @return Builder<\App\Models\Session>
      */
     public function scopeToday(Builder $query): Builder
@@ -239,18 +243,22 @@ class Session extends Model
 
     /**
      * @param Builder<\App\Models\Session> $query
+     *
      * @return Builder<\App\Models\Session>
      */
     public function scopeWhereOnDate(Builder $query, DateTimeInterface $date): Builder
     {
         $carbonDate = $date instanceof \Carbon\Carbon ? $date : \Carbon\Carbon::parse($date);
+
         return $query->where('started_at', '>=', (new DateTimeFormatter())->utcFormat($date))
             ->where('started_at', '<', (new DateTimeFormatter())->utcFormat($carbonDate->addDays(1)));
     }
 
     /**
      * @deprecated in favour of whereOnDate
+     *
      * @param Builder<\App\Models\Session> $query
+     *
      * @return Builder<\App\Models\Session>
      */
     public function scopeOnDate(Builder $query, DateTimeInterface $date): Builder
@@ -260,6 +268,7 @@ class Session extends Model
 
     /**
      * @param Builder<\App\Models\Session> $query
+     *
      * @return Builder<\App\Models\Session>
      */
     public function scopeWhereThisWeek(Builder $query): Builder
@@ -270,6 +279,7 @@ class Session extends Model
 
     /**
      * @param Builder<\App\Models\Session> $query
+     *
      * @return Builder<\App\Models\Session>
      */
     public function scopeWhereOnDayThisWeek(Builder $query, string $day): Builder
@@ -285,7 +295,9 @@ class Session extends Model
      * Deprecated in favour of whereThisWeek.
      *
      * @deprecated
+     *
      * @param Builder<\App\Models\Session> $query
+     *
      * @return Builder<\App\Models\Session>
      */
     public function scopeThisWeek(Builder $query): Builder
@@ -295,6 +307,7 @@ class Session extends Model
 
     /**
      * @param Builder<\App\Models\Session> $query
+     *
      * @return Builder<\App\Models\Session>
      */
     public function scopeFinished(Builder $query): Builder
@@ -304,6 +317,7 @@ class Session extends Model
 
     /**
      * @param Builder<\App\Models\Session> $query
+     *
      * @return Builder<\App\Models\Session>
      */
     public function scopeStartedAfter(Builder $query, DateTimeInterface $date): Builder
@@ -313,6 +327,7 @@ class Session extends Model
 
     /**
      * @param Builder<\App\Models\Session> $query
+     *
      * @return Builder<\App\Models\Session>
      */
     public function scopeStartedBefore(Builder $query, DateTimeInterface $date): Builder
@@ -371,6 +386,7 @@ class Session extends Model
 
     /**
      * @param Builder<\App\Models\Session> $sessions
+     *
      * @return Builder<\App\Models\Session>
      */
     public function scopeLinkedTo(Builder $sessions, ThirdPartyApplication $app): Builder

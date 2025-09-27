@@ -39,6 +39,7 @@ class Target extends Model
 
     /**
      * Create a new Eloquent Collection instance.
+     *
      * @param array<int, \App\Models\Target> $models
      */
     public function newCollection(array $models = []): TargetCollection
@@ -48,6 +49,7 @@ class Target extends Model
 
     /**
      * @param Builder<\App\Models\Target> $query
+     *
      * @return Builder<\App\Models\Target>
      */
     public function scopeWhereBillableOnly(Builder $query): Builder
@@ -57,6 +59,7 @@ class Target extends Model
 
     /**
      * @param Builder<\App\Models\Target> $query
+     *
      * @return Builder<\App\Models\Target>
      */
     public function scopeWhereNotBillableOnly(Builder $query): Builder
@@ -66,6 +69,7 @@ class Target extends Model
 
     /**
      * @param Builder<\App\Models\Target> $query
+     *
      * @return Builder<\App\Models\Target>
      */
     public function scopeWhereForDate(Builder $query, ?string $date = null): Builder
@@ -82,6 +86,7 @@ class Target extends Model
 
     /**
      * @param Builder<\App\Models\Target> $query
+     *
      * @return Builder<\App\Models\Target>
      */
     public function scopeWhereForThisWeek(Builder $query): Builder
@@ -135,7 +140,7 @@ class Target extends Model
     {
         $startOfWeek = app(DateTimeFormatter::class)->startOfWeek();
         $endOfWeek = app(DateTimeFormatter::class)->endOfWeek();
-        
+
         return Carbon::parse($this->starts_at)->between($startOfWeek, $endOfWeek);
     }
 }

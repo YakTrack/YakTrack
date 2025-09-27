@@ -60,10 +60,10 @@ class SessionController extends Controller
             'thirdPartyApplications' => ThirdPartyApplication::all(),
             'sprints'                => Sprint::with('project.client')->orderBy('id', 'desc')->get(),
             'days'                   => $days,
-            'total'       => (int) $total = Session::count(),
-            'perPage'     => (int) request('per-page'),
-            'page'        => (int) $page,
-            'lastPage'    => (int) request('per-page') ? ceil($total / request('per-page')) : 1,
+            'total'                  => (int) $total = Session::count(),
+            'perPage'                => (int) request('per-page'),
+            'page'                   => (int) $page,
+            'lastPage'               => (int) request('per-page') ? ceil($total / request('per-page')) : 1,
         ]);
     }
 

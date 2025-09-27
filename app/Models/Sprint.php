@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+
 class Sprint extends Model
 {
     use HasFactory;
@@ -33,6 +34,7 @@ class Sprint extends Model
 
     /**
      * @param \Illuminate\Database\Eloquent\Builder<\App\Models\Sprint> $query
+     *
      * @return \Illuminate\Database\Eloquent\Builder<\App\Models\Sprint>
      */
     public function scopeOpen(\Illuminate\Database\Eloquent\Builder $query): \Illuminate\Database\Eloquent\Builder

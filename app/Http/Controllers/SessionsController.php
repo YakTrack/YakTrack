@@ -12,7 +12,7 @@ class SessionsController extends Controller
         $sessionData = request('sessions', []);
 
         request()->validate([
-            'sessions' => 'required|array',
+            'sessions'   => 'required|array',
             'sessions.*' => 'required|array',
         ]);
 

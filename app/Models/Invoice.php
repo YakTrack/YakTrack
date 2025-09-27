@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Concerns\BelongsToClient;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+
 class Invoice extends Model
 {
     use BelongsToClient;
