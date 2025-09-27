@@ -1,14 +1,14 @@
 <template>
     <span>
-        <inertia-link
+        <Link
             :href="url"
             method="delete"
+            as="button"
+            class="btn btn-red"
             v-if="confirmIsActive"
         >
-            <button class="btn btn-red">
-                Delete
-            </button>
-        </inertia-link>
+            Delete
+        </Link>
         <button class="btn btn-default" v-if="confirmIsActive" @click="toggleConfirm()">
             Cancel
         </button>
@@ -24,8 +24,12 @@
 </template>
 
 <script>
+import { Link } from '@inertiajs/vue2'
 
 export default {
+    components: {
+        Link,
+    },
     data() {
         return {
             confirmIsActive: false,

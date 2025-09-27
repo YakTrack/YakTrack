@@ -29,9 +29,9 @@
                     class="item-container"
                 >
                     <td>
-                        <inertia-link :href="route('session-category.show', sessionCategory)">
+                        <Link :href="route('session-category.show', sessionCategory)">
                             {{ sessionCategory.name }}
-                        </inertia-link>
+                        </Link>
                     </td>
                     <td>
                         <span class="text-gray-600">
@@ -62,14 +62,15 @@
         </div>
         <div class="card-body" v-else>
             You have not created any session categories yet.
-            <inertia-link :href="route('session-category.create')" class="text-blue-600 hover:text-blue-800 underline ml-1">
+            <Link :href="route('session-category.create')" class="text-blue-600 hover:text-blue-800 underline ml-1">
                 Create your first session category
-            </inertia-link>
+            </Link>
         </div>
     </layout>
 </template>
 
 <script>
+import { Link } from '@inertiajs/vue2'
 import Layout from '../../Shared/Layout.vue'
 import Breadcrumbs from '../../Shared/Breadcrumbs.vue'
 import ButtonLink from '../../Shared/ButtonLink.vue'
@@ -77,6 +78,7 @@ import DeleteButton from '../../Shared/DeleteButton.vue'
 
 export default {
     components: {
+        Link,
         Layout,
         Breadcrumbs,
         ButtonLink,

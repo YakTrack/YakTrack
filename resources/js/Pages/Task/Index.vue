@@ -30,24 +30,24 @@
                     class="item-container"
                 >
                     <td>
-                        <inertia-link :href="route('task.show', task)">
+                        <Link :href="route('task.show', task)">
                             {{ task.shortName }}
-                        </inertia-link>
+                        </Link>
                     </td>
                     <td>
-                        <inertia-link :href="route('task.show', task.parent)" v-if="task.parent">
+                        <Link :href="route('task.show', task.parent)" v-if="task.parent">
                             {{ task.parent.shortName }}
-                        </inertia-link>
+                        </Link>
                     </td>
                     <td>
-                        <inertia-link :href="route('project.show', task.project)" v-if="task.project">
+                        <Link :href="route('project.show', task.project)" v-if="task.project">
                             {{ task.project.name }}
-                        </inertia-link>
+                        </Link>
                     </td>
                     <td>
-                        <inertia-link :href="route('client.show', task.project.client)" v-if="task.project && task.project.client">
+                        <Link :href="route('client.show', task.project.client)" v-if="task.project && task.project.client">
                             {{ task.project.client.name }}
-                        </inertia-link>
+                        </Link>
                     </td>
                     <td>
                         <span v-if="task.task_status" 
@@ -84,6 +84,7 @@
 
 <script>
 
+    import { Link } from '@inertiajs/vue2';
     import breadcrumbs from '@/Shared/Breadcrumbs';
     import deleteButton from '@/Shared/DeleteButton';
     import layout from '@/Shared/Layout';
@@ -93,6 +94,7 @@
             'tasks',
         ],
         components: {
+            Link,
             breadcrumbs: breadcrumbs,
             deleteButton: deleteButton,
             layout: layout,

@@ -46,12 +46,12 @@
                         </div>
                     </td>
                     <td v-if="!project">
-                        <inertia-link 
+                        <Link 
                             v-if="status.project"
                             :href="route('project.show', status.project.id)"
                         >
                             {{ status.project.name }}
-                        </inertia-link>
+                        </Link>
                     </td>
                     <td>
                         <span 
@@ -107,6 +107,7 @@
 </template>
 
 <script>
+import { Link } from '@inertiajs/vue2';
 import breadcrumbs from '@/Shared/Breadcrumbs';
 import deleteButton from '@/Shared/DeleteButton';
 import layout from '@/Shared/Layout';
@@ -118,6 +119,7 @@ export default {
         'projects',
     ],
     components: {
+        Link,
         breadcrumbs: breadcrumbs,
         deleteButton: deleteButton,
         layout: layout,

@@ -7,13 +7,13 @@
                 :key="index"
             >
                 <li class="lg:mb-2 hover:bg-blue-400 px-6 py-1 rounded" :class="menuItem.active ? 'bg-gray-300' : ''">
-                    <inertia-link
+                    <Link
                         class="no-underline text-gray-900"
                         :href="route(menuItem.route)"
                     >
                         <i class="text-gray-500 parent-hover:text-white" :class="menuItem.icon"></i>
                         <span class="ml-3 parent-hover:text-white"> {{ menuItem.name }} </span>
-                    </inertia-link>
+                    </Link>
                 </li>
             </ul>
         </nav>
@@ -21,7 +21,12 @@
 </template>
 
 <script>
+    import { Link } from '@inertiajs/vue2';
+
     export default {
+        components: {
+            Link,
+        },
         data() {
             return {
                 menuItems: [

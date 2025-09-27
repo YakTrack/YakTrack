@@ -31,14 +31,14 @@
                         :data-item-destroy-route="route('sprint.destroy', sprint.id)"
                     >
                         <td>
-                            <inertia-link :href="route('sprint.show', sprint.id)">
+                            <Link :href="route('sprint.show', sprint.id)">
                                 {{ sprint.name }}
-                            </inertia-link>
+                            </Link>
                         </td>
                         <td>
-                            <inertia-link :href="route('project.show', sprint.project_id)">
+                            <Link :href="route('project.show', sprint.project_id)">
                                 {{ sprint.project ? sprint.project.name : '' }}
-                            </inertia-link>
+                            </Link>
                         </td>
                         <td>
                             <div class="text-green" v-if="sprint.is_open"> Open </div>
@@ -70,6 +70,7 @@
 </template>
 
 <script>
+    import { Link } from '@inertiajs/vue2';
     import breadcrumbs from '@/Shared/Breadcrumbs';
     import deleteButton from '@/Shared/DeleteButton';
     import layout from '@/Shared/Layout';
@@ -79,6 +80,7 @@
             'sprints',
         ],
         components: {
+            Link,
             breadcrumbs: breadcrumbs,
             deleteButton: deleteButton,
             layout: layout,

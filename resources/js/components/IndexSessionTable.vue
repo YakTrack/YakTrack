@@ -55,36 +55,36 @@
                         <td class="pl-1 sm:pl-4">
                             <div class="h-full overflow-auto whitespace-nowrap">
                                 <div v-if="session.task_id">
-                                    <inertia-link  class="inline-block max-w-xs no-underline truncate opacity-100 hover:opacity-50" :href="route('task.show', session.task_id)">
+                                    <Link  class="inline-block max-w-xs no-underline truncate opacity-100 hover:opacity-50" :href="route('task.show', session.task_id)">
                                         <i class="mr-2 text-gray-400 fas fa-check-square"></i>
                                         <span class="text-sm font-semibold sm:text-base"> {{ taskPrefix(session.task_name) }} </span>
                                         <span class="text-sm sm:text-base"> {{ taskSuffix(session.task_name) }} </span>
-                                    </inertia-link>
+                                    </Link>
                                 </div>
                                 <div class="flex items-center text-gray-500">
                                     <div class="w-32">
-                                        <inertia-link v-if="session.client_id != null" class="text-xs text-blue-700 no-underline opacity-50 hover:opacity-100" :href="route('client.show', session.client_id)">
+                                        <Link v-if="session.client_id != null" class="text-xs text-blue-700 no-underline opacity-50 hover:opacity-100" :href="route('client.show', session.client_id)">
                                             <i class="mr-2 text-blue-700 opacity-50 fas fa-users"></i>
                                             {{ session.client_name }}
-                                        </inertia-link>
+                                        </Link>
                                     </div>
                                     <div class="w-32">
-                                        <inertia-link v-if="session.project_id != null" class="text-xs text-indigo-700 no-underline opacity-50 hover:opacity-100" :href="route('project.show', session.project_id)">
+                                        <Link v-if="session.project_id != null" class="text-xs text-indigo-700 no-underline opacity-50 hover:opacity-100" :href="route('project.show', session.project_id)">
                                             <i class="mr-2 text-indigo-700 opacity-50 fas fa-briefcase"></i>
                                             {{ session.project_name }}
-                                        </inertia-link>
+                                        </Link>
                                     </div>
                                     <div class="w-32">
-                                        <inertia-link v-if="session.sprint_id != null" class="text-xs text-purple-700 no-underline opacity-50 hover:opacity-100" :href="route('sprint.show', session.sprint_id)">
+                                        <Link v-if="session.sprint_id != null" class="text-xs text-purple-700 no-underline opacity-50 hover:opacity-100" :href="route('sprint.show', session.sprint_id)">
                                             <i class="mr-2 text-purple-700 opacity-50 fas fa-calendar-times"></i>
                                             {{ session.sprint_name }}
-                                        </inertia-link>
+                                        </Link>
                                     </div>
                                     <div class="w-32">
-                                        <inertia-link v-if="session.invoice_id != null" class="text-xs text-teal-700 no-underline opacity-50 hover:opacity-100" :href="route('invoice.show', session.invoice_id)">
+                                        <Link v-if="session.invoice_id != null" class="text-xs text-teal-700 no-underline opacity-50 hover:opacity-100" :href="route('invoice.show', session.invoice_id)">
                                             <i class="mr-2 text-teal-700 opacity-50 fas fa-file-invoice-dollar"></i>
                                             {{ session.invoice_number }}
-                                        </inertia-link>
+                                        </Link>
                                     </div>
                                     <i v-if="session.is_billable" class="mr-2 text-gray-400 fas fa-money-bill-alt"></i>
                                 </div>
@@ -166,6 +166,7 @@
 </template>
 
 <script>
+    import { Link } from '@inertiajs/vue2'
     import dropdown from '@/Shared/Dropdown';
     import deleteButton from '@/Shared/DeleteButton';
     import timestamp from '@/Shared/Timestamp';
@@ -194,6 +195,7 @@
             'onSplitSession',
         ],
         components: {
+            Link,
             deleteButton: deleteButton,
             dropdown: dropdown,
             modal: modal,

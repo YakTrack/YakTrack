@@ -1,4 +1,4 @@
-import { App, plugin } from '@inertiajs/inertia-vue'
+import { createInertiaApp } from '@inertiajs/vue2'
 import PortalVue from 'portal-vue'
 import closeable from './directives/Closeable';
 import dateTime from './filters/DateTime.js';
@@ -19,7 +19,6 @@ Vue.mixin({
 })
 
 // Plugins
-Vue.use(plugin)
 Vue.use(PortalVue)
 
 // Global filters
@@ -38,14 +37,16 @@ Vue.component('buttonLink', buttonLink);
 // Events Bus
 window.events = new Vue();
 
-// Root Vue instance
-let app = document.getElementById('app')
+createInertiaApp({
+  resolve: name => {
+    const pages = require.context('./Pages', true, /\.vue$/i)
+    return pages(`./` + name + '.vue').default
+  },
+  setup({ el, App, props, plugin }) {
+    Vue.use(plugin)
 
-new Vue({
-    render: h => h(App, {
-        props: {
-            initialPage: JSON.parse(app.dataset.page),
-            resolveComponent: name => import(`@/Pages/${name}`).then(module => module.default),
-        },
-    }),
-}).$mount(app)
+    new Vue({
+      render: h => h(App, props),
+    }).$mount(el)
+  },
+})

@@ -38,16 +38,16 @@
                         class="item-container"
                     >
                         <td>
-                            <inertia-link :href="route('invoice.show', {id: invoice.id})">
+                            <Link :href="route('invoice.show', {id: invoice.id})">
                                 {{ invoice.number }}
-                            </inertia-link>
+                            </Link>
                         </td>
                         <td> {{ invoice.date }} </td>
                         <td> {{ invoice.due_date }} </td>
                         <td>
-                            <inertia-link v-if="invoice.client" :href="route('client.show', {id: invoice.client_id})">
+                            <Link v-if="invoice.client" :href="route('client.show', {id: invoice.client_id})">
                                 {{ invoice.client.name }}
-                            </inertia-link>
+                            </Link>
                         </td>
                         <td> {{ invoice.totalDurationForHumans == '0:00:00' ? '-' : invoice.totalDurationForHumans }} </td>
                         <td> {{ invoice.total_hours }} </td>
@@ -89,6 +89,7 @@
 
 <script>
 
+import { Link } from '@inertiajs/vue2';
 import breadcrumbs from '@/Shared/Breadcrumbs';
 import deleteButton from '@/Shared/DeleteButton';
 import layout from '@/Shared/Layout';
@@ -99,6 +100,7 @@ export default {
         'invoices',
     ],
     components: {
+        Link,
         breadcrumbs: breadcrumbs,
         deleteButton: deleteButton,
         layout: layout,

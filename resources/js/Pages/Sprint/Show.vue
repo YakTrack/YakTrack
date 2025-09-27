@@ -22,9 +22,9 @@
             </div>
             <div class="mt-2">
                 <span>
-                    <inertia-link :href="route('sprint.show', sprint)" class="no-underline text-xl text-gray-600">
+                    <Link :href="route('sprint.show', sprint)" class="no-underline text-xl text-gray-600">
                         {{ sprint.project.name }}
-                    </inertia-link>
+                    </Link>
                 </span>
             </div>
             <div class="mt-2">
@@ -54,6 +54,7 @@
 </template>
 
 <script>
+    import { Link } from '@inertiajs/vue2';
     import breadcrumbs from '@/Shared/Breadcrumbs';
     import layout from '@/Shared/Layout';
 
@@ -64,6 +65,7 @@
             'tasks',
         ],
         components: {
+            Link,
             breadcrumbs: breadcrumbs,
             layout: layout,
         },

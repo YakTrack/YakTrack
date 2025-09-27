@@ -1,15 +1,23 @@
 <template>
     <div class="inline-block">
-        <inertia-link :href="href" class="table" :method="method || 'get'">
-            <span class="btn btn-default table-cell align-middle" :class="!color || `btn-${color}`">
-                <slot></slot>
-            </span>
-        </inertia-link>
+        <Link
+            :href="href"
+            :class="['btn', 'btn-default', !color || `btn-${color}`]"
+            :method="method || 'get'"
+            :as="(method && method !== 'get') ? 'button' : 'a'"
+        >
+            <slot></slot>
+        </Link>
     </div>
 </template>
 
 <script>
+import { Link } from '@inertiajs/vue2'
+
 export default {
+    components: {
+        Link,
+    },
     props: [
         'href',
         'color',

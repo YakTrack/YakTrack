@@ -29,9 +29,9 @@
                         :data-item-destroy-route="route('client.destroy', client.id)"
                     >
                         <td>
-                            <inertia-link :href="route('client.show', client.id)">
+                            <Link :href="route('client.show', client.id)">
                                 {{ client.name }}
-                            </inertia-link>
+                            </Link>
                         </td>
                         <td> {{ client.email }} </td>
                         <td>
@@ -58,6 +58,7 @@
 </template>
 
 <script>
+    import { Link } from '@inertiajs/vue2'
     import breadcrumbs from '@/Shared/Breadcrumbs';
     import deleteButton from '@/Shared/DeleteButton';
     import layout from '@/Shared/Layout';
@@ -67,6 +68,7 @@
             'clients',
         ],
         components: {
+            Link,
             breadcrumbs: breadcrumbs,
             deleteButton: deleteButton,
             layout: layout,

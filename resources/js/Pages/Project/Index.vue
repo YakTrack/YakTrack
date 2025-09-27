@@ -27,16 +27,16 @@
                         class="item-container"
                     >
                     <td>
-                        <inertia-link :href="route('project.show', {project: project.id})">
+                        <Link :href="route('project.show', {project: project.id})">
                             {{ project.name }}
-                        </inertia-link>
+                        </Link>
                     </td>
                     <td>
-                        <inertia-link
+                        <Link
                             v-if="project.client"
                             :href="route('client.show', {client: project.client.id})">
                             {{ project.client.name }}
-                        </inertia-link>
+                        </Link>
                     </td>
                     <td>
                         <div class="btn-group float-right">
@@ -64,6 +64,7 @@
 
 <script>
 
+import { Link } from '@inertiajs/vue2';
 import breadcrumbs from '@/Shared/Breadcrumbs';
 import deleteButton from '@/Shared/DeleteButton';
 import layout from '@/Shared/Layout';
@@ -72,6 +73,7 @@ export default {
     props: ['projects'],
 
     components: {
+        Link,
         breadcrumbs: breadcrumbs,
         deleteButton: deleteButton,
         layout: layout,

@@ -15,11 +15,12 @@ const tailwindcss = require('tailwindcss')
  |
  */
 
-// Javascript
-mix.js('resources/js/app.js', 'public/js');
+// Javascript with Vue 2 support
+mix.js('resources/js/app.js', 'public/js')
+    .vue({ version: 2 });
 
 // CSS
-mix.css('~@fortawesome/fontawesome-free/css/all.css', 'public/css/fontawesome.css');
+mix.css('node_modules/@fortawesome/fontawesome-free/css/all.css', 'public/css/fontawesome.css');
 
 // Webfonts
 mix.copyDirectory('node_modules/@fortawesome/fontawesome-free/webfonts', 'public/webfonts');
@@ -29,15 +30,18 @@ mix.postCss('resources/css/app.css', 'public/css', [
     cssNesting(),
     tailwindcss('./tailwind.config.js'),
 ])
-    
+
 mix.webpackConfig({
     output: { chunkFilename: 'js/[name].js?id=[chunkhash]' },
     resolve: {
+        extensions: ['*', '.wasm', '.mjs', '.js', '.jsx', '.json', '.vue'],
         alias: {
             vue$: 'vue/dist/vue.runtime.esm.js',
             '@': path.resolve('resources/js'),
         },
     },
 })
-    .version()
-    .sourceMaps()
+
+if (mix.inProduction()) {
+    mix.version();
+}

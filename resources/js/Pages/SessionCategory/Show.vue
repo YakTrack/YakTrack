@@ -57,10 +57,10 @@
                 <div class="card-body">
                     <p class="text-gray-600">
                         This category has {{ sessionCategory.sessions_count }} associated session(s).
-                        <inertia-link :href="route('session.index', { session_category_id: sessionCategory.id })"
+                        <Link :href="route('session.index', { session_category_id: sessionCategory.id })"
                                       class="text-blue-600 hover:text-blue-800 underline ml-1">
                             View all sessions in this category
-                        </inertia-link>
+                        </Link>
                     </p>
                 </div>
             </div>
@@ -84,6 +84,7 @@
 </template>
 
 <script>
+import { Link } from '@inertiajs/vue2'
 import Layout from '../../Shared/Layout.vue'
 import Breadcrumbs from '../../Shared/Breadcrumbs.vue'
 import ButtonLink from '../../Shared/ButtonLink.vue'
@@ -91,6 +92,7 @@ import DeleteButton from '../../Shared/DeleteButton.vue'
 
 export default {
     components: {
+        Link,
         Layout,
         Breadcrumbs,
         ButtonLink,

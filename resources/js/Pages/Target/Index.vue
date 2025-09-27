@@ -28,14 +28,14 @@
                     class="item-container"
                 >
                     <td>
-                        <inertia-link :href="route('target.show', target)">
+                        <Link :href="route('target.show', target)">
                             {{ target.starts_at | dateForHumans }}
-                        </inertia-link>
+                        </Link>
                     </td>
                     <td>
-                        <inertia-link :href="route('target.show', target)">
+                        <Link :href="route('target.show', target)">
                             {{ target.value }} {{ target.value_unit }}
-                        </inertia-link>
+                        </Link>
                     </td>
                     <td>
                         <div class="btn-group float-right">
@@ -62,6 +62,7 @@
 
 <script>
 
+    import { Link } from '@inertiajs/vue2';
     import breadcrumbs from '@/Shared/Breadcrumbs';
     import deleteButton from '@/Shared/DeleteButton';
     import layout from '@/Shared/Layout';
@@ -71,6 +72,7 @@
             'targets',
         ],
         components: {
+            Link,
             breadcrumbs: breadcrumbs,
             deleteButton: deleteButton,
             layout: layout,
