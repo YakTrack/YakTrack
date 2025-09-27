@@ -19,7 +19,7 @@ export default {
         let minutes = Math.floor(absoluteNumberOfSeconds / 60) % 60
         let seconds = absoluteNumberOfSeconds % 60
     
-        return (isNegative ? '-' : ' ') + [hours, minutes, seconds]
+        return (isNegative ? '-' : '') + [hours, minutes, seconds]
             .map(component => component < 10 ? "0" + component : component)
             .join(":")
     },
