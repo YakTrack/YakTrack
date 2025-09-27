@@ -6,7 +6,6 @@ use App\Models\Client;
 use App\Models\Session;
 use App\Models\Target;
 use App\Statistics\Sessions;
-use App\Support\DateIntervalFormatter;
 use App\Support\DateTimeFormatter;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -14,18 +13,16 @@ use Inertia\Response;
 class HomeController extends Controller
 {
     private DateTimeFormatter $dateTimeFormatter;
-    private DateIntervalFormatter $dateIntervalFormatter;
     private Sessions $sessions;
 
     /**
      * Create a new controller instance.
      */
-    public function __construct(DateTimeFormatter $dateTimeFormatter, DateIntervalFormatter $dateIntervalFormatter, Sessions $sessions)
+    public function __construct(DateTimeFormatter $dateTimeFormatter, Sessions $sessions)
     {
         $this->middleware('auth');
 
         $this->dateTimeFormatter = $dateTimeFormatter;
-        $this->dateIntervalFormatter = $dateIntervalFormatter;
         $this->sessions = $sessions;
     }
 

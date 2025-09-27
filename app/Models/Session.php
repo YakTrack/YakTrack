@@ -80,7 +80,7 @@ class Session extends Model
 
     public function getEndedAtAttribute()
     {
-        if (!isset($this->attributes['ended_at']) || is_null($this->attributes['ended_at'])) {
+        if (!isset($this->attributes['ended_at'])) {
             return;
         }
 

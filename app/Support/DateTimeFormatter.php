@@ -92,13 +92,12 @@ class DateTimeFormatter
             $format = self::DATETIME_FOR_MYSQL_FORMAT;
         }
 
-        $dateTime = Carbon::parse($dateTime);
-
-        if (!$dateTime) {
+        try {
+            $dateTime = Carbon::parse($dateTime);
+            return $dateTime->format($format);
+        } catch (\Exception $e) {
             return;
         }
-
-        return $dateTime->format($format);
     }
 
     public function localFormat($dateTime, $format = null)

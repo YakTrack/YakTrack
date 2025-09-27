@@ -93,7 +93,7 @@ class SprintController extends Controller
      * @param \Illuminate\Http\Request $request
      * @param Sprint                   $sprint
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update(Request $request, Sprint $sprint): RedirectResponse
     {
