@@ -2,7 +2,6 @@ const cssImport = require('postcss-import')
 const cssNesting = require('postcss-nesting')
 const mix = require('laravel-mix');
 const path = require('path');
-const purgecss = require('@fullhuman/postcss-purgecss');
 const tailwindcss = require('tailwindcss')
 
 /*
