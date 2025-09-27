@@ -64,7 +64,7 @@
                                             </a>
                                         </div>
                                         <div>
-                                            <span v-if="task.task_status" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium whitespace-no-wrap" :style="{ backgroundColor: task.task_status.color + '20', color: task.task_status.color }">
+                                            <span v-if="task.task_status" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium whitespace-nowrap" :style="{ backgroundColor: task.task_status.color + '20', color: task.task_status.color }">
                                                 {{ task.task_status.name }}
                                             </span>
                                         </div>

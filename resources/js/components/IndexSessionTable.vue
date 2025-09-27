@@ -53,7 +53,7 @@
                             <input type="checkbox" class="form-checkbox " v-model="session.isSelected" :value="session.id"/>
                         </td>
                         <td class="pl-1 sm:pl-4">
-                            <div class="h-full overflow-auto whitespace-no-wrap">
+                            <div class="h-full overflow-auto whitespace-nowrap">
                                 <div v-if="session.task_id">
                                     <inertia-link  class="inline-block max-w-xs no-underline truncate opacity-100 hover:opacity-50" :href="route('task.show', session.task_id)">
                                         <i class="mr-2 text-gray-400 fas fa-check-square"></i>

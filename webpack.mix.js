@@ -28,7 +28,7 @@ mix.copyDirectory('node_modules/@fortawesome/fontawesome-free/webfonts', 'public
 mix.postCss('resources/css/app.css', 'public/css', [
     cssImport(),
     cssNesting(),
-    tailwindcss('tailwind.js'),
+    tailwindcss('./tailwind.config.js'),
 ])
     
 mix.webpackConfig({

@@ -6,7 +6,6 @@
                 block
                 z-10
                 bg-white
-                w-full
                 lg:max-w-3xs
                 border-b
                 -mb-16
@@ -15,7 +14,6 @@
                 sm:flex
                 sm:relative
                 lg:-mb-0
-                lg:static
                 lg:bg-transparent
                 lg:border-b-0
                 lg:pt-0
@@ -25,7 +23,7 @@
                 <sidebar></sidebar>
             </div>
             <div class="flex-1 container mx-auto px-4">
-                <div id="content-wrapper" class="min-h-screen w-full lg:static lg:max-h-full lg:overflow-visible">
+                <div id="content-wrapper" class="min-h-screen w-full lg:max-h-full lg:overflow-visible">
                     <main role="main" class="lg:sticky w-full py-24">
                         <div class="px-2 sm:px-0">
                             <slot name="breadcrumbs"></slot>
