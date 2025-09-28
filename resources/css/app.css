@@ -1,6 +1,9 @@
 /* Reset */
 @import "tailwindcss/base";
 
+/* FontAwesome */
+@import "@fortawesome/fontawesome-free/css/all.css";
+
 /* Components */
 @import "tailwindcss/components";
 
@@ -36,7 +39,7 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 .btn-default {
-    @apply bg-white text-gray-700
+    @apply bg-white text-gray-700;
 }
 
 .btn-group {
@@ -48,11 +51,11 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 .btn-default:hover {
-    @apply bg-gray-100
+    @apply bg-gray-100;
 }
 
 .btn-red {
-    @apply bg-red-500 text-white
+    @apply bg-red-500 text-white;
 }
 
 .btn-red:hover {
@@ -60,15 +63,15 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 .btn-blue {
-    @apply bg-blue-500 text-white
+    @apply bg-blue-500 text-white;
 }
 
 .btn-blue-300 {
-    @apply bg-blue-400 text-white
+    @apply bg-blue-400 text-white;
 }
 
 .btn-gray-300 {
-    @apply bg-gray-300
+    @apply bg-gray-300;
 }
 
 .btn-blue:hover {
@@ -76,19 +79,19 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 .btn-disabled {
-    @apply text-gray-400 cursor-not-allowed
+    @apply text-gray-400 cursor-not-allowed;
 }
 
 .btn-disabled:hover {
-    @apply bg-white
+    @apply bg-white;
 }
 
 .btn-green {
-    @apply bg-green-500 text-white
+    @apply bg-green-500 text-white;
 }
 
 .btn-green:hover {
-    @apply bg-green-600
+    @apply bg-green-600;
 }
 
 .btn-sm {
@@ -100,19 +103,19 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 .btn-group {
-    @apply flex
+    @apply flex;
 }
 
 .form-group {
-    @apply pb-4
+    @apply pb-4;
 }
 
 .form-group label {
-    @apply text-gray-700 font-light mb-1 block
+    @apply text-gray-700 font-light mb-1 block;
 }
 
 input.form-control, textarea.form-control, select.form-control, .form-group textarea {
-    @apply rounded bg-white shadow h-12 w-full py-2 px-4 btn-height
+    @apply rounded bg-white shadow h-12 w-full py-2 px-4 btn-height;
 }
 
 .form-group textarea {
@@ -120,16 +123,16 @@ input.form-control, textarea.form-control, select.form-control, .form-group text
 }
 
 .form-checkbox {
-    @apply w-5 h-5
+    @apply w-5 h-5;
 }
 
 /* .table, .table tbody, .table thead, .table tr {
-    @apply w-full
+    @apply w-full;
 } */
 
 .table td:not(.text-right):not(.text-center),
 .table th:not(.text-right):not(.text-center) {
-    @apply text-left
+    @apply text-left;
 }
 
 .clickable {
@@ -137,18 +140,18 @@ input.form-control, textarea.form-control, select.form-control, .form-group text
 }
 
 .card {
-    @apply bg-white rounded shadow p-4
+    @apply bg-white rounded shadow p-4;
 }
 
 .card .card-header {
-    @apply w-full p-4 mb-4
+    @apply w-full p-4 mb-4;
 }
 
 .card .card-body {
-    @apply w-full p-4
+    @apply w-full p-4;
 }
 .card .card-body:not(table) {
-    @apply block
+    @apply block;
 }
 
 .card table.card-body.table {
@@ -156,14 +159,14 @@ input.form-control, textarea.form-control, select.form-control, .form-group text
 }
 
 .card table.card-body, .card table.card-body tbody, .card table.card-body tr, .card table.card-body thead {
-    @apply w-full
+    @apply w-full;
 }
 .card .card-body a {
-    @apply no-underline text-gray-900
+    @apply no-underline text-gray-900;
 }
 
 .card .card-body td, .card .card-body, th {
-    @apply p-2
+    @apply p-2;
 }
 
 .min-w-1 {
@@ -243,7 +246,7 @@ fieldset[disabled] .multiselect {
 }
 
 .multiselect {
-    @apply h-12
+    @apply h-12;
 }
 
 .multiselect {
@@ -291,7 +294,7 @@ fieldset[disabled] .multiselect {
 
 .multiselect__input,
 .multiselect__single {
-    @apply relative inline-block h-10 leading-normal border-none rounded bg-white pt-0 pr-0 pb-0 pr-1 w-full mb-2 align-top
+    @apply relative inline-block h-10 leading-normal border-none rounded bg-white pt-0 pr-0 pb-0 pr-1 w-full mb-2 align-top;
 }
 .multiselect__input,
 .multiselect__single {
@@ -324,18 +327,18 @@ fieldset[disabled] .multiselect {
 }
 
 .multiselect__single {
-    @apply pl-1 mb-1
+    @apply pl-1 mb-1;
 }
 
 .multiselect__tags {
-    @apply block h-12 pt-2 pr-10 pb-0 pl-2 rounded border-none shadow bg-white
+    @apply block h-12 pt-2 pr-10 pb-0 pl-2 rounded border-none shadow bg-white;
 }
 .multiselect__tags-wrap {
-    @apply inline
+    @apply inline;
 }
 
 .multiselect__tag {
-    @apply relative inline-block pt-1 pr-6 pb-1 pl-2 rounded mr-2 mb-1 text-white leading-normal bg-green-500
+    @apply relative inline-block pt-1 pr-6 pb-1 pl-2 rounded mr-2 mb-1 text-white leading-normal bg-green-500;
 }
 
 .multiselect__tag {
@@ -398,7 +401,7 @@ fieldset[disabled] .multiselect {
 }
 
 .multiselect__select {
-    @apply absolute w-10 h-10 px-1 py-2
+    @apply absolute w-10 h-10 px-1 py-2;
 }
 .multiselect__select {
     right: 1px;
@@ -420,7 +423,7 @@ fieldset[disabled] .multiselect {
 }
 
 .multiselect__placeholder {
-    @apply pl-2 pt-2 mb-2
+    @apply pl-2 pt-2 mb-2;
 }
 
 .multiselect__placeholder {
@@ -432,7 +435,7 @@ fieldset[disabled] .multiselect {
     display: none
 }
 .multiselect__content-wrapper {
-    @apply absolute block bg-white w-full border-none shadow
+    @apply absolute block bg-white w-full border-none shadow;
 }
 
 .multiselect__content-wrapper {

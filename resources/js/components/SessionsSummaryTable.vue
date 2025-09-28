@@ -131,8 +131,8 @@
 
 <script>
 
-import timer from '@/components/Timer';
-import duration from '@/components/Duration';
+import timer from '@/components/Timer.vue';
+import duration from '@/components/Duration.vue';
 import dayjs from 'dayjs';
 
 export default {

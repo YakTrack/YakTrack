@@ -462,15 +462,15 @@
 
 <script>
     import { Link } from '@inertiajs/vue3'
-    import dropdown from '@/Shared/Dropdown';
-    import actionsDropdown from '@/Shared/ActionsDropdown';
-    import deleteButton from '@/Shared/DeleteButton';
-    import timestamp from '@/Shared/Timestamp';
-    import modal from './Modal';
-    import timer from './Timer';
-    import dateTime from './../filters/DateTime';
-    import datetimeInput from './DatetimeInput';
-    import pageSelector from './PageSelector';
+    import dropdown from '@/Shared/Dropdown.vue';
+    import actionsDropdown from '@/Shared/ActionsDropdown.vue';
+    import deleteButton from '@/Shared/DeleteButton.vue';
+    import timestamp from '@/Shared/Timestamp.vue';
+    import modal from '@/components/Modal.vue';
+    import timer from '@/components/Timer.vue';
+    import dateTime from '@/filters/DateTime.js';
+    import datetimeInput from '@/components/DatetimeInput.vue';
+    import pageSelector from '@/components/PageSelector.vue';
     import urlParser from '@/UrlParser.js';
     import searchParams from '@/SearchParams';
     import dayjs from 'dayjs';

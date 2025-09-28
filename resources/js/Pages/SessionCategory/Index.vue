@@ -75,10 +75,10 @@
 
 <script>
 import { Link } from '@inertiajs/vue3'
-import Layout from '../../Shared/Layout.vue'
-import Breadcrumbs from '../../Shared/Breadcrumbs.vue'
-import ButtonLink from '../../Shared/ButtonLink.vue'
-import DeleteButton from '../../Shared/DeleteButton.vue'
+import Layout from '@/Shared/Layout.vue'
+import Breadcrumbs from '@/Shared/Breadcrumbs.vue'
+import ButtonLink from '@/Shared/ButtonLink.vue'
+import DeleteButton from '@/Shared/DeleteButton.vue'
 
 export default {
     components: {

@@ -7,7 +7,7 @@
 </template>
 
 <script>
-    import DateTime from './../filters/DateTime';
+    import DateTime from '@/filters/DateTime.js';
 
     export default {
         props: {

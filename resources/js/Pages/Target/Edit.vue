@@ -32,9 +32,9 @@
 </template>
 
 <script>
-    import breadcrumbs from '@/Shared/Breadcrumbs';
-    import clientSelect from '@/Shared/ClientSelect';
-    import layout from '@/Shared/Layout';
+    import breadcrumbs from '@/Shared/Breadcrumbs.vue';
+    import clientSelect from '@/Shared/ClientSelect.vue';
+    import layout from '@/Shared/Layout.vue';
 
     export default {
         props: [

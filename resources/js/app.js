@@ -4,12 +4,12 @@ import { createPinia } from 'pinia'
 import mitt from 'mitt'
 import closeable from './directives/Closeable';
 import dateTime from './filters/DateTime.js';
-import buttonLink from '@/Shared/ButtonLink';
+import buttonLink from '@/Shared/ButtonLink.vue';
 
 createInertiaApp({
   resolve: name => {
-    const pages = require.context('./Pages', true, /\.vue$/i)
-    return pages(`./` + name + '.vue').default
+    const pages = import.meta.glob('./Pages/**/*.vue', { eager: true })
+    return pages[`./Pages/${name}.vue`].default
   },
   setup({ el, App, props, plugin }) {
     const app = createApp({ render: () => h(App, props) })

@@ -52,9 +52,9 @@
 </template>
 
 <script>
-    import HeaderNav from '@/Shared/HeaderNav';
-    import Messages from '@/Shared/Messages';
-    import Sidebar from '@/Shared/Sidebar';
+    import HeaderNav from '@/Shared/HeaderNav.vue';
+    import Messages from '@/Shared/Messages.vue';
+    import Sidebar from '@/Shared/Sidebar.vue';
 
     export default {
         props: [

@@ -52,10 +52,10 @@
 </template>
 
 <script>
-import Layout from '../../Shared/Layout.vue'
-import Breadcrumbs from '../../Shared/Breadcrumbs.vue'
-import ButtonLink from '../../Shared/ButtonLink.vue'
-import LoadingButton from '../../Shared/LoadingButton.vue'
+import Layout from '@/Shared/Layout.vue'
+import Breadcrumbs from '@/Shared/Breadcrumbs.vue'
+import ButtonLink from '@/Shared/ButtonLink.vue'
+import LoadingButton from '@/Shared/LoadingButton.vue'
 
 export default {
     components: {

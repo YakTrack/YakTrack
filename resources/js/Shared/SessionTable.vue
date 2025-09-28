@@ -94,10 +94,10 @@
 </template>
 
 <script>
-    import deleteButton from '@/Shared/DeleteButton';
-    import dropdown from '@/Shared/Dropdown';
-    import sessionTask from '@/Shared/SessionTask';
-    import modal from '@/components/Modal';
+    import deleteButton from '@/Shared/DeleteButton.vue';
+    import dropdown from '@/Shared/Dropdown.vue';
+    import sessionTask from '@/Shared/SessionTask.vue';
+    import modal from '@/components/Modal.vue';
 
     export default {
         components: {

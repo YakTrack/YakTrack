@@ -64,9 +64,9 @@
 
 <script>
     import { Link } from '@inertiajs/vue3'
-    import breadcrumbs from '@/Shared/Breadcrumbs';
-    import deleteButton from '@/Shared/DeleteButton';
-    import layout from '@/Shared/Layout';
+    import breadcrumbs from '@/Shared/Breadcrumbs.vue';
+    import deleteButton from '@/Shared/DeleteButton.vue';
+    import layout from '@/Shared/Layout.vue';
 
     export default {
         props: [

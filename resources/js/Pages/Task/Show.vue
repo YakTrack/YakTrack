@@ -36,9 +36,9 @@
 </template>
 
 <script>
-    import breadcrumbs from '@/Shared/Breadcrumbs';
-    import layout from '@/Shared/Layout';
-    import sessionTable from '@/Shared/SessionTable';
+    import breadcrumbs from '@/Shared/Breadcrumbs.vue';
+    import layout from '@/Shared/Layout.vue';
+    import sessionTable from '@/Shared/SessionTable.vue';
 
     export default {
         props: [

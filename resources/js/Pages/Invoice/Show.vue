@@ -53,10 +53,10 @@
 
 <script>
 
-import breadcrumbs from '@/Shared/Breadcrumbs';
-import dropdown from '@/Shared/Dropdown';
-import layout from '@/Shared/Layout';
-import sessionTable from '@/Shared/SessionTable';
+import breadcrumbs from '@/Shared/Breadcrumbs.vue';
+import dropdown from '@/Shared/Dropdown.vue';
+import layout from '@/Shared/Layout.vue';
+import sessionTable from '@/Shared/SessionTable.vue';
 
 export default {
     props: [

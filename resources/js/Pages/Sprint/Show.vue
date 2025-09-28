@@ -59,8 +59,8 @@
 
 <script>
     import { Link } from '@inertiajs/vue3';
-    import breadcrumbs from '@/Shared/Breadcrumbs';
-    import layout from '@/Shared/Layout';
+    import breadcrumbs from '@/Shared/Breadcrumbs.vue';
+    import layout from '@/Shared/Layout.vue';
 
     export default {
         props: [

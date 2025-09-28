@@ -47,8 +47,8 @@
 
 <script>
 
-import LoadingButton from '@/Shared/LoadingButton'
-import Logo from '@/Shared/Logo'
+import LoadingButton from '@/Shared/LoadingButton.vue'
+import Logo from '@/Shared/Logo.vue'
 
 export default {
     components: {

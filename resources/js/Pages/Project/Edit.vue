@@ -45,9 +45,9 @@
 
 <script>
 
-    import clientSelect from '@/Shared/ClientSelect';
-    import breadcrumbs from '@/Shared/Breadcrumbs';
-    import layout from '@/Shared/Layout';
+    import clientSelect from '@/Shared/ClientSelect.vue';
+    import breadcrumbs from '@/Shared/Breadcrumbs.vue';
+    import layout from '@/Shared/Layout.vue';
 
     export default {
         props: [

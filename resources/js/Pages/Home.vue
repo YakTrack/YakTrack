@@ -20,11 +20,11 @@
 
 <script>
     import dayjs from 'dayjs';
-    import breadcrumbs from '@/Shared/Breadcrumbs';
-    import layout from '@/Shared/Layout';
-    import timer from '@/components/Timer';
-    import duration from '@/components/Duration';
-    import sessionsSummaryTable from '@/components/SessionsSummaryTable';
+    import breadcrumbs from '@/Shared/Breadcrumbs.vue';
+    import layout from '@/Shared/Layout.vue';
+    import timer from '@/components/Timer.vue';
+    import duration from '@/components/Duration.vue';
+    import sessionsSummaryTable from '@/components/SessionsSummaryTable.vue';
 
     export default {
         props: [

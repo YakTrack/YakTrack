@@ -64,9 +64,9 @@
 
 <script>
     import multiSelect from 'vue-multiselect';
-    import breadcrumbs from '@/Shared/Breadcrumbs';
-    import layout from '@/Shared/Layout';
-    import projectSelect from '@/Shared/ProjectSelect';
+    import breadcrumbs from '@/Shared/Breadcrumbs.vue';
+    import layout from '@/Shared/Layout.vue';
+    import projectSelect from '@/Shared/ProjectSelect.vue';
 
     export default {
         props: [

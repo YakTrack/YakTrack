@@ -62,12 +62,12 @@
 
 <script>
 
-    import breadcrumbs from '@/Shared/Breadcrumbs';
-    import layout from '@/Shared/Layout';
-    import taskSelect from '@/Shared/TaskSelect';
-    import sprintSelect from '@/Shared/SprintSelect';
-    import invoiceSelect from '@/Shared/InvoiceSelect';
-    import sessionCategorySelect from '@/Shared/SessionCategorySelect';
+    import breadcrumbs from '@/Shared/Breadcrumbs.vue';
+    import layout from '@/Shared/Layout.vue';
+    import taskSelect from '@/Shared/TaskSelect.vue';
+    import sprintSelect from '@/Shared/SprintSelect.vue';
+    import invoiceSelect from '@/Shared/InvoiceSelect.vue';
+    import sessionCategorySelect from '@/Shared/SessionCategorySelect.vue';
     import dateTime from '@/filters/DateTime';
 
     export default {

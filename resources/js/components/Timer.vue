@@ -6,8 +6,8 @@
 </template>
 
 <script>
-    import Duration from './../components/Duration';
-    import DateTime from './../filters/DateTime';
+    import Duration from '@/components/Duration.vue';
+    import DateTime from '@/filters/DateTime.js';
 
     export default {
         components: {

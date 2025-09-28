@@ -146,8 +146,8 @@
 
 <script>
 import multiSelect from 'vue-multiselect';
-import breadcrumbs from '@/Shared/Breadcrumbs';
-import layout from '@/Shared/Layout';
+import breadcrumbs from '@/Shared/Breadcrumbs.vue';
+import layout from '@/Shared/Layout.vue';
 
 export default {
     props: [

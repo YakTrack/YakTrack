@@ -105,14 +105,14 @@
 
 <script>
 
-import breadcrumbs from '@/Shared/Breadcrumbs'
-import indexSessionTable from '@/components/IndexSessionTable'
-import layout from '@/Shared/Layout'
+import breadcrumbs from '@/Shared/Breadcrumbs.vue'
+import indexSessionTable from '@/components/IndexSessionTable.vue'
+import layout from '@/Shared/Layout.vue'
 import searchParams from '@/SearchParams'
 import urlParser from '@/UrlParser.js';
-import modal from '@/components/Modal'
-import invoiceSelect from '@/Shared/InvoiceSelect';
-import sprintSelect from '@/Shared/SprintSelect';
+import modal from '@/components/Modal.vue'
+import invoiceSelect from '@/Shared/InvoiceSelect.vue';
+import sprintSelect from '@/Shared/SprintSelect.vue';
 
 export default {
     data() {
