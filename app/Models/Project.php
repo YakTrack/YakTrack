@@ -23,7 +23,9 @@ class Project extends Model
      * Create a new Eloquent Collection instance.
      *
      * @param array<int, \App\Models\Project> $models
+     *
      * @return \App\Models\Collections\ProjectCollection
+     *
      * @phpstan-return \App\Models\Collections\ProjectCollection
      */
     public function newCollection(array $models = []): ProjectCollection
