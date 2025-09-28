@@ -21,7 +21,7 @@ class CreateTargetsTable extends Migration
             $table->string('duration_unit')->nullable();
             $table->unsignedInteger('duration')->nullable();
             $table->string('value_unit');
-            $table->unsignedDecimal('value');
+            $table->decimal('value')->unsigned();
             $table->boolean('billable_only');
             $table->timestamps();
         });
