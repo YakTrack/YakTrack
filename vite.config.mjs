@@ -53,4 +53,20 @@ export default defineConfig({
         },
         origin: 'http://localhost:5173',
     },
+    test: {
+        environment: 'node',
+        include: [
+            'resources/js/tests/**/*.{test,spec}.js'
+        ],
+        exclude: [
+            'node_modules/**',
+            'e2e/**',
+            'test-results/**',
+            'playwright-report/**'
+        ],
+        globals: true,
+        alias: {
+            '@': path.resolve('resources/js'),
+        },
+    },
 });
