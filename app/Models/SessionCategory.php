@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class SessionCategory extends Model
 {
+    /** @use HasFactory<\Database\Factories\SessionCategoryFactory> */
     use HasFactory;
 
     protected $fillable = ['name', 'description'];
 
     /**
-     * @return HasMany<Session>
+     * @return HasMany<Session, $this>
      */
     public function sessions(): HasMany
     {

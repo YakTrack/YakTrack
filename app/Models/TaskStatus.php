@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TaskStatus extends Model
 {
+    /** @use HasFactory<\Database\Factories\TaskStatusFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -26,7 +27,7 @@ class TaskStatus extends Model
     ];
 
     /**
-     * @return BelongsTo<Project, TaskStatus>
+     * @return BelongsTo<Project, $this>
      */
     public function project(): BelongsTo
     {
@@ -34,7 +35,7 @@ class TaskStatus extends Model
     }
 
     /**
-     * @return HasMany<Task>
+     * @return HasMany<Task, $this>
      */
     public function tasks(): HasMany
     {

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Invoice extends Model
 {
     use BelongsToClient;
+    /** @use HasFactory<\Database\Factories\InvoiceFactory> */
     use HasFactory;
 
     protected $guarded = [];
@@ -28,7 +29,7 @@ class Invoice extends Model
     }
 
     /**
-     * @return HasMany<Session>
+     * @return HasMany<Session, $this>
      */
     public function sessions(): HasMany
     {

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ThirdPartyApplication extends Model
 {
+    /** @use HasFactory<\Database\Factories\ThirdPartyApplicationFactory> */
     use HasFactory;
 
     protected $guarded = [];

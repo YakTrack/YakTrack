@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 
 class ClientUser extends Authenticatable
 {
+    /** @use HasFactory<\Database\Factories\ClientUserFactory> */
     use HasFactory;
     use Notifiable;
 
@@ -49,7 +50,7 @@ class ClientUser extends Authenticatable
      * Get the client that this user belongs to.
      */
     /**
-     * @return BelongsTo<Client, ClientUser>
+     * @return BelongsTo<Client, $this>
      */
     public function client(): BelongsTo
     {
@@ -59,7 +60,7 @@ class ClientUser extends Authenticatable
     /**
      * Get all projects for this client user.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Project>
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<\App\Models\Project, \App\Models\Client>
      */
     public function projects(): \Illuminate\Database\Eloquent\Relations\HasMany
     {

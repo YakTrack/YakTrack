@@ -8,12 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ThirdPartyApplicationSession extends Model
 {
+    /** @use HasFactory<\Database\Factories\ThirdPartyApplicationSessionFactory> */
     use HasFactory;
 
     protected $guarded = [];
 
     /**
-     * @return BelongsTo<Session, ThirdPartyApplicationSession>
+     * @return BelongsTo<Session, $this>
      */
     public function session(): BelongsTo
     {

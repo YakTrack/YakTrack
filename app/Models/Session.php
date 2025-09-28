@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Session extends Model
 {
     use Concerns\CanBeBillable;
+    /** @use HasFactory<\Database\Factories\SessionFactory> */
     use HasFactory;
 
     protected $guarded = [];
@@ -47,7 +48,7 @@ class Session extends Model
     ];
 
     /**
-     * @return BelongsTo<Invoice, Session>
+     * @return BelongsTo<Invoice, $this>
      */
     public function invoice(): BelongsTo
     {
@@ -55,7 +56,7 @@ class Session extends Model
     }
 
     /**
-     * @return BelongsTo<Sprint, Session>
+     * @return BelongsTo<Sprint, $this>
      */
     public function sprint(): BelongsTo
     {
@@ -63,7 +64,7 @@ class Session extends Model
     }
 
     /**
-     * @return BelongsTo<Task, Session>
+     * @return BelongsTo<Task, $this>
      */
     public function task(): BelongsTo
     {
@@ -71,7 +72,7 @@ class Session extends Model
     }
 
     /**
-     * @return BelongsTo<SessionCategory, Session>
+     * @return BelongsTo<SessionCategory, $this>
      */
     public function sessionCategory(): BelongsTo
     {
@@ -79,7 +80,7 @@ class Session extends Model
     }
 
     /**
-     * @return HasMany<ThirdPartyApplicationSession>
+     * @return HasMany<ThirdPartyApplicationSession, $this>
      */
     public function thirdPartyApplicationSessions(): HasMany
     {

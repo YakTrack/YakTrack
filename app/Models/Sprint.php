@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Sprint extends Model
 {
+    /** @use HasFactory<\Database\Factories\SprintFactory> */
     use HasFactory;
 
     protected $guarded = [];
@@ -17,7 +18,7 @@ class Sprint extends Model
      * The relationship to the project which this sprint belongs to.
      **/
     /**
-     * @return BelongsTo<Project, Sprint>
+     * @return BelongsTo<Project, $this>
      */
     public function project(): BelongsTo
     {
@@ -25,7 +26,7 @@ class Sprint extends Model
     }
 
     /**
-     * @return HasMany<Session>
+     * @return HasMany<Session, $this>
      */
     public function sessions(): HasMany
     {

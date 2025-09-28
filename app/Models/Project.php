@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Project extends Model
 {
+    /** @use HasFactory<\Database\Factories\ProjectFactory> */
     use HasFactory;
     protected $fillable = [
         'name',
@@ -34,7 +35,7 @@ class Project extends Model
      * The client that the project belongs to.
      **/
     /**
-     * @return BelongsTo<Client, Project>
+     * @return BelongsTo<Client, $this>
      */
     public function client(): BelongsTo
     {
@@ -60,7 +61,7 @@ class Project extends Model
      * The sprints that belong to the project.
      **/
     /**
-     * @return HasMany<Sprint>
+     * @return HasMany<Sprint, $this>
      */
     public function sprints(): HasMany
     {
@@ -71,7 +72,7 @@ class Project extends Model
      * The tasks that belong to the project.
      **/
     /**
-     * @return HasMany<Task>
+     * @return HasMany<Task, $this>
      */
     public function tasks(): HasMany
     {
@@ -82,7 +83,7 @@ class Project extends Model
      * The task statuses that belong to the project.
      **/
     /**
-     * @return HasMany<TaskStatus>
+     * @return HasMany<TaskStatus, $this>
      */
     public function taskStatuses(): HasMany
     {
@@ -93,7 +94,7 @@ class Project extends Model
      * The sessions that belong to the project through tasks.
      **/
     /**
-     * @return HasManyThrough<Session>
+     * @return HasManyThrough<Session, Task, $this>
      */
     public function sessions(): HasManyThrough
     {

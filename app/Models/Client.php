@@ -9,12 +9,13 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Client extends Model
 {
+    /** @use HasFactory<\Database\Factories\ClientFactory> */
     use HasFactory;
 
     protected $guarded = [];
 
     /**
-     * @return HasMany<Invoice>
+     * @return HasMany<Invoice, $this>
      */
     public function invoices(): HasMany
     {
@@ -22,7 +23,7 @@ class Client extends Model
     }
 
     /**
-     * @return HasMany<Project>
+     * @return HasMany<Project, $this>
      */
     public function projects(): HasMany
     {
@@ -30,7 +31,7 @@ class Client extends Model
     }
 
     /**
-     * @return HasManyThrough<Sprint>
+     * @return HasManyThrough<Sprint, Project, $this>
      */
     public function sprints(): HasManyThrough
     {
@@ -54,7 +55,7 @@ class Client extends Model
     }
 
     /**
-     * @return HasMany<ClientUser>
+     * @return HasMany<ClientUser, $this>
      */
     public function clientUsers(): HasMany
     {

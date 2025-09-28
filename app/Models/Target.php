@@ -12,6 +12,7 @@ use Illuminate\Support\Carbon;
 
 class Target extends Model
 {
+    /** @use HasFactory<\Database\Factories\TargetFactory> */
     use HasFactory;
 
     protected $guarded = [];

@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Task extends Model
 {
     use BelongsToProject;
+    /** @use HasFactory<\Database\Factories\TaskFactory> */
     use HasFactory;
 
     protected $guarded = [];
@@ -31,7 +32,7 @@ class Task extends Model
     }
 
     /**
-     * @return HasMany<Session>
+     * @return HasMany<Session, $this>
      */
     public function sessions(): HasMany
     {
@@ -39,7 +40,7 @@ class Task extends Model
     }
 
     /**
-     * @return BelongsTo<Task, Task>
+     * @return BelongsTo<Task, $this>
      */
     public function parent(): BelongsTo
     {
@@ -47,7 +48,7 @@ class Task extends Model
     }
 
     /**
-     * @return BelongsTo<TaskStatus, Task>
+     * @return BelongsTo<TaskStatus, $this>
      */
     public function taskStatus(): BelongsTo
     {
