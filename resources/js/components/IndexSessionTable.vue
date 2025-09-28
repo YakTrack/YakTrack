@@ -32,7 +32,7 @@
                     </button>
                     <button 
                         class="px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200"
-                        :class="filterPresetIsSelected('thisWeek') 
+                        :class="filterPresetIsSelected('thisWeek')
                             ? 'bg-blue-100 text-blue-700 border border-blue-200' 
                             : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'"
                         @click="loadFilterPreset('thisWeek')"
@@ -49,7 +49,7 @@
                         Last Week
                     </button>
                 </div>
-                
+
                 <!-- Date Range Inputs -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div class="space-y-2">
@@ -118,31 +118,31 @@
                             <td class="px-6 py-3 text-sm font-medium text-gray-600 uppercase tracking-wide">
                             </td>
                         </tr>
-                        
+
                         <!-- Session Rows -->
                         <template v-for="(session, sessionIndex) in day.sessions" :key="session.id">
                             <!-- First Row: Task Name -->
-                            <tr 
+                            <tr
                                 :class="[rowClasses(session), 'session-row transition-colors duration-150', { 'bg-gray-50': hoveredSessionId === session.id }]"
                                 :data-session-id="session.id"
                                 @mouseenter="hoveredSessionId = session.id"
                                 @mouseleave="hoveredSessionId = null"
                             >
                                 <!-- Checkbox Column -->
-                                <td class="px-6 py-2 w-12 transition-colors duration-150 border-l border-transparent" rowspan="2">
-                                    <input 
-                                        type="checkbox" 
+                                <td class="px-4 py-2 w-6 transition-colors duration-150 border-l border-transparent" rowspan="2">
+                                    <input
+                                        type="checkbox"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" 
-                                        v-model="session.isSelected" 
+                                        v-model="session.isSelected"
                                         :value="session.id"
                                     />
                                 </td>
-                                
+
                                 <!-- Task Name Column -->
-                                <td class="px-6 py-2 min-w-0 transition-colors duration-150" colspan="3">
+                                <td class="pr-6 py-2 min-w-0 transition-colors duration-150 max-w-xl" colspan="3">
                                     <div v-if="session.task_id" class="flex items-start">
-                                        <Link 
-                                            class="group flex-1 min-w-0" 
+                                        <Link
+                                            class="group flex-1 min-w-0"
                                             :href="route('task.show', session.task_id)"
                                         >
                                             <div class="flex items-center space-x-2 min-w-0">
@@ -156,7 +156,7 @@
                                         </Link>
                                     </div>
                                 </td>
-                                
+
                                 <!-- Time Range Column -->
                                 <td class="px-6 py-2 text-right transition-colors duration-150" rowspan="2">
                                     <div class="text-sm text-gray-600">
@@ -167,14 +167,14 @@
                                         </div>
                                     </div>
                                 </td>
-                                
+
                                 <!-- Duration Column -->
                                 <td class="px-6 py-2 text-right transition-colors duration-150" rowspan="2">
                                     <div class="text-sm font-mono font-semibold text-gray-900">
                                         <timer :initial-time="session.durationInSeconds" :is-paused="!session.isRunning"></timer>
                                     </div>
                                 </td>
-                                
+
                                 <!-- Actions Column -->
                                 <td class="px-6 py-2 text-right w-16 transition-colors duration-150" rowspan="2">
                                     <actions-dropdown
@@ -183,7 +183,7 @@
                                     ></actions-dropdown>
                                 </td>
                             </tr>
-                            
+
                             <!-- Second Row: Context Links -->
                             <tr 
                                 :class="[rowClasses(session), 'border-b border-gray-200 session-row transition-colors duration-150', { 'bg-gray-50': hoveredSessionId === session.id }]"
@@ -192,10 +192,10 @@
                                 @mouseleave="hoveredSessionId = null"
                             >
                                 <!-- Context Links Column -->
-                                <td class="px-6 py-1 text-xs transition-colors duration-150" colspan="3">
+                                <td class="pr-6 py-1 text-xs transition-colors duration-150" colspan="3">
                                     <div class="flex items-center whitespace-nowrap gap-1">
                                         <!-- Client -->
-                                        <div class="w-1/5 min-w-0">
+                                        <div class="min-w-0">
                                             <Link 
                                                 v-if="session.client_id != null" 
                                                 class="text-blue-600 hover:text-blue-800 transition-colors duration-150 min-w-0" 
@@ -206,7 +206,7 @@
                                         </div>
                                         
                                         <!-- Project -->
-                                        <div class="w-1/5 min-w-0">
+                                        <div class="min-w-0">
                                             <Link 
                                                 v-if="session.project_id != null" 
                                                 class="text-indigo-600 hover:text-indigo-800 transition-colors duration-150 min-w-0" 
@@ -217,7 +217,7 @@
                                         </div>
                                         
                                         <!-- Sprint -->
-                                        <div class="w-1/5 min-w-0">
+                                        <div class="min-w-0">
                                             <Link 
                                                 v-if="session.sprint_id != null" 
                                                 class="text-purple-600 hover:text-purple-800 transition-colors duration-150 min-w-0" 
@@ -228,7 +228,7 @@
                                         </div>
                                         
                                         <!-- Invoice -->
-                                        <div class="w-1/5 min-w-0">
+                                        <div class="min-w-0">
                                             <Link 
                                                 v-if="session.invoice_id != null" 
                                                 class="text-teal-600 hover:text-teal-800 transition-colors duration-150 min-w-0" 
@@ -239,7 +239,7 @@
                                         </div>
                                         
                                         <!-- Billable -->
-                                        <div class="w-1/5 min-w-0">
+                                        <div class="min-w-0">
                                             <div v-if="session.is_billable" class="text-green-600 min-w-0">
                                                 <span class="truncate text-xs">Billable</span>
                                             </div>
