@@ -104,7 +104,7 @@ class HomeController extends Controller
                     'actual' => Session::whereThisWeek()->whereNotBillable()->get()->totalDurationInSeconds(),
                     'target' => Target::whereForThisWeek()->whereNotBillableOnly()->get()->totalValueInSeconds(),
                 ],
-                'days' => collect($this->dateTimeFormatter::DAYS_OF_WEEK)->mapWithKeys(function (string $day) use ($currentSession): array {
+                'days' => \Illuminate\Support\Collection::make($this->dateTimeFormatter::DAYS_OF_WEEK)->mapWithKeys(function (string $day) use ($currentSession): array {
                     $date = $this->dateTimeFormatter->dayThisWeek(strtolower($day));
 
                     return [

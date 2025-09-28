@@ -42,6 +42,8 @@ class Target extends Model
      * Create a new Eloquent Collection instance.
      *
      * @param array<int, \App\Models\Target> $models
+     * @return \App\Models\Collections\TargetCollection
+     * @phpstan-return \App\Models\Collections\TargetCollection
      */
     public function newCollection(array $models = []): TargetCollection
     {

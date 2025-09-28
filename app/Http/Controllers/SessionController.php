@@ -47,7 +47,7 @@ class SessionController extends Controller
         });
 
         /** @var \Illuminate\Support\Collection<int, array{date: string, sessions: \Illuminate\Support\Collection<int, \App\Models\Session>, totalDurationForHumans: string}> $days */
-        $days = $groupedSessions->map(function ($sessionsOnDay, $date): array {
+        $days = $groupedSessions->map(function (\Illuminate\Support\Collection $sessionsOnDay, string $date): array {
             return [
                 'date'                   => $date,
                 'sessions'               => $sessionsOnDay,

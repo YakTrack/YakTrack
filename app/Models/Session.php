@@ -13,10 +13,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @method static \Illuminate\Database\Eloquent\Builder whereThisWeek()
- * @method static \Illuminate\Database\Eloquent\Builder whereBillable()
- * @method static \Illuminate\Database\Eloquent\Builder whereNotBillable()
- * @method static \Illuminate\Database\Eloquent\Builder whereOnDayThisWeek(string $day)
+ * @method static \Illuminate\Database\Eloquent\Builder<\App\Models\Session> whereThisWeek()
+ * @method static \Illuminate\Database\Eloquent\Builder<\App\Models\Session> whereBillable()
+ * @method static \Illuminate\Database\Eloquent\Builder<\App\Models\Session> whereNotBillable()
+ * @method static \Illuminate\Database\Eloquent\Builder<\App\Models\Session> whereOnDayThisWeek(string $day)
+ * @property-read bool $isRunning
  */
 class Session extends Model
 {
@@ -369,8 +370,8 @@ class Session extends Model
      * Create a new Eloquent Collection instance.
      *
      * @param array<int, \App\Models\Session> $models
-     *
      * @return \App\Models\Collections\SessionCollection
+     * @phpstan-return \App\Models\Collections\SessionCollection
      */
     public function newCollection(array $models = []): SessionCollection
     {

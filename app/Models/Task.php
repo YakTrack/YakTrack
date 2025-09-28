@@ -25,6 +25,8 @@ class Task extends Model
      * Create a new Eloquent Collection instance.
      *
      * @param array<int, \App\Models\Task> $models
+     * @return \App\Models\Collections\TaskCollection
+     * @phpstan-return \App\Models\Collections\TaskCollection
      */
     public function newCollection(array $models = []): TaskCollection
     {

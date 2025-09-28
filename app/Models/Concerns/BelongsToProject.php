@@ -10,7 +10,7 @@ trait BelongsToProject
     use HasRelations;
 
     /**
-     * @return BelongsTo<Project, static>
+     * @return BelongsTo<Project, $this>
      */
     public function project(): BelongsTo
     {

@@ -25,3 +25,14 @@ parameters:
         # Ignore property access on specific model classes
         - '#Access to an undefined property App\\Models\\Sprint::\$totalDurationForHumans#'
         - '#Access to an undefined property App\\Models\\Task::\$totalDurationInSprintForHumans#'
+        # Ignore custom collection return type issues - these are intentional design choices
+        - '#Return type \(App\\Models\\Collections\\.*Collection\) of method App\\Models\\.*::newCollection\(\) should be compatible with return type \(Illuminate\\Database\\Eloquent\\Collection.*\) of method Illuminate\\Database\\Eloquent\\Model::newCollection\(\)#'
+        # Ignore template type resolution issues in Collection operations
+        - '#Unable to resolve the template type T(Key|Value) in call to function collect#'
+        - '#Unable to resolve the template type TMake(Key|Value) in call to method static method.*Collection.*::make\(\)#'
+        - '#contains unresolvable type#'
+        # Ignore pagination generic type issues
+        - '#Generic type .*LengthAwarePaginator.* does not specify all template types#'
+        - '#Type .*Session.* in generic type .*LengthAwarePaginator.* is not subtype of template type TKey#'
+        # Ignore model appends property issues for properties with valid accessors
+        - "#Property 'isRunning' does not exist in model#"

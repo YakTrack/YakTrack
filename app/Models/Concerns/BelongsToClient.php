@@ -10,7 +10,7 @@ trait BelongsToClient
     use HasRelations;
 
     /**
-     * @return BelongsTo<Client, static>
+     * @return BelongsTo<Client, $this>
      */
     public function client(): BelongsTo
     {
