@@ -17,7 +17,7 @@ it('stops the session when stop_session is called', function () {
 
     expect($session->isRunning())->toBeFalse();
 
-    $this->seeInDatabase('sessions', [
+    $this->assertDatabaseHas('sessions', [
         'id'         => $session->id,
         'started_at' => '2018-01-01 00:00:00',
         'ended_at'   => '2018-01-01 00:10:00',

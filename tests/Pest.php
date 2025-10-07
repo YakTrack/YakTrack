@@ -19,7 +19,7 @@ pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Unit/Support', 'Unit/Statistics', 'Unit/Models');
 
-pest()->extend(BrowserKitTestCase::class)
+pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Unit/SessionTest.php');
 
