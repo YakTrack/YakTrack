@@ -13,6 +13,7 @@ public/webfonts/
 .phpunit.cache
 playwright-report
 test-results
+tests/Browser/Screenshots
 public/build/assets
 public/build
 public/hot

@@ -23,6 +23,16 @@ pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Unit/SessionTest.php');
 
+// Browser testing configuration
+pest()->extend(Tests\TestCase::class)
+    ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
+    ->in('Browser');
+
+pest()->browser()
+    ->timeout(10000)
+    ->headed(false)
+    ->inChrome();
+
 /*
 |--------------------------------------------------------------------------
 | Expectations
