@@ -1,54 +1,41 @@
 <?php
 
-namespace Tests\Feature\Project;
-
 use App\Models\Client;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class CreateProjectTest extends TestCase
-{
-    use RefreshDatabase;
+it('can visit the create project page', function () {
+    $client = Client::factory()->create([
+        'name' => 'O\'Reilly Apostropheson',
+    ]);
 
-    /** @test */
-    public function a_user_can_visit_the_create_project_page()
-    {
-        $client = Client::factory()->create([
-            'name' => 'O\'Reilly Apostropheson',
-        ]);
+    $this->withoutExceptionHandling();
 
-        $this->withoutExceptionHandling();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->get(route('project.create'));
 
-        $response = $this->get(route('project.create'));
+    $response->assertSuccessful();
 
-        $response->assertSuccessful();
+    $response->assertSee($client->name);
+});
 
-        $response->assertSee($client->name);
-    }
+it('can submit a post request to create a project', function () {
+    $client = Client::factory()->create();
 
-    /** @test */
-    public function a_user_can_submit_a_post_request_to_create_a_project()
-    {
-        $client = Client::factory()->create();
+    $this->withoutExceptionHandling();
 
-        $this->withoutExceptionHandling();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->post(route('project.store'), [
+        'name'        => 'Test Project',
+        'description' => 'Test project description.',
+        'client_id'   => $client->id,
+    ]);
 
-        $response = $this->post(route('project.store'), [
-            'name'        => 'Test Project',
-            'description' => 'Test project description.',
-            'client_id'   => $client->id,
-        ]);
+    $response->assertRedirect(route('project.index'));
 
-        $response->assertRedirect(route('project.index'));
-
-        $this->assertDatabaseHas('projects', [
-            'name'        => 'Test Project',
-            'description' => 'Test project description.',
-            'client_id'   => $client->id,
-        ]);
-    }
-}
+    $this->assertDatabaseHas('projects', [
+        'name'        => 'Test Project',
+        'description' => 'Test project description.',
+        'client_id'   => $client->id,
+    ]);
+});

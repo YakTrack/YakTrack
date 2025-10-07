@@ -1,113 +1,100 @@
 <?php
 
-namespace Tests\Feature\Task\Session;
-
 use App\Models\Project;
 use App\Models\Session;
 use App\Models\SessionCategory;
 use App\Models\Sprint;
 use App\Models\Task;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
-use Tests\TestCase;
 
-class ContinueSessionTest extends TestCase
-{
-    use RefreshDatabase;
+it('can create a new session with the same details as an existing session', function () {
+    $this->withoutExceptionHandling();
+    $this->usingTestDisplayTimeZone();
+    Carbon::setTestNow($now = '2021-01-01 00:00:00');
 
-    /** @test */
-    public function a_user_can_create_a_new_session_with_the_same_details_as_an_existing_session()
-    {
-        $this->withoutExceptionHandling();
-        $this->usingTestDisplayTimeZone();
-        Carbon::setTestNow($now = '2021-01-01 00:00:00');
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $project = Project::factory()->create();
+    $previousSprint = Sprint::factory()->create([
+        'project_id' => $project->id,
+        'is_open'    => 0,
+    ]);
+    $currentSprint = Sprint::factory()->create([
+        'project_id' => $project->id,
+        'is_open'    => 1,
+    ]);
+    $sessionCategory = SessionCategory::factory()->create();
 
-        $project = Project::factory()->create();
-        $previousSprint = Sprint::factory()->create([
-            'project_id' => $project->id,
-            'is_open'    => 0,
-        ]);
-        $currentSprint = Sprint::factory()->create([
-            'project_id' => $project->id,
-            'is_open'    => 1,
-        ]);
-        $sessionCategory = SessionCategory::factory()->create();
+    $task = Task::factory()->create([
+        'project_id' => $project->id,
+    ]);
 
-        $task = Task::factory()->create([
-            'project_id' => $project->id,
-        ]);
+    $existingSession = Session::factory()->create([
+        'task_id'               => $task->id,
+        'sprint_id'             => $previousSprint->id,
+        'session_category_id'   => $sessionCategory->id,
+        'is_billable'           => 1,
+    ]);
 
-        $existingSession = Session::factory()->create([
-            'task_id'               => $task->id,
-            'sprint_id'             => $previousSprint->id,
-            'session_category_id'   => $sessionCategory->id,
-            'is_billable'           => 1,
-        ]);
+    $response = $this->post(route('session.continue', [
+        'session' => $existingSession,
+    ]));
 
-        $response = $this->post(route('session.continue', [
-            'session' => $existingSession,
-        ]));
+    $response->assertRedirect(route('session.index'));
 
-        $response->assertRedirect(route('session.index'));
+    $session = Session::orderBy('id', 'desc')->first();
 
-        $session = Session::orderBy('id', 'desc')->first();
+    $this->assertDatabaseHas('sessions', [
+        'id'                    => $session->id,
+        'task_id'               => $existingSession->task->id,
+        'is_billable'           => 1,
+        'started_at'            => $now,
+        'ended_at'              => null,
+        'sprint_id'             => $currentSprint->id,
+        'session_category_id'   => $sessionCategory->id,
+    ]);
+});
 
-        $this->assertDatabaseHas('sessions', [
-            'id'                    => $session->id,
-            'task_id'               => $existingSession->task->id,
-            'is_billable'           => 1,
-            'started_at'            => $now,
-            'ended_at'              => null,
-            'sprint_id'             => $currentSprint->id,
-            'session_category_id'   => $sessionCategory->id,
-        ]);
-    }
+it('can create a new session with the same details as an existing session when there is no open sprint', function () {
+    $this->withoutExceptionHandling();
+    $this->usingTestDisplayTimeZone();
+    Carbon::setTestNow($now = '2021-01-01 00:00:00');
 
-    /** @test */
-    public function a_user_can_create_a_new_session_with_the_same_details_as_an_existing_session_when_there_is_no_open_sprint()
-    {
-        $this->withoutExceptionHandling();
-        $this->usingTestDisplayTimeZone();
-        Carbon::setTestNow($now = '2021-01-01 00:00:00');
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $project = Project::factory()->create();
+    $previousSprint = Sprint::factory()->create([
+        'project_id' => $project->id,
+        'is_open'    => 0,
+    ]);
+    $sessionCategory = SessionCategory::factory()->create();
 
-        $project = Project::factory()->create();
-        $previousSprint = Sprint::factory()->create([
-            'project_id' => $project->id,
-            'is_open'    => 0,
-        ]);
-        $sessionCategory = SessionCategory::factory()->create();
+    $task = Task::factory()->create([
+        'project_id' => $project->id,
+    ]);
 
-        $task = Task::factory()->create([
-            'project_id' => $project->id,
-        ]);
+    $existingSession = Session::factory()->create([
+        'task_id'               => $task->id,
+        'sprint_id'             => $previousSprint->id,
+        'session_category_id'   => $sessionCategory->id,
+        'is_billable'           => 1,
+    ]);
 
-        $existingSession = Session::factory()->create([
-            'task_id'               => $task->id,
-            'sprint_id'             => $previousSprint->id,
-            'session_category_id'   => $sessionCategory->id,
-            'is_billable'           => 1,
-        ]);
+    $response = $this->post(route('session.continue', [
+        'session' => $existingSession,
+    ]));
 
-        $response = $this->post(route('session.continue', [
-            'session' => $existingSession,
-        ]));
+    $response->assertRedirect(route('session.index'));
 
-        $response->assertRedirect(route('session.index'));
+    $session = Session::orderBy('id', 'desc')->first();
 
-        $session = Session::orderBy('id', 'desc')->first();
-
-        $this->assertDatabaseHas('sessions', [
-            'id'                    => $session->id,
-            'task_id'               => $existingSession->task->id,
-            'is_billable'           => 1,
-            'started_at'            => $now,
-            'ended_at'              => null,
-            'sprint_id'             => $previousSprint->id,
-            'session_category_id'   => $sessionCategory->id,
-        ]);
-    }
-}
+    $this->assertDatabaseHas('sessions', [
+        'id'                    => $session->id,
+        'task_id'               => $existingSession->task->id,
+        'is_billable'           => 1,
+        'started_at'            => $now,
+        'ended_at'              => null,
+        'sprint_id'             => $previousSprint->id,
+        'session_category_id'   => $sessionCategory->id,
+    ]);
+});

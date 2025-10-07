@@ -1,41 +1,28 @@
 <?php
 
-namespace Tests\Feature\Client;
-
 use App\Models\Client;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class EditClientTest extends TestCase
-{
-    use RefreshDatabase;
+it('can see the page to edit a client', function () {
+    $client = Client::factory()->create();
 
-    /** @test */
-    public function a_user_can_see_the_page_to_edit_a_client()
-    {
-        $client = Client::factory()->create();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->get(route('client.edit', ['client' => $client]));
 
-        $response = $this->get(route('client.edit', ['client' => $client]));
+    $response->assertSuccessful();
+});
 
-        $response->assertSuccessful();
-    }
+it('can submit a put request to update a client', function () {
+    $client = Client::factory()->create();
 
-    /** @test */
-    public function a_user_can_submit_a_put_request_to_update_a_client()
-    {
-        $client = Client::factory()->create();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->put(route('client.update', ['client' => $client]), $newClientDetails = [
+        'name'  => 'New name',
+        'email' => 'test@domain.com',
+    ]);
 
-        $response = $this->put(route('client.update', ['client' => $client]), $newClientDetails = [
-            'name'  => 'New name',
-            'email' => 'test@domain.com',
-        ]);
+    $response->assertRedirect(route('client.index'));
 
-        $response->assertRedirect(route('client.index'));
-
-        $this->assertDatabaseHas('clients', array_merge(['id' => $client->id], $newClientDetails));
-    }
-}
+    $this->assertDatabaseHas('clients', array_merge(['id' => $client->id], $newClientDetails));
+});

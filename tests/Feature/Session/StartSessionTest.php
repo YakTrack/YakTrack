@@ -1,35 +1,24 @@
 <?php
 
-namespace Tests\Feature\Session;
-
 use App\Models\Session;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class StartSessionTest extends TestCase
-{
-    use RefreshDatabase;
+it('can start a session from now with a post request', function () {
+    $previouslyRunningSession = Session::factory()->running()->create();
 
-    /** @test */
-    public function a_user_can_start_a_session_from_now_with_a_post_request()
-    {
-        $previouslyRunningSession = Session::factory()->running()->create();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    Carbon::setTestNow(Carbon::parse('2018-01-01 12:34:56'));
 
-        Carbon::setTestNow(Carbon::parse('2018-01-01 12:34:56'));
+    $response = $this->post(route('session.start'));
 
-        $response = $this->post(route('session.start'));
+    $response->assertRedirect(route('session.index'));
 
-        $response->assertRedirect(route('session.index'));
+    $this->assertDatabaseHas('sessions', [
+        'started_at' => '2018-01-01 12:34:56',
+    ]);
 
-        $this->assertDatabaseHas('sessions', [
-            'started_at' => '2018-01-01 12:34:56',
-        ]);
+    expect($previouslyRunningSession->fresh()->isRunning())->toBeFalse();
 
-        $this->assertFalse($previouslyRunningSession->fresh()->isRunning());
-
-        Carbon::setTestNow();
-    }
-}
+    Carbon::setTestNow();
+});

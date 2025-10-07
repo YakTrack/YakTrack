@@ -1,31 +1,19 @@
 <?php
 
-namespace Tests\Feature\ThirdPartyApplication;
+it('can create a third party application', function () {
+    $this->withoutExceptionHandling();
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+    $this->actingAsUser();
 
-class CreateThirdPartyApplicationTest extends TestCase
-{
-    use RefreshDatabase;
+    $response = $this->post(route('third-party-application.store'), [
+        'type' => 'wrike',
+        'name' => 'Test Wrike Account',
+    ]);
 
-    /** @test */
-    public function a_user_can_create_an_third_party_application()
-    {
-        $this->withoutExceptionHandling();
+    $response->assertRedirect(route('third-party-application.index'));
 
-        $this->actingAsUser();
-
-        $response = $this->post(route('third-party-application.store'), [
-            'type' => 'wrike',
-            'name' => 'Test Wrike Account',
-        ]);
-
-        $response->assertRedirect(route('third-party-application.index'));
-
-        $this->assertDatabaseHas('third_party_applications', [
-            'type' => 'wrike',
-            'name' => 'Test Wrike Account',
-        ]);
-    }
-}
+    $this->assertDatabaseHas('third_party_applications', [
+        'type' => 'wrike',
+        'name' => 'Test Wrike Account',
+    ]);
+});

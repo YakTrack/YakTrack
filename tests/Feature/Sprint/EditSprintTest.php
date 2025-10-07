@@ -1,59 +1,46 @@
 <?php
 
-namespace Tests\Feature\Sprint;
-
 use App\Models\Project;
 use App\Models\Sprint;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class EditSprintTest extends TestCase
-{
-    use RefreshDatabase;
+it('can view the page to edit a sprint', function () {
+    $sprint = Sprint::factory()->create();
 
-    /** @test */
-    public function a_user_can_view_the_page_to_edit_a_sprint()
-    {
-        $sprint = Sprint::factory()->create();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->get(route('sprint.edit', ['sprint' => $sprint]));
 
-        $response = $this->get(route('sprint.edit', ['sprint' => $sprint]));
+    $response->assertSuccessful();
 
-        $response->assertSuccessful();
+    $response->assertSee($sprint->name);
+});
 
-        $response->assertSee($sprint->name);
-    }
+it('can submit a patch request to update a sprint', function () {
+    $this->withoutExceptionHandling();
+    $sprint = Sprint::factory()->create([
+        'is_open' => 0,
+    ]);
 
-    /** @test */
-    public function a_user_can_submit_a_patch_request_to_update_a_sprint()
-    {
-        $this->withoutExceptionHandling();
-        $sprint = Sprint::factory()->create([
-            'is_open' => 0,
-        ]);
+    $newProject = Project::factory()->create();
 
-        $newProject = Project::factory()->create();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->patch(route('sprint.update', ['sprint' => $sprint]), $newSprintDetails = [
+        'name'       => 'New sprint name',
+        'project_id' => $newProject->id,
+        'is_open'    => 'is_open',
+    ]);
 
-        $response = $this->patch(route('sprint.update', ['sprint' => $sprint]), $newSprintDetails = [
-            'name'       => 'New sprint name',
-            'project_id' => $newProject->id,
-            'is_open'    => 'is_open',
-        ]);
+    $response->assertRedirect(route('sprint.index'));
 
-        $response->assertRedirect(route('sprint.index'));
-
-        $this->assertDatabaseHas(
-            'sprints',
-            array_merge(
-                $newSprintDetails,
-                [
-                    'id'      => $sprint->id,
-                    'is_open' => 1,
-                ],
-            )
-        );
-    }
-}
+    $this->assertDatabaseHas(
+        'sprints',
+        array_merge(
+            $newSprintDetails,
+            [
+                'id'      => $sprint->id,
+                'is_open' => 1,
+            ],
+        )
+    );
+});

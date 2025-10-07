@@ -1,89 +1,74 @@
 <?php
 
-namespace Tests\Feature\Session;
-
 use App\Models\Invoice;
 use App\Models\Session;
 use App\Models\Sprint;
 use App\Models\Task;
 use App\Support\DateTimeFormatter;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class CreateSessionTest extends TestCase
-{
-    use RefreshDatabase;
+it('can view the page to create a session', function () {
+    $invoice = Invoice::factory()->create();
+    $sprint = Sprint::factory()->create();
+    $task = Task::factory()->create();
 
-    /** @test */
-    public function a_user_can_view_the_page_to_create_a_session()
-    {
-        $invoice = Invoice::factory()->create();
-        $sprint = Sprint::factory()->create();
-        $task = Task::factory()->create();
+    $this->withoutExceptionHandling();
 
-        $this->withoutExceptionHandling();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->get(route('session.create'));
 
-        $response = $this->get(route('session.create'));
+    $response->assertSuccessful();
 
-        $response->assertSuccessful();
+    $response->assertSee($invoice->number);
+    $response->assertSee($sprint->name);
+    $response->assertSee($task->name);
+});
 
-        $response->assertSee($invoice->number);
-        $response->assertSee($sprint->name);
-        $response->assertSee($task->name);
-    }
+it('can create a session with a post request', function () {
+    $invoice = Invoice::factory()->create();
+    $sprint = Sprint::factory()->create();
+    $task = Task::factory()->create();
 
-    /** @test */
-    public function a_user_can_create_a_session_with_a_post_request()
-    {
-        $invoice = Invoice::factory()->create();
-        $sprint = Sprint::factory()->create();
-        $task = Task::factory()->create();
+    $this->withoutExceptionHandling();
 
-        $this->withoutExceptionHandling();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->post(route('session.store'), [
+        'started_at'    => '2018-01-01 12:34:56',
+        'ended_at'      => '2018-01-01 12:34:57',
+        'sprint_id'     => $sprint->id,
+        'invoice_id'    => $invoice->id,
+        'task_id'       => $task->id,
+    ]);
 
-        $response = $this->post(route('session.store'), [
-            'started_at'    => '2018-01-01 12:34:56',
-            'ended_at'      => '2018-01-01 12:34:57',
-            'sprint_id'     => $sprint->id,
-            'invoice_id'    => $invoice->id,
-            'task_id'       => $task->id,
-        ]);
+    $response->assertRedirect(route('session.index'));
 
-        $response->assertRedirect(route('session.index'));
+    $this->assertDatabaseHas('sessions', [
+        'started_at'    => app(DateTimeFormatter::class)->utcFormat('2018-01-01 12:34:56'),
+        'ended_at'      => app(DateTimeFormatter::class)->utcFormat('2018-01-01 12:34:57'),
+        'sprint_id'     => $sprint->id,
+        'invoice_id'    => $invoice->id,
+        'task_id'       => $task->id,
+    ]);
+});
 
-        $this->assertDatabaseHas('sessions', [
-            'started_at'    => app(DateTimeFormatter::class)->utcFormat('2018-01-01 12:34:56'),
-            'ended_at'      => app(DateTimeFormatter::class)->utcFormat('2018-01-01 12:34:57'),
-            'sprint_id'     => $sprint->id,
-            'invoice_id'    => $invoice->id,
-            'task_id'       => $task->id,
-        ]);
-    }
+it('can create a session with a post request with the minimum required fields', function () {
+    $previouslyRunningSession = Session::factory()->running()->create();
 
-    /** @test */
-    public function a_user_can_create_a_session_with_a_post_request_with_the_minimum_required_fields()
-    {
-        $previouslyRunningSession = Session::factory()->running()->create();
+    $this->withoutExceptionHandling();
 
-        $this->withoutExceptionHandling();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->post(route('session.store'), [
+        'started_at' => '2018-01-01 12:34:56',
+    ]);
 
-        $response = $this->post(route('session.store'), [
-            'started_at' => '2018-01-01 12:34:56',
-        ]);
+    $response->assertRedirect(route('session.index'));
 
-        $response->assertRedirect(route('session.index'));
+    $this->assertDatabaseHas('sessions', [
+        'started_at' => app(DateTimeFormatter::class)->utcFormat('2018-01-01 12:34:56'),
+        'ended_at'   => null,
+    ]);
 
-        $this->assertDatabaseHas('sessions', [
-            'started_at' => app(DateTimeFormatter::class)->utcFormat('2018-01-01 12:34:56'),
-            'ended_at'   => null,
-        ]);
-
-        $this->assertFalse($previouslyRunningSession->fresh()->isRunning);
-    }
-}
+    expect($previouslyRunningSession->fresh()->isRunning)->toBeFalse();
+});

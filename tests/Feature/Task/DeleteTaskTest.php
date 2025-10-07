@@ -1,30 +1,19 @@
 <?php
 
-namespace Tests\Feature\Task;
-
 use App\Models\Task;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class DeleteTaskTest extends TestCase
-{
-    use RefreshDatabase;
+it('can delete a task', function () {
+    $task = Task::factory()->create(['name' => 'Test Task']);
 
-    /** @test */
-    public function a_user_can_delete_a_task()
-    {
-        $task = Task::factory()->create(['name' => 'Test Task']);
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->delete(route('task.destroy', [
+        'task' => $task,
+    ]));
 
-        $response = $this->delete(route('task.destroy', [
-            'task' => $task,
-        ]));
+    $response->assertRedirect(route('task.index'));
 
-        $response->assertRedirect(route('task.index'));
-
-        $this->assertDatabaseMissing('tasks', [
-            'id' => $task->id,
-        ]);
-    }
-}
+    $this->assertDatabaseMissing('tasks', [
+        'id' => $task->id,
+    ]);
+});

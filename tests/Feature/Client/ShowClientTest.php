@@ -1,29 +1,18 @@
 <?php
 
-namespace Tests\Feature\Client;
-
 use App\Models\Client;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class ShowClientTest extends TestCase
-{
-    use RefreshDatabase;
+it('can see a single client', function () {
+    $client = Client::factory()->create([
+        'name' => 'Joseph O\'Conner',
+    ]);
 
-    /** @test */
-    public function a_user_can_see_a_single_client()
-    {
-        $client = Client::factory()->create([
-            'name' => 'Joseph O\'Conner',
-        ]);
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->get(route('client.show', ['client' => $client]));
 
-        $response = $this->get(route('client.show', ['client' => $client]));
+    $response->assertSuccessful();
 
-        $response->assertSuccessful();
-
-        $response->assertSee($client->name);
-        $response->assertSee($client->email);
-    }
-}
+    $response->assertSee($client->name);
+    $response->assertSee($client->email);
+});

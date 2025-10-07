@@ -1,41 +1,28 @@
 <?php
 
-namespace Tests\Feature\TaskStatus;
-
 use App\Models\Project;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class CreateTaskStatusTest extends TestCase
-{
-    use RefreshDatabase;
+it('can visit create task status page', function () {
+    $this->actingAsUser();
 
-    /** @test */
-    public function a_user_can_visit_create_task_status_page()
-    {
-        $this->actingAsUser();
+    $project = Project::factory()->create();
 
-        $project = Project::factory()->create();
+    $response = $this->get(route('task-status.create', ['project_id' => $project->id]));
 
-        $response = $this->get(route('task-status.create', ['project_id' => $project->id]));
+    $response->assertStatus(200);
+    $response->assertHasProp('projects');
+    $response->assertHasProp('project');
 
-        $response->assertStatus(200);
-        $response->assertHasProp('projects');
-        $response->assertHasProp('project');
+    $projectData = $response->props('project');
+    expect($projectData['id'])->toBe($project->id);
+});
 
-        $projectData = $response->props('project');
-        $this->assertEquals($project->id, $projectData['id']);
-    }
+it('can visit create task status page without project id', function () {
+    $this->actingAsUser();
 
-    /** @test */
-    public function a_user_can_visit_create_task_status_page_without_project_id()
-    {
-        $this->actingAsUser();
+    $response = $this->get(route('task-status.create'));
 
-        $response = $this->get(route('task-status.create'));
-
-        $response->assertStatus(200);
-        $response->assertHasProp('projects');
-        $response->assertPropValue('project', null);
-    }
-}
+    $response->assertStatus(200);
+    $response->assertHasProp('projects');
+    $response->assertPropValue('project', null);
+});

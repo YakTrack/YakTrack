@@ -1,187 +1,166 @@
 <?php
 
-namespace Tests\Feature\TaskStatus;
-
 use App\Models\Project;
 use App\Models\TaskStatus;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class IndexTaskStatusTest extends TestCase
-{
-    use RefreshDatabase;
+it('can list task statuses for a specific project', function () {
+    $this->withoutExceptionHandling();
+    $this->actingAsUser();
 
-    /** @test */
-    public function a_user_can_list_task_statuses_for_a_specific_project()
-    {
-        $this->withoutExceptionHandling();
-        $this->actingAsUser();
+    $project1 = Project::factory()->create(['name' => 'Project One']);
+    $project2 = Project::factory()->create(['name' => 'Project Two']);
 
-        $project1 = Project::factory()->create(['name' => 'Project One']);
-        $project2 = Project::factory()->create(['name' => 'Project Two']);
+    $status1 = TaskStatus::factory()->create([
+        'name'       => 'To Do',
+        'project_id' => $project1->id,
+        'sort_order' => 1,
+    ]);
 
-        $status1 = TaskStatus::factory()->create([
+    $status2 = TaskStatus::factory()->create([
+        'name'       => 'In Progress',
+        'project_id' => $project1->id,
+        'sort_order' => 2,
+    ]);
+
+    // Status for different project
+    $status3 = TaskStatus::factory()->create([
+        'name'       => 'Done',
+        'project_id' => $project2->id,
+        'sort_order' => 1,
+    ]);
+
+    $response = $this->get(route('task-status.index', ['project_id' => $project1->id]));
+
+    $response->assertStatus(200);
+
+    $response->assertPropCount('taskStatuses', 2); // Only 2 statuses for project1
+
+    $taskStatuses = $response->props('taskStatuses');
+
+    $this->assertArrayMatches([
+        [
+            'id'         => $status1->id,
             'name'       => 'To Do',
             'project_id' => $project1->id,
             'sort_order' => 1,
-        ]);
-
-        $status2 = TaskStatus::factory()->create([
+        ],
+        [
+            'id'         => $status2->id,
             'name'       => 'In Progress',
             'project_id' => $project1->id,
             'sort_order' => 2,
-        ]);
+        ],
+    ], $taskStatuses);
 
-        // Status for different project
-        $status3 = TaskStatus::factory()->create([
-            'name'       => 'Done',
-            'project_id' => $project2->id,
-            'sort_order' => 1,
-        ]);
+    // Ensure the other project's status is not included
+    $foundStatus3 = collect($taskStatuses)->contains('id', $status3->id);
+    expect($foundStatus3)->toBeFalse('Status from different project should not be included');
+});
 
-        $response = $this->get(route('task-status.index', ['project_id' => $project1->id]));
+it('returns task statuses ordered by sort order', function () {
+    $this->actingAsUser();
 
-        $response->assertStatus(200);
+    $project = Project::factory()->create();
 
-        $response->assertPropCount('taskStatuses', 2); // Only 2 statuses for project1
+    TaskStatus::factory()->create([
+        'name'       => 'Last',
+        'project_id' => $project->id,
+        'sort_order' => 3,
+    ]);
 
-        $taskStatuses = $response->props('taskStatuses');
+    TaskStatus::factory()->create([
+        'name'       => 'First',
+        'project_id' => $project->id,
+        'sort_order' => 1,
+    ]);
 
-        $this->assertArrayMatches([
-            [
-                'id'         => $status1->id,
-                'name'       => 'To Do',
-                'project_id' => $project1->id,
-                'sort_order' => 1,
-            ],
-            [
-                'id'         => $status2->id,
-                'name'       => 'In Progress',
-                'project_id' => $project1->id,
-                'sort_order' => 2,
-            ],
-        ], $taskStatuses);
+    TaskStatus::factory()->create([
+        'name'       => 'Middle',
+        'project_id' => $project->id,
+        'sort_order' => 2,
+    ]);
 
-        // Ensure the other project's status is not included
-        $foundStatus3 = collect($taskStatuses)->contains('id', $status3->id);
-        $this->assertFalse($foundStatus3, 'Status from different project should not be included');
-    }
+    $response = $this->get(route('task-status.index', ['project_id' => $project->id]));
 
-    /** @test */
-    public function task_statuses_are_returned_ordered_by_sort_order()
-    {
-        $this->actingAsUser();
+    $response->assertStatus(200);
 
-        $project = Project::factory()->create();
+    $taskStatuses = $response->props('taskStatuses');
 
-        TaskStatus::factory()->create([
-            'name'       => 'Last',
-            'project_id' => $project->id,
-            'sort_order' => 3,
-        ]);
+    expect($taskStatuses[0]['name'])->toBe('First');
+    expect($taskStatuses[1]['name'])->toBe('Middle');
+    expect($taskStatuses[2]['name'])->toBe('Last');
+});
 
-        TaskStatus::factory()->create([
-            'name'       => 'First',
-            'project_id' => $project->id,
-            'sort_order' => 1,
-        ]);
+it('can list all task statuses when no project id is provided', function () {
+    $this->actingAsUser();
 
-        TaskStatus::factory()->create([
-            'name'       => 'Middle',
-            'project_id' => $project->id,
-            'sort_order' => 2,
-        ]);
+    $project1 = Project::factory()->create(['name' => 'Project One']);
+    $project2 = Project::factory()->create(['name' => 'Project Two']);
 
-        $response = $this->get(route('task-status.index', ['project_id' => $project->id]));
+    TaskStatus::factory()->create([
+        'name'       => 'Status 1',
+        'project_id' => $project1->id,
+    ]);
 
-        $response->assertStatus(200);
+    TaskStatus::factory()->create([
+        'name'       => 'Status 2',
+        'project_id' => $project2->id,
+    ]);
 
-        $taskStatuses = $response->props('taskStatuses');
+    $response = $this->get(route('task-status.index'));
 
-        $this->assertEquals('First', $taskStatuses[0]['name']);
-        $this->assertEquals('Middle', $taskStatuses[1]['name']);
-        $this->assertEquals('Last', $taskStatuses[2]['name']);
-    }
+    $response->assertStatus(200);
 
-    /** @test */
-    public function a_user_can_list_all_task_statuses_when_no_project_id_is_provided()
-    {
-        $this->actingAsUser();
+    $response->assertPropCount('taskStatuses', 2); // Both statuses should be returned
 
-        $project1 = Project::factory()->create(['name' => 'Project One']);
-        $project2 = Project::factory()->create(['name' => 'Project Two']);
+    $taskStatuses = $response->props('taskStatuses');
 
-        TaskStatus::factory()->create([
-            'name'       => 'Status 1',
-            'project_id' => $project1->id,
-        ]);
+    // Should include project relationship
+    expect($taskStatuses[0])->toHaveKey('id');
+    expect($taskStatuses[0])->toHaveKey('name');
+    expect($taskStatuses[0])->toHaveKey('color');
+    expect($taskStatuses[0])->toHaveKey('sort_order');
+    expect($taskStatuses[0])->toHaveKey('is_default');
+    expect($taskStatuses[0])->toHaveKey('is_completed');
+    expect($taskStatuses[0])->toHaveKey('project_id');
+    expect($taskStatuses[0])->toHaveKey('created_at');
+    expect($taskStatuses[0])->toHaveKey('updated_at');
+    expect($taskStatuses[0])->toHaveKey('project');
+    expect($taskStatuses[0]['project'])->toHaveKey('id');
+    expect($taskStatuses[0]['project'])->toHaveKey('name');
+});
 
-        TaskStatus::factory()->create([
-            'name'       => 'Status 2',
-            'project_id' => $project2->id,
-        ]);
+it('cannot list task statuses when unauthenticated', function () {
+    $project = Project::factory()->create();
 
-        $response = $this->get(route('task-status.index'));
+    TaskStatus::factory()->create([
+        'project_id' => $project->id,
+    ]);
 
-        $response->assertStatus(200);
+    $response = $this->get(route('task-status.index'));
 
-        $response->assertPropCount('taskStatuses', 2); // Both statuses should be returned
+    $response->assertStatus(302); // Redirect to login
+    $response->assertRedirect(route('login'));
+});
 
-        $taskStatuses = $response->props('taskStatuses');
+it('returns empty result for project with no statuses', function () {
+    $this->actingAsUser();
 
-        // Should include project relationship
-        $this->assertArrayHasKey('id', $taskStatuses[0]);
-        $this->assertArrayHasKey('name', $taskStatuses[0]);
-        $this->assertArrayHasKey('color', $taskStatuses[0]);
-        $this->assertArrayHasKey('sort_order', $taskStatuses[0]);
-        $this->assertArrayHasKey('is_default', $taskStatuses[0]);
-        $this->assertArrayHasKey('is_completed', $taskStatuses[0]);
-        $this->assertArrayHasKey('project_id', $taskStatuses[0]);
-        $this->assertArrayHasKey('created_at', $taskStatuses[0]);
-        $this->assertArrayHasKey('updated_at', $taskStatuses[0]);
-        $this->assertArrayHasKey('project', $taskStatuses[0]);
-        $this->assertArrayHasKey('id', $taskStatuses[0]['project']);
-        $this->assertArrayHasKey('name', $taskStatuses[0]['project']);
-    }
+    $project = Project::factory()->create();
 
-    /** @test */
-    public function unauthenticated_users_cannot_list_task_statuses()
-    {
-        $project = Project::factory()->create();
+    $response = $this->get(route('task-status.index', ['project_id' => $project->id]));
 
-        TaskStatus::factory()->create([
-            'project_id' => $project->id,
-        ]);
+    $response->assertStatus(200);
+    $response->assertPropCount('taskStatuses', 0);
 
-        $response = $this->get(route('task-status.index'));
+    $taskStatuses = $response->props('taskStatuses');
+    expect($taskStatuses)->toBe([]);
+});
 
-        $response->assertStatus(302); // Redirect to login
-        $response->assertRedirect(route('login'));
-    }
+it('returns 404 for nonexistent project id', function () {
+    $this->actingAsUser();
 
-    /** @test */
-    public function empty_result_is_returned_for_project_with_no_statuses()
-    {
-        $this->actingAsUser();
+    $response = $this->get(route('task-status.index', ['project_id' => 99999]));
 
-        $project = Project::factory()->create();
-
-        $response = $this->get(route('task-status.index', ['project_id' => $project->id]));
-
-        $response->assertStatus(200);
-        $response->assertPropCount('taskStatuses', 0);
-
-        $taskStatuses = $response->props('taskStatuses');
-        $this->assertEquals([], $taskStatuses);
-    }
-
-    /** @test */
-    public function nonexistent_project_id_returns_404()
-    {
-        $this->actingAsUser();
-
-        $response = $this->get(route('task-status.index', ['project_id' => 99999]));
-
-        $response->assertStatus(404);
-    }
-}
+    $response->assertStatus(404);
+});

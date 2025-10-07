@@ -1,39 +1,28 @@
 <?php
 
-namespace Tests\Feature\Session;
-
 use App\Models\Session;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class EndSessionTest extends TestCase
-{
-    use RefreshDatabase;
+it('can end a session with a post request', function () {
+    Carbon::setTestNow(Carbon::parse('2018-01-01 00:10:00'));
 
-    /** @test */
-    public function a_user_can_end_a_session_with_a_post_request()
-    {
-        Carbon::setTestNow(Carbon::parse('2018-01-01 00:10:00'));
+    $this->withoutExceptionHandling();
 
-        $this->withoutExceptionHandling();
+    $session = Session::factory()->create([
+        'started_at' => '2018-01-01 00:00:00',
+        'ended_at'   => null,
+    ]);
 
-        $session = Session::factory()->create([
-            'started_at' => '2018-01-01 00:00:00',
-            'ended_at'   => null,
-        ]);
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->post(route('session.stop'));
 
-        $response = $this->post(route('session.stop'));
+    $response->assertRedirect(route('session.index'));
 
-        $response->assertRedirect(route('session.index'));
+    $this->assertDatabaseHas('sessions', [
+        'started_at' => '2018-01-01 00:00:00',
+        'ended_at'   => '2018-01-01 00:10:00',
+    ]);
 
-        $this->assertDatabaseHas('sessions', [
-            'started_at' => '2018-01-01 00:00:00',
-            'ended_at'   => '2018-01-01 00:10:00',
-        ]);
-
-        Carbon::setTestNow();
-    }
-}
+    Carbon::setTestNow();
+});

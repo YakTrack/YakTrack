@@ -1,26 +1,15 @@
 <?php
 
-namespace Tests\Feature\Session;
-
 use App\Models\Target;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class IndexTargetTest extends TestCase
-{
-    use RefreshDatabase;
+it('can load the target index page', function () {
+    $target = Target::factory()->create();
 
-    /** @test */
-    public function a_user_can_load_the_target_index_page()
-    {
-        $target = Target::factory()->create();
+    $this->withoutExceptionHandling();
 
-        $this->withoutExceptionHandling();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->get(route('target.index'));
 
-        $response = $this->get(route('target.index'));
-
-        $response->assertSuccessful();
-    }
-}
+    $response->assertSuccessful();
+});

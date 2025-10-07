@@ -1,159 +1,140 @@
 <?php
 
-namespace Tests\Feature\Session;
-
 use App\Models\Invoice;
 use App\Models\Session;
 use App\Models\SessionCategory;
 use App\Models\Sprint;
 use App\Models\Task;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class EditSessionTest extends TestCase
-{
-    use RefreshDatabase;
+it('can load the page to edit a session', function () {
+    $this->withoutExceptionHandling();
 
-    /** @test */
-    public function a_user_can_load_the_page_to_edit_a_session()
-    {
-        $this->withoutExceptionHandling();
+    $session = Session::factory()->create();
 
-        $session = Session::factory()->create();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->get(route('session.edit', ['session' => $session]));
 
-        $response = $this->get(route('session.edit', ['session' => $session]));
+    $response->assertHasProp('session', $session->fresh()->toArray());
+});
 
-        $response->assertHasProp('session', $session->fresh()->toArray());
-    }
+it('can load the page to edit a session in progress', function () {
+    $this->withoutExceptionHandling();
 
-    /** @test */
-    public function a_user_can_load_the_page_to_edit_a_session_in_progress()
-    {
-        $this->withoutExceptionHandling();
+    $session = Session::factory()->create([
+        'ended_at' => null,
+    ]);
 
-        $session = Session::factory()->create([
-            'ended_at' => null,
-        ]);
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->get(route('session.edit', ['session' => $session]));
 
-        $response = $this->get(route('session.edit', ['session' => $session]));
+    $response->assertHasProp('session', $session->fresh()->toArray());
+});
 
-        $response->assertHasProp('session', $session->fresh()->toArray());
-    }
+it('can send a patch request to edit a session', function () {
+    // Default test display timezone is Asutralia/Sydney which corresponds to UTC+11 during
+    // daylight savings in January
+    $this->usingTestDisplayTimeZone();
 
-    /** @test */
-    public function a_user_can_send_a_patch_request_to_edit_a_session()
-    {
-        // Default test display timezone is Asutralia/Sydney which corresponds to UTC+11 during
-        // daylight savings in January
-        $this->usingTestDisplayTimeZone();
+    $this->withoutExceptionHandling();
 
-        $this->withoutExceptionHandling();
+    $session = Session::factory()->create([
+        'started_at' => '2018-01-01 00:00:00',
+        'ended_at'   => '2018-01-01 01:00:00',
+    ]);
 
-        $session = Session::factory()->create([
-            'started_at' => '2018-01-01 00:00:00',
-            'ended_at'   => '2018-01-01 01:00:00',
-        ]);
+    $newTask = Task::factory()->create();
+    $newInvoice = Invoice::factory()->create();
+    $newSprint = Sprint::factory()->create();
+    $sessionCategory = SessionCategory::factory()->create();
 
-        $newTask = Task::factory()->create();
-        $newInvoice = Invoice::factory()->create();
-        $newSprint = Sprint::factory()->create();
-        $sessionCategory = SessionCategory::factory()->create();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->patch(route('session.update', ['session' => $session]), [
+        // Started at and ended at times ae submitted in display timezone
+        'started_at'            => '2018-01-01 12:00:00',
+        // Started at and ended at times are submitted in display timezone
+        'ended_at'              => '2018-01-01 13:00:00',
+        'task_id'               => $newTask->id,
+        'invoice_id'            => $newInvoice->id,
+        'sprint_id'             => $newSprint->id,
+        'session_category_id'   => $sessionCategory->id,
+        'comment'               => $comment = str_random(10),
+    ]);
 
-        $response = $this->patch(route('session.update', ['session' => $session]), [
-            // Started at and ended at times ae submitted in display timezone
-            'started_at'            => '2018-01-01 12:00:00',
-            // Started at and ended at times are submitted in display timezone
-            'ended_at'              => '2018-01-01 13:00:00',
-            'task_id'               => $newTask->id,
-            'invoice_id'            => $newInvoice->id,
-            'sprint_id'             => $newSprint->id,
-            'session_category_id'   => $sessionCategory->id,
-            'comment'               => $comment = str_random(10),
-        ]);
+    $response->assertRedirect(route('session.index'));
 
-        $response->assertRedirect(route('session.index'));
+    $this->assertDatabaseHas('sessions', [
+        'id'                    => $session->id,
+        // Australia/Sydney offset is UTC+11 in January, meaning that the corresponding UTC time for 12:00pm in display timezone
+        // will be 1:00am on the same date
+        'started_at'            => '2018-01-01 01:00:00',
+        // Australia/Sydney offset is UTC+11 in January, meaning that the corresponding UTC time for 1:00pm in display timezone
+        // will be 2:00am on the same date
+        'ended_at'              => '2018-01-01 02:00:00',
+        'task_id'               => $newTask->id,
+        'invoice_id'            => $newInvoice->id,
+        'sprint_id'             => $newSprint->id,
+        'session_category_id'   => $sessionCategory->id,
+        'comment'               => $comment,
+    ]);
+});
 
-        $this->assertDatabaseHas('sessions', [
-            'id'                    => $session->id,
-            // Australia/Sydney offset is UTC+11 in January, meaning that the corresponding UTC time for 12:00pm in display timezone
-            // will be 1:00am on the same date
-            'started_at'            => '2018-01-01 01:00:00',
-            // Australia/Sydney offset is UTC+11 in January, meaning that the corresponding UTC time for 1:00pm in display timezone
-            // will be 2:00am on the same date
-            'ended_at'              => '2018-01-01 02:00:00',
-            'task_id'               => $newTask->id,
-            'invoice_id'            => $newInvoice->id,
-            'sprint_id'             => $newSprint->id,
-            'session_category_id'   => $sessionCategory->id,
-            'comment'               => $comment,
-        ]);
-    }
+it('can send a patch request to edit a session for a session with no task or invoice', function () {
+    $this->usingTestDisplayTimezone('UTC');
+    $this->withoutExceptionHandling();
 
-    /** @test */
-    public function a_user_can_send_a_patch_request_to_edit_a_session_for_a_session_with_no_task_or_invoice()
-    {
-        $this->usingTestDisplayTimezone('UTC');
-        $this->withoutExceptionHandling();
+    $session = Session::factory()->create([
+        'started_at' => '2018-01-01 00:00:00',
+        'ended_at'   => null,
+    ]);
 
-        $session = Session::factory()->create([
-            'started_at' => '2018-01-01 00:00:00',
-            'ended_at'   => null,
-        ]);
+    $newTask = Task::factory()->create();
 
-        $newTask = Task::factory()->create();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->patch(route('session.update', ['session' => $session]), [
+        'task_id'    => '',
+        'started_at' => '2018-01-01 00:00:00',
+        'ended_at'   => '',
+    ]);
 
-        $response = $this->patch(route('session.update', ['session' => $session]), [
-            'task_id'    => '',
-            'started_at' => '2018-01-01 00:00:00',
-            'ended_at'   => '',
-        ]);
+    $response->assertRedirect(route('session.index'));
 
-        $response->assertRedirect(route('session.index'));
+    $this->assertDatabaseHas('sessions', [
+        'id'            => $session->id,
+        'task_id'       => null,
+        'invoice_id'    => null,
+        'started_at'    => '2018-01-01 00:00:00',
+        'ended_at'      => null,
+    ]);
+});
 
-        $this->assertDatabaseHas('sessions', [
-            'id'            => $session->id,
-            'task_id'       => null,
-            'invoice_id'    => null,
-            'started_at'    => '2018-01-01 00:00:00',
-            'ended_at'      => null,
-        ]);
-    }
+it('can edit a session with a json patch request', function () {
+    $this->usingTestDisplayTimeZone('UTC');
+    $this->withoutExceptionHandling();
 
-    /** @test */
-    public function a_user_can_edit_a_session_with_a_json_patch_request()
-    {
-        $this->usingTestDisplayTimeZone('UTC');
-        $this->withoutExceptionHandling();
+    $session = Session::factory()->create([
+        'started_at' => '2018-01-01 00:00:00',
+        'ended_at'   => null,
+    ]);
 
-        $session = Session::factory()->create([
-            'started_at' => '2018-01-01 00:00:00',
-            'ended_at'   => null,
-        ]);
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->json('patch', route('session.update', ['session' => $session]), [
+        'started_at' => '2018-01-01 00:00:00',
+        'ended_at'   => '2018-01-01 12:34:56',
+    ]);
 
-        $response = $this->json('patch', route('session.update', ['session' => $session]), [
-            'started_at' => '2018-01-01 00:00:00',
-            'ended_at'   => '2018-01-01 12:34:56',
-        ]);
+    $response->assertRedirect(route('session.index'));
 
-        $response->assertRedirect(route('session.index'));
+    $this->assertDatabaseHas('sessions', [
+        'id'         => $session->id,
+        'started_at' => '2018-01-01 00:00:00',
+        'ended_at'   => '2018-01-01 12:34:56',
+    ]);
 
-        $this->assertDatabaseHas('sessions', [
-            'id'         => $session->id,
-            'started_at' => '2018-01-01 00:00:00',
-            'ended_at'   => '2018-01-01 12:34:56',
-        ]);
-
-        Carbon::setTestNow();
-    }
-}
+    Carbon::setTestNow();
+});

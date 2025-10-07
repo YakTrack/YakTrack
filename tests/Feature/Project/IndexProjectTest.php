@@ -1,28 +1,17 @@
 <?php
 
-namespace Tests\Feature\Project;
-
 use App\Models\Project;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class IndexProjectTest extends TestCase
-{
-    use RefreshDatabase;
+it('can see a list of projects', function () {
+    $this->withoutExceptionHandling();
 
-    /** @test */
-    public function a_user_can_see_a_list_of_projects()
-    {
-        $this->withoutExceptionHandling();
+    $project = Project::factory()->create();
 
-        $invoice = Project::factory()->create();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->get(route('project.index'));
 
-        $response = $this->get(route('project.index'));
+    $response->assertSuccessful();
 
-        $response->assertSuccessful();
-
-        $response->assertSee($invoice->number);
-    }
-}
+    $response->assertSee($project->name);
+});

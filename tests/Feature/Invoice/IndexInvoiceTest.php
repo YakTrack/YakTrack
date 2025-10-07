@@ -1,28 +1,17 @@
 <?php
 
-namespace Tests\Feature\Invoice;
-
 use App\Models\Invoice;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class IndexInvoiceTest extends TestCase
-{
-    use RefreshDatabase;
+it('can see a list of invoices', function () {
+    $this->withoutExceptionHandling();
 
-    /** @test */
-    public function a_user_can_see_a_list_of_invoices()
-    {
-        $this->withoutExceptionHandling();
+    $invoice = Invoice::factory()->create();
 
-        $invoice = Invoice::factory()->create();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->get(route('invoice.index'));
 
-        $response = $this->get(route('invoice.index'));
+    $response->assertSuccessful();
 
-        $response->assertSuccessful();
-
-        $response->assertSee($invoice->number);
-    }
-}
+    $response->assertSee($invoice->number);
+});

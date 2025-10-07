@@ -1,26 +1,15 @@
 <?php
 
-namespace Tests\Feature\Client;
-
 use App\Models\Client;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class IndexClientTest extends TestCase
-{
-    use RefreshDatabase;
+it('can see a list of clients', function () {
+    $client = Client::factory()->create();
 
-    /** @test */
-    public function a_user_can_see_a_list_of_clients()
-    {
-        $client = Client::factory()->create();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->get(route('client.index'));
 
-        $response = $this->get(route('client.index'));
+    $response->assertSuccessful();
 
-        $response->assertSuccessful();
-
-        $response->assertSee(e($client->name));
-    }
-}
+    $response->assertSee(e($client->name));
+});

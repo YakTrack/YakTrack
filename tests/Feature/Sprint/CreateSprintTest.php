@@ -1,44 +1,31 @@
 <?php
 
-namespace Tests\Feature\Sprint;
-
 use App\Models\Project;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class CreateSprintTest extends TestCase
-{
-    use RefreshDatabase;
+it('can view the form to create a sprint', function () {
+    $project = Project::factory()->create();
 
-    /** @test */
-    public function a_user_can_view_the_form_to_create_a_sprint()
-    {
-        $project = Project::factory()->create();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->get(route('sprint.create'));
 
-        $response = $this->get(route('sprint.create'));
+    $response->assertSuccessful();
 
-        $response->assertSuccessful();
+    $response->assertSee($project->name);
+});
 
-        $response->assertSee($project->name);
-    }
+it('can store a new sprint with a post request', function () {
+    $project = Project::factory()->create();
 
-    /** @test */
-    public function a_user_can_store_a_new_sprint_with_a_post_request()
-    {
-        $project = Project::factory()->create();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->post(route('sprint.store'), $sprintDetails = [
+        'name'       => 'New sprint',
+        'project_id' => $project->id,
+        'is_open'    => array_random([0, 1]),
+    ]);
 
-        $response = $this->post(route('sprint.store'), $sprintDetails = [
-            'name'       => 'New sprint',
-            'project_id' => $project->id,
-            'is_open'    => array_random([0, 1]),
-        ]);
+    $response->assertRedirect(route('sprint.index'));
 
-        $response->assertRedirect(route('sprint.index'));
-
-        $this->assertDatabaseHas('sprints', $sprintDetails);
-    }
-}
+    $this->assertDatabaseHas('sprints', $sprintDetails);
+});

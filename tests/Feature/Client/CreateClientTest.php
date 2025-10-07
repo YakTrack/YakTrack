@@ -1,50 +1,34 @@
 <?php
 
-namespace Tests\Feature\Client;
+it('can load the page to create a client', function () {
+    $this->actingAsUser();
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
+    $response = $this->get(route('client.create'));
 
-class CreateClientTest extends TestCase
-{
-    use RefreshDatabase;
+    $response->assertSuccessful();
+});
 
-    /** @test */
-    public function a_user_can_load_the_page_to_create_a_client()
-    {
-        $this->actingAsUser();
+it('can submit a post request to create a client', function () {
+    $this->actingAsUser();
 
-        $response = $this->get(route('client.create'));
+    $response = $this->post(route('client.store'), $newClientDetails = [
+        'name'  => 'Test Client',
+        'email' => 'test@domain.com',
+    ]);
 
-        $response->assertSuccessful();
-    }
+    $response->assertRedirect(route('client.index'));
 
-    /** @test */
-    public function a_user_can_submit_a_post_request_to_create_a_client()
-    {
-        $this->actingAsUser();
+    $this->assertDatabaseHas('clients', $newClientDetails);
+});
 
-        $response = $this->post(route('client.store'), $newClientDetails = [
-            'name'  => 'Test Client',
-            'email' => 'test@domain.com',
-        ]);
+it('can create a client without an email address', function () {
+    $this->actingAsUser();
 
-        $response->assertRedirect(route('client.index'));
+    $response = $this->post(route('client.store'), $newClientDetails = [
+        'name' => 'Test Client Without Email',
+    ]);
 
-        $this->assertDatabaseHas('clients', $newClientDetails);
-    }
+    $response->assertRedirect(route('client.index'));
 
-    /** @test */
-    public function a_user_can_create_a_client_without_an_email_address()
-    {
-        $this->actingAsUser();
-
-        $response = $this->post(route('client.store'), $newClientDetails = [
-            'name' => 'Test Client Without Email',
-        ]);
-
-        $response->assertRedirect(route('client.index'));
-
-        $this->assertDatabaseHas('clients', $newClientDetails);
-    }
-}
+    $this->assertDatabaseHas('clients', $newClientDetails);
+});

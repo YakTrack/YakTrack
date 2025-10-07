@@ -1,68 +1,51 @@
 <?php
 
-namespace Tests\Unit\Models;
-
 use App\Models\Session;
 use App\Models\Target;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class TargetTest extends TestCase
-{
-    use RefreshDatabase;
+it('returns expected target for find_for_date static method', function () {
+    $target = Target::factory()->forDate()->create([
+        'starts_at' => '2020-01-01 00:00:00',
+    ]);
 
-    /** @test */
-    public function find_for_date_static_method_returns_expected_target()
-    {
-        $target = Target::factory()->forDate()->create([
-            'starts_at' => '2020-01-01 00:00:00',
-        ]);
+    expect(Target::findForDate('2020-01-01')->is($target))->toBeTrue();
+});
 
-        $this->assertTrue(Target::findForDate('2020-01-01')->is($target));
-    }
+it('returns the number of hours remaining for the target', function () {
+    $target = Target::factory()->forDate()->inHours()->create([
+        'starts_at' => '2020-01-01 00:00:00',
+        'value'     => 8,
+    ]);
 
-    /** @test */
-    public function hours_remaining_method_returns_the_number_of_hours_remaining_for_the_target()
-    {
-        $target = Target::factory()->forDate()->inHours()->create([
-            'starts_at' => '2020-01-01 00:00:00',
-            'value'     => 8,
-        ]);
+    expect($target->hoursRemaining())->toBe(8.0);
+});
 
-        $this->assertEquals(8, $target->hoursRemaining());
-    }
+it('returns the number of hours remaining for the target less any sessions', function () {
+    $target = Target::factory()->forDate()->inHours()->create([
+        'starts_at' => '2020-01-01 00:00:00',
+        'value'     => 8,
+    ]);
 
-    /** @test */
-    public function hours_remaining_method_returns_the_number_of_hours_remaining_for_the_target_less_any_sessions()
-    {
-        $target = Target::factory()->forDate()->inHours()->create([
-            'starts_at' => '2020-01-01 00:00:00',
-            'value'     => 8,
-        ]);
+    Session::factory()->create([
+        'started_at' => '2020-01-01 00:00:00',
+        'ended_at'   => '2020-01-01 01:00:00',
+    ]);
 
-        $session = Session::factory()->create([
-            'started_at' => '2020-01-01 00:00:00',
-            'ended_at'   => '2020-01-01 01:00:00',
-        ]);
+    expect($target->hoursRemaining())->toBe(7.0);
+});
 
-        $this->assertEquals(7, $target->hoursRemaining());
-    }
+it('excludes non billable hours if billable_only is selected', function () {
+    $target = Target::factory()->forDate()->inHours()->create([
+        'starts_at'     => '2020-01-01 00:00:00',
+        'value'         => 8,
+        'billable_only' => 1,
+    ]);
 
-    /** @test */
-    public function hours_remaining_method_excludes_non_billable_hours_method_if_billable_only_is_selected()
-    {
-        $target = Target::factory()->forDate()->inHours()->create([
-            'starts_at'     => '2020-01-01 00:00:00',
-            'value'         => 8,
-            'billable_only' => 1,
-        ]);
+    Session::factory()->create([
+        'started_at'  => '2020-01-01 00:00:00',
+        'ended_at'    => '2020-01-01 01:00:00',
+        'is_billable' => 0,
+    ]);
 
-        $session = Session::factory()->create([
-            'started_at'  => '2020-01-01 00:00:00',
-            'ended_at'    => '2020-01-01 01:00:00',
-            'is_billable' => 0,
-        ]);
-
-        $this->assertEquals(8, $target->hoursRemaining());
-    }
-}
+    expect($target->hoursRemaining())->toBe(8.0);
+});

@@ -1,31 +1,20 @@
 <?php
 
-namespace Tests\Feature\Sprint;
-
 use App\Models\Project;
 use App\Models\Sprint;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class IndexSprintTest extends TestCase
-{
-    use RefreshDatabase;
+it('can view a list of sprints', function () {
+    $project = Project::factory()->create();
+    $sprints = Sprint::factory()->create(['project_id' => $project->id]);
 
-    /** @test */
-    public function a_user_can_view_a_list_of_sprints()
-    {
-        $project = Project::factory()->create();
-        $sprints = Sprint::factory()->create(['project_id' => $project->id]);
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->get(route('sprint.index'));
 
-        $response = $this->get(route('sprint.index'));
+    $response->assertSuccessful();
 
-        $response->assertSuccessful();
-
-        $sprints->each(function ($sprint) use ($response) {
-            $response->assertSee($sprint->name);
-            $response->assertSee($sprint->sessions->totalDurationForHumans());
-        });
-    }
-}
+    $sprints->each(function ($sprint) use ($response) {
+        $response->assertSee($sprint->name);
+        $response->assertSee($sprint->sessions->totalDurationForHumans());
+    });
+});

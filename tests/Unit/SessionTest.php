@@ -2,120 +2,96 @@
 
 use App\Models\Session;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class SessionTest extends BrowserKitTestCase
-{
-    use RefreshDatabase;
+it('stops the session when stop_session is called', function () {
+    Carbon::setTestNow(Carbon::parse('2018-01-01 00:10:00'));
 
-    /** @test */
-    public function stop_session_stops_the_session()
-    {
-        Carbon::setTestNow(Carbon::parse('2018-01-01 00:10:00'));
+    $session = Session::factory()->create([
+        'started_at' => '2018-01-01 00:00:00',
+        'ended_at'   => null,
+    ]);
 
-        $session = Session::factory()->create([
-            'started_at' => '2018-01-01 00:00:00',
-            'ended_at'   => null,
-        ]);
+    expect($session->isRunning())->toBeTrue();
 
-        $this->assertTrue($session->isRunning());
+    $session->stop();
 
-        $session->stop();
+    expect($session->isRunning())->toBeFalse();
 
-        $this->assertFalse($session->isRunning());
+    $this->seeInDatabase('sessions', [
+        'id'         => $session->id,
+        'started_at' => '2018-01-01 00:00:00',
+        'ended_at'   => '2018-01-01 00:10:00',
+    ]);
 
-        $this->seeInDatabase('sessions', [
-            'id'         => $session->id,
-            'started_at' => '2018-01-01 00:00:00',
-            'ended_at'   => '2018-01-01 00:10:00',
-        ]);
+    Carbon::setTestNow();
+});
 
-        Carbon::setTestNow();
+it('returns sessions which start on given date according to display timezone', function () {
+    $this->usingTestDisplayTimeZone();
+
+    $startsAndEndsOnDate = Session::factory()->create([
+        'started_at' => '2018-01-01 12:00:00',
+        'ended_at'   => '2018-01-01 13:00:00',
+    ]);
+
+    $startsOnDateOnly = Session::factory()->create([
+        'started_at' => '2018-01-01 12:00:00',
+        'ended_at'   => '2018-01-02 12:30:00',
+    ]);
+
+    $endsOnDateOnly = Session::factory()->create([
+        'started_at' => '2017-12-12 23:55:00',
+        'ended_at'   => '2018-01-01 12:30:00',
+    ]);
+
+    $neitherStartsNorEndsOnDate = Session::factory()->create([
+        'started_at' => '2017-01-01 11:00:00',
+        'ended_at'   => '2017-01-01 11:30:00',
+    ]);
+
+    foreach ([
+        [$startsAndEndsOnDate, true],
+        [$startsOnDateOnly, true],
+        [$endsOnDateOnly, false],
+        [$neitherStartsNorEndsOnDate, false],
+    ] as $testCase) {
+        expect(Session::onDate(Carbon::parse('2018-01-01'))
+            ->get()
+            ->contains(function ($session) use ($testCase) {
+                return $session->id === $testCase[0]->id;
+            }))->toBe($testCase[1], 'Session '.$testCase[0]->id.' not found in dates on 2018-01-01');
     }
+});
 
-    /** @test */
-    public function on_date_scope_returns_sessions_which_start_on_given_date_according_to_display_timezone()
-    {
-        $this->usingTestDisplayTimeZone();
+it('does not return dates which are on the date in utc but not display timezone', function () {
+    $session = Session::create(['started_at' => '2018-09-25 22:32:56']);
 
-        $startsAndEndsOnDate = Session::factory()->create([
-            'started_at' => '2018-01-01 12:00:00',
-            'ended_at'   => '2018-01-01 13:00:00',
-        ]);
+    expect(Session::onDate(Carbon::parse('2018-09-25 Australia/Sydney'))
+        ->get()
+        ->contains(function ($foundSession) use ($session) {
+            return $foundSession->id === $session->id;
+        }))->toBeFalse();
+});
 
-        $startsOnDateOnly = Session::factory()->create([
-            'started_at' => '2018-01-01 12:00:00',
-            'ended_at'   => '2018-01-02 12:30:00',
-        ]);
+it('returns sessions which started on the expected date for where_on_day_this_week_scope', function () {
+    $this->usingTestDisplayTimeZone();
 
-        $endsOnDateOnly = Session::factory()->create([
-            'started_at' => '2017-12-12 23:55:00',
-            'ended_at'   => '2018-01-01 12:30:00',
-        ]);
+    Carbon::setTestNow('2020-11-12 09:40:00');
 
-        $neitherStartsNorEndsOnDate = Session::factory()->create([
-            'started_at' => '2017-01-01 11:00:00',
-            'ended_at'   => '2017-01-01 11:30:00',
-        ]);
+    $session = Session::create(['started_at' => '2020-11-12 09:20:00']);
 
-        foreach ([
-            [$startsAndEndsOnDate, true],
-            [$startsOnDateOnly, true],
-            [$endsOnDateOnly, false],
-            [$neitherStartsNorEndsOnDate, false],
-        ] as $testCase) {
-            $this->assertEquals(
-                $testCase[1],
-                Session::onDate(Carbon::parse('2018-01-01'))
-                    ->get()
-                    ->contains(function ($session) use ($testCase) {
-                        return $session->id === $testCase[0]->id;
-                    }),
-                'Session '.$testCase[0]->id.' not found in dates on 2018-01-01'
-            );
-        }
-    }
+    expect(Session::whereOnDayThisWeek('thursday')
+        ->get()
+        ->contains(function ($foundSession) use ($session) {
+            return $foundSession->id === $session->id;
+        }))->toBeTrue();
+});
 
-    /** @test */
-    public function the_on_date_scope_does_not_return_dates_which_are_on_the_date_in_utc_but_not_display_timezone()
-    {
-        $session = Session::create(['started_at' => '2018-09-25 22:32:56']);
+it('returns expected value for duration_in_seconds attribute', function () {
+    $session = Session::factory()->create([
+        'started_at' => '2018-01-01 12:00:00',
+        'ended_at'   => '2018-01-01 13:00:00',
+    ]);
 
-        $this->assertFalse(
-            Session::onDate(Carbon::parse('2018-09-25 Australia/Sydney'))
-                ->get()
-                ->contains(function ($foundSession) use ($session) {
-                    return $foundSession->id === $session->id;
-                })
-        );
-    }
-
-    /** #@test */
-    public function the_where_on_day_this_week_scope_returns_sessions_which_started_on_the_expected_date()
-    {
-        $this->usingTestDisplayTimeZone();
-
-        Carbon::setTestNow('2020-11-12 09:40:00');
-
-        $session = Session::create(['started_at' => '2020-11-12 09:20:00']);
-
-        $this->assertTrue(
-            Session::whereOnDayThisWeek('thursday')
-                ->get()
-                ->contains(function ($foundSession) use ($session) {
-                    return $foundSession->id === $session->id;
-                })
-        );
-    }
-
-    /** @test */
-    public function duration_in_seconds_attribute_returns_expected_value()
-    {
-        $session = Session::factory()->create([
-            'started_at' => '2018-01-01 12:00:00',
-            'ended_at'   => '2018-01-01 13:00:00',
-        ]);
-
-        $this->assertEquals(3600, $session->durationInSeconds);
-    }
-}
+    expect($session->durationInSeconds)->toBe(3600);
+});

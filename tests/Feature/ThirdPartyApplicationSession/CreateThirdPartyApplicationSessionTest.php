@@ -1,50 +1,37 @@
 <?php
 
-namespace Tests\Feature\ThirdPartyApplicationSession;
-
 use App\Models\Session;
 use App\Models\ThirdPartyApplication;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class CreateThirdPartyApplicationSessionTest extends TestCase
-{
-    use RefreshDatabase;
+it('can export a session to a third party application', function () {
+    $thirdPartyApplication = ThirdPartyApplication::factory()->wrike()->create();
 
-    /** @test */
-    public function a_session_can_be_exported_to_a_third_party_application_with_sessions()
-    {
-        $thirdPartyApplication = ThirdPartyApplication::factory()->wrike()->create();
+    $session = Session::factory()->create();
 
-        $session = Session::factory()->create();
+    $session->exportToThirdPartyApplication($thirdPartyApplication);
 
-        $session->exportToThirdPartyApplication($thirdPartyApplication);
+    expect($session->thirdPartyApplicationSessions->contains(function ($thirdPartyApplicationSession) use ($session) {
+        return $thirdPartyApplicationSession->session->id === $session->id;
+    }))->toBeTrue();
+});
 
-        $this->assertTrue($session->thirdPartyApplicationSessions->contains(function ($thirdPartyApplicationSession) use ($session) {
-            return $thirdPartyApplicationSession->session->id === $session->id;
-        }));
-    }
+it('can create a session with a post request', function () {
+    $this->withoutExceptionHandling();
 
-    /** @test */
-    public function a_session_can_be_created_with_a_post_request()
-    {
-        $this->withoutExceptionHandling();
+    $thirdPartyApplication = ThirdPartyApplication::factory()->wrike()->create();
 
-        $thirdPartyApplication = ThirdPartyApplication::factory()->wrike()->create();
+    $session = Session::factory()->create();
 
-        $session = Session::factory()->create();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->post(route('third-party-application-session.store'), [
+        'session_id'                 => $session->id,
+        'third_party_application_id' => $thirdPartyApplication->id,
+    ]);
 
-        $response = $this->post(route('third-party-application-session.store'), [
-            'session_id'                 => $session->id,
-            'third_party_application_id' => $thirdPartyApplication->id,
-        ]);
+    $response->assertRedirect('/');
 
-        $response->assertRedirect('/');
-
-        $this->assertTrue($session->thirdPartyApplicationSessions->contains(function ($thirdPartyApplicationSession) use ($session) {
-            return $thirdPartyApplicationSession->session->id === $session->id;
-        }));
-    }
-}
+    expect($session->thirdPartyApplicationSessions->contains(function ($thirdPartyApplicationSession) use ($session) {
+        return $thirdPartyApplicationSession->session->id === $session->id;
+    }))->toBeTrue();
+});

@@ -1,26 +1,15 @@
 <?php
 
-namespace Tests\Feature\Session;
-
 use App\Models\Session;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class StopSessionTest extends TestCase
-{
-    use RefreshDatabase;
+it('can stop a session from now with a post request', function () {
+    $session = Session::factory()->running()->create();
 
-    /** @test */
-    public function a_user_can_stop_a_session_from_now_with_a_post_request()
-    {
-        $session = Session::factory()->running()->create();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->post(route('session.stop', ['session' => $session]));
 
-        $response = $this->post(route('session.stop', ['session' => $session]));
+    $response->assertRedirect(route('session.index'));
 
-        $response->assertRedirect(route('session.index'));
-
-        $this->assertFalse($session->fresh()->isRunning());
-    }
-}
+    expect($session->fresh()->isRunning())->toBeFalse();
+});

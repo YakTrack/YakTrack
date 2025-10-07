@@ -1,37 +1,26 @@
 <?php
 
-namespace Tests\Unit\Models;
-
 use App\Models\Client;
 use App\Models\Project;
 use App\Models\Session;
 use App\Models\Task;
 use Carbon\Carbon;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class ClientTest extends TestCase
-{
-    use RefreshDatabase;
+it('returns all the clients sessions for the week', function () {
+    Carbon::setTestNow('2018-01-02 12:00:00');
 
-    /** @test */
-    public function the_sessions_this_week_attribute_returns_all_the_clients_sessions_for_the_week()
-    {
-        Carbon::setTestNow('2018-01-02 12:00:00');
+    $client = Client::factory()->create();
+    $project = Project::factory()->create(['client_id' => $client->id]);
+    $task = Task::factory()->create(['project_id' => $project->id]);
+    $session = Session::factory()->create([
+        'started_at' => Carbon::now(),
+        'ended_at'   => Carbon::now(),
+        'task_id'    => $task->id,
+    ]);
 
-        $client = Client::factory()->create();
-        $project = Project::factory()->create(['client_id' => $client->id]);
-        $task = Task::factory()->create(['project_id' => $project->id]);
-        $session = Session::factory()->create([
-            'started_at' => Carbon::now(),
-            'ended_at'   => Carbon::now(),
-            'task_id'    => $task->id,
-        ]);
+    expect($client->sessionsThisWeek->contains(function ($clientSession) use ($session) {
+        return $session->id === $clientSession->id;
+    }))->toBeTrue();
 
-        $this->assertTrue($client->sessionsThisWeek->contains(function ($clientSession) use ($session) {
-            return $session->id === $clientSession->id;
-        }));
-
-        Carbon::setTestNow();
-    }
-}
+    Carbon::setTestNow();
+});

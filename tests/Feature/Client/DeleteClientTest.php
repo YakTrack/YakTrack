@@ -1,30 +1,19 @@
 <?php
 
-namespace Tests\Feature\Client;
-
 use App\Models\Client;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class DeleteClientTest extends TestCase
-{
-    use RefreshDatabase;
+it('can delete a client', function () {
+    $client = Client::factory()->create();
 
-    /** @test */
-    public function a_user_can_delete_a_client()
-    {
-        $client = Client::factory()->create();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->delete(route('client.destroy', [
+        'client' => $client,
+    ]));
 
-        $response = $this->delete(route('client.destroy', [
-            'client' => $client,
-        ]));
+    $response->assertRedirect(route('client.index'));
 
-        $response->assertRedirect(route('client.index'));
-
-        $this->assertDatabaseMissing('clients', [
-            'id' => $client->id,
-        ]);
-    }
-}
+    $this->assertDatabaseMissing('clients', [
+        'id' => $client->id,
+    ]);
+});

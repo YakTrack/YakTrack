@@ -1,28 +1,17 @@
 <?php
 
-namespace Tests\Feature\Session;
-
 use App\Models\Session;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class DeleteSessionTest extends TestCase
-{
-    use RefreshDatabase;
+it('can delete a session', function () {
+    $session = Session::factory()->create();
 
-    /** @test */
-    public function a_user_can_delete_a_session()
-    {
-        $session = Session::factory()->create();
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->delete(route('session.destroy', ['session' => $session]));
 
-        $response = $this->delete(route('session.destroy', ['session' => $session]));
+    $response->assertRedirect(route('session.index'));
 
-        $response->assertRedirect(route('session.index'));
-
-        $this->assertDatabaseMissing('sessions', [
-            'id' => $session->id,
-        ]);
-    }
-}
+    $this->assertDatabaseMissing('sessions', [
+        'id' => $session->id,
+    ]);
+});

@@ -1,38 +1,27 @@
 <?php
 
-namespace Tests\Feature\Invoice;
-
 use App\Models\Invoice;
 use App\Models\Session;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class DeleteInvoiceTest extends TestCase
-{
-    use RefreshDatabase;
+it('can delete an invoice', function () {
+    $this->withoutExceptionHandling();
 
-    /** @test */
-    public function a_user_can_delete_an_invoice()
-    {
-        $this->withoutExceptionHandling();
+    $invoice = Invoice::factory()->create();
+    $session = Session::factory()->create([
+        'invoice_id' => $invoice->id,
+    ]);
 
-        $invoice = Invoice::factory()->create();
-        $session = Session::factory()->create([
-            'invoice_id' => $invoice->id,
-        ]);
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->delete(route('invoice.destroy', ['invoice' => $invoice]));
 
-        $response = $this->delete(route('invoice.destroy', ['invoice' => $invoice]));
+    $response->assertRedirect(route('invoice.index'));
 
-        $response->assertRedirect(route('invoice.index'));
-
-        $this->assertDatabaseMissing('invoices', [
-            'id' => $invoice->id,
-        ]);
-        $this->assertDatabaseMissing('sessions', [
-            'id'         => $session->id,
-            'invoice_id' => $invoice->id,
-        ]);
-    }
-}
+    $this->assertDatabaseMissing('invoices', [
+        'id' => $invoice->id,
+    ]);
+    $this->assertDatabaseMissing('sessions', [
+        'id'         => $session->id,
+        'invoice_id' => $invoice->id,
+    ]);
+});

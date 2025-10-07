@@ -1,41 +1,26 @@
 <?php
 
-namespace Tests\Feature\Auth;
-
 use App\Models\User;
-use Auth;
-use Hash;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class LoginTest extends TestCase
-{
-    use RefreshDatabase;
+it('can load the login page', function () {
+    $this->withoutExceptionHandling();
 
-    /** @test */
-    public function a_guest_can_load_the_login_page()
-    {
-        $this->withoutExceptionHandling();
+    $response = $this->get('/login');
 
-        $response = $this->get('/login');
+    $response->assertSuccessful();
+});
 
-        $response->assertSuccessful();
-    }
+it('logs in when a guest submits the login form with correct credentials', function () {
+    $this->withoutExceptionHandling();
 
-    /** @test */
-    public function when_a_guest_submits_the_login_form_with_correct_credentials_they_are_logged_in()
-    {
-        $this->withoutExceptionHandling();
+    $user = User::factory()->create([
+        'email'    => 'test@domain.com',
+        'password' => Hash::make('password'),
+    ]);
 
-        $user = User::factory()->create([
-            'email'    => 'test@domain.com',
-            'password' => Hash::make('password'),
-        ]);
+    $response = $this->post('/login', ['email' => 'test@domain.com', 'password' => 'password']);
 
-        $response = $this->post('/login', ['email' => 'test@domain.com', 'password' => 'password']);
+    $response->assertRedirect('/');
 
-        $response->assertRedirect('/');
-
-        $this->assertTrue(Auth::check());
-    }
-}
+    expect(Auth::check())->toBeTrue();
+});

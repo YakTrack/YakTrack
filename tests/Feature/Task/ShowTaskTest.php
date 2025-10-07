@@ -1,36 +1,25 @@
 <?php
 
-namespace Tests\Feature\Task;
-
 use App\Models\Session;
 use App\Models\Task;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
-class ShowTaskTest extends TestCase
-{
-    use RefreshDatabase;
+it('can view the show task page for a task', function () {
+    $this->withoutExceptionHandling();
 
-    /** @test */
-    public function a_user_can_view_the_show_task_page_for_a_task()
-    {
-        $this->withoutExceptionHandling();
+    $task = Task::factory()->create();
 
-        $task = Task::factory()->create();
+    $session = Session::factory()->create([
+        'task_id' => $task->id,
+    ]);
 
-        $session = Session::factory()->create([
-            'task_id' => $task->id,
-        ]);
+    $this->actingAsUser();
 
-        $this->actingAsUser();
+    $response = $this->get(route('task.show', ['task' => $task]));
 
-        $response = $this->get(route('task.show', ['task' => $task]));
+    $response->assertSuccessful();
 
-        $response->assertSuccessful();
+    $response->assertSee($task->name);
+    $response->assertSee($task->description);
 
-        $response->assertSee($task->name);
-        $response->assertSee($task->description);
-
-        $response->assertSee($session->created_at);
-    }
-}
+    $response->assertSee($session->created_at);
+});
