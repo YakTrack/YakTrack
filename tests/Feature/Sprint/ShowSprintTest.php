@@ -54,7 +54,9 @@ it('can view a single sprint', function () {
                     ->where('created_at', $sprint->created_at->toIsoString())
                     ->where('updated_at', $sprint->updated_at->toIsoString())
                     ->where('is_open', 0)
-                    ->has('project', fn (Assert $page) => $page
+                    ->has(
+                        'project',
+                        fn (Assert $page) => $page
                         ->where('id', $project->id)
                         ->where('name', $project->name)
                         ->where('description', $project->description)
@@ -62,13 +64,19 @@ it('can view a single sprint', function () {
                         ->where('is_billable', 0)
                         ->where('created_at', $project->created_at->toIsoString())
                         ->where('updated_at', $project->updated_at->toIsoString())
-                    )->has('sessions', fn (Assert $page) => $page
-                        ->has(0, fn (Assert $page) => $page
+                    )->has(
+                        'sessions',
+                        fn (Assert $page) => $page
+                        ->has(
+                            0,
+                            fn (Assert $page) => $page
                             ->whereAll([
                                 'id' => $session1->id,
                             ])
                             ->etc()
-                        )->has(1, fn (Assert $page) => $page
+                        )->has(
+                            1,
+                            fn (Assert $page) => $page
                             ->whereAll([
                                 'id' => $session2->id,
                             ])
@@ -78,10 +86,12 @@ it('can view a single sprint', function () {
             )->has(
                 'tasks',
                 fn (Assert $page) => $page
-                    ->has($task->id, fn (Assert $page) => $page
+                    ->has(
+                        $task->id,
+                        fn (Assert $page) => $page
                         ->where('totalDurationInSprintForHumans', '0:01:23')
                         ->etc()
-                )
+                    )
             )
     );
 });
