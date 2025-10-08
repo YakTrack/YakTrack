@@ -58,25 +58,29 @@
 </template>
 
 <script>
-    import { Link } from '@inertiajs/vue3';
-    import breadcrumbs from '@/Shared/Breadcrumbs.vue';
-    import layout from '@/Shared/Layout.vue';
+import { Link } from '@inertiajs/vue3';
+import breadcrumbs from '@/Shared/Breadcrumbs.vue';
+import layout from '@/Shared/Layout.vue';
+import { durationForHumans } from '@/filters/DateTime';
 
-    export default {
-        props: [
-            'sprint',
-            'totalDurationForHumans',
-            'tasks',
-        ],
-        components: {
-            Link,
-            breadcrumbs: breadcrumbs,
-            layout: layout,
+export default {
+    props: [
+        'sprint',
+        'totalDurationForHumans',
+        'tasks',
+    ],
+    components: {
+        Link,
+        breadcrumbs: breadcrumbs,
+        layout: layout,
+    },
+    methods: {
+        createInvoice() {
+            this.$inertia.post(route('sprint.invoice.store', this.sprint.id));
         },
-        methods: {
-            createInvoice() {
-                this.$inertia.post(route('sprint.invoice.store', this.sprint.id));
-            }
+        durationForHumans(seconds) {
+            return durationForHumans(seconds)
         },
-    }
+    },
+}
 </script>

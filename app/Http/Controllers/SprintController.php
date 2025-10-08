@@ -69,7 +69,7 @@ class SprintController extends Controller
             'tasks'  => $sprint->sessions->groupBy('task_id')->map(function ($sessionsForTask) {
                 $task = $sessionsForTask->first()->task;
 
-                $task->totalDurationInSprintForHumans = $sessionsForTask->sum('durationInSeconds');
+                $task->totalDurationInSprintForHumans = $sessionsForTask->totalDurationForHumans();
 
                 return $task;
             }),
