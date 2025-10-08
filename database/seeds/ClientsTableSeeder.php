@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Client;
 use Illuminate\Database\Seeder;
 
 class ClientsTableSeeder extends Seeder
@@ -11,13 +12,13 @@ class ClientsTableSeeder extends Seeder
      */
     public function run()
     {
-        $acme = factory(App\Models\Client::class)->states('with_invoices')->create([
+        $acme = Client::factory()->withInvoices()->create([
             'name' => 'Acme Inc.',
         ]);
-        $bertrandCarroll = factory(App\Models\Client::class)->states('with_invoices')->create([
+        $bertrandCarroll = Client::factory()->withInvoices()->create([
             'name' => 'Bertrand Carroll',
         ]);
-        $edesapaAndSongs = factory(App\Models\Client::class)->states('with_invoices')->create([
+        $edesapaAndSongs = Client::factory()->withInvoices()->create([
             'name' => 'Edesapa and Sons',
         ]);
     }

@@ -14,7 +14,7 @@ class ProjectsTableSeeder extends Seeder
     public function run()
     {
         Client::all()->each(function ($client) {
-            factory(Project::class, 3)->create(['client_id' => $client->id]);
+            Project::factory(3)->create(['client_id' => $client->id]);
         });
     }
 }

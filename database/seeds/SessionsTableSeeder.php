@@ -13,7 +13,7 @@ class SessionsTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(Session::class, 100)->states('classified')->create();
-        factory(SessionCategory::class, 3)->create();
+        Session::factory(100)->classified()->create();
+        SessionCategory::factory(3)->create();
     }
 }

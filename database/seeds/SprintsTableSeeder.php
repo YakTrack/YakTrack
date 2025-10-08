@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Project;
+use App\Models\Sprint;
 use Illuminate\Database\Seeder;
 
 class SprintsTableSeeder extends Seeder
@@ -13,7 +14,7 @@ class SprintsTableSeeder extends Seeder
     public function run()
     {
         Project::all()->each(function ($project) {
-            factory(App\Models\Sprint::class, 3)->create(['project_id' => $project->id]);
+            Sprint::factory(3)->create(['project_id' => $project->id]);
         });
     }
 }
