@@ -61,7 +61,6 @@
 import { Link } from '@inertiajs/vue3';
 import breadcrumbs from '@/Shared/Breadcrumbs.vue';
 import layout from '@/Shared/Layout.vue';
-import { durationForHumans } from '@/filters/DateTime';
 
 export default {
     props: [
