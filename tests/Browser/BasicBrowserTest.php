@@ -32,14 +32,14 @@ it('can test responsive design', function () {
 
 it('can test multiple pages simultaneously', function () {
     $pages = visit(['/', '/login']);
-    
+
     $pages->assertNoSmoke()
         ->assertNoAccessibilityIssues()
         ->assertNoConsoleLogs()
         ->assertNoJavaScriptErrors();
-    
+
     [$homePage, $loginPage] = $pages;
-    
+
     $homePage->assertSee('YakTrack');
     $loginPage->assertSee('Log in to start your session');
 });
