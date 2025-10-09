@@ -32,7 +32,11 @@ export default {
     },
     methods: {
         optionWasClicked(option) {
-            typeof option.event == 'string' ? events.emit(option.event) : events.emit(option.event.name, option.event.args);
+            if (option.callback) {
+                option.callback();
+            } else if (option.event) {
+                typeof option.event == 'string' ? events.emit(option.event) : events.emit(option.event.name, option.event.args);
+            }
             this.isOpen = false;
         },
         toggleIsOpen() {

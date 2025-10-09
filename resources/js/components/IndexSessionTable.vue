@@ -466,7 +466,7 @@
     import actionsDropdown from '@/Shared/ActionsDropdown.vue';
     import deleteButton from '@/Shared/DeleteButton.vue';
     import timestamp from '@/Shared/Timestamp.vue';
-    import modal from '@/components/Modal.vue';
+    import modal from '@/components/LegacyModal.vue';
     import timer from '@/components/Timer.vue';
     import dateTime from '@/filters/DateTime.js';
     import datetimeInput from '@/components/DatetimeInput.vue';

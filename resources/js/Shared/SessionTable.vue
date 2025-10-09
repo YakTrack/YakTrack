@@ -97,7 +97,7 @@
     import deleteButton from '@/Shared/DeleteButton.vue';
     import dropdown from '@/Shared/Dropdown.vue';
     import sessionTask from '@/Shared/SessionTask.vue';
-    import modal from '@/components/Modal.vue';
+    import modal from '@/components/LegacyModal.vue';
 
     export default {
         components: {
