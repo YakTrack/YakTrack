@@ -45,7 +45,7 @@ export default defineConfig({
         host: '0.0.0.0',
         port: 5173,
         cors: {
-            origin: ['http://localhost:5173', 'http://yak-track.test', 'https://yak-track.test'],
+            origin: ['http://localhost:5173', 'http://yak-track.test', 'https://yak-track.test', 'https://yaktrack.test', 'http://yaktrack.test'],
             credentials: true,
         },
         hmr: {
