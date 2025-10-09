@@ -44,7 +44,7 @@ class SprintController extends Controller
     {
         $this->validate($request, [
             'name'       => 'required|unique:sprints,name',
-            'project_id' => 'exists:projects,id',
+            'project_id' => 'required|exists:projects,id',
             'is_open'    => 'boolean',
         ]);
 
@@ -100,7 +100,7 @@ class SprintController extends Controller
     {
         $this->validate($request, [
             'name'       => 'required|unique:sprints,name,'.$sprint->id,
-            'project_id' => 'exists:projects,id',
+            'project_id' => 'required|exists:projects,id',
         ]);
 
         $sprint->update([

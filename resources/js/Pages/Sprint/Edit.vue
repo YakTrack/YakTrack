@@ -19,10 +19,13 @@
             </div>
             <div class="form-group">
                 <label for="project_id"> Project </label>
-                <project-select
-                    :projects="projects"
-                    v-model="form.project_id"
-                />
+                <multi-select
+                    :options="projects"
+                    label="name"
+                    track-by="id"
+                    v-model="selectedProject"
+                    placeholder="Select a project"
+                ></multi-select>
             </div>
             <div class="form-group">
                 <label for="is_open"> Is Open </label>
@@ -43,7 +46,7 @@
 <script>
     import breadcrumbs from '@/Shared/Breadcrumbs.vue';
     import layout from '@/Shared/Layout.vue';
-    import projectSelect from '@/Shared/ProjectSelect.vue';
+    import multiSelect from 'vue-multiselect';
 
     export default {
         props: [
@@ -53,16 +56,23 @@
         components: {
             breadcrumbs: breadcrumbs,
             layout: layout,
-            projectSelect: projectSelect,
+            multiSelect: multiSelect,
         },
         data() {
             return {
-                form: this.sprint || {},
+                selectedProject: (this.sprint && this.sprint.project_id) ? this.projects.find(p => p.id == this.sprint.project_id) : null,
+                form: this.sprint || {
+                    name: '',
+                    is_open: false,
+                },
             };
         },
         computed: {
             isCreateForm() {
                 return this.form.id == null;
+            },
+            selectedProjectId() {
+                return this.selectedProject ? this.selectedProject.id : null;
             },
         },
         methods: {
@@ -70,7 +80,10 @@
                 let verb = this.isCreateForm ? 'post' : 'patch';
                 let url = this.isCreateForm ? route('sprint.store') : route('sprint.update', this.sprint.id);
 
-                this.$inertia[verb](url, this.form);
+                this.$inertia[verb](url, {
+                    ...this.form,
+                    project_id: this.selectedProjectId,
+                });
             },
         }
     }
