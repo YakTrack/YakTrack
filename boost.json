@@ -1,0 +1,13 @@
+{
+    "agents": [
+        "claude_code",
+        "cursor"
+    ],
+    "editors": [
+        "claude_code",
+        "cursor",
+        "vscode"
+    ],
+    "guidelines": [],
+    "herd_mcp": true
+}

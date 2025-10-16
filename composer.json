@@ -26,7 +26,8 @@
         "filp/whoops": "^2.15",
         "larastan/larastan": "^3.0",
         "pestphp/pest": "^4.0",
-        "pestphp/pest-plugin-browser": "^4.1"
+        "pestphp/pest-plugin-browser": "^4.1",
+        "laravel/boost": "^1.4"
     },
     "autoload": {
         "classmap": [
