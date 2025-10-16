@@ -18,8 +18,9 @@
     <title>YakTrack</title>
 
     <!-- Styles -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/js/app.js'])
     @routes
+    @inertiaHead
 </head>
 
 <body class="font-source-sans font-normal leading-normal bg-gray-100 text-gray-700">

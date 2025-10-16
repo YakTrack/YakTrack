@@ -6,12 +6,8 @@ import path from 'path';
 export default defineConfig({
     plugins: [
         laravel({
-            input: [
-                'resources/css/app.css',
-                'resources/js/app.js',
-            ],
+            input: ['resources/js/app.js'],
             refresh: true,
-            publicDirectory: 'public',
         }),
         vue({
             template: {
@@ -19,6 +15,11 @@ export default defineConfig({
                     base: null,
                     includeAbsolute: false,
                 },
+            },
+            compilerOptions: {
+                isCustomElement: (tag) => {
+                    return tag.includes(':') // Treat any tag with colons as custom elements
+                }
             },
         }),
     ],
@@ -44,14 +45,9 @@ export default defineConfig({
     server: {
         host: '0.0.0.0',
         port: 5173,
-        cors: {
-            origin: ['http://localhost:5173', 'http://yak-track.test', 'https://yak-track.test', 'https://yaktrack.test', 'http://yaktrack.test'],
-            credentials: true,
-        },
         hmr: {
-            host: 'localhost',
+            host: 'yaktrack.test',
         },
-        origin: 'http://localhost:5173',
     },
     test: {
         environment: 'node',
