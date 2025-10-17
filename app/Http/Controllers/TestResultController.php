@@ -7,10 +7,7 @@ use App\Http\Requests\UpdateTestResultRequest;
 use App\Models\TestResult;
 use App\Models\TestResultEvidence;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Inertia\Inertia;
-use Inertia\Response;
 
 class TestResultController extends Controller
 {
@@ -27,13 +24,13 @@ class TestResultController extends Controller
         $validated = $request->validated();
         $data = [
             'test_result_id' => $testResult->id,
-            'type' => $validated['type'],
-            'sort_order' => $testResult->evidence()->max('sort_order') + 1,
+            'type'           => $validated['type'],
+            'sort_order'     => $testResult->evidence()->max('sort_order') + 1,
         ];
 
         if ($validated['type'] === 'image' && $request->hasFile('file')) {
             $file = $request->file('file');
-            $filename = uniqid() . '.' . $file->getClientOriginalExtension();
+            $filename = uniqid().'.'.$file->getClientOriginalExtension();
             $path = $file->storeAs('test-evidence', $filename, 'public');
             $data['file_path'] = $path;
             $data['content'] = $path; // Also store in content for consistency

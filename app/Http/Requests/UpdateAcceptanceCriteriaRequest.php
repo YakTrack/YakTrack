@@ -27,7 +27,7 @@ class UpdateAcceptanceCriteriaRequest extends FormRequest
 
         return [
             'project_id' => 'required|exists:projects,id',
-            'code' => [
+            'code'       => [
                 'nullable',
                 'string',
                 'max:50',
@@ -39,7 +39,7 @@ class UpdateAcceptanceCriteriaRequest extends FormRequest
                         return $rule->ignore($criteriaId);
                     }),
             ],
-            'name' => 'required|string|max:255',
+            'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
         ];
     }
@@ -53,10 +53,10 @@ class UpdateAcceptanceCriteriaRequest extends FormRequest
     {
         return [
             'project_id.required' => 'A project must be selected.',
-            'project_id.exists' => 'The selected project does not exist.',
-            'code.unique' => 'This code already exists for the selected project.',
-            'name.required' => 'The acceptance criteria name is required.',
-            'name.max' => 'The acceptance criteria name may not be greater than 255 characters.',
+            'project_id.exists'   => 'The selected project does not exist.',
+            'code.unique'         => 'This code already exists for the selected project.',
+            'name.required'       => 'The acceptance criteria name is required.',
+            'name.max'            => 'The acceptance criteria name may not be greater than 255 characters.',
         ];
     }
 }

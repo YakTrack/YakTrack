@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\TestResult;
 use App\EvidenceType;
+use App\Models\TestResult;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,10 +22,10 @@ class TestResultEvidenceFactory extends Factory
 
         return [
             'test_result_id' => TestResult::factory(),
-            'type' => $type,
-            'file_path' => $type === EvidenceType::Image ? 'test-evidence/' . $this->faker->uuid() . '.jpg' : null,
-            'content' => $type === EvidenceType::Text ? $this->faker->paragraphs(2, true) : null,
-            'sort_order' => $this->faker->numberBetween(0, 10),
+            'type'           => $type,
+            'file_path'      => $type === EvidenceType::Image ? 'test-evidence/'.$this->faker->uuid().'.jpg' : null,
+            'content'        => $type === EvidenceType::Text ? $this->faker->paragraphs(2, true) : null,
+            'sort_order'     => $this->faker->numberBetween(0, 10),
         ];
     }
 
@@ -35,9 +35,9 @@ class TestResultEvidenceFactory extends Factory
     public function image(): static
     {
         return $this->state(fn (array $attributes) => [
-            'type' => EvidenceType::Image,
-            'file_path' => 'test-evidence/' . $this->faker->uuid() . '.jpg',
-            'content' => null,
+            'type'      => EvidenceType::Image,
+            'file_path' => 'test-evidence/'.$this->faker->uuid().'.jpg',
+            'content'   => null,
         ]);
     }
 
@@ -47,9 +47,9 @@ class TestResultEvidenceFactory extends Factory
     public function text(): static
     {
         return $this->state(fn (array $attributes) => [
-            'type' => EvidenceType::Text,
+            'type'      => EvidenceType::Text,
             'file_path' => null,
-            'content' => $this->faker->paragraphs(2, true),
+            'content'   => $this->faker->paragraphs(2, true),
         ]);
     }
 

@@ -1,12 +1,12 @@
 <?php
 
+use App\EvidenceType;
 use App\Models\AcceptanceCriteria;
 use App\Models\Project;
 use App\Models\TestResult;
 use App\Models\TestResultEvidence;
 use App\Models\TestRun;
 use App\Models\User;
-use App\EvidenceType;
 use App\TestResultStatus;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -17,23 +17,23 @@ it('can add text evidence to test result', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Passed,
+        'status'                 => TestResultStatus::Passed,
     ]);
 
     $response = $this->post(route('test-result.evidence.store', $testResult), [
-        'type' => EvidenceType::Text->value,
+        'type'    => EvidenceType::Text->value,
         'content' => 'This is test evidence',
     ]);
 
@@ -41,32 +41,32 @@ it('can add text evidence to test result', function () {
 
     $this->assertDatabaseHas('test_result_evidence', [
         'test_result_id' => $testResult->id,
-        'type' => EvidenceType::Text->value,
-        'content' => 'This is test evidence',
+        'type'           => EvidenceType::Text->value,
+        'content'        => 'This is test evidence',
     ]);
 });
 
 it('can add image evidence to test result', function () {
     Storage::fake('public');
-    
+
     $this->actingAsUser();
 
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Passed,
+        'status'                 => TestResultStatus::Passed,
     ]);
 
     $file = UploadedFile::fake()->image('test-image.jpg');
@@ -80,7 +80,7 @@ it('can add image evidence to test result', function () {
 
     $this->assertDatabaseHas('test_result_evidence', [
         'test_result_id' => $testResult->id,
-        'type' => EvidenceType::Image->value,
+        'type'           => EvidenceType::Image->value,
     ]);
 
     // Check that file was stored
@@ -95,43 +95,43 @@ it('can add multiple pieces of evidence to test result', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Passed,
+        'status'                 => TestResultStatus::Passed,
     ]);
 
     // Add first evidence
     $response1 = $this->post(route('test-result.evidence.store', $testResult), [
-        'type' => EvidenceType::Text->value,
+        'type'    => EvidenceType::Text->value,
         'content' => 'First evidence',
     ]);
     $response1->assertRedirect();
 
     // Add second evidence
     $response2 = $this->post(route('test-result.evidence.store', $testResult), [
-        'type' => EvidenceType::Text->value,
+        'type'    => EvidenceType::Text->value,
         'content' => 'Second evidence',
     ]);
     $response2->assertRedirect();
 
     $this->assertDatabaseHas('test_result_evidence', [
         'test_result_id' => $testResult->id,
-        'content' => 'First evidence',
+        'content'        => 'First evidence',
     ]);
 
     $this->assertDatabaseHas('test_result_evidence', [
         'test_result_id' => $testResult->id,
-        'content' => 'Second evidence',
+        'content'        => 'Second evidence',
     ]);
 });
 
@@ -141,25 +141,25 @@ it('can remove evidence from test result', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Passed,
+        'status'                 => TestResultStatus::Passed,
     ]);
 
     $evidence = TestResultEvidence::factory()->create([
         'test_result_id' => $testResult->id,
-        'type' => EvidenceType::Text->value,
-        'content' => 'Test evidence',
+        'type'           => EvidenceType::Text->value,
+        'content'        => 'Test evidence',
     ]);
 
     $response = $this->delete(route('test-result.evidence.destroy', $evidence));
@@ -173,25 +173,25 @@ it('can remove evidence from test result', function () {
 
 it('removes image file when deleting image evidence', function () {
     Storage::fake('public');
-    
+
     $this->actingAsUser();
 
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Passed,
+        'status'                 => TestResultStatus::Passed,
     ]);
 
     $file = UploadedFile::fake()->image('test-image.jpg');
@@ -199,9 +199,9 @@ it('removes image file when deleting image evidence', function () {
 
     $evidence = TestResultEvidence::factory()->create([
         'test_result_id' => $testResult->id,
-        'type' => EvidenceType::Image->value,
-        'file_path' => $filePath,
-        'content' => $filePath,
+        'type'           => EvidenceType::Image->value,
+        'file_path'      => $filePath,
+        'content'        => $filePath,
     ]);
 
     $response = $this->delete(route('test-result.evidence.destroy', $evidence));
@@ -221,23 +221,23 @@ it('shows validation errors for invalid evidence type', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Passed,
+        'status'                 => TestResultStatus::Passed,
     ]);
 
     $response = $this->post(route('test-result.evidence.store', $testResult), [
-        'type' => 'invalid_type',
+        'type'    => 'invalid_type',
         'content' => 'Test evidence',
     ]);
 
@@ -251,23 +251,23 @@ it('shows validation errors for missing content', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Passed,
+        'status'                 => TestResultStatus::Passed,
     ]);
 
     $response = $this->post(route('test-result.evidence.store', $testResult), [
-        'type' => EvidenceType::Text->value,
+        'type'    => EvidenceType::Text->value,
         'content' => '', // Empty content
     ]);
 
@@ -279,23 +279,23 @@ it('requires authentication to add evidence', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Passed,
+        'status'                 => TestResultStatus::Passed,
     ]);
 
     $response = $this->post(route('test-result.evidence.store', $testResult), [
-        'type' => EvidenceType::Text->value,
+        'type'    => EvidenceType::Text->value,
         'content' => 'Test evidence',
     ]);
 
@@ -306,25 +306,25 @@ it('requires authentication to remove evidence', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Passed,
+        'status'                 => TestResultStatus::Passed,
     ]);
 
     $evidence = TestResultEvidence::factory()->create([
         'test_result_id' => $testResult->id,
-        'type' => EvidenceType::Text->value,
-        'content' => 'Test evidence',
+        'type'           => EvidenceType::Text->value,
+        'content'        => 'Test evidence',
     ]);
 
     $response = $this->delete(route('test-result.evidence.destroy', $evidence));
@@ -346,23 +346,23 @@ it('shows success message after adding evidence', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Passed,
+        'status'                 => TestResultStatus::Passed,
     ]);
 
     $response = $this->post(route('test-result.evidence.store', $testResult), [
-        'type' => EvidenceType::Text->value,
+        'type'    => EvidenceType::Text->value,
         'content' => 'Test evidence',
     ]);
 
@@ -376,25 +376,25 @@ it('shows success message after removing evidence', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Passed,
+        'status'                 => TestResultStatus::Passed,
     ]);
 
     $evidence = TestResultEvidence::factory()->create([
         'test_result_id' => $testResult->id,
-        'type' => EvidenceType::Text->value,
-        'content' => 'Test evidence',
+        'type'           => EvidenceType::Text->value,
+        'content'        => 'Test evidence',
     ]);
 
     $response = $this->delete(route('test-result.evidence.destroy', $evidence));

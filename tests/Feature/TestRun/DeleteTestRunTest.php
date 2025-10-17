@@ -11,8 +11,8 @@ it('can delete test run', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run',
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -31,8 +31,8 @@ it('deletes associated test results when deleting test run', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run',
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -59,8 +59,8 @@ it('deletes associated evidence when deleting test run', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run',
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -69,7 +69,7 @@ it('deletes associated evidence when deleting test run', function () {
     ]);
 
     $evidence = $testResult->evidence()->create([
-        'type' => 'text',
+        'type'    => 'text',
         'content' => 'Test evidence',
     ]);
 
@@ -90,8 +90,8 @@ it('requires authentication to delete test run', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run',
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -114,8 +114,8 @@ it('shows success message after deletion', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run',
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -130,16 +130,16 @@ it('can delete multiple test runs', function () {
 
     $project = Project::factory()->create();
     $user = User::factory()->create();
-    
+
     $testRun1 = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run 1',
+        'project_id'          => $project->id,
+        'name'                => 'Test Run 1',
         'executed_by_user_id' => $user->id,
     ]);
-    
+
     $testRun2 = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run 2',
+        'project_id'          => $project->id,
+        'name'                => 'Test Run 2',
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -163,8 +163,8 @@ it('handles deletion of test run with many test results', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run',
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
         'executed_by_user_id' => $user->id,
     ]);
 

@@ -21,11 +21,11 @@ class TestResultFactory extends Factory
     public function definition(): array
     {
         return [
-            'test_run_id' => TestRun::factory(),
-            'acceptance_criteria_id' => AcceptanceCriteria::factory(),
+            'test_run_id'                    => TestRun::factory(),
+            'acceptance_criteria_id'         => AcceptanceCriteria::factory(),
             'acceptance_criteria_version_id' => AcceptanceCriteriaVersion::factory(),
-            'status' => $this->faker->randomElement(TestResultStatus::cases()),
-            'notes' => $this->faker->optional(0.4)->paragraphs(1, true),
+            'status'                         => $this->faker->randomElement(TestResultStatus::cases()),
+            'notes'                          => $this->faker->optional(0.4)->paragraphs(1, true),
         ];
     }
 

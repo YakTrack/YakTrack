@@ -19,10 +19,10 @@ class TestRunFactory extends Factory
     public function definition(): array
     {
         return [
-            'project_id' => Project::factory(),
-            'name' => $this->faker->words(3, true) . ' Test Run',
-            'description' => $this->faker->optional(0.6)->paragraphs(2, true),
-            'executed_at' => $this->faker->dateTimeBetween('-1 week', 'now'),
+            'project_id'          => Project::factory(),
+            'name'                => $this->faker->words(3, true).' Test Run',
+            'description'         => $this->faker->optional(0.6)->paragraphs(2, true),
+            'executed_at'         => $this->faker->dateTimeBetween('-1 week', 'now'),
             'executed_by_user_id' => User::factory(),
         ];
     }

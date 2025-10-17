@@ -45,7 +45,7 @@ class TestResultEvidence extends Model
     public function getFileUrlAttribute(): ?string
     {
         if ($this->isImage() && $this->file_path) {
-            return asset('storage/test-evidence/' . basename($this->file_path));
+            return asset('storage/test-evidence/'.basename($this->file_path));
         }
 
         return null;

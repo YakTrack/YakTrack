@@ -18,11 +18,11 @@ class AcceptanceCriteriaFactory extends Factory
     public function definition(): array
     {
         return [
-            'project_id' => Project::factory(),
-            'code' => $this->faker->optional(0.7)->regexify('[A-Z]{2,3}-[0-9]{3}'),
-            'name' => $this->faker->sentence(4),
+            'project_id'  => Project::factory(),
+            'code'        => $this->faker->optional(0.7)->regexify('[A-Z]{2,3}-[0-9]{3}'),
+            'name'        => $this->faker->sentence(4),
             'description' => $this->faker->optional(0.8)->paragraphs(2, true),
-            'is_active' => true,
+            'is_active'   => true,
         ];
     }
 

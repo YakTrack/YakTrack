@@ -59,13 +59,13 @@ class TestRun extends Model
         $blocked = $this->testResults()->where('status', TestResultStatus::Blocked)->count();
 
         return [
-            'total' => $total,
-            'pending' => $pending,
-            'passed' => $passed,
-            'failed' => $failed,
-            'skipped' => $skipped,
-            'blocked' => $blocked,
-            'pass_rate' => $total > 0 ? round(($passed / $total) * 100, 1) : 0,
+            'total'           => $total,
+            'pending'         => $pending,
+            'passed'          => $passed,
+            'failed'          => $failed,
+            'skipped'         => $skipped,
+            'blocked'         => $blocked,
+            'pass_rate'       => $total > 0 ? round(($passed / $total) * 100, 1) : 0,
             'completion_rate' => $total > 0 ? round((($passed + $failed) / $total) * 100, 1) : 0,
         ];
     }

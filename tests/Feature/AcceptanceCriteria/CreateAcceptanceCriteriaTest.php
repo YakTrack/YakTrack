@@ -2,7 +2,6 @@
 
 use App\Models\AcceptanceCriteria;
 use App\Models\Project;
-use App\Models\User;
 
 it('can view the page to create acceptance criteria', function () {
     $this->actingAsUser();
@@ -23,30 +22,30 @@ it('can submit a post request to create acceptance criteria', function () {
     $project = Project::factory()->create();
 
     $response = $this->post(route('acceptance-criteria.store'), [
-        'project_id' => $project->id,
-        'code' => 'AC-001',
-        'name' => 'User can login',
+        'project_id'  => $project->id,
+        'code'        => 'AC-001',
+        'name'        => 'User can login',
         'description' => 'User should be able to login with valid credentials.',
     ]);
 
     $response->assertRedirect(route('acceptance-criteria.index'));
 
     $this->assertDatabaseHas('acceptance_criteria', [
-        'project_id' => $project->id,
-        'code' => 'AC-001',
-        'name' => 'User can login',
+        'project_id'  => $project->id,
+        'code'        => 'AC-001',
+        'name'        => 'User can login',
         'description' => 'User should be able to login with valid credentials.',
-        'is_active' => true,
+        'is_active'   => true,
     ]);
 
     // Check that a version was created
     $criteria = AcceptanceCriteria::where('name', 'User can login')->first();
     $this->assertDatabaseHas('acceptance_criteria_versions', [
         'acceptance_criteria_id' => $criteria->id,
-        'code' => 'AC-001',
-        'name' => 'User can login',
-        'description' => 'User should be able to login with valid credentials.',
-        'version_number' => 1,
+        'code'                   => 'AC-001',
+        'name'                   => 'User can login',
+        'description'            => 'User should be able to login with valid credentials.',
+        'version_number'         => 1,
     ]);
 });
 
@@ -59,17 +58,17 @@ it('can create acceptance criteria without code and description', function () {
 
     $response = $this->post(route('acceptance-criteria.store'), [
         'project_id' => $project->id,
-        'name' => 'User can logout',
+        'name'       => 'User can logout',
     ]);
 
     $response->assertRedirect(route('acceptance-criteria.index'));
 
     $this->assertDatabaseHas('acceptance_criteria', [
-        'project_id' => $project->id,
-        'code' => null,
-        'name' => 'User can logout',
+        'project_id'  => $project->id,
+        'code'        => null,
+        'name'        => 'User can logout',
         'description' => null,
-        'is_active' => true,
+        'is_active'   => true,
     ]);
 });
 
@@ -79,13 +78,13 @@ it('cannot create acceptance criteria with duplicate code for same project', fun
     $project = Project::factory()->create();
     AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'code' => 'AC-001',
+        'code'       => 'AC-001',
     ]);
 
     $response = $this->post(route('acceptance-criteria.store'), [
         'project_id' => $project->id,
-        'code' => 'AC-001',
-        'name' => 'Another criteria',
+        'code'       => 'AC-001',
+        'name'       => 'Another criteria',
     ]);
 
     $response->assertRedirect();
@@ -104,20 +103,20 @@ it('can create acceptance criteria with same code for different projects', funct
 
     AcceptanceCriteria::factory()->create([
         'project_id' => $project1->id,
-        'code' => 'AC-001',
+        'code'       => 'AC-001',
     ]);
 
     $response = $this->post(route('acceptance-criteria.store'), [
         'project_id' => $project2->id,
-        'code' => 'AC-001',
-        'name' => 'Another criteria',
+        'code'       => 'AC-001',
+        'name'       => 'Another criteria',
     ]);
 
     $response->assertRedirect(route('acceptance-criteria.index'));
 
     $this->assertDatabaseHas('acceptance_criteria', [
         'project_id' => $project2->id,
-        'code' => 'AC-001',
-        'name' => 'Another criteria',
+        'code'       => 'AC-001',
+        'name'       => 'Another criteria',
     ]);
 });

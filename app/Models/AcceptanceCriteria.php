@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\TestResultStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -66,11 +65,11 @@ class AcceptanceCriteria extends Model
         $versionNumber = $maxVersion ? $maxVersion + 1 : 1;
 
         return $this->versions()->create([
-            'code' => $data['code'] ?? $this->code,
-            'name' => $data['name'] ?? $this->name,
-            'description' => $data['description'] ?? $this->description,
-            'version_number' => $versionNumber,
-            'changed_at' => now(),
+            'code'               => $data['code'] ?? $this->code,
+            'name'               => $data['name'] ?? $this->name,
+            'description'        => $data['description'] ?? $this->description,
+            'version_number'     => $versionNumber,
+            'changed_at'         => now(),
             'changed_by_user_id' => $userId,
         ]);
     }
