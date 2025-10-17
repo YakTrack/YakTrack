@@ -28,7 +28,7 @@ class StoreTestResultEvidenceRequest extends FormRequest
                 'required',
                 Rule::enum(EvidenceType::class),
             ],
-            'file' => 'required_if:type,image|image|max:10240', // 10MB max
+            'file'    => 'required_if:type,image|image|max:10240', // 10MB max
             'content' => 'required_if:type,text|string',
         ];
     }
@@ -41,11 +41,11 @@ class StoreTestResultEvidenceRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'type.required' => 'The evidence type is required.',
-            'type.enum' => 'The evidence type must be either image or text.',
-            'file.required_if' => 'An image file is required when evidence type is image.',
-            'file.image' => 'The uploaded file must be an image.',
-            'file.max' => 'The image file may not be greater than 10MB.',
+            'type.required'       => 'The evidence type is required.',
+            'type.enum'           => 'The evidence type must be either image or text.',
+            'file.required_if'    => 'An image file is required when evidence type is image.',
+            'file.image'          => 'The uploaded file must be an image.',
+            'file.max'            => 'The image file may not be greater than 10MB.',
             'content.required_if' => 'Content is required when evidence type is text.',
         ];
     }

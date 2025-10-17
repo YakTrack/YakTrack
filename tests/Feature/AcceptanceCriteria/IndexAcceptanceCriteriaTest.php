@@ -2,7 +2,6 @@
 
 use App\Models\AcceptanceCriteria;
 use App\Models\Project;
-use App\Models\User;
 
 it('can view the acceptance criteria index page', function () {
     $this->actingAsUser();
@@ -17,9 +16,9 @@ it('displays existing acceptance criteria', function () {
 
     $project = Project::factory()->create(['name' => 'Test Project']);
     $criteria = AcceptanceCriteria::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'User can login',
-        'code' => 'AC-001',
+        'project_id'  => $project->id,
+        'name'        => 'User can login',
+        'code'        => 'AC-001',
         'description' => 'User should be able to login with valid credentials.',
     ]);
 
@@ -33,15 +32,15 @@ it('can filter acceptance criteria by project', function () {
 
     $project1 = Project::factory()->create(['name' => 'Project One']);
     $project2 = Project::factory()->create(['name' => 'Project Two']);
-    
+
     $criteria1 = AcceptanceCriteria::factory()->create([
         'project_id' => $project1->id,
-        'name' => 'Criteria One',
+        'name'       => 'Criteria One',
     ]);
-    
+
     $criteria2 = AcceptanceCriteria::factory()->create([
         'project_id' => $project2->id,
-        'name' => 'Criteria Two',
+        'name'       => 'Criteria Two',
     ]);
 
     $response = $this->get(route('acceptance-criteria.index', ['project_id' => $project1->id]));
@@ -63,7 +62,7 @@ it('can navigate to show page from criteria link', function () {
     $project = Project::factory()->create();
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $response = $this->get(route('acceptance-criteria.show', $criteria));
@@ -81,7 +80,7 @@ it('paginates results when there are many criteria', function () {
     $this->actingAsUser();
 
     $project = Project::factory()->create();
-    
+
     // Create more than 15 criteria (default pagination limit)
     AcceptanceCriteria::factory()->count(20)->create([
         'project_id' => $project->id,

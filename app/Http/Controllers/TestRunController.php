@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTestRunRequest;
 use App\Models\AcceptanceCriteria;
 use App\Models\Project;
-use App\Models\TestRun;
 use App\Models\TestResult;
+use App\Models\TestRun;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -30,20 +30,20 @@ class TestRunController extends Controller
         return Inertia::render('TestRun/Index', [
             'testRuns' => $testRuns,
             'projects' => Project::orderBy('name')->get(),
-            'filters' => $request->only(['project_id']),
+            'filters'  => $request->only(['project_id']),
         ]);
     }
 
     public function create(Request $request): Response
     {
         $projectId = $request->get('project_id');
-        $criteria = $projectId 
+        $criteria = $projectId
             ? AcceptanceCriteria::where('project_id', $projectId)->where('is_active', true)->orderBy('name')->get()
             : collect();
 
         return Inertia::render('TestRun/Create', [
-            'projects' => Project::orderBy('name')->get(),
-            'criteria' => $criteria,
+            'projects'          => Project::orderBy('name')->get(),
+            'criteria'          => $criteria,
             'selectedProjectId' => $projectId,
         ]);
     }
@@ -53,10 +53,10 @@ class TestRunController extends Controller
         $validated = $request->validated();
 
         $testRun = TestRun::create([
-            'project_id' => $validated['project_id'],
-            'name' => $validated['name'],
-            'description' => $validated['description'] ?? null,
-            'executed_at' => $validated['executed_at'],
+            'project_id'          => $validated['project_id'],
+            'name'                => $validated['name'],
+            'description'         => $validated['description'] ?? null,
+            'executed_at'         => $validated['executed_at'],
             'executed_by_user_id' => auth()->id(),
         ]);
 
@@ -66,15 +66,15 @@ class TestRunController extends Controller
             $latestVersion = $criteria->getCurrentVersion();
 
             TestResult::create([
-                'test_run_id' => $testRun->id,
-                'acceptance_criteria_id' => $criteriaId,
+                'test_run_id'                    => $testRun->id,
+                'acceptance_criteria_id'         => $criteriaId,
                 'acceptance_criteria_version_id' => $latestVersion?->id,
-                'status' => 'skipped', // Default status
+                'status'                         => 'skipped', // Default status
             ]);
         }
 
         return redirect()->route('test-run.show', $testRun)
-            ->with('success', 'Test run "' . $testRun->name . '" has been created.');
+            ->with('success', 'Test run "'.$testRun->name.'" has been created.');
     }
 
     public function show(TestRun $testRun): Response
@@ -96,10 +96,10 @@ class TestRunController extends Controller
     public function destroy(TestRun $testRun): RedirectResponse
     {
         $name = $testRun->name;
-        
+
         $testRun->delete();
 
         return redirect()->route('test-run.index')
-            ->with('success', 'Test run "' . $name . '" has been deleted.');
+            ->with('success', 'Test run "'.$name.'" has been deleted.');
     }
 }
