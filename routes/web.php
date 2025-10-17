@@ -50,6 +50,17 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('session', 'SessionController');
     Route::patch('sessions', 'SessionsController@update')->name('sessions.update');
+
+    // Acceptance Criteria Routes
+    Route::resource('acceptance-criteria', 'AcceptanceCriteriaController');
+
+    // Test Run Routes
+    Route::resource('test-run', 'TestRunController');
+
+    // Test Result Routes
+    Route::patch('test-result/{testResult}', 'TestResultController@update')->name('test-result.update');
+    Route::post('test-result/{testResult}/evidence', 'TestResultController@addEvidence')->name('test-result.evidence.store');
+    Route::delete('test-result-evidence/{evidence}', 'TestResultController@removeEvidence')->name('test-result.evidence.destroy');
 });
 
 // Client Portal Routes

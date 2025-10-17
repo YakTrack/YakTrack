@@ -103,6 +103,28 @@ class Project extends Model
         return $this->hasManyThrough(Session::class, Task::class);
     }
 
+    /**
+     * The acceptance criteria that belong to the project.
+     **/
+    /**
+     * @return HasMany<AcceptanceCriteria, $this>
+     */
+    public function acceptanceCriteria(): HasMany
+    {
+        return $this->hasMany(AcceptanceCriteria::class)->where('is_active', true);
+    }
+
+    /**
+     * The test runs that belong to the project.
+     **/
+    /**
+     * @return HasMany<TestRun, $this>
+     */
+    public function testRuns(): HasMany
+    {
+        return $this->hasMany(TestRun::class)->orderBy('executed_at', 'desc');
+    }
+
     public function isDeletable(): bool
     {
         if ($this->sprints->count() > 0) {
@@ -110,6 +132,14 @@ class Project extends Model
         }
 
         if ($this->tasks->count() > 0) {
+            return false;
+        }
+
+        if ($this->acceptanceCriteria->count() > 0) {
+            return false;
+        }
+
+        if ($this->testRuns->count() > 0) {
             return false;
         }
 

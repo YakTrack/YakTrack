@@ -7,6 +7,7 @@ use App\Models\Concerns\BelongsToProject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Task extends Model
@@ -57,6 +58,14 @@ class Task extends Model
     public function taskStatus(): BelongsTo
     {
         return $this->belongsTo(TaskStatus::class, 'status_id');
+    }
+
+    /**
+     * @return BelongsToMany<AcceptanceCriteria, $this>
+     */
+    public function acceptanceCriteria(): BelongsToMany
+    {
+        return $this->belongsToMany(AcceptanceCriteria::class, 'acceptance_criteria_task');
     }
 
     public function openSprint(): Sprint

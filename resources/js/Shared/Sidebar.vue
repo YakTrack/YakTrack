@@ -63,7 +63,20 @@
                     {
                         name: 'Projects',
                         route: 'project.index',
-                        icon: 'fas fa-briefcase fa-fw'
+                        icon: 'fas fa-briefcase fa-fw',
+                        active: route().current('project.*'),
+                    },
+                    {
+                        name: 'Acceptance Criteria',
+                        route: 'acceptance-criteria.index',
+                        icon: 'fas fa-clipboard-check fa-fw',
+                        active: route().current('acceptance-criteria.*'),
+                    },
+                    {
+                        name: 'Test Runs',
+                        route: 'test-run.index',
+                        icon: 'fas fa-vial fa-fw',
+                        active: route().current('test-run.*'),
                     },
                     {
                         name: 'Targets',
