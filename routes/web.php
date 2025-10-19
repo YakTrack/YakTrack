@@ -66,6 +66,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::patch('test-result/{testResult}', 'TestResultController@update')->name('test-result.update');
     Route::post('test-result/{testResult}/evidence', 'TestResultController@addEvidence')->name('test-result.evidence.store');
     Route::delete('test-result-evidence/{evidence}', 'TestResultController@removeEvidence')->name('test-result.evidence.destroy');
+
+    // Client User Management Routes
+    Route::resource('client-users', 'ClientUserController');
+    Route::post('client-users/{clientUser}/logout-all-sessions', 'ClientUserController@logoutAllSessions')->name('client-users.logout-all-sessions');
+
+    // Client Login Session Routes
+    Route::get('client-login-sessions', 'ClientLoginSessionController@index')->name('client-login-sessions.index');
+    Route::get('client-login-sessions/statistics', 'ClientLoginSessionController@statistics')->name('client-login-sessions.statistics');
+    Route::get('client-login-sessions/{session}', 'ClientLoginSessionController@show')->name('client-login-sessions.show');
+    Route::post('client-login-sessions/{session}/logout', 'ClientLoginSessionController@logout')->name('client-login-sessions.logout');
+    Route::get('client-users/{clientUser}/login-sessions', 'ClientLoginSessionController@forClientUser')->name('client-users.login-sessions');
+    Route::post('client-users/{clientUser}/logout-all-sessions', 'ClientLoginSessionController@logoutAllForUser')->name('client-users.logout-all-sessions');
 });
 
 // Client Portal Routes
@@ -76,7 +88,7 @@ Route::prefix('client-portal')->name('client-portal.')->group(function () {
     Route::post('logout', 'ClientPortal\AuthController@logout')->name('logout');
 
     // Protected routes
-    Route::middleware('auth:client')->group(function () {
+    Route::middleware(['auth:client', 'log.client.login'])->group(function () {
         Route::get('/', 'ClientPortal\DashboardController@index')->name('dashboard');
 
         Route::get('projects', 'ClientPortal\ProjectController@index')->name('projects.index');

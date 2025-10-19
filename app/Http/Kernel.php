@@ -55,5 +55,6 @@ class Kernel extends HttpKernel
         'bindings'   => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'signed'     => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'verified'   => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'log.client.login' => \App\Http\Middleware\LogClientLogin::class,
     ];
 }

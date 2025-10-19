@@ -104,6 +104,8 @@ import {
   BeakerIcon,
   ViewfinderCircleIcon,
   DocumentTextIcon,
+  UserGroupIcon,
+  ChartBarIcon,
 } from '@heroicons/vue/24/outline'
 
 const props = defineProps({
@@ -142,5 +144,7 @@ const navigation = [
   { name: 'Targets', route: 'target.index', icon: ViewfinderCircleIcon, current: route().current('target.*') },
   { name: 'Invoices', route: 'invoice.index', icon: DocumentTextIcon, current: route().current('invoice.*') },
   { name: 'Clients', route: 'client.index', icon: UsersIcon, current: route().current('client.*') },
+  { name: 'Client Users', route: 'client-users.index', icon: UserGroupIcon, current: route().current('client-users.*') },
+  { name: 'Login Sessions', route: 'client-login-sessions.index', icon: ChartBarIcon, current: route().current('client-login-sessions.*') },
 ]
 </script>
