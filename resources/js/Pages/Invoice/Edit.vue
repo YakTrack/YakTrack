@@ -9,52 +9,67 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <template #title> {{ form.id ? 'Update' : 'Create' }} Invoice </template>
-        <form :action="route('invoice.store')" method="post" @submit.prevent="submit">
-            <div class="form-group">
-                <label for="client_id"> Client </label>
-                <client-select
-                    :clients="clients"
-                    v-model="form.client_id"
-                />
-            </div>
-            <div class="form-group">
-                <label for="date"> Date </label>
-                <input type="date" v-model="form.date" class="form-control"/>
-            </div>
-            <div class="form-group">
-                <label for="due_date"> Due Date </label>
-                <input type="date" name="due_date" v-model="form.due_date" class="form-control"/>
-            </div>
-            <div class="form-group">
-                <label for="number"> Number </label>
-                <input type="text" class="form-control" v-model="form.number" placeholder="Invoice name" />
-            </div>
+        <template #title>{{ form.id ? 'Update' : 'Create' }} Invoice</template>
 
-            <div class="form-group">
-                <label for="amount"> Amount </label>
-                <input type="text" placeholder="123.45" class="form-control" name="amount" v-model="form.amount"> 
-            </div>
-            <div class="form-group">
-                <label for="description"> Description </label>
-                <textarea name="description" class="form-control" placeholder="Enter a description for this invoice (optional)" v-model="form.description"/>
-            </div>
-            <div class="flex mt-4">
-                <div class="flex-1 mt-2">
-                    <button-link :href="route('invoice.index')"> Cancel </button-link>
-                </div>
-                <div class="flex-1 float-right">
-                    <button class="btn btn-blue float-right"> {{ isCreateForm ? 'Create' : 'Update' }} </button>
-                </div>
-            </div>
-        </form>
+        <form-layout
+            :cancel-url="route('invoice.index')"
+            :submit-text="isCreateForm ? 'Create' : 'Update'"
+            :submit-loading-text="'Saving...'"
+            :processing="processing"
+            @submit="submit"
+        >
+            <form-field
+                v-model="form.client_id"
+                type="select"
+                label="Client"
+                placeholder="Select a client"
+                :options="clients"
+                :required="true"
+            />
+
+            <form-field
+                v-model="form.date"
+                type="date"
+                label="Date"
+            />
+
+            <form-field
+                v-model="form.due_date"
+                type="date"
+                label="Due Date"
+            />
+
+            <form-field
+                v-model="form.number"
+                type="text"
+                label="Number"
+                placeholder="Invoice number"
+            />
+
+            <form-field
+                v-model="form.amount"
+                type="text"
+                label="Amount"
+                placeholder="123.45"
+                help="Enter the invoice amount"
+            />
+
+            <form-field
+                v-model="form.description"
+                type="textarea"
+                label="Description"
+                placeholder="Enter a description for this invoice (optional)"
+                :rows="3"
+            />
+        </form-layout>
     </layout>
 </template>
 
 <script>
     import breadcrumbs from '@/Shared/Breadcrumbs.vue';
-    import clientSelect from '@/Shared/ClientSelect.vue';
     import layout from '@/Shared/Layout.vue';
+    import formLayout from '@/Shared/FormLayout.vue';
+    import formField from '@/Shared/FormField.vue';
 
     export default {
         props: [
@@ -63,8 +78,9 @@
         ],
         components: {
             layout: layout,
-            clientSelect: clientSelect,
             breadcrumbs: breadcrumbs,
+            formLayout: formLayout,
+            formField: formField,
         },
         data() {
             return {
@@ -74,6 +90,9 @@
         computed: {
             isCreateForm() {
                 return this.form.id == null;
+            },
+            processing() {
+                return this.$inertia.processing;
             },
         },
         methods: {

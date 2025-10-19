@@ -11,133 +11,72 @@
         </template>
         <template #title>Create Acceptance Criteria</template>
 
-        <form @submit.prevent="submitForm" class="max-w-2xl">
-            <div class="card">
-                <div class="card-body">
-                    <!-- Project Selection -->
-                    <div class="mb-4">
-                        <label for="project_id" class="block text-sm font-medium text-gray-700 mb-2">
-                            Project <span class="text-red-500">*</span>
-                        </label>
-                        <select
-                            id="project_id"
-                            v-model="form.project_id"
-                            @change="onProjectChange"
-                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            :class="{ 'border-red-500': errors.project_id }"
-                        >
-                            <option value="">Select a project</option>
-                            <option v-for="project in projects" :key="project.id" :value="project.id">
-                                {{ project.name }}
-                            </option>
-                        </select>
-                        <div v-if="errors.project_id" class="mt-1 text-sm text-red-600">
-                            {{ errors.project_id }}
-                        </div>
-                    </div>
+        <form-layout
+            :cancel-url="route('acceptance-criteria.index')"
+            :submit-text="'Create Acceptance Criteria'"
+            :submit-loading-text="'Creating...'"
+            :processing="form.processing"
+            @submit="submitForm"
+        >
+            <!-- Project Selection -->
+            <form-field
+                v-model="form.project_id"
+                type="select"
+                label="Project"
+                placeholder="Select a project"
+                :options="projects"
+                :error="errors.project_id"
+                :required="true"
+                @update:model-value="onProjectChange"
+            />
 
-                    <!-- Feature Selection -->
-                    <div class="mb-4">
-                        <label for="feature_id" class="block text-sm font-medium text-gray-700 mb-2">
-                            Feature
-                        </label>
-                        <select
-                            id="feature_id"
-                            v-model="form.feature_id"
-                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            :class="{ 'border-red-500': errors.feature_id }"
-                            :disabled="!form.project_id"
-                        >
-                            <option value="">No feature (optional)</option>
-                            <option v-for="feature in availableFeatures" :key="feature.id" :value="feature.id">
-                                {{ feature.name }}
-                            </option>
-                        </select>
-                        <div v-if="errors.feature_id" class="mt-1 text-sm text-red-600">
-                            {{ errors.feature_id }}
-                        </div>
-                        <p v-if="!form.project_id" class="mt-1 text-sm text-gray-500">
-                            Please select a project first to see available features.
-                        </p>
-                    </div>
+            <!-- Feature Selection -->
+            <form-field
+                v-model="form.feature_id"
+                type="select"
+                label="Feature"
+                placeholder="No feature (optional)"
+                :options="availableFeatures"
+                :error="errors.feature_id"
+                :disabled="!form.project_id"
+            >
+                <template #help>
+                    <p v-if="!form.project_id" class="mt-1 text-sm text-gray-500">
+                        Please select a project first to see available features.
+                    </p>
+                </template>
+            </form-field>
 
-                    <!-- Code -->
-                    <div class="mb-4">
-                        <label for="code" class="block text-sm font-medium text-gray-700 mb-2">
-                            Code
-                        </label>
-                        <input
-                            id="code"
-                            v-model="form.code"
-                            type="text"
-                            placeholder="e.g., AC-001"
-                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            :class="{ 'border-red-500': errors.code }"
-                        />
-                        <div v-if="errors.code" class="mt-1 text-sm text-red-600">
-                            {{ errors.code }}
-                        </div>
-                        <p class="mt-1 text-sm text-gray-500">
-                            Optional unique identifier for this criteria within the project
-                        </p>
-                    </div>
+            <!-- Code -->
+            <form-field
+                v-model="form.code"
+                type="text"
+                label="Code"
+                placeholder="e.g., AC-001"
+                :error="errors.code"
+                help="Optional unique identifier for this criteria within the project"
+            />
 
-                    <!-- Name -->
-                    <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                            Name <span class="text-red-500">*</span>
-                        </label>
-                        <input
-                            id="name"
-                            v-model="form.name"
-                            type="text"
-                            placeholder="Enter acceptance criteria name"
-                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            :class="{ 'border-red-500': errors.name }"
-                        />
-                        <div v-if="errors.name" class="mt-1 text-sm text-red-600">
-                            {{ errors.name }}
-                        </div>
-                    </div>
+            <!-- Name -->
+            <form-field
+                v-model="form.name"
+                type="text"
+                label="Name"
+                placeholder="Enter acceptance criteria name"
+                :error="errors.name"
+                :required="true"
+            />
 
-                    <!-- Description -->
-                    <div class="mb-4">
-                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-                            Description
-                        </label>
-                        <textarea
-                            id="description"
-                            v-model="form.description"
-                            rows="4"
-                            placeholder="Enter detailed description of the acceptance criteria"
-                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
-                            :class="{ 'border-red-500': errors.description }"
-                        ></textarea>
-                        <div v-if="errors.description" class="mt-1 text-sm text-red-600">
-                            {{ errors.description }}
-                        </div>
-                    </div>
-
-                    <!-- Actions -->
-                    <div class="flex items-center justify-end space-x-3">
-                        <button-link
-                            :href="route('acceptance-criteria.index')"
-                            color="gray"
-                        >
-                            Cancel
-                        </button-link>
-                        <button
-                            type="submit"
-                            :disabled="form.processing"
-                            class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-50"
-                        >
-                            <span v-if="form.processing">Creating...</span>
-                            <span v-else>Create Acceptance Criteria</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </form>
+            <!-- Description -->
+            <form-field
+                v-model="form.description"
+                type="textarea"
+                label="Description"
+                placeholder="Enter detailed description of the acceptance criteria"
+                :error="errors.description"
+                :rows="4"
+            />
+        </form-layout>
     </layout>
 </template>
 
@@ -146,6 +85,8 @@ import { Link, useForm } from '@inertiajs/vue3'
 import { computed } from 'vue'
 import breadcrumbs from '@/Shared/Breadcrumbs.vue'
 import layout from '@/Shared/Layout.vue'
+import formLayout from '@/Shared/FormLayout.vue'
+import formField from '@/Shared/FormField.vue'
 
 export default {
     props: [
@@ -157,6 +98,8 @@ export default {
         Link,
         breadcrumbs: breadcrumbs,
         layout: layout,
+        formLayout: formLayout,
+        formField: formField,
     },
     setup(props) {
         const form = useForm({

@@ -9,45 +9,48 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <form @submit.prevent="submit" class="mt-2">
-            <div class="form-group">
-                <label for="name"> Name </label>
-                <input type="text" name="name" v-model="form.name" class="form-control" placeholder="Project name"/>
-            </div>
-            <div class="form-group">
-                <label for="description"> Description </label>
-                <textarea name="description" v-model="form.description" class="form-control" placeholder="Project description"/>
-            </div>
-            <div class="form-group">
-                <label for="client_id"> Client </label>
-                <client-select
-                    :clients="clients"
-                    v-model="form.client_id"
-                />
-            </div>
-            <div class="form-group mt-2 flex">
-                <div class="flex-1">
-                </div>
-                <div class="text-right flex-1">
-                </div>
-            </div>
-            <div class="flex">
-                <div class="flex-1 mt-2">
-                    <button-link :href="route('project.index')"> Cancel </button-link>
-                </div>
-                <div class="flex-1 float-right">
-                    <button class="btn btn-blue float-right"> {{ isCreateForm ? 'Create' : 'Update' }} </button>
-                </div>
-            </div>
-        </form>
+        <template #title>{{ isCreateForm ? 'Create' : 'Edit' }} Project</template>
+
+        <form-layout
+            :cancel-url="route('project.index')"
+            :submit-text="isCreateForm ? 'Create' : 'Update'"
+            :submit-loading-text="'Saving...'"
+            :processing="processing"
+            @submit="submit"
+        >
+            <form-field
+                v-model="form.name"
+                type="text"
+                label="Name"
+                placeholder="Project name"
+                :required="true"
+            />
+
+            <form-field
+                v-model="form.description"
+                type="textarea"
+                label="Description"
+                placeholder="Project description"
+                :rows="3"
+            />
+
+            <form-field
+                v-model="form.client_id"
+                type="select"
+                label="Client"
+                placeholder="Select a client"
+                :options="clients"
+            />
+        </form-layout>
     </layout>
 </template>
 
 <script>
 
-    import clientSelect from '@/Shared/ClientSelect.vue';
     import breadcrumbs from '@/Shared/Breadcrumbs.vue';
     import layout from '@/Shared/Layout.vue';
+    import formLayout from '@/Shared/FormLayout.vue';
+    import formField from '@/Shared/FormField.vue';
 
     export default {
         props: [
@@ -60,9 +63,10 @@
             }
         },
         components: {
-            clientSelect: clientSelect,
             breadcrumbs: breadcrumbs,
             layout: layout,
+            formLayout: formLayout,
+            formField: formField,
         },
         methods: {
             submit() {
@@ -75,6 +79,9 @@
         computed: {
             isCreateForm() {
                 return this.project == null;
+            },
+            processing() {
+                return this.$inertia.processing;
             },
         }
     }

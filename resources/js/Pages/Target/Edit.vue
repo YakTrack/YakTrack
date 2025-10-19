@@ -9,32 +9,39 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <template #title> {{ form.id ? 'Update' : 'Create' }} Daily Target </template>
-        <form :action="route('target.store')" method="post" @submit.prevent="submit">
-            <div class="form-group">
-                <label for="starts_at"> Date </label>
-                <input type="date" name="starts_at" v-model="form.starts_at" class="form-control" required/>
-            </div>
-            <div lass="form-group">
-                <label for="due_date"> Target Value (hours) </label>
-                <input type="number" name="due_date" v-model="form.value" class="form-control" step="0.25" required/>
-            </div>
-            <div class="flex mt-4">
-                <div class="flex-1 mt-2">
-                    <button-link :href="route('target.index')"> Cancel </button-link>
-                </div>
-                <div class="flex-1 float-right">
-                    <button class="btn btn-blue float-right"> {{ isCreateForm ? 'Create' : 'Update' }} </button>
-                </div>
-            </div>
-        </form>
+        <template #title>{{ form.id ? 'Update' : 'Create' }} Daily Target</template>
+
+        <form-layout
+            :cancel-url="route('target.index')"
+            :submit-text="isCreateForm ? 'Create' : 'Update'"
+            :submit-loading-text="'Saving...'"
+            :processing="processing"
+            @submit="submit"
+        >
+            <form-field
+                v-model="form.starts_at"
+                type="date"
+                label="Date"
+                :required="true"
+            />
+
+            <form-field
+                v-model="form.value"
+                type="number"
+                label="Target Value (hours)"
+                placeholder="Enter target hours"
+                :required="true"
+                help="Enter the target number of hours for this day"
+            />
+        </form-layout>
     </layout>
 </template>
 
 <script>
     import breadcrumbs from '@/Shared/Breadcrumbs.vue';
-    import clientSelect from '@/Shared/ClientSelect.vue';
     import layout from '@/Shared/Layout.vue';
+    import formLayout from '@/Shared/FormLayout.vue';
+    import formField from '@/Shared/FormField.vue';
 
     export default {
         props: [
@@ -43,8 +50,9 @@
         ],
         components: {
             layout: layout,
-            clientSelect: clientSelect,
             breadcrumbs: breadcrumbs,
+            formLayout: formLayout,
+            formField: formField,
         },
         data() {
             return {
@@ -54,6 +62,9 @@
         computed: {
             isCreateForm() {
                 return this.form.id == null;
+            },
+            processing() {
+                return this.$inertia.processing;
             },
         },
         methods: {

@@ -10,35 +10,45 @@
             ></breadcrumbs>
         </template>
         <template #title> {{ isCreateForm ? 'Create' : 'Edit' }} Client </template>
-        <form :action="route('client.store')" method="post" @submit.prevent="submit">
-            <div class="form-group">
-                <label for="name"> Name </label>
-                <input type="text" name="name" v-model="form.name" placeholder="Name of client" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label for="email"> Email </label>
-                <input type="email" name="email" v-model="form.email" placeholder="Email address of client" class="form-control" />
-            </div>
-            <div class="flex mt-4">
-                <div class="flex-1 mt-2">
-                    <button-link :href="route('client.index')"> Cancel </button-link>
-                </div>
-                <div class="flex-1 float-right">
-                    <button class="btn btn-blue float-right"> {{ isCreateForm ? 'Create' : 'Update' }} </button>
-                </div>
-            </div>
-        </form>
+
+        <form-layout
+            :cancel-url="route('client.index')"
+            :submit-text="isCreateForm ? 'Create' : 'Update'"
+            :submit-loading-text="'Saving...'"
+            :processing="processing"
+            @submit="submit"
+        >
+            <form-field
+                v-model="form.name"
+                type="text"
+                label="Name"
+                placeholder="Name of client"
+                :required="true"
+            />
+
+            <form-field
+                v-model="form.email"
+                type="email"
+                label="Email"
+                placeholder="Email address of client"
+                :required="true"
+            />
+        </form-layout>
     </layout>
 </template>
 
 <script>
     import breadcrumbs from '@/Shared/Breadcrumbs.vue';
     import layout from '@/Shared/Layout.vue';
+    import formLayout from '@/Shared/FormLayout.vue';
+    import formField from '@/Shared/FormField.vue';
 
     export default {
         components: {
             breadcrumbs: breadcrumbs,
             layout: layout,
+            formLayout: formLayout,
+            formField: formField,
         },
         props: ['client'],
         data() {
@@ -49,6 +59,9 @@
         computed: {
             isCreateForm() {
                 return this.client == null;
+            },
+            processing() {
+                return this.$inertia.processing;
             },
         },
         methods: {

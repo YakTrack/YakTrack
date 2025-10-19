@@ -9,37 +9,42 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <template #title> {{ form.id ? 'Update' : 'Create' }} Sprint </template>
-        <template #top-right-toolbar> 
-        </template>
-        <form @submit.prevent="submit" class="mt-2">
-            <div class="form-group">
-                <label for="name"> Name </label>
-                <input type="text" class="form-control" v-model="form.name" placeholder="Sprint name" />
-            </div>
-            <div class="form-group">
-                <label for="project_id"> Project </label>
+        <template #title>{{ form.id ? 'Update' : 'Create' }} Sprint</template>
+
+        <form-layout
+            :cancel-url="route('sprint.index')"
+            :submit-text="isCreateForm ? 'Create' : 'Update'"
+            :submit-loading-text="'Saving...'"
+            :processing="processing"
+            @submit="submit"
+        >
+            <form-field
+                v-model="form.name"
+                type="text"
+                label="Name"
+                placeholder="Sprint name"
+                :required="true"
+            />
+
+            <div class="mb-6">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Project
+                </label>
                 <multi-select
                     :options="projects"
                     label="name"
                     track-by="id"
                     v-model="selectedProject"
                     placeholder="Select a project"
-                ></multi-select>
+                />
             </div>
-            <div class="form-group">
-                <label for="is_open"> Is Open </label>
-                <input type="checkbox" class="form-checkbox" name="is_open" v-model="form.is_open"/>
-            </div>
-            <div class="flex mt-4">
-                <div class="flex-1 mt-2">
-                    <button-link :href="route('sprint.index')"> Cancel </button-link>
-                </div>
-                <div class="flex-1 float-right">
-                    <button class="btn btn-blue float-right"> {{ isCreateForm ? 'Create' : 'Update' }} </button>
-                </div>
-            </div>
-        </form>
+
+            <form-field
+                v-model="form.is_open"
+                type="checkbox"
+                checkbox-label="Is Open"
+            />
+        </form-layout>
     </layout>
 </template>
 
@@ -47,6 +52,8 @@
     import breadcrumbs from '@/Shared/Breadcrumbs.vue';
     import layout from '@/Shared/Layout.vue';
     import multiSelect from 'vue-multiselect';
+    import formLayout from '@/Shared/FormLayout.vue';
+    import formField from '@/Shared/FormField.vue';
 
     export default {
         props: [
@@ -57,6 +64,8 @@
             breadcrumbs: breadcrumbs,
             layout: layout,
             multiSelect: multiSelect,
+            formLayout: formLayout,
+            formField: formField,
         },
         data() {
             return {
@@ -73,6 +82,9 @@
             },
             selectedProjectId() {
                 return this.selectedProject ? this.selectedProject.id : null;
+            },
+            processing() {
+                return this.$inertia.processing;
             },
         },
         methods: {
