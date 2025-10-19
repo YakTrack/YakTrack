@@ -26,17 +26,7 @@
                         </div>
                     </div>
                     <div class="flex items-center">
-                        <div class="flex-shrink-0">
-                            <span class="text-sm text-gray-700">Welcome, {{ clientUser.name }}</span>
-                        </div>
-                        <div class="ml-4">
-                            <form :action="route('client-portal.logout')" method="POST" class="inline">
-                                <input type="hidden" name="_token" :value="$page.props.csrf_token">
-                                <button type="submit" class="text-sm text-gray-500 hover:text-gray-700">
-                                    Logout
-                                </button>
-                            </form>
-                        </div>
+                        <user-menu :logout-url="route('client-portal.logout')"></user-menu>
                     </div>
                 </div>
             </div>
@@ -124,7 +114,12 @@
 </template>
 
 <script>
+import UserMenu from '@/Shared/UserMenu.vue'
+
 export default {
+    components: {
+        'user-menu': UserMenu,
+    },
     props: {
         clientUser: Object,
         tasks: Array,

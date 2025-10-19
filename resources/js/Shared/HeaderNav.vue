@@ -5,24 +5,22 @@
                 <logo></logo>
                 <span class="text-2xl tracking-tight text-gray-900 font-thin"> {{ $page.props.app.name }} </span>
             </div>
-            <button-link :href="route('logout')" method="post" class="nav-link mx-8">Log out</button-link>
+            <div class="flex items-center mx-8">
+                <user-menu :logout-url="route('logout')"></user-menu>
+            </div>
         </nav>
-
     </div>
 </template>
 
 <script>
     import Logo from '@/Shared/Logo.vue';
+    import UserMenu from '@/Shared/UserMenu.vue';
 
     export default {
         components: {
             logo: Logo,
+            'user-menu': UserMenu,
         },
-        methods: {
-            logout() {
-                this.$inertia.post(route('logout'));
-            }
-        }
     }
 </script>
 
