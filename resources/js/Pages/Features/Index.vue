@@ -1,46 +1,55 @@
 <template>
     <layout>
-        <breadcrumbs :items="breadcrumbs" />
-
-        <!-- Header -->
-        <div class="card-header">
-            <div class="flex justify-between items-center">
-                <h1 class="text-2xl font-bold text-gray-900">Features</h1>
-                <Link
-                    :href="route('features.create')"
-                    class="px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150"
-                >
-                    Create Feature
-                </Link>
-            </div>
-        </div>
+        <template #breadcrumbs>
+            <breadcrumbs
+                :breadcrumbs="[
+                    {title: 'Home',     url: route('home')},
+                    {title: 'Features'},
+                ]"
+            ></breadcrumbs>
+        </template>
+        <template #title> Features </template>
+        <template #top-right-toolbar>
+            <button-link :href="route('features.create')" color="blue">
+                <i class="fa fa-plus text-blue-100 mr-2"></i>
+                Create Feature
+            </button-link>
+        </template>
 
         <!-- Filters -->
-        <div class="card-body">
-            <form @submit.prevent="filterFeatures" class="flex gap-4 mb-6">
-                <div class="flex-1">
-                    <label for="project_id" class="block text-sm font-medium text-gray-700 mb-1">
-                        Project
-                    </label>
-                    <select
-                        id="project_id"
-                        v-model="filters.project_id"
-                        @change="onProjectChange"
-                        class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+        <div class="card mb-4">
+            <div class="card-body">
+                <form @submit.prevent="filterFeatures" class="flex gap-4 items-end">
+                    <div class="flex-1">
+                        <label for="project_id" class="block text-sm font-medium text-gray-700 mb-1">
+                            Project
+                        </label>
+                        <select
+                            id="project_id"
+                            v-model="filters.project_id"
+                            @change="onProjectChange"
+                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                        >
+                            <option value="">All Projects</option>
+                            <option v-for="project in projects" :key="project.id" :value="project.id">
+                                {{ project.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <button
+                        type="submit"
+                        class="px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150"
                     >
-                        <option value="">All Projects</option>
-                        <option v-for="project in projects" :key="project.id" :value="project.id">
-                            {{ project.name }}
-                        </option>
-                    </select>
-                </div>
-                <button
-                    type="submit"
-                    class="px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150"
-                >
-                    Filter
-                </button>
-            </form>
+                        Filter
+                    </button>
+                    <button-link
+                        :href="route('features.index')"
+                        color="gray"
+                    >
+                        Clear
+                    </button-link>
+                </form>
+            </div>
         </div>
 
         <!-- Features List -->
@@ -151,13 +160,6 @@ export default {
             onProjectChange,
             getFeatureActions,
         }
-    },
-    computed: {
-        breadcrumbs() {
-            return [
-                { label: 'Features', href: route('features.index') },
-            ]
-        },
-    },
+    }
 }
 </script>
