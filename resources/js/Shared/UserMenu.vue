@@ -60,11 +60,13 @@ const props = defineProps({
 const page = usePage()
 
 const userName = computed(() => {
-    return page.props.auth?.user?.name || page.props.auth?.clientUser?.name || 'User'
+    // Prioritize clientUser when available (for client portal)
+    return page.props.auth?.clientUser?.name || page.props.auth?.user?.name || 'User'
 })
 
 const userEmail = computed(() => {
-    return page.props.auth?.user?.email || page.props.auth?.clientUser?.email || ''
+    // Prioritize clientUser when available (for client portal)
+    return page.props.auth?.clientUser?.email || page.props.auth?.user?.email || ''
 })
 
 const userInitials = computed(() => {

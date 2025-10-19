@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Client;
 use App\Models\ClientUser;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class ClientUserSeeder extends Seeder
 {
@@ -27,7 +28,7 @@ class ClientUserSeeder extends Seeder
         ClientUser::factory()->create([
             'name'      => 'John Doe',
             'email'     => 'john@client.com',
-            'password'  => bcrypt('password'),
+            'password'  => Hash::make('password'),
             'client_id' => $client->id,
             'is_active' => true,
         ]);
@@ -35,7 +36,7 @@ class ClientUserSeeder extends Seeder
         ClientUser::factory()->create([
             'name'      => 'Jane Smith',
             'email'     => 'jane@client.com',
-            'password'  => bcrypt('password'),
+            'password'  => Hash::make('password'),
             'client_id' => $client->id,
             'is_active' => true,
         ]);

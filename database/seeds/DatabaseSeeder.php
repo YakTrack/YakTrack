@@ -1,5 +1,6 @@
 <?php
 
+use Database\Seeders\ClientUserSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -19,5 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(SessionsTableSeeder::class);
         $this->call(InvoicesTableSeeder::class);
         $this->call(TargetsTableSeeder::class);
+        $this->call(ClientUserSeeder::class);
     }
 }
