@@ -40,7 +40,7 @@ class Feature extends Model
     }
 
     /**
-     * Get acceptance criteria count for this feature
+     * Get acceptance criteria count for this feature.
      */
     public function getAcceptanceCriteriaCountAttribute(): int
     {
@@ -48,14 +48,14 @@ class Feature extends Model
     }
 
     /**
-     * Find or create a feature by name and project
+     * Find or create a feature by name and project.
      */
     public static function findOrCreateByName(string $name, int $projectId): self
     {
         return static::firstOrCreate(
             [
                 'project_id' => $projectId,
-                'name' => $name,
+                'name'       => $name,
             ],
             [
                 'is_active' => true,
@@ -64,7 +64,7 @@ class Feature extends Model
     }
 
     /**
-     * Get features for a project
+     * Get features for a project.
      */
     public static function getForProject(int $projectId): \Illuminate\Database\Eloquent\Collection
     {

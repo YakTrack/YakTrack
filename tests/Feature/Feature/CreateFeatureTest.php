@@ -9,7 +9,8 @@ it('can view the page to create a feature', function () {
     $response = $this->get(route('features.create'));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Edit')
         ->has('projects')
     );
@@ -21,18 +22,18 @@ it('can submit a post request to create a feature', function () {
     $project = Project::factory()->create();
 
     $response = $this->post(route('features.store'), [
-        'project_id' => $project->id,
-        'name' => 'User Authentication',
+        'project_id'  => $project->id,
+        'name'        => 'User Authentication',
         'description' => 'Features related to user login and authentication',
     ]);
 
     $response->assertRedirect(route('features.show', Feature::latest()->first()));
 
     $this->assertDatabaseHas('features', [
-        'project_id' => $project->id,
-        'name' => 'User Authentication',
+        'project_id'  => $project->id,
+        'name'        => 'User Authentication',
         'description' => 'Features related to user login and authentication',
-        'is_active' => true,
+        'is_active'   => true,
     ]);
 });
 
@@ -43,16 +44,16 @@ it('can create a feature without description', function () {
 
     $response = $this->post(route('features.store'), [
         'project_id' => $project->id,
-        'name' => 'User Authentication',
+        'name'       => 'User Authentication',
     ]);
 
     $response->assertRedirect(route('features.show', Feature::latest()->first()));
 
     $this->assertDatabaseHas('features', [
-        'project_id' => $project->id,
-        'name' => 'User Authentication',
+        'project_id'  => $project->id,
+        'name'        => 'User Authentication',
         'description' => null,
-        'is_active' => true,
+        'is_active'   => true,
     ]);
 });
 
@@ -62,12 +63,12 @@ it('cannot create a feature with duplicate name for same project', function () {
     $project = Project::factory()->create();
     Feature::factory()->create([
         'project_id' => $project->id,
-        'name' => 'User Authentication',
+        'name'       => 'User Authentication',
     ]);
 
     $response = $this->post(route('features.store'), [
         'project_id' => $project->id,
-        'name' => 'User Authentication',
+        'name'       => 'User Authentication',
     ]);
 
     $response->assertSessionHasErrors(['name']);
@@ -81,19 +82,19 @@ it('can create a feature with same name for different projects', function () {
 
     Feature::factory()->create([
         'project_id' => $project1->id,
-        'name' => 'User Authentication',
+        'name'       => 'User Authentication',
     ]);
 
     $response = $this->post(route('features.store'), [
         'project_id' => $project2->id,
-        'name' => 'User Authentication',
+        'name'       => 'User Authentication',
     ]);
 
     $response->assertRedirect();
 
     $this->assertDatabaseHas('features', [
         'project_id' => $project2->id,
-        'name' => 'User Authentication',
+        'name'       => 'User Authentication',
     ]);
 });
 

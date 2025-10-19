@@ -122,11 +122,11 @@ class ClientUser extends Authenticatable
     public function logLoginSession(array $metadata = []): ClientLoginSession
     {
         return $this->loginSessions()->create([
-            'ip_address' => request()->ip(),
-            'user_agent' => request()->userAgent(),
-            'session_id' => session()->getId(),
+            'ip_address'   => request()->ip(),
+            'user_agent'   => request()->userAgent(),
+            'session_id'   => session()->getId(),
             'logged_in_at' => now(),
-            'metadata' => $metadata,
+            'metadata'     => $metadata,
         ]);
     }
 
@@ -137,7 +137,7 @@ class ClientUser extends Authenticatable
     {
         $this->activeLoginSessions()->update([
             'logged_out_at' => now(),
-            'is_active' => false,
+            'is_active'     => false,
         ]);
     }
 }

@@ -11,7 +11,8 @@ it('can view the page to edit a feature', function () {
     $response = $this->get(route('features.edit', $feature));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Edit')
         ->has('feature')
         ->has('projects')
@@ -22,13 +23,13 @@ it('can update a feature', function () {
     $this->actingAsUser();
 
     $feature = Feature::factory()->create([
-        'name' => 'Old Feature Name',
+        'name'        => 'Old Feature Name',
         'description' => 'Old description',
     ]);
 
     $response = $this->put(route('features.update', $feature), [
-        'project_id' => $feature->project_id,
-        'name' => 'New Feature Name',
+        'project_id'  => $feature->project_id,
+        'name'        => 'New Feature Name',
         'description' => 'New description',
     ]);
 
@@ -47,8 +48,8 @@ it('can update a feature without description', function () {
     ]);
 
     $response = $this->put(route('features.update', $feature), [
-        'project_id' => $feature->project_id,
-        'name' => $feature->name,
+        'project_id'  => $feature->project_id,
+        'name'        => $feature->name,
         'description' => '',
     ]);
 
@@ -74,16 +75,16 @@ it('cannot update with duplicate name for same project', function () {
     $project = Project::factory()->create();
     $feature1 = Feature::factory()->create([
         'project_id' => $project->id,
-        'name' => 'User Authentication',
+        'name'       => 'User Authentication',
     ]);
     $feature2 = Feature::factory()->create([
         'project_id' => $project->id,
-        'name' => 'User Registration',
+        'name'       => 'User Registration',
     ]);
 
     $response = $this->put(route('features.update', $feature2), [
         'project_id' => $project->id,
-        'name' => 'User Authentication',
+        'name'       => 'User Authentication',
     ]);
 
     $response->assertSessionHasErrors(['name']);
@@ -96,12 +97,12 @@ it('can update with same name for different projects', function () {
     $project2 = Project::factory()->create();
     $feature = Feature::factory()->create([
         'project_id' => $project1->id,
-        'name' => 'User Authentication',
+        'name'       => 'User Authentication',
     ]);
 
     $response = $this->put(route('features.update', $feature), [
         'project_id' => $project2->id,
-        'name' => 'User Authentication',
+        'name'       => 'User Authentication',
     ]);
 
     $response->assertRedirect(route('features.show', $feature));
@@ -134,7 +135,8 @@ it('can cancel editing and return to show page', function () {
     $response = $this->get(route('features.edit', $feature));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Edit')
         ->has('feature')
     );

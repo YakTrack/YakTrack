@@ -24,7 +24,7 @@ class StoreFeatureRequest extends FormRequest
     {
         return [
             'project_id' => ['required', 'integer', 'exists:projects,id'],
-            'name' => [
+            'name'       => [
                 'required',
                 'string',
                 'max:255',
@@ -44,10 +44,10 @@ class StoreFeatureRequest extends FormRequest
     {
         return [
             'project_id.required' => 'Please select a project.',
-            'project_id.exists' => 'The selected project does not exist.',
-            'name.required' => 'Feature name is required.',
-            'name.unique' => 'A feature with this name already exists for the selected project.',
-            'name.max' => 'Feature name must not exceed 255 characters.',
+            'project_id.exists'   => 'The selected project does not exist.',
+            'name.required'       => 'Feature name is required.',
+            'name.unique'         => 'A feature with this name already exists for the selected project.',
+            'name.max'            => 'Feature name must not exceed 255 characters.',
         ];
     }
 

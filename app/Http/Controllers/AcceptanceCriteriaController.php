@@ -43,10 +43,10 @@ class AcceptanceCriteriaController extends Controller
         }
 
         return Inertia::render('AcceptanceCriteria/Index', [
-            'criteria' => $criteria,
-            'projects' => Project::orderBy('name')->get(),
+            'criteria'          => $criteria,
+            'projects'          => Project::orderBy('name')->get(),
             'availableFeatures' => $availableFeatures,
-            'filters' => $request->only(['project_id', 'feature_id']),
+            'filters'           => $request->only(['project_id', 'feature_id']),
         ]);
     }
 
@@ -148,20 +148,20 @@ class AcceptanceCriteriaController extends Controller
                     if ($existingCriteria && $overwriteExisting) {
                         // Update existing criteria
                         $existingCriteria->updateWithVersion([
-                            'name' => $data['name'],
+                            'name'        => $data['name'],
                             'description' => $data['description'],
-                            'feature_id' => $data['feature_id'] ?? null,
+                            'feature_id'  => $data['feature_id'] ?? null,
                         ], auth()->id());
                         $importedCount++;
                     } else {
                         // Create new criteria
                         $criteria = AcceptanceCriteria::create([
-                            'project_id' => $project->id,
-                            'code' => $data['code'],
-                            'name' => $data['name'],
+                            'project_id'  => $project->id,
+                            'code'        => $data['code'],
+                            'name'        => $data['name'],
                             'description' => $data['description'],
-                            'feature_id' => $data['feature_id'] ?? null,
-                            'is_active' => true,
+                            'feature_id'  => $data['feature_id'] ?? null,
+                            'is_active'   => true,
                         ]);
 
                         // Create initial version
@@ -169,19 +169,19 @@ class AcceptanceCriteriaController extends Controller
                         $importedCount++;
                     }
                 } catch (\Exception $e) {
-                    $errors[] = "Failed to import '{$data['name']}': " . $e->getMessage();
+                    $errors[] = "Failed to import '{$data['name']}': ".$e->getMessage();
                 }
             }
         });
 
         $message = "Import completed. {$importedCount} acceptance criteria imported successfully.";
-        
+
         if ($skippedCount > 0) {
             $message .= " {$skippedCount} criteria were skipped (already exist).";
         }
 
         if (!empty($errors)) {
-            $message .= " " . count($errors) . " errors occurred.";
+            $message .= ' '.count($errors).' errors occurred.';
         }
 
         return redirect()->route('acceptance-criteria.index')
