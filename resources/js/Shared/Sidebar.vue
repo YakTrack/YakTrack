@@ -67,6 +67,12 @@
                         active: route().current('project.*'),
                     },
                     {
+                        name: 'Features',
+                        route: 'features.index',
+                        icon: 'fas fa-puzzle-piece fa-fw',
+                        active: route().current('features.*'),
+                    },
+                    {
                         name: 'Acceptance Criteria',
                         route: 'acceptance-criteria.index',
                         icon: 'fas fa-clipboard-check fa-fw',
