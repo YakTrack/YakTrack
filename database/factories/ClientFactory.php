@@ -19,8 +19,8 @@ class ClientFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'        => $this->faker->name(),
-            'email'       => $this->faker->safeEmail(),
+            'name'        => 'Test Client',
+            'email'       => 'test@example.com',
             'is_billable' => true,
         ];
     }

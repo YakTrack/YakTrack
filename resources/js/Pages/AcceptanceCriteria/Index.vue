@@ -10,10 +10,16 @@
         </template>
         <template #title>Acceptance Criteria</template>
         <template #top-right-toolbar>
-            <button-link :href="route('acceptance-criteria.create')" color="blue">
-                <i class="fa fa-plus text-blue-100 mr-2"></i>
-                Create Criteria
-            </button-link>
+            <div class="flex space-x-3">
+                <button-link :href="route('acceptance-criteria.import')" color="green">
+                    <i class="fa fa-upload text-green-100 mr-2"></i>
+                    Import from Gherkin
+                </button-link>
+                <button-link :href="route('acceptance-criteria.create')" color="blue">
+                    <i class="fa fa-plus text-blue-100 mr-2"></i>
+                    Create Criteria
+                </button-link>
+            </div>
         </template>
 
         <!-- Filters -->
@@ -27,11 +33,27 @@
                         <select
                             id="project_id"
                             v-model="filters.project_id"
+                            @change="onProjectChange"
                             class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                         >
                             <option value="">All Projects</option>
                             <option v-for="project in projects" :key="project.id" :value="project.id">
                                 {{ project.name }}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="flex-1" v-if="availableFeatures.length > 0">
+                        <label for="feature_id" class="block text-sm font-medium text-gray-700 mb-1">
+                            Feature
+                        </label>
+                        <select
+                            id="feature_id"
+                            v-model="filters.feature_id"
+                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                        >
+                            <option value="">All Features</option>
+                            <option v-for="feature in availableFeatures" :key="feature.id" :value="feature.id">
+                                {{ feature.name }}
                             </option>
                         </select>
                     </div>
@@ -58,6 +80,7 @@
                     <tr>
                         <th>Code</th>
                         <th>Name</th>
+                        <th>Feature</th>
                         <th>Project</th>
                         <th>Versions</th>
                         <th>Linked Tasks</th>
@@ -76,6 +99,12 @@
                             <Link :href="route('acceptance-criteria.show', criterion.id)">
                                 {{ criterion.name }}
                             </Link>
+                        </td>
+                        <td>
+                            <span v-if="criterion.feature" class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
+                                {{ criterion.feature.name }}
+                            </span>
+                            <span v-else class="text-gray-400 italic">No feature</span>
                         </td>
                         <td>
                             <Link :href="route('project.show', criterion.project)" v-if="criterion.project">
@@ -121,6 +150,7 @@ export default {
     props: [
         'criteria',
         'projects',
+        'availableFeatures',
         'filters',
     ],
     components: {
@@ -128,9 +158,10 @@ export default {
         breadcrumbs: breadcrumbs,
         layout: layout,
     },
-    setup() {
+    setup(props) {
         const filters = reactive({
-            project_id: '',
+            project_id: props.filters.project_id || '',
+            feature_id: props.filters.feature_id || '',
         })
 
         const filterCriteria = () => {
@@ -140,10 +171,18 @@ export default {
             })
         }
 
+        const onProjectChange = () => {
+            // Clear feature filter when project changes
+            filters.feature_id = ''
+            filterCriteria()
+        }
+
         return {
             filters,
             filterCriteria,
+            onProjectChange,
         }
     }
 }
 </script>
+

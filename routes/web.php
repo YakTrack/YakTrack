@@ -53,6 +53,8 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Acceptance Criteria Routes
     Route::resource('acceptance-criteria', 'AcceptanceCriteriaController');
+    Route::get('acceptance-criteria-import', 'AcceptanceCriteriaController@import')->name('acceptance-criteria.import');
+    Route::post('acceptance-criteria-import', 'AcceptanceCriteriaController@processImport')->name('acceptance-criteria.import.process');
 
     // Test Run Routes
     Route::resource('test-run', 'TestRunController');

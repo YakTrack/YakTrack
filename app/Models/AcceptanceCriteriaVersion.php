@@ -16,6 +16,7 @@ class AcceptanceCriteriaVersion extends Model
         'code',
         'name',
         'description',
+        'feature_id',
         'version_number',
         'changed_at',
         'changed_by_user_id',
@@ -31,6 +32,14 @@ class AcceptanceCriteriaVersion extends Model
     public function acceptanceCriteria(): BelongsTo
     {
         return $this->belongsTo(AcceptanceCriteria::class);
+    }
+
+    /**
+     * @return BelongsTo<Feature, $this>
+     */
+    public function feature(): BelongsTo
+    {
+        return $this->belongsTo(Feature::class);
     }
 
     /**

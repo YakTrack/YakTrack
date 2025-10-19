@@ -21,7 +21,7 @@ class ProjectFactory extends Factory
         return [
             'name'          => ucfirst(app(FactoryGenerator::class)->projectName()),
             'client_id'     => Client::factory(),
-            'description'   => $this->faker->sentence,
+            'description'   => 'Test project description',
         ];
     }
 }

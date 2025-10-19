@@ -21,6 +21,7 @@ class AcceptanceCriteria extends Model
         'code',
         'name',
         'description',
+        'feature_id',
         'is_active',
     ];
 
@@ -34,6 +35,14 @@ class AcceptanceCriteria extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class);
+    }
+
+    /**
+     * @return BelongsTo<Feature, $this>
+     */
+    public function feature(): BelongsTo
+    {
+        return $this->belongsTo(Feature::class);
     }
 
     /**
@@ -69,6 +78,7 @@ class AcceptanceCriteria extends Model
             'code' => $data['code'] ?? $this->code,
             'name' => $data['name'] ?? $this->name,
             'description' => $data['description'] ?? $this->description,
+            'feature_id' => $data['feature_id'] ?? $this->feature_id,
             'version_number' => $versionNumber,
             'changed_at' => now(),
             'changed_by_user_id' => $userId,
@@ -100,5 +110,37 @@ class AcceptanceCriteria extends Model
     public function getLatestTestResultAttribute(): ?TestResult
     {
         return $this->testResults()->latest()->first();
+    }
+
+    /**
+     * Get acceptance criteria grouped by feature
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getGroupedByFeature(int $projectId = null): \Illuminate\Database\Eloquent\Collection
+    {
+        $query = static::with(['project', 'feature', 'versions', 'tasks'])
+            ->where('is_active', true);
+
+        if ($projectId) {
+            $query->where('project_id', $projectId);
+        }
+
+        return $query->orderBy('feature_id')
+            ->orderBy('name')
+            ->get()
+            ->groupBy(function ($item) {
+                return $item->feature ? $item->feature->name : 'No Feature';
+            });
+    }
+
+    /**
+     * Get features for a project
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public static function getFeaturesForProject(int $projectId): \Illuminate\Database\Eloquent\Collection
+    {
+        return Feature::getForProject($projectId);
     }
 }
