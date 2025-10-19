@@ -2,7 +2,6 @@
 
 use App\Models\AcceptanceCriteria;
 use App\Models\Feature;
-use App\Models\Project;
 
 it('can soft delete a feature', function () {
     $this->actingAsUser();
@@ -98,7 +97,8 @@ it('does not appear in index after deletion', function () {
     $response = $this->get(route('features.index'));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Index')
         ->has('features.data', 0)
     );
@@ -114,7 +114,8 @@ it('can still be accessed directly after soft deletion', function () {
     $response = $this->get(route('features.show', $feature));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Show')
         ->has('feature')
     );

@@ -9,7 +9,8 @@ it('can view the features index page', function () {
     $response = $this->get(route('features.index'));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Index')
         ->has('features')
         ->has('projects')
@@ -24,7 +25,8 @@ it('displays existing features', function () {
     $response = $this->get(route('features.index'));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Index')
         ->has('features.data', 1)
         ->where('features.data.0.name', $feature->name)
@@ -43,7 +45,8 @@ it('can filter features by project', function () {
     $response = $this->get(route('features.index', ['project_id' => $project1->id]));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Index')
         ->has('features.data', 1)
         ->where('features.data.0.name', $feature1->name)
@@ -56,7 +59,8 @@ it('can navigate to create page from index', function () {
     $response = $this->get(route('features.index'));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Index')
     );
 });
@@ -69,7 +73,8 @@ it('can navigate to show page from feature link', function () {
     $response = $this->get(route('features.index'));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Index')
         ->has('features.data', 1)
     );
@@ -89,7 +94,8 @@ it('paginates results when there are many features', function () {
     $response = $this->get(route('features.index'));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Index')
         ->has('features.data', 15) // Default pagination
         ->has('features.links')
@@ -102,7 +108,8 @@ it('shows empty state when no features exist', function () {
     $response = $this->get(route('features.index'));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Index')
         ->has('features.data', 0)
     );
@@ -117,7 +124,8 @@ it('only shows active features', function () {
     $response = $this->get(route('features.index'));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Index')
         ->has('features.data', 1)
     );

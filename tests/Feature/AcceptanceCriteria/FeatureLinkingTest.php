@@ -10,24 +10,24 @@ it('can create acceptance criteria with a feature', function () {
     $project = Project::factory()->create();
     $feature = Feature::factory()->create([
         'project_id' => $project->id,
-        'name' => 'User Authentication',
+        'name'       => 'User Authentication',
     ]);
 
     $response = $this->post(route('acceptance-criteria.store'), [
-        'project_id' => $project->id,
-        'feature_id' => $feature->id,
-        'name' => 'User can login with valid credentials',
+        'project_id'  => $project->id,
+        'feature_id'  => $feature->id,
+        'name'        => 'User can login with valid credentials',
         'description' => 'Given valid credentials, user should be able to login',
     ]);
 
     $response->assertRedirect(route('acceptance-criteria.index'));
 
     $this->assertDatabaseHas('acceptance_criteria', [
-        'project_id' => $project->id,
-        'feature_id' => $feature->id,
-        'name' => 'User can login with valid credentials',
+        'project_id'  => $project->id,
+        'feature_id'  => $feature->id,
+        'name'        => 'User can login with valid credentials',
         'description' => 'Given valid credentials, user should be able to login',
-        'is_active' => true,
+        'is_active'   => true,
     ]);
 });
 
@@ -37,20 +37,20 @@ it('can create acceptance criteria without a feature', function () {
     $project = Project::factory()->create();
 
     $response = $this->post(route('acceptance-criteria.store'), [
-        'project_id' => $project->id,
-        'feature_id' => null,
-        'name' => 'User can login with valid credentials',
+        'project_id'  => $project->id,
+        'feature_id'  => null,
+        'name'        => 'User can login with valid credentials',
         'description' => 'Given valid credentials, user should be able to login',
     ]);
 
     $response->assertRedirect(route('acceptance-criteria.index'));
 
     $this->assertDatabaseHas('acceptance_criteria', [
-        'project_id' => $project->id,
-        'feature_id' => null,
-        'name' => 'User can login with valid credentials',
+        'project_id'  => $project->id,
+        'feature_id'  => null,
+        'name'        => 'User can login with valid credentials',
         'description' => 'Given valid credentials, user should be able to login',
-        'is_active' => true,
+        'is_active'   => true,
     ]);
 });
 
@@ -60,7 +60,7 @@ it('can update acceptance criteria to link to a feature', function () {
     $project = Project::factory()->create();
     $feature = Feature::factory()->create([
         'project_id' => $project->id,
-        'name' => 'User Authentication',
+        'name'       => 'User Authentication',
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
@@ -69,9 +69,9 @@ it('can update acceptance criteria to link to a feature', function () {
     ]);
 
     $response = $this->patch(route('acceptance-criteria.update', $criteria), [
-        'project_id' => $project->id,
-        'feature_id' => $feature->id,
-        'name' => $criteria->name,
+        'project_id'  => $project->id,
+        'feature_id'  => $feature->id,
+        'name'        => $criteria->name,
         'description' => $criteria->description,
     ]);
 
@@ -96,9 +96,9 @@ it('can update acceptance criteria to remove feature link', function () {
     ]);
 
     $response = $this->patch(route('acceptance-criteria.update', $criteria), [
-        'project_id' => $project->id,
-        'feature_id' => null,
-        'name' => $criteria->name,
+        'project_id'  => $project->id,
+        'feature_id'  => null,
+        'name'        => $criteria->name,
         'description' => $criteria->description,
     ]);
 
@@ -120,7 +120,7 @@ it('validates that feature belongs to the same project', function () {
     $response = $this->post(route('acceptance-criteria.store'), [
         'project_id' => $project1->id,
         'feature_id' => $feature->id,
-        'name' => 'User can login with valid credentials',
+        'name'       => 'User can login with valid credentials',
     ]);
 
     $response->assertSessionHasErrors(['feature_id']);
@@ -134,7 +134,7 @@ it('validates that feature exists', function () {
     $response = $this->post(route('acceptance-criteria.store'), [
         'project_id' => $project->id,
         'feature_id' => 999,
-        'name' => 'User can login with valid credentials',
+        'name'       => 'User can login with valid credentials',
     ]);
 
     $response->assertSessionHasErrors(['feature_id']);
@@ -146,13 +146,13 @@ it('validates that feature is active', function () {
     $project = Project::factory()->create();
     $feature = Feature::factory()->create([
         'project_id' => $project->id,
-        'is_active' => false,
+        'is_active'  => false,
     ]);
 
     $response = $this->post(route('acceptance-criteria.store'), [
         'project_id' => $project->id,
         'feature_id' => $feature->id,
-        'name' => 'User can login with valid credentials',
+        'name'       => 'User can login with valid credentials',
     ]);
 
     $response->assertSessionHasErrors(['feature_id']);
@@ -164,7 +164,7 @@ it('shows feature information in acceptance criteria show page', function () {
     $project = Project::factory()->create();
     $feature = Feature::factory()->create([
         'project_id' => $project->id,
-        'name' => 'User Authentication',
+        'name'       => 'User Authentication',
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
@@ -175,7 +175,8 @@ it('shows feature information in acceptance criteria show page', function () {
     $response = $this->get(route('acceptance-criteria.show', $criteria));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('AcceptanceCriteria/Show')
         ->has('criteria.feature')
         ->where('criteria.feature.name', 'User Authentication')
@@ -192,7 +193,8 @@ it('shows no feature when acceptance criteria has no feature', function () {
     $response = $this->get(route('acceptance-criteria.show', $criteria));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('AcceptanceCriteria/Show')
         ->has('criteria.feature')
         ->where('criteria.feature', null)

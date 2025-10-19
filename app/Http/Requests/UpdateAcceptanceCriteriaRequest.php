@@ -61,11 +61,11 @@ class UpdateAcceptanceCriteriaRequest extends FormRequest
     {
         return [
             'project_id.required' => 'A project must be selected.',
-            'project_id.exists' => 'The selected project does not exist.',
-            'feature_id.exists' => 'The selected feature does not exist or is not active for this project.',
-            'code.unique' => 'This code already exists for the selected project.',
-            'name.required' => 'The acceptance criteria name is required.',
-            'name.max' => 'The acceptance criteria name may not be greater than 255 characters.',
+            'project_id.exists'   => 'The selected project does not exist.',
+            'feature_id.exists'   => 'The selected feature does not exist or is not active for this project.',
+            'code.unique'         => 'This code already exists for the selected project.',
+            'name.required'       => 'The acceptance criteria name is required.',
+            'name.max'            => 'The acceptance criteria name may not be greater than 255 characters.',
         ];
     }
 }

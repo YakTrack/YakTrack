@@ -30,7 +30,7 @@ class FeatureController extends Controller
         return Inertia::render('Features/Index', [
             'features' => $features,
             'projects' => Project::orderBy('name')->get(),
-            'filters' => $request->only(['project_id']),
+            'filters'  => $request->only(['project_id']),
         ]);
     }
 
@@ -65,7 +65,7 @@ class FeatureController extends Controller
         $feature->load('project');
 
         return Inertia::render('Features/Edit', [
-            'feature' => $feature,
+            'feature'  => $feature,
             'projects' => Project::orderBy('name')->get(),
         ]);
     }
