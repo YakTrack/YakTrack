@@ -63,17 +63,8 @@
                             </span>
                         </td>
                         <td>
-                            <div class="btn-group float-right">
-                                <button-link
-                                    :href="route('task.edit', task)"
-                                >
-                                    <i class="fa fa-edit text-gray-600 text-xs"></i>
-                                </button-link>
-                                <delete-button
-                                    :url="route('task.destroy', task.id)"
-                                >
-                                    <i class="fa fa-trash text-gray-600 text-xs"></i>
-                                </delete-button>
+                            <div class="float-right">
+                                <actions-dropdown :options="getTaskActions(task)" direction="left"></actions-dropdown>
                             </div>
                         </td>
                     </tr>
@@ -92,6 +83,7 @@
     import breadcrumbs from '@/Shared/Breadcrumbs.vue';
     import deleteButton from '@/Shared/DeleteButton.vue';
     import layout from '@/Shared/Layout.vue';
+    import actionsDropdown from '@/Shared/ActionsDropdown.vue';
 
     export default {
         props: [
@@ -102,6 +94,27 @@
             breadcrumbs: breadcrumbs,
             deleteButton: deleteButton,
             layout: layout,
+            actionsDropdown: actionsDropdown,
+        },
+        methods: {
+            getTaskActions(task) {
+                return [
+                    {
+                        name: 'Edit Task',
+                        callback: () => {
+                            this.$inertia.visit(route('task.edit', task));
+                        }
+                    },
+                    {
+                        name: 'Delete Task',
+                        callback: () => {
+                            if (confirm('Are you sure you want to delete this task?')) {
+                                this.$inertia.delete(route('task.destroy', task.id));
+                            }
+                        }
+                    }
+                ];
+            }
         }
     }
 

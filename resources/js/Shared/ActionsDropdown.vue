@@ -5,7 +5,7 @@
         </MenuButton>
 
         <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform scale-100" leave-to-class="transform opacity-0 scale-95">
-            <MenuItems :class="[dropdownClasses, 'absolute z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg outline-1 outline-black/5 dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10']">
+            <MenuItems :class="[dropdownClasses, 'absolute z-10 mt-2 w-56 rounded-md bg-white shadow-lg outline-1 outline-black/5 dark:bg-gray-800 dark:shadow-none dark:-outline-offset-1 dark:outline-white/10']">
                 <div class="py-1">
                     <MenuItem v-for="option in options" :key="option.name" v-slot="{ active }">
                         <a
@@ -47,8 +47,8 @@ const optionWasClicked = (option) => {
 
 const dropdownClasses = computed(() => {
     if (props.direction === 'left') {
-        return 'right-0';
+        return 'right-0 origin-top-right';
     }
-    return 'left-0';
+    return 'left-0 origin-top-left';
 })
 </script>

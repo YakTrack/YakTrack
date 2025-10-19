@@ -77,17 +77,8 @@
                             {{ status.tasks_count || 0 }}
                         </td>
                         <td>
-                            <div class="btn-group float-right">
-                                <button-link :href="route('task-status.edit', status.id)">
-                                    <i class="fa fa-edit text-gray-600 text-xs"></i>
-                                </button-link>
-                                <delete-button
-                                    :url="route('task-status.destroy', status.id)"
-                                    :disabled="status.tasks_count > 0"
-                                    :title="status.tasks_count > 0 ? 'Cannot delete status with assigned tasks' : 'Delete status'"
-                                >
-                                    <i class="fa fa-trash text-gray-600 text-xs"></i>
-                                </delete-button>
+                            <div class="float-right">
+                                <actions-dropdown :options="getTaskStatusActions(status)" direction="left"></actions-dropdown>
                             </div>
                         </td>
                     </tr>
@@ -115,6 +106,7 @@ import { Link } from '@inertiajs/vue3';
 import breadcrumbs from '@/Shared/Breadcrumbs.vue';
 import deleteButton from '@/Shared/DeleteButton.vue';
 import layout from '@/Shared/Layout.vue';
+import actionsDropdown from '@/Shared/ActionsDropdown.vue';
 
 export default {
     props: [
@@ -127,6 +119,7 @@ export default {
         breadcrumbs: breadcrumbs,
         deleteButton: deleteButton,
         layout: layout,
+        actionsDropdown: actionsDropdown,
     },
     data() {
         return {
@@ -142,6 +135,29 @@ export default {
             } else {
                 this.$inertia.get(route('task-status.index'));
             }
+        },
+        getTaskStatusActions(status) {
+            const actions = [
+                {
+                    name: 'Edit Status',
+                    callback: () => {
+                        this.$inertia.visit(route('task-status.edit', status.id));
+                    }
+                }
+            ];
+            
+            if (status.tasks_count === 0) {
+                actions.push({
+                    name: 'Delete Status',
+                    callback: () => {
+                        if (confirm('Are you sure you want to delete this task status?')) {
+                            this.$inertia.delete(route('task-status.destroy', status.id));
+                        }
+                    }
+                });
+            }
+            
+            return actions;
         }
     },
     computed: {

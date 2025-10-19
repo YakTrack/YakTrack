@@ -47,17 +47,8 @@
                             </span>
                         </td>
                         <td>
-                            <div class="btn-group float-right">
-                                <button-link
-                                    :href="route('session-category.edit', sessionCategory)"
-                                >
-                                    <i class="fa fa-edit text-gray-600 text-xs"></i>
-                                </button-link>
-                                <delete-button
-                                    :url="route('session-category.destroy', sessionCategory.id)"
-                                >
-                                    <i class="fa fa-trash text-gray-600 text-xs"></i>
-                                </delete-button>
+                            <div class="float-right">
+                                <actions-dropdown :options="getSessionCategoryActions(sessionCategory)" direction="left"></actions-dropdown>
                             </div>
                         </td>
                     </tr>
@@ -79,6 +70,7 @@ import Layout from '@/Shared/Layout.vue'
 import Breadcrumbs from '@/Shared/Breadcrumbs.vue'
 import ButtonLink from '@/Shared/ButtonLink.vue'
 import DeleteButton from '@/Shared/DeleteButton.vue'
+import ActionsDropdown from '@/Shared/ActionsDropdown.vue'
 
 export default {
     components: {
@@ -87,6 +79,27 @@ export default {
         Breadcrumbs,
         ButtonLink,
         DeleteButton,
+        ActionsDropdown,
+    },
+    methods: {
+        getSessionCategoryActions(sessionCategory) {
+            return [
+                {
+                    name: 'Edit Category',
+                    callback: () => {
+                        this.$inertia.visit(route('session-category.edit', sessionCategory));
+                    }
+                },
+                {
+                    name: 'Delete Category',
+                    callback: () => {
+                        if (confirm('Are you sure you want to delete this session category?')) {
+                            this.$inertia.delete(route('session-category.destroy', sessionCategory.id));
+                        }
+                    }
+                }
+            ];
+        }
     },
     props: {
         sessionCategories: Array,

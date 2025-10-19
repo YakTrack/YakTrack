@@ -51,17 +51,8 @@
                             {{ sprint.totalDurationForHumans }} 
                         </td>
                         <td>
-                            <div class="mx-auto btn-group float-right">
-                                <button-link
-                                    :href="route('sprint.edit', sprint.id)"
-                                >
-                                    <i class="fa fa-edit text-gray-600 text-xs"></i>
-                                </button-link>
-                                <delete-button
-                                    :url="route('sprint.destroy', sprint.id)"
-                                >
-                                    <i class="fa fa-trash text-gray-600 text-xs"></i>
-                                </delete-button>
+                            <div class="float-right">
+                                <actions-dropdown :options="getSprintActions(sprint)" direction="left"></actions-dropdown>
                             </div>
                         </td>
                     </tr>
@@ -79,6 +70,7 @@
     import breadcrumbs from '@/Shared/Breadcrumbs.vue';
     import deleteButton from '@/Shared/DeleteButton.vue';
     import layout from '@/Shared/Layout.vue';
+    import actionsDropdown from '@/Shared/ActionsDropdown.vue';
 
     export default {
         props: [
@@ -89,6 +81,27 @@
             breadcrumbs: breadcrumbs,
             deleteButton: deleteButton,
             layout: layout,
+            actionsDropdown: actionsDropdown,
+        },
+        methods: {
+            getSprintActions(sprint) {
+                return [
+                    {
+                        name: 'Edit Sprint',
+                        callback: () => {
+                            this.$inertia.visit(route('sprint.edit', sprint.id));
+                        }
+                    },
+                    {
+                        name: 'Delete Sprint',
+                        callback: () => {
+                            if (confirm('Are you sure you want to delete this sprint?')) {
+                                this.$inertia.delete(route('sprint.destroy', sprint.id));
+                            }
+                        }
+                    }
+                ];
+            }
         },
     }
 </script>

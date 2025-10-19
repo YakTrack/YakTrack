@@ -105,12 +105,8 @@
                             </div>
                         </td>
                         <td>
-                            <div class="btn-group float-right">
-                                <button-link
-                                    :href="route('test-run.show', testRun.id)"
-                                >
-                                    <i class="fa fa-eye text-gray-600 text-xs"></i>
-                                </button-link>
+                            <div class="float-right">
+                                <actions-dropdown :options="getTestRunActions(testRun)" direction="left"></actions-dropdown>
                             </div>
                         </td>
                     </tr>
@@ -128,6 +124,7 @@ import { Link, router } from '@inertiajs/vue3'
 import { reactive } from 'vue'
 import breadcrumbs from '@/Shared/Breadcrumbs.vue'
 import layout from '@/Shared/Layout.vue'
+import actionsDropdown from '@/Shared/ActionsDropdown.vue'
 
 export default {
     props: [
@@ -139,10 +136,11 @@ export default {
         Link,
         breadcrumbs: breadcrumbs,
         layout: layout,
+        actionsDropdown: actionsDropdown,
     },
-    setup() {
+    setup(props) {
         const filters = reactive({
-            project_id: '',
+            project_id: props.filters?.project_id || '',
         })
 
         const filterTestRuns = () => {
@@ -162,10 +160,22 @@ export default {
             })
         }
 
+        const getTestRunActions = (testRun) => {
+            return [
+                {
+                    name: 'View Test Run',
+                    callback: () => {
+                        router.visit(route('test-run.show', testRun.id));
+                    }
+                }
+            ];
+        }
+
         return {
             filters,
             filterTestRuns,
             formatDate,
+            getTestRunActions,
         }
     }
 }

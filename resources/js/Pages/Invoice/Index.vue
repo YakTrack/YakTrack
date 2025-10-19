@@ -53,17 +53,8 @@
                         <td> {{ invoice.total_hours }} </td>
                         <td> {{ invoice.amountForHumans }} </td>
                         <td>
-                            <div class="btn-group float-right">
-                                <button-link
-                                    :href="route('invoice.edit', invoice.id)"
-                                >
-                                    <i class="fa fa-edit text-xs text-gray-600"></i>
-                                </button-link>
-                                <delete-button
-                                    :url="route('invoice.destroy', invoice.id)"
-                                >
-                                    <i class="fa fa-trash text-xs text-gray-600"></i>
-                                </delete-button>
+                            <div class="float-right">
+                                <actions-dropdown :options="getInvoiceActions(invoice)" direction="left"></actions-dropdown>
                             </div>
                         </td>
                     </tr>
@@ -94,6 +85,7 @@ import breadcrumbs from '@/Shared/Breadcrumbs.vue';
 import deleteButton from '@/Shared/DeleteButton.vue';
 import layout from '@/Shared/Layout.vue';
 import pageSelector from '@/components/PageSelector.vue';
+import actionsDropdown from '@/Shared/ActionsDropdown.vue';
 
 export default {
     props: [
@@ -105,6 +97,7 @@ export default {
         deleteButton: deleteButton,
         layout: layout,
         pageSelector: pageSelector,
+        actionsDropdown: actionsDropdown,
     },
     methods: {
         selectPage(page) {
@@ -112,6 +105,24 @@ export default {
                 preserveScroll: true,
             });
         },
+        getInvoiceActions(invoice) {
+            return [
+                {
+                    name: 'Edit Invoice',
+                    callback: () => {
+                        this.$inertia.visit(route('invoice.edit', invoice.id));
+                    }
+                },
+                {
+                    name: 'Delete Invoice',
+                    callback: () => {
+                        if (confirm('Are you sure you want to delete this invoice?')) {
+                            this.$inertia.delete(route('invoice.destroy', invoice.id));
+                        }
+                    }
+                }
+            ];
+        }
     },
 }
 

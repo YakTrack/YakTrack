@@ -79,19 +79,8 @@
                             </span>
                         </td>
                         <td>
-                            <div class="flex justify-end gap-2">
-                                <button-link
-                                    :href="route('features.edit', feature.id)"
-                                    class="text-gray-600 hover:text-gray-900"
-                                >
-                                    <i class="fa fa-edit text-gray-600 text-xs"></i>
-                                </button-link>
-                                <button-link
-                                    :href="route('features.show', feature.id)"
-                                    class="text-gray-600 hover:text-gray-900"
-                                >
-                                    <i class="fa fa-eye text-gray-600 text-xs"></i>
-                                </button-link>
+                            <div class="float-right">
+                                <actions-dropdown :options="getFeatureActions(feature)" direction="left"></actions-dropdown>
                             </div>
                         </td>
                     </tr>
@@ -109,6 +98,7 @@ import { Link, router } from '@inertiajs/vue3'
 import { reactive } from 'vue'
 import breadcrumbs from '@/Shared/Breadcrumbs.vue'
 import layout from '@/Shared/Layout.vue'
+import actionsDropdown from '@/Shared/ActionsDropdown.vue'
 
 export default {
     props: [
@@ -120,6 +110,7 @@ export default {
         Link,
         breadcrumbs: breadcrumbs,
         layout: layout,
+        actionsDropdown: actionsDropdown,
     },
     setup(props) {
         const filters = reactive({
@@ -137,10 +128,28 @@ export default {
             filterFeatures()
         }
 
+        const getFeatureActions = (feature) => {
+            return [
+                {
+                    name: 'Edit Feature',
+                    callback: () => {
+                        router.visit(route('features.edit', feature.id));
+                    }
+                },
+                {
+                    name: 'View Feature',
+                    callback: () => {
+                        router.visit(route('features.show', feature.id));
+                    }
+                }
+            ];
+        }
+
         return {
             filters,
             filterFeatures,
             onProjectChange,
+            getFeatureActions,
         }
     },
     computed: {

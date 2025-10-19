@@ -43,18 +43,8 @@
                         </Link>
                     </td>
                     <td>
-                        <div class="btn-group float-right">
-                            <button-link
-                                :href="route('project.edit', {project: project})"
-                            >
-                                <i class="fa fa-edit text-xs text-gray-600"></i>
-                            </button-link>
-                            <delete-button
-                                :is-disabled="!project.isDeletable"
-                                :url="route('project.destroy', project.id)"
-                            >
-                                <i class="fa fa-trash text-xs text-gray-600"></i>
-                            </delete-button>
+                        <div class="float-right">
+                            <actions-dropdown :options="getProjectActions(project)" direction="left"></actions-dropdown>
                         </div>
                     </td>
                     </tr>
@@ -73,6 +63,7 @@ import { Link } from '@inertiajs/vue3';
 import breadcrumbs from '@/Shared/Breadcrumbs.vue';
 import deleteButton from '@/Shared/DeleteButton.vue';
 import layout from '@/Shared/Layout.vue';
+import actionsDropdown from '@/Shared/ActionsDropdown.vue';
 
 export default {
     props: ['projects'],
@@ -82,7 +73,33 @@ export default {
         breadcrumbs: breadcrumbs,
         deleteButton: deleteButton,
         layout: layout,
+        actionsDropdown: actionsDropdown,
     },
+    methods: {
+        getProjectActions(project) {
+            const actions = [
+                {
+                    name: 'Edit Project',
+                    callback: () => {
+                        this.$inertia.visit(route('project.edit', {project: project}));
+                    }
+                }
+            ];
+            
+            if (project.isDeletable) {
+                actions.push({
+                    name: 'Delete Project',
+                    callback: () => {
+                        if (confirm('Are you sure you want to delete this project?')) {
+                            this.$inertia.delete(route('project.destroy', project.id));
+                        }
+                    }
+                });
+            }
+            
+            return actions;
+        }
+    }
 }
 
 </script>

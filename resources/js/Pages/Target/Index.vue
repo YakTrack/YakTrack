@@ -41,17 +41,8 @@
                             </Link>
                         </td>
                         <td>
-                            <div class="btn-group float-right">
-                                <button-link
-                                    :href="route('target.edit', target)"
-                                >
-                                    <i class="fa fa-edit text-gray-600 text-xs"></i>
-                                </button-link>
-                                <delete-button
-                                    :url="route('target.destroy', target.id)"
-                                >
-                                    <i class="fa fa-trash text-gray-600 text-xs"></i>
-                                </delete-button>
+                            <div class="float-right">
+                                <actions-dropdown :options="getTargetActions(target)" direction="left"></actions-dropdown>
                             </div>
                         </td>
                     </tr>
@@ -70,6 +61,7 @@
     import breadcrumbs from '@/Shared/Breadcrumbs.vue';
     import deleteButton from '@/Shared/DeleteButton.vue';
     import layout from '@/Shared/Layout.vue';
+    import actionsDropdown from '@/Shared/ActionsDropdown.vue';
 
     export default {
         props: [
@@ -80,6 +72,27 @@
             breadcrumbs: breadcrumbs,
             deleteButton: deleteButton,
             layout: layout,
+            actionsDropdown: actionsDropdown,
+        },
+        methods: {
+            getTargetActions(target) {
+                return [
+                    {
+                        name: 'Edit Target',
+                        callback: () => {
+                            this.$inertia.visit(route('target.edit', target));
+                        }
+                    },
+                    {
+                        name: 'Delete Target',
+                        callback: () => {
+                            if (confirm('Are you sure you want to delete this target?')) {
+                                this.$inertia.delete(route('target.destroy', target.id));
+                            }
+                        }
+                    }
+                ];
+            }
         }
     }
 

@@ -39,17 +39,8 @@
                         </td>
                         <td> {{ client.email }} </td>
                         <td>
-                            <div class="mx-auto btn-group float-right">
-                                <button-link
-                                    :href="route('client.edit', client.id)"
-                                >
-                                    <i class="fa fa-edit text-xs text-gray-600"></i>
-                                </button-link>
-                                <delete-button
-                                    :url="route('client.destroy', client.id)"
-                                >
-                                    <i class="fa fa-trash text-xs text-gray-600"></i>
-                                </delete-button>
+                            <div class="float-right">
+                                <actions-dropdown :options="getClientActions(client)" direction="left"></actions-dropdown>
                             </div>
                         </td>
                     </tr>
@@ -67,6 +58,7 @@
     import breadcrumbs from '@/Shared/Breadcrumbs.vue';
     import deleteButton from '@/Shared/DeleteButton.vue';
     import layout from '@/Shared/Layout.vue';
+    import actionsDropdown from '@/Shared/ActionsDropdown.vue';
 
     export default {
         props: [
@@ -77,6 +69,27 @@
             breadcrumbs: breadcrumbs,
             deleteButton: deleteButton,
             layout: layout,
+            actionsDropdown: actionsDropdown,
+        },
+        methods: {
+            getClientActions(client) {
+                return [
+                    {
+                        name: 'Edit Client',
+                        callback: () => {
+                            this.$inertia.visit(route('client.edit', client.id));
+                        }
+                    },
+                    {
+                        name: 'Delete Client',
+                        callback: () => {
+                            if (confirm('Are you sure you want to delete this client?')) {
+                                this.$inertia.delete(route('client.destroy', client.id));
+                            }
+                        }
+                    }
+                ];
+            }
         },
     }
 </script>

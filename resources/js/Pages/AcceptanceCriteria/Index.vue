@@ -122,12 +122,8 @@
                             </span>
                         </td>
                         <td>
-                            <div class="btn-group float-right">
-                                <button-link
-                                    :href="route('acceptance-criteria.edit', criterion.id)"
-                                >
-                                    <i class="fa fa-edit text-gray-600 text-xs"></i>
-                                </button-link>
+                            <div class="float-right">
+                                <actions-dropdown :options="getCriterionActions(criterion)" direction="left"></actions-dropdown>
                             </div>
                         </td>
                     </tr>
@@ -145,6 +141,7 @@ import { Link, router } from '@inertiajs/vue3'
 import { reactive } from 'vue'
 import breadcrumbs from '@/Shared/Breadcrumbs.vue'
 import layout from '@/Shared/Layout.vue'
+import actionsDropdown from '@/Shared/ActionsDropdown.vue'
 
 export default {
     props: [
@@ -157,6 +154,7 @@ export default {
         Link,
         breadcrumbs: breadcrumbs,
         layout: layout,
+        actionsDropdown: actionsDropdown,
     },
     setup(props) {
         const filters = reactive({
@@ -177,10 +175,22 @@ export default {
             filterCriteria()
         }
 
+        const getCriterionActions = (criterion) => {
+            return [
+                {
+                    name: 'Edit Criteria',
+                    callback: () => {
+                        router.visit(route('acceptance-criteria.edit', criterion.id));
+                    }
+                }
+            ];
+        }
+
         return {
             filters,
             filterCriteria,
             onProjectChange,
+            getCriterionActions,
         }
     }
 }
