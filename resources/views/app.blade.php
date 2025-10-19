@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full bg-white dark:bg-gray-900">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,7 +23,7 @@
     @inertiaHead
 </head>
 
-<body class="font-source-sans font-normal leading-normal bg-gray-100 text-gray-700">
+<body class="h-full font-source-sans font-normal leading-normal bg-gray-100 text-gray-700">
 
     @inertia
 
