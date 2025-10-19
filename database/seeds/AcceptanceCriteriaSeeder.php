@@ -5,8 +5,8 @@ namespace Database\Seeds;
 use App\Models\AcceptanceCriteria;
 use App\Models\Project;
 use App\Models\Task;
-use App\Models\TestRun;
 use App\Models\TestResult;
+use App\Models\TestRun;
 use App\Models\User;
 use App\TestResultStatus;
 use Illuminate\Database\Seeder;
@@ -23,50 +23,51 @@ class AcceptanceCriteriaSeeder extends Seeder
 
         if (!$user || !$project) {
             $this->command->info('No user or project found. Please run UserSeeder and ProjectSeeder first.');
+
             return;
         }
 
         // Create sample acceptance criteria
         $criteria1 = AcceptanceCriteria::create([
-            'project_id' => $project->id,
-            'code' => 'AC-001',
-            'name' => 'User Authentication',
+            'project_id'  => $project->id,
+            'code'        => 'AC-001',
+            'name'        => 'User Authentication',
             'description' => 'Users should be able to log in with valid credentials and log out securely.',
-            'is_active' => true,
+            'is_active'   => true,
         ]);
 
         $criteria2 = AcceptanceCriteria::create([
-            'project_id' => $project->id,
-            'code' => 'AC-002',
-            'name' => 'Dashboard Display',
+            'project_id'  => $project->id,
+            'code'        => 'AC-002',
+            'name'        => 'Dashboard Display',
             'description' => 'The dashboard should display relevant project information and navigation options.',
-            'is_active' => true,
+            'is_active'   => true,
         ]);
 
         $criteria3 = AcceptanceCriteria::create([
-            'project_id' => $project->id,
-            'code' => 'AC-003',
-            'name' => 'Task Management',
+            'project_id'  => $project->id,
+            'code'        => 'AC-003',
+            'name'        => 'Task Management',
             'description' => 'Users should be able to create, edit, and delete tasks within projects.',
-            'is_active' => true,
+            'is_active'   => true,
         ]);
 
         // Create initial versions for each criteria
         $criteria1->createVersion([
-            'code' => 'AC-001',
-            'name' => 'User Authentication',
+            'code'        => 'AC-001',
+            'name'        => 'User Authentication',
             'description' => 'Users should be able to log in with valid credentials and log out securely.',
         ], $user->id);
 
         $criteria2->createVersion([
-            'code' => 'AC-002',
-            'name' => 'Dashboard Display',
+            'code'        => 'AC-002',
+            'name'        => 'Dashboard Display',
             'description' => 'The dashboard should display relevant project information and navigation options.',
         ], $user->id);
 
         $criteria3->createVersion([
-            'code' => 'AC-003',
-            'name' => 'Task Management',
+            'code'        => 'AC-003',
+            'name'        => 'Task Management',
             'description' => 'Users should be able to create, edit, and delete tasks within projects.',
         ], $user->id);
 
@@ -81,36 +82,36 @@ class AcceptanceCriteriaSeeder extends Seeder
 
         // Create a sample test run
         $testRun = TestRun::create([
-            'project_id' => $project->id,
-            'name' => 'Sprint 1 Testing',
-            'description' => 'Initial testing of core functionality',
-            'executed_at' => now()->subDays(2),
+            'project_id'          => $project->id,
+            'name'                => 'Sprint 1 Testing',
+            'description'         => 'Initial testing of core functionality',
+            'executed_at'         => now()->subDays(2),
             'executed_by_user_id' => $user->id,
         ]);
 
         // Create test results
         TestResult::create([
-            'test_run_id' => $testRun->id,
-            'acceptance_criteria_id' => $criteria1->id,
+            'test_run_id'                    => $testRun->id,
+            'acceptance_criteria_id'         => $criteria1->id,
             'acceptance_criteria_version_id' => $criteria1->getCurrentVersion()->id,
-            'status' => TestResultStatus::Passed,
-            'notes' => 'Login and logout functionality working correctly.',
+            'status'                         => TestResultStatus::Passed,
+            'notes'                          => 'Login and logout functionality working correctly.',
         ]);
 
         TestResult::create([
-            'test_run_id' => $testRun->id,
-            'acceptance_criteria_id' => $criteria2->id,
+            'test_run_id'                    => $testRun->id,
+            'acceptance_criteria_id'         => $criteria2->id,
             'acceptance_criteria_version_id' => $criteria2->getCurrentVersion()->id,
-            'status' => TestResultStatus::Failed,
-            'notes' => 'Dashboard layout needs adjustment for mobile devices.',
+            'status'                         => TestResultStatus::Failed,
+            'notes'                          => 'Dashboard layout needs adjustment for mobile devices.',
         ]);
 
         TestResult::create([
-            'test_run_id' => $testRun->id,
-            'acceptance_criteria_id' => $criteria3->id,
+            'test_run_id'                    => $testRun->id,
+            'acceptance_criteria_id'         => $criteria3->id,
             'acceptance_criteria_version_id' => $criteria3->getCurrentVersion()->id,
-            'status' => TestResultStatus::Skipped,
-            'notes' => 'Task management features not yet implemented.',
+            'status'                         => TestResultStatus::Skipped,
+            'notes'                          => 'Task management features not yet implemented.',
         ]);
 
         $this->command->info('Acceptance criteria system seeded successfully!');

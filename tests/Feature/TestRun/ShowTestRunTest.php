@@ -13,10 +13,10 @@ it('can view the test run show page', function () {
     $project = Project::factory()->create(['name' => 'Test Project']);
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Sprint 1 Testing',
-        'description' => 'Testing all sprint 1 features',
-        'executed_at' => now(),
+        'project_id'          => $project->id,
+        'name'                => 'Sprint 1 Testing',
+        'description'         => 'Testing all sprint 1 features',
+        'executed_at'         => now(),
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -31,10 +31,10 @@ it('shows test run without description', function () {
     $project = Project::factory()->create(['name' => 'Test Project']);
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Quick Test',
-        'description' => null,
-        'executed_at' => now(),
+        'project_id'          => $project->id,
+        'name'                => 'Quick Test',
+        'description'         => null,
+        'executed_at'         => now(),
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -49,32 +49,32 @@ it('displays test results for the test run', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run',
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria1 = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'User can login',
+        'name'       => 'User can login',
     ]);
     $criteria2 = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'User can logout',
+        'name'       => 'User can logout',
     ]);
 
     $testResult1 = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria1->id,
-        'status' => TestResultStatus::Passed,
-        'notes' => 'Login works correctly',
+        'status'                 => TestResultStatus::Passed,
+        'notes'                  => 'Login works correctly',
     ]);
 
     $testResult2 = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria2->id,
-        'status' => TestResultStatus::Failed,
-        'notes' => 'Logout button not working',
+        'status'                 => TestResultStatus::Failed,
+        'notes'                  => 'Logout button not working',
     ]);
 
     $response = $this->get(route('test-run.show', $testRun));
@@ -88,8 +88,8 @@ it('shows empty state when no test results exist', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run',
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -104,11 +104,11 @@ it('displays execution information', function () {
     $project = Project::factory()->create(['name' => 'Test Project']);
     $user = User::factory()->create(['name' => 'Test User']);
     $executionDate = now()->subDays(1);
-    
+
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run',
-        'executed_at' => $executionDate,
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
+        'executed_at'         => $executionDate,
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -129,8 +129,8 @@ it('requires authentication to view show page', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run',
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -153,40 +153,40 @@ it('displays test run summary statistics', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run',
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria1 = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Criteria 1',
+        'name'       => 'Criteria 1',
     ]);
     $criteria2 = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Criteria 2',
+        'name'       => 'Criteria 2',
     ]);
     $criteria3 = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Criteria 3',
+        'name'       => 'Criteria 3',
     ]);
 
     TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria1->id,
-        'status' => TestResultStatus::Passed,
+        'status'                 => TestResultStatus::Passed,
     ]);
 
     TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria2->id,
-        'status' => TestResultStatus::Failed,
+        'status'                 => TestResultStatus::Failed,
     ]);
 
     TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria3->id,
-        'status' => TestResultStatus::Skipped,
+        'status'                 => TestResultStatus::Skipped,
     ]);
 
     $response = $this->get(route('test-run.show', $testRun));
@@ -200,20 +200,20 @@ it('shows evidence for test results', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run',
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Passed,
+        'status'                 => TestResultStatus::Passed,
     ]);
 
     $response = $this->get(route('test-run.show', $testRun));

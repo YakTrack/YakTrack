@@ -20,12 +20,12 @@ class AcceptanceCriteriaVersionFactory extends Factory
     {
         return [
             'acceptance_criteria_id' => AcceptanceCriteria::factory(),
-            'code' => $this->faker->optional(0.7)->regexify('[A-Z]{2,3}-[0-9]{3}'),
-            'name' => $this->faker->sentence(4),
-            'description' => $this->faker->optional(0.8)->paragraphs(2, true),
-            'version_number' => $this->faker->numberBetween(1, 5),
-            'changed_at' => $this->faker->dateTimeBetween('-6 months', 'now'),
-            'changed_by_user_id' => User::factory(),
+            'code'                   => $this->faker->optional(0.7)->regexify('[A-Z]{2,3}-[0-9]{3}'),
+            'name'                   => $this->faker->sentence(4),
+            'description'            => $this->faker->optional(0.8)->paragraphs(2, true),
+            'version_number'         => $this->faker->numberBetween(1, 5),
+            'changed_at'             => $this->faker->dateTimeBetween('-6 months', 'now'),
+            'changed_by_user_id'     => User::factory(),
         ];
     }
 

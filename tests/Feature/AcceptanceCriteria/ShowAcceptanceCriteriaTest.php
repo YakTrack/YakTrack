@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\AcceptanceCriteria;
-use App\Models\AcceptanceCriteriaVersion;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\TestResult;
@@ -14,9 +13,9 @@ it('can view the acceptance criteria show page', function () {
 
     $project = Project::factory()->create(['name' => 'Test Project']);
     $criteria = AcceptanceCriteria::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Criteria',
-        'code' => 'AC-001',
+        'project_id'  => $project->id,
+        'name'        => 'Test Criteria',
+        'code'        => 'AC-001',
         'description' => 'Test description',
     ]);
 
@@ -31,7 +30,7 @@ it('shows criteria without code', function () {
     $project = Project::factory()->create(['name' => 'Test Project']);
     $criteria = AcceptanceCriteria::factory()->withoutCode()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $response = $this->get(route('acceptance-criteria.show', $criteria));
@@ -45,7 +44,7 @@ it('shows criteria without description', function () {
     $project = Project::factory()->create(['name' => 'Test Project']);
     $criteria = AcceptanceCriteria::factory()->withoutDescription()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $response = $this->get(route('acceptance-criteria.show', $criteria));
@@ -60,18 +59,18 @@ it('displays version history', function () {
     $user = User::factory()->create();
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     // Create multiple versions
     $criteria->createVersion([
-        'code' => 'AC-001',
-        'name' => 'Test Criteria',
+        'code'        => 'AC-001',
+        'name'        => 'Test Criteria',
         'description' => 'Original description',
     ], $user->id);
 
     $criteria->updateWithVersion([
-        'name' => 'Updated Criteria',
+        'name'        => 'Updated Criteria',
         'description' => 'Updated description',
     ], $user->id);
 
@@ -86,12 +85,12 @@ it('displays linked tasks', function () {
     $project = Project::factory()->create();
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
-    
+
     $task = Task::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Task',
+        'name'       => 'Test Task',
     ]);
 
     $criteria->tasks()->attach($task->id);
@@ -108,20 +107,20 @@ it('displays test results history', function () {
     $user = User::factory()->create();
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run',
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
         'executed_by_user_id' => $user->id,
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Passed,
-        'notes' => 'Test passed successfully',
+        'status'                 => TestResultStatus::Passed,
+        'notes'                  => 'Test passed successfully',
     ]);
 
     $response = $this->get(route('acceptance-criteria.show', $criteria));
@@ -135,7 +134,7 @@ it('can navigate to edit page from show page', function () {
     $project = Project::factory()->create();
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $response = $this->get(route('acceptance-criteria.edit', $criteria));
@@ -155,7 +154,7 @@ it('requires authentication to view show page', function () {
     $project = Project::factory()->create();
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $response = $this->get(route('acceptance-criteria.show', $criteria));
@@ -177,7 +176,7 @@ it('shows empty state for criteria with no linked tasks', function () {
     $project = Project::factory()->create();
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $response = $this->get(route('acceptance-criteria.show', $criteria));
@@ -191,7 +190,7 @@ it('shows empty state for criteria with no test results', function () {
     $project = Project::factory()->create();
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $response = $this->get(route('acceptance-criteria.show', $criteria));

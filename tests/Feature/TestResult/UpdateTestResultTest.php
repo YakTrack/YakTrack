@@ -13,32 +13,32 @@ it('can update test result status', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Pending,
+        'status'                 => TestResultStatus::Pending,
     ]);
 
     $response = $this->patch(route('test-result.update', $testResult), [
         'status' => TestResultStatus::Passed->value,
-        'notes' => 'Test passed successfully',
+        'notes'  => 'Test passed successfully',
     ]);
 
     $response->assertRedirect();
 
     $this->assertDatabaseHas('test_results', [
-        'id' => $testResult->id,
+        'id'     => $testResult->id,
         'status' => TestResultStatus::Passed->value,
-        'notes' => 'Test passed successfully',
+        'notes'  => 'Test passed successfully',
     ]);
 });
 
@@ -48,54 +48,54 @@ it('can update test result with all status types', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Pending,
+        'status'                 => TestResultStatus::Pending,
     ]);
 
     // Test Passed status
     $response = $this->patch(route('test-result.update', $testResult), [
         'status' => TestResultStatus::Passed->value,
-        'notes' => 'Test passed',
+        'notes'  => 'Test passed',
     ]);
     $response->assertRedirect();
 
     $this->assertDatabaseHas('test_results', [
-        'id' => $testResult->id,
+        'id'     => $testResult->id,
         'status' => TestResultStatus::Passed->value,
     ]);
 
     // Test Failed status
     $response = $this->patch(route('test-result.update', $testResult), [
         'status' => TestResultStatus::Failed->value,
-        'notes' => 'Test failed',
+        'notes'  => 'Test failed',
     ]);
     $response->assertRedirect();
 
     $this->assertDatabaseHas('test_results', [
-        'id' => $testResult->id,
+        'id'     => $testResult->id,
         'status' => TestResultStatus::Failed->value,
     ]);
 
     // Test Skipped status
     $response = $this->patch(route('test-result.update', $testResult), [
         'status' => TestResultStatus::Skipped->value,
-        'notes' => 'Test skipped',
+        'notes'  => 'Test skipped',
     ]);
     $response->assertRedirect();
 
     $this->assertDatabaseHas('test_results', [
-        'id' => $testResult->id,
+        'id'     => $testResult->id,
         'status' => TestResultStatus::Skipped->value,
     ]);
 });
@@ -106,33 +106,33 @@ it('can update test result without notes', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Pending,
-        'notes' => 'Original notes',
+        'status'                 => TestResultStatus::Pending,
+        'notes'                  => 'Original notes',
     ]);
 
     $response = $this->patch(route('test-result.update', $testResult), [
         'status' => TestResultStatus::Passed->value,
-        'notes' => null,
+        'notes'  => null,
     ]);
 
     $response->assertRedirect();
 
     $this->assertDatabaseHas('test_results', [
-        'id' => $testResult->id,
+        'id'     => $testResult->id,
         'status' => TestResultStatus::Passed->value,
-        'notes' => null,
+        'notes'  => null,
     ]);
 });
 
@@ -142,19 +142,19 @@ it('shows validation errors for invalid status', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Pending,
+        'status'                 => TestResultStatus::Pending,
     ]);
 
     $response = $this->patch(route('test-result.update', $testResult), [
@@ -169,19 +169,19 @@ it('requires authentication to update test result', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Pending,
+        'status'                 => TestResultStatus::Pending,
     ]);
 
     $response = $this->patch(route('test-result.update', $testResult), [
@@ -207,24 +207,24 @@ it('shows success message after update', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Pending,
+        'status'                 => TestResultStatus::Pending,
     ]);
 
     $response = $this->patch(route('test-result.update', $testResult), [
         'status' => TestResultStatus::Passed->value,
-        'notes' => 'Test passed',
+        'notes'  => 'Test passed',
     ]);
 
     $response->assertRedirect();
@@ -237,44 +237,44 @@ it('can update test result multiple times', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testResult = TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
-        'status' => TestResultStatus::Pending,
+        'status'                 => TestResultStatus::Pending,
     ]);
 
     // First update
     $response = $this->patch(route('test-result.update', $testResult), [
         'status' => TestResultStatus::Passed->value,
-        'notes' => 'First update',
+        'notes'  => 'First update',
     ]);
     $response->assertRedirect();
 
     $this->assertDatabaseHas('test_results', [
-        'id' => $testResult->id,
+        'id'     => $testResult->id,
         'status' => TestResultStatus::Passed->value,
-        'notes' => 'First update',
+        'notes'  => 'First update',
     ]);
 
     // Second update
     $response = $this->patch(route('test-result.update', $testResult), [
         'status' => TestResultStatus::Failed->value,
-        'notes' => 'Second update',
+        'notes'  => 'Second update',
     ]);
     $response->assertRedirect();
 
     $this->assertDatabaseHas('test_results', [
-        'id' => $testResult->id,
+        'id'     => $testResult->id,
         'status' => TestResultStatus::Failed->value,
-        'notes' => 'Second update',
+        'notes'  => 'Second update',
     ]);
 });

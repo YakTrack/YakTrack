@@ -18,10 +18,10 @@ it('displays existing test runs', function () {
     $project = Project::factory()->create(['name' => 'Test Project']);
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Sprint 1 Testing',
-        'description' => 'Testing for sprint 1 features',
-        'executed_at' => now(),
+        'project_id'          => $project->id,
+        'name'                => 'Sprint 1 Testing',
+        'description'         => 'Testing for sprint 1 features',
+        'executed_at'         => now(),
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -36,10 +36,10 @@ it('displays test runs without description', function () {
     $project = Project::factory()->create(['name' => 'Test Project']);
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Quick Test',
-        'description' => null,
-        'executed_at' => now(),
+        'project_id'          => $project->id,
+        'name'                => 'Quick Test',
+        'description'         => null,
+        'executed_at'         => now(),
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -54,16 +54,16 @@ it('can filter test runs by project', function () {
     $project1 = Project::factory()->create(['name' => 'Project One']);
     $project2 = Project::factory()->create(['name' => 'Project Two']);
     $user = User::factory()->create();
-    
+
     $testRun1 = TestRun::factory()->create([
-        'project_id' => $project1->id,
-        'name' => 'Test Run One',
+        'project_id'          => $project1->id,
+        'name'                => 'Test Run One',
         'executed_by_user_id' => $user->id,
     ]);
-    
+
     $testRun2 = TestRun::factory()->create([
-        'project_id' => $project2->id,
-        'name' => 'Test Run Two',
+        'project_id'          => $project2->id,
+        'name'                => 'Test Run Two',
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -86,11 +86,11 @@ it('displays execution date and user information', function () {
     $project = Project::factory()->create(['name' => 'Test Project']);
     $user = User::factory()->create(['name' => 'Test User']);
     $executionDate = now()->subDays(1);
-    
+
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run',
-        'executed_at' => $executionDate,
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
+        'executed_at'         => $executionDate,
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -113,8 +113,8 @@ it('can navigate to show page from test run link', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run',
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -134,10 +134,10 @@ it('paginates results when there are many test runs', function () {
 
     $project = Project::factory()->create();
     $user = User::factory()->create();
-    
+
     // Create more than 15 test runs (default pagination limit)
     TestRun::factory()->count(20)->create([
-        'project_id' => $project->id,
+        'project_id'          => $project->id,
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -152,8 +152,8 @@ it('displays test run status summary', function () {
     $project = Project::factory()->create();
     $user = User::factory()->create();
     $testRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Test Run',
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
         'executed_by_user_id' => $user->id,
     ]);
 
@@ -167,18 +167,18 @@ it('orders test runs by execution date descending', function () {
 
     $project = Project::factory()->create();
     $user = User::factory()->create();
-    
+
     $olderTestRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Older Test Run',
-        'executed_at' => now()->subDays(2),
+        'project_id'          => $project->id,
+        'name'                => 'Older Test Run',
+        'executed_at'         => now()->subDays(2),
         'executed_by_user_id' => $user->id,
     ]);
-    
+
     $newerTestRun = TestRun::factory()->create([
-        'project_id' => $project->id,
-        'name' => 'Newer Test Run',
-        'executed_at' => now()->subDays(1),
+        'project_id'          => $project->id,
+        'name'                => 'Newer Test Run',
+        'executed_at'         => now()->subDays(1),
         'executed_by_user_id' => $user->id,
     ]);
 

@@ -66,7 +66,7 @@ class AcceptanceCriteriaController extends Controller
         $criteria->createVersion($request->validated(), auth()->id());
 
         return redirect()->route('acceptance-criteria.index')
-            ->with('success', 'Acceptance criteria "' . $criteria->name . '" has been created.');
+            ->with('success', 'Acceptance criteria "'.$criteria->name.'" has been created.');
     }
 
     public function show(AcceptanceCriteria $acceptance_criterion): Response
@@ -98,17 +98,17 @@ class AcceptanceCriteriaController extends Controller
         $acceptance_criterion->updateWithVersion($request->validated(), auth()->id());
 
         return redirect()->route('acceptance-criteria.show', $acceptance_criterion)
-            ->with('success', 'Acceptance criteria "' . $acceptance_criterion->name . '" has been updated.');
+            ->with('success', 'Acceptance criteria "'.$acceptance_criterion->name.'" has been updated.');
     }
 
     public function destroy(AcceptanceCriteria $acceptance_criterion): RedirectResponse
     {
         $name = $acceptance_criterion->name;
-        
+
         $acceptance_criterion->update(['is_active' => false]);
 
         return redirect()->route('acceptance-criteria.index')
-            ->with('success', 'Acceptance criteria "' . $name . '" has been deleted.');
+            ->with('success', 'Acceptance criteria "'.$name.'" has been deleted.');
     }
 
     public function import(): Response

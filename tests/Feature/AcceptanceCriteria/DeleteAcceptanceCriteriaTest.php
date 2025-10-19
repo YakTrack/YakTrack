@@ -5,7 +5,6 @@ use App\Models\Project;
 use App\Models\Task;
 use App\Models\TestResult;
 use App\Models\TestRun;
-use App\Models\User;
 
 it('can soft delete acceptance criteria', function () {
     $this->actingAsUser();
@@ -13,7 +12,7 @@ it('can soft delete acceptance criteria', function () {
     $project = Project::factory()->create();
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $response = $this->delete(route('acceptance-criteria.destroy', $criteria));
@@ -22,7 +21,7 @@ it('can soft delete acceptance criteria', function () {
 
     // Check that is_active is set to false
     $this->assertDatabaseHas('acceptance_criteria', [
-        'id' => $criteria->id,
+        'id'        => $criteria->id,
         'is_active' => false,
     ]);
 });
@@ -33,12 +32,12 @@ it('can delete criteria with linked tasks', function () {
     $project = Project::factory()->create();
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
-    
+
     $task = Task::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Task',
+        'name'       => 'Test Task',
     ]);
 
     $criteria->tasks()->attach($task->id);
@@ -49,7 +48,7 @@ it('can delete criteria with linked tasks', function () {
 
     // Check that the criteria is still deleted (soft delete)
     $this->assertDatabaseHas('acceptance_criteria', [
-        'id' => $criteria->id,
+        'id'        => $criteria->id,
         'is_active' => false,
     ]);
 });
@@ -60,16 +59,16 @@ it('can delete criteria with test results', function () {
     $project = Project::factory()->create();
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $testRun = TestRun::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Run',
+        'name'       => 'Test Run',
     ]);
 
     TestResult::factory()->create([
-        'test_run_id' => $testRun->id,
+        'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria->id,
     ]);
 
@@ -79,7 +78,7 @@ it('can delete criteria with test results', function () {
 
     // Check that the criteria is still deleted (soft delete)
     $this->assertDatabaseHas('acceptance_criteria', [
-        'id' => $criteria->id,
+        'id'        => $criteria->id,
         'is_active' => false,
     ]);
 });
@@ -90,7 +89,7 @@ it('can delete criteria without any dependencies', function () {
     $project = Project::factory()->create();
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $response = $this->delete(route('acceptance-criteria.destroy', $criteria));
@@ -99,7 +98,7 @@ it('can delete criteria without any dependencies', function () {
 
     // Check that is_active is set to false
     $this->assertDatabaseHas('acceptance_criteria', [
-        'id' => $criteria->id,
+        'id'        => $criteria->id,
         'is_active' => false,
     ]);
 });
@@ -110,13 +109,13 @@ it('preserves version history when deleting criteria', function () {
     $project = Project::factory()->create();
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     // Create a version
     $criteria->createVersion([
-        'code' => 'AC-001',
-        'name' => 'Test Criteria',
+        'code'        => 'AC-001',
+        'name'        => 'Test Criteria',
         'description' => 'Test description',
     ], auth()->id());
 
@@ -127,7 +126,7 @@ it('preserves version history when deleting criteria', function () {
     // Check that versions are preserved
     $this->assertDatabaseHas('acceptance_criteria_versions', [
         'acceptance_criteria_id' => $criteria->id,
-        'version_number' => 1,
+        'version_number'         => 1,
     ]);
 });
 
@@ -135,7 +134,7 @@ it('requires authentication to delete criteria', function () {
     $project = Project::factory()->create();
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $response = $this->delete(route('acceptance-criteria.destroy', $criteria));
@@ -157,7 +156,7 @@ it('shows success message after deletion', function () {
     $project = Project::factory()->create();
     $criteria = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $response = $this->delete(route('acceptance-criteria.destroy', $criteria));
@@ -172,11 +171,11 @@ it('can delete multiple criteria at once', function () {
     $project = Project::factory()->create();
     $criteria1 = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Criteria One',
+        'name'       => 'Criteria One',
     ]);
     $criteria2 = AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'name' => 'Criteria Two',
+        'name'       => 'Criteria Two',
     ]);
 
     $response1 = $this->delete(route('acceptance-criteria.destroy', $criteria1));
@@ -187,11 +186,11 @@ it('can delete multiple criteria at once', function () {
 
     // Check that both criteria are soft deleted
     $this->assertDatabaseHas('acceptance_criteria', [
-        'id' => $criteria1->id,
+        'id'        => $criteria1->id,
         'is_active' => false,
     ]);
     $this->assertDatabaseHas('acceptance_criteria', [
-        'id' => $criteria2->id,
+        'id'        => $criteria2->id,
         'is_active' => false,
     ]);
 });

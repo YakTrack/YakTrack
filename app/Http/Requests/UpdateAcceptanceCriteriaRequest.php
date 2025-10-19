@@ -47,7 +47,7 @@ class UpdateAcceptanceCriteriaRequest extends FormRequest
                         return $rule->ignore($criteriaId);
                     }),
             ],
-            'name' => 'required|string|max:255',
+            'name'        => 'required|string|max:255',
             'description' => 'nullable|string',
         ];
     }
