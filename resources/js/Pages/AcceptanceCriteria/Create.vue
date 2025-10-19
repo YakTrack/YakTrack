@@ -22,6 +22,7 @@
                         <select
                             id="project_id"
                             v-model="form.project_id"
+                            @change="onProjectChange"
                             class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                             :class="{ 'border-red-500': errors.project_id }"
                         >
@@ -33,6 +34,31 @@
                         <div v-if="errors.project_id" class="mt-1 text-sm text-red-600">
                             {{ errors.project_id }}
                         </div>
+                    </div>
+
+                    <!-- Feature Selection -->
+                    <div class="mb-4">
+                        <label for="feature_id" class="block text-sm font-medium text-gray-700 mb-2">
+                            Feature
+                        </label>
+                        <select
+                            id="feature_id"
+                            v-model="form.feature_id"
+                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            :class="{ 'border-red-500': errors.feature_id }"
+                            :disabled="!form.project_id"
+                        >
+                            <option value="">No feature (optional)</option>
+                            <option v-for="feature in availableFeatures" :key="feature.id" :value="feature.id">
+                                {{ feature.name }}
+                            </option>
+                        </select>
+                        <div v-if="errors.feature_id" class="mt-1 text-sm text-red-600">
+                            {{ errors.feature_id }}
+                        </div>
+                        <p v-if="!form.project_id" class="mt-1 text-sm text-gray-500">
+                            Please select a project first to see available features.
+                        </p>
                     </div>
 
                     <!-- Code -->
@@ -117,12 +143,14 @@
 
 <script>
 import { Link, useForm } from '@inertiajs/vue3'
+import { computed } from 'vue'
 import breadcrumbs from '@/Shared/Breadcrumbs.vue'
 import layout from '@/Shared/Layout.vue'
 
 export default {
     props: [
         'projects',
+        'features',
         'errors',
     ],
     components: {
@@ -130,9 +158,10 @@ export default {
         breadcrumbs: breadcrumbs,
         layout: layout,
     },
-    setup() {
+    setup(props) {
         const form = useForm({
             project_id: '',
+            feature_id: '',
             code: '',
             name: '',
             description: '',
@@ -146,9 +175,23 @@ export default {
             })
         }
 
+        const onProjectChange = () => {
+            // Clear feature selection when project changes
+            form.feature_id = '';
+        }
+
+        const availableFeatures = computed(() => {
+            if (!form.project_id) {
+                return [];
+            }
+            return props.features.filter(feature => feature.project_id == form.project_id);
+        })
+
         return {
             form,
             submitForm,
+            onProjectChange,
+            availableFeatures,
         }
     }
 }

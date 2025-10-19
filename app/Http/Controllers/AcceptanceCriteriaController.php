@@ -54,6 +54,7 @@ class AcceptanceCriteriaController extends Controller
     {
         return Inertia::render('AcceptanceCriteria/Edit', [
             'projects' => Project::orderBy('name')->get(),
+            'features' => Feature::where('is_active', true)->orderBy('name')->get(),
         ]);
     }
 
@@ -72,6 +73,7 @@ class AcceptanceCriteriaController extends Controller
     {
         $acceptance_criterion->load([
             'project',
+            'feature',
             'versions.changedByUser',
             'tasks',
             'testResults.testRun.executedByUser',
@@ -87,6 +89,7 @@ class AcceptanceCriteriaController extends Controller
         return Inertia::render('AcceptanceCriteria/Edit', [
             'criteria' => $acceptance_criterion,
             'projects' => Project::orderBy('name')->get(),
+            'features' => Feature::where('is_active', true)->orderBy('name')->get(),
         ]);
     }
 
