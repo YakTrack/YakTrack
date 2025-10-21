@@ -93,6 +93,10 @@ class TaskController extends Controller
      */
     public function edit(Task $task): Response
     {
+        // Store the intended URL in the session for redirect after update
+        $intendedUrl = request()->header('referer', route('task.index'));
+        session(['url.intended' => $intendedUrl]);
+
         return Inertia::render('Task/Edit', [
             'task'     => $task->load('taskStatus'),
             'tasks'    => Task::all(),
@@ -121,7 +125,9 @@ class TaskController extends Controller
             'status_id'   => request('status_id', $task->status_id),
         ]);
 
-        return redirect()->route('task.index');
+        // Use Laravel's intended redirect with fallback
+        return redirect()->intended(route('task.index'))
+            ->with('success', 'Task "'.$task->name.'" updated successfully.');
     }
 
     /**
