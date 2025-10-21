@@ -32,6 +32,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('client', 'ClientController');
     Route::resource('project', 'ProjectController');
+    Route::patch('project/{project}/archive', 'ProjectController@archive')->name('project.archive');
+    Route::patch('project/{project}/unarchive', 'ProjectController@unarchive')->name('project.unarchive');
+    Route::get('project-archived', 'ProjectController@archived')->name('project.archived');
     Route::resource('sprint', 'SprintController');
     Route::resource('sprint.invoice', 'Sprint\InvoiceController');
     Route::resource('target', 'TargetController');

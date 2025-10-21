@@ -17,11 +17,12 @@ class ProjectController extends Controller
     public function index(): Response
     {
         return Inertia::render('Project/Index', [
-            'projects' => Project::orderBy('name')
+            'projects' => Project::notArchived()
+                ->orderBy('name')
                 ->with('sprints', 'tasks', 'client')
                 ->get()
                 ->map
-                ->append('isDeletable'),
+                ->append(['isDeletable', 'isArchived']),
         ]);
     }
 
@@ -133,5 +134,44 @@ class ProjectController extends Controller
         return redirect()
             ->route('project.index')
             ->with('success', 'You have deleted Project '.$project->name.'.');
+    }
+
+    /**
+     * Archive the specified project.
+     */
+    public function archive(Project $project): RedirectResponse
+    {
+        $project->archive();
+
+        return redirect()
+            ->route('project.index')
+            ->with('success', "Project \"$project->name\" has been archived.");
+    }
+
+    /**
+     * Unarchive the specified project.
+     */
+    public function unarchive(Project $project): RedirectResponse
+    {
+        $project->unarchive();
+
+        return redirect()
+            ->route('project.index')
+            ->with('success', "Project \"$project->name\" has been unarchived.");
+    }
+
+    /**
+     * Show archived projects.
+     */
+    public function archived(): Response
+    {
+        return Inertia::render('Project/Archived', [
+            'projects' => Project::archived()
+                ->orderBy('archived_at', 'desc')
+                ->with('client')
+                ->get()
+                ->map
+                ->append('isArchived'),
+        ]);
     }
 }

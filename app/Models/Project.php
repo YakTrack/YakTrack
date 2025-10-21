@@ -17,6 +17,7 @@ class Project extends Model
         'name',
         'description',
         'client_id',
+        'archived_at',
     ];
 
     /**
@@ -149,5 +150,53 @@ class Project extends Model
     public function getIsDeletableAttribute(): bool
     {
         return $this->isDeletable();
+    }
+
+    /**
+     * Archive the project.
+     */
+    public function archive(): void
+    {
+        $this->update(['archived_at' => now()]);
+    }
+
+    /**
+     * Unarchive the project.
+     */
+    public function unarchive(): void
+    {
+        $this->update(['archived_at' => null]);
+    }
+
+    /**
+     * Check if the project is archived.
+     */
+    public function isArchived(): bool
+    {
+        return !is_null($this->archived_at);
+    }
+
+    /**
+     * Get the archived status attribute.
+     */
+    public function getIsArchivedAttribute(): bool
+    {
+        return $this->isArchived();
+    }
+
+    /**
+     * Scope to get only archived projects.
+     */
+    public function scopeArchived($query)
+    {
+        return $query->whereNotNull('archived_at');
+    }
+
+    /**
+     * Scope to get only non-archived projects.
+     */
+    public function scopeNotArchived($query)
+    {
+        return $query->whereNull('archived_at');
     }
 }
