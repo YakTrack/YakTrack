@@ -74,12 +74,12 @@ class AcceptanceCriteria extends Model
         $versionNumber = $maxVersion ? $maxVersion + 1 : 1;
 
         return $this->versions()->create([
-            'code' => $data['code'] ?? $this->code,
-            'name' => $data['name'] ?? $this->name,
-            'description' => $data['description'] ?? $this->description,
-            'feature_id' => $data['feature_id'] ?? $this->feature_id,
-            'version_number' => $versionNumber,
-            'changed_at' => now(),
+            'code'               => $data['code'] ?? $this->code,
+            'name'               => $data['name'] ?? $this->name,
+            'description'        => $data['description'] ?? $this->description,
+            'feature_id'         => $data['feature_id'] ?? $this->feature_id,
+            'version_number'     => $versionNumber,
+            'changed_at'         => now(),
             'changed_by_user_id' => $userId,
         ]);
     }
@@ -112,11 +112,11 @@ class AcceptanceCriteria extends Model
     }
 
     /**
-     * Get acceptance criteria grouped by feature
+     * Get acceptance criteria grouped by feature.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public static function getGroupedByFeature(int $projectId = null): \Illuminate\Database\Eloquent\Collection
+    public static function getGroupedByFeature(?int $projectId = null): \Illuminate\Database\Eloquent\Collection
     {
         $query = static::with(['project', 'feature', 'versions', 'tasks'])
             ->where('is_active', true);
@@ -134,7 +134,7 @@ class AcceptanceCriteria extends Model
     }
 
     /**
-     * Get features for a project
+     * Get features for a project.
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */

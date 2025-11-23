@@ -12,7 +12,8 @@ it('can view the feature show page', function () {
     $response = $this->get(route('features.show', $feature));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Show')
         ->has('feature')
         ->where('feature.name', $feature->name)
@@ -27,7 +28,8 @@ it('shows feature without description', function () {
     $response = $this->get(route('features.show', $feature));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Show')
         ->has('feature')
         ->where('feature.description', null)
@@ -40,13 +42,14 @@ it('displays acceptance criteria for the feature', function () {
     $feature = Feature::factory()->create();
     $criteria = AcceptanceCriteria::factory()->create([
         'feature_id' => $feature->id,
-        'name' => 'Test Criteria',
+        'name'       => 'Test Criteria',
     ]);
 
     $response = $this->get(route('features.show', $feature));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Show')
         ->has('feature.acceptance_criteria', 1)
         ->where('feature.acceptance_criteria.0.name', 'Test Criteria')
@@ -61,7 +64,8 @@ it('shows empty state when no acceptance criteria exist', function () {
     $response = $this->get(route('features.show', $feature));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Show')
         ->has('feature.acceptance_criteria', 0)
     );
@@ -76,7 +80,8 @@ it('displays project information', function () {
     $response = $this->get(route('features.show', $feature));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Show')
         ->has('feature.project')
         ->where('feature.project.name', 'Test Project')
@@ -91,7 +96,8 @@ it('can navigate to edit page from show page', function () {
     $response = $this->get(route('features.show', $feature));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Show')
         ->has('feature')
     );
@@ -105,7 +111,8 @@ it('can navigate back to index from show page', function () {
     $response = $this->get(route('features.show', $feature));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Show')
     );
 });
@@ -132,19 +139,20 @@ it('only shows active acceptance criteria', function () {
     $feature = Feature::factory()->create();
     AcceptanceCriteria::factory()->create([
         'feature_id' => $feature->id,
-        'is_active' => true,
-        'name' => 'Active Criteria',
+        'is_active'  => true,
+        'name'       => 'Active Criteria',
     ]);
     AcceptanceCriteria::factory()->create([
         'feature_id' => $feature->id,
-        'is_active' => false,
-        'name' => 'Inactive Criteria',
+        'is_active'  => false,
+        'name'       => 'Inactive Criteria',
     ]);
 
     $response = $this->get(route('features.show', $feature));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Show')
         ->has('feature.acceptance_criteria', 1)
         ->where('feature.acceptance_criteria.0.name', 'Active Criteria')
@@ -157,17 +165,18 @@ it('orders acceptance criteria by name', function () {
     $feature = Feature::factory()->create();
     AcceptanceCriteria::factory()->create([
         'feature_id' => $feature->id,
-        'name' => 'Z Criteria',
+        'name'       => 'Z Criteria',
     ]);
     AcceptanceCriteria::factory()->create([
         'feature_id' => $feature->id,
-        'name' => 'A Criteria',
+        'name'       => 'A Criteria',
     ]);
 
     $response = $this->get(route('features.show', $feature));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Features/Show')
         ->has('feature.acceptance_criteria', 2)
         ->where('feature.acceptance_criteria.0.name', 'A Criteria')

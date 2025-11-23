@@ -40,9 +40,9 @@ class ClientLoginSessionController extends Controller
         $clientUsers = ClientUser::with('client')->orderBy('name')->get();
 
         return inertia('ClientLoginSessions/Index', [
-            'sessions' => $sessions,
+            'sessions'    => $sessions,
             'clientUsers' => $clientUsers,
-            'filters' => $request->only(['client_user_id', 'active_only', 'date_from', 'date_to']),
+            'filters'     => $request->only(['client_user_id', 'active_only', 'date_from', 'date_to']),
         ]);
     }
 
@@ -57,7 +57,7 @@ class ClientLoginSessionController extends Controller
 
         return inertia('ClientLoginSessions/ForClientUser', [
             'clientUser' => $clientUser->load('client'),
-            'sessions' => $sessions,
+            'sessions'   => $sessions,
         ]);
     }
 
@@ -80,7 +80,7 @@ class ClientLoginSessionController extends Controller
     {
         if ($session->is_active) {
             $session->markAsLoggedOut();
-            
+
             return redirect()->back()
                 ->with('success', 'Session has been logged out successfully.');
         }
@@ -95,10 +95,10 @@ class ClientLoginSessionController extends Controller
     public function logoutAllForUser(ClientUser $clientUser)
     {
         $activeCount = $clientUser->activeLoginSessions()->count();
-        
+
         if ($activeCount > 0) {
             $clientUser->logOutAllSessions();
-            
+
             return redirect()->back()
                 ->with('success', "All {$activeCount} active sessions have been logged out.");
         }
@@ -113,12 +113,12 @@ class ClientLoginSessionController extends Controller
     public function statistics()
     {
         $stats = [
-            'total_sessions' => ClientLoginSession::count(),
-            'active_sessions' => ClientLoginSession::active()->count(),
-            'sessions_today' => ClientLoginSession::whereDate('logged_in_at', today())->count(),
-            'sessions_this_week' => ClientLoginSession::where('logged_in_at', '>=', now()->startOfWeek())->count(),
+            'total_sessions'      => ClientLoginSession::count(),
+            'active_sessions'     => ClientLoginSession::active()->count(),
+            'sessions_today'      => ClientLoginSession::whereDate('logged_in_at', today())->count(),
+            'sessions_this_week'  => ClientLoginSession::where('logged_in_at', '>=', now()->startOfWeek())->count(),
             'sessions_this_month' => ClientLoginSession::where('logged_in_at', '>=', now()->startOfMonth())->count(),
-            'unique_users_today' => ClientLoginSession::whereDate('logged_in_at', today())
+            'unique_users_today'  => ClientLoginSession::whereDate('logged_in_at', today())
                 ->distinct('client_user_id')
                 ->count('client_user_id'),
             'unique_users_this_week' => ClientLoginSession::where('logged_in_at', '>=', now()->startOfWeek())
@@ -139,7 +139,7 @@ class ClientLoginSessionController extends Controller
             ->get();
 
         return inertia('ClientLoginSessions/Statistics', [
-            'stats' => $stats,
+            'stats'          => $stats,
             'topActiveUsers' => $topActiveUsers,
         ]);
     }

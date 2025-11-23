@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Services\GherkinParser;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
 class ImportAcceptanceCriteriaRequest extends FormRequest
 {
@@ -24,8 +23,8 @@ class ImportAcceptanceCriteriaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'project_id' => 'required|exists:projects,id',
-            'file' => 'required|file|mimes:feature,txt|max:10240', // 10MB max
+            'project_id'         => 'required|exists:projects,id',
+            'file'               => 'required|file|mimes:feature,txt|max:10240', // 10MB max
             'overwrite_existing' => 'boolean',
         ];
     }
@@ -39,11 +38,11 @@ class ImportAcceptanceCriteriaRequest extends FormRequest
     {
         return [
             'project_id.required' => 'A project must be selected.',
-            'project_id.exists' => 'The selected project does not exist.',
-            'file.required' => 'A Gherkin file must be uploaded.',
-            'file.file' => 'The uploaded file is not valid.',
-            'file.mimes' => 'The file must be a .feature or .txt file.',
-            'file.max' => 'The file size must not exceed 10MB.',
+            'project_id.exists'   => 'The selected project does not exist.',
+            'file.required'       => 'A Gherkin file must be uploaded.',
+            'file.file'           => 'The uploaded file is not valid.',
+            'file.mimes'          => 'The file must be a .feature or .txt file.',
+            'file.max'            => 'The file size must not exceed 10MB.',
         ];
     }
 
@@ -58,10 +57,10 @@ class ImportAcceptanceCriteriaRequest extends FormRequest
             if ($this->hasFile('file')) {
                 $file = $this->file('file');
                 $content = file_get_contents($file->getPathname());
-                
+
                 $parser = new GherkinParser();
                 $validation = $parser->validate($content);
-                
+
                 if (!$validation['valid']) {
                     foreach ($validation['errors'] as $error) {
                         $validator->errors()->add('file', $error);
@@ -71,4 +70,3 @@ class ImportAcceptanceCriteriaRequest extends FormRequest
         });
     }
 }
-

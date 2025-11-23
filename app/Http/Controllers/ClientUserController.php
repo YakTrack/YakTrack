@@ -44,17 +44,17 @@ class ClientUserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:client_users',
-            'password' => 'required|string|min:8|confirmed',
+            'name'      => 'required|string|max:255',
+            'email'     => 'required|string|email|max:255|unique:client_users',
+            'password'  => 'required|string|min:8|confirmed',
             'client_id' => 'required|exists:clients,id',
             'is_active' => 'boolean',
         ]);
 
         ClientUser::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name'      => $request->name,
+            'email'     => $request->email,
+            'password'  => Hash::make($request->password),
             'client_id' => $request->client_id,
             'is_active' => $request->boolean('is_active', true),
         ]);
@@ -86,7 +86,7 @@ class ClientUserController extends Controller
 
         return inertia('ClientUsers/Edit', [
             'clientUser' => $clientUser,
-            'clients' => $clients,
+            'clients'    => $clients,
         ]);
     }
 
@@ -96,7 +96,7 @@ class ClientUserController extends Controller
     public function update(Request $request, ClientUser $clientUser)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name'  => 'required|string|max:255',
             'email' => [
                 'required',
                 'string',
@@ -104,14 +104,14 @@ class ClientUserController extends Controller
                 'max:255',
                 Rule::unique('client_users')->ignore($clientUser->id),
             ],
-            'password' => 'nullable|string|min:8|confirmed',
+            'password'  => 'nullable|string|min:8|confirmed',
             'client_id' => 'required|exists:clients,id',
             'is_active' => 'boolean',
         ]);
 
         $data = [
-            'name' => $request->name,
-            'email' => $request->email,
+            'name'      => $request->name,
+            'email'     => $request->email,
             'client_id' => $request->client_id,
             'is_active' => $request->boolean('is_active', true),
         ];

@@ -2,10 +2,7 @@
 
 use App\Models\AcceptanceCriteria;
 use App\Models\Project;
-use App\Models\User;
-use App\Services\GherkinParser;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 
 it('can view the import page', function () {
     $this->actingAsUser();
@@ -45,8 +42,8 @@ GHERKIN;
     $file = UploadedFile::fake()->createWithContent('test.feature', $gherkinContent);
 
     $response = $this->post(route('acceptance-criteria.import.process'), [
-        'project_id' => $project->id,
-        'file' => $file,
+        'project_id'         => $project->id,
+        'file'               => $file,
         'overwrite_existing' => false,
     ]);
 
@@ -55,18 +52,18 @@ GHERKIN;
     // Check that acceptance criteria were created
     $this->assertDatabaseHas('acceptance_criteria', [
         'project_id' => $project->id,
-        'code' => 'AC-001',
-        'name' => 'Successful login with valid credentials',
+        'code'       => 'AC-001',
+        'name'       => 'Successful login with valid credentials',
         'feature_id' => \App\Models\Feature::where('project_id', $project->id)->where('name', 'User Authentication')->first()->id,
-        'is_active' => true,
+        'is_active'  => true,
     ]);
 
     $this->assertDatabaseHas('acceptance_criteria', [
         'project_id' => $project->id,
-        'code' => 'AC-002',
-        'name' => 'Failed login with invalid credentials',
+        'code'       => 'AC-002',
+        'name'       => 'Failed login with invalid credentials',
         'feature_id' => \App\Models\Feature::where('project_id', $project->id)->where('name', 'User Authentication')->first()->id,
-        'is_active' => true,
+        'is_active'  => true,
     ]);
 
     // Check that versions were created
@@ -75,12 +72,12 @@ GHERKIN;
 
     $this->assertDatabaseHas('acceptance_criteria_versions', [
         'acceptance_criteria_id' => $criteria1->id,
-        'version_number' => 1,
+        'version_number'         => 1,
     ]);
 
     $this->assertDatabaseHas('acceptance_criteria_versions', [
         'acceptance_criteria_id' => $criteria2->id,
-        'version_number' => 1,
+        'version_number'         => 1,
     ]);
 });
 
@@ -91,15 +88,15 @@ it('can import acceptance criteria and overwrite existing ones', function () {
 
     // Create existing acceptance criteria
     $existingCriteria = AcceptanceCriteria::factory()->create([
-        'project_id' => $project->id,
-        'code' => 'AC-001',
-        'name' => 'Old scenario name',
+        'project_id'  => $project->id,
+        'code'        => 'AC-001',
+        'name'        => 'Old scenario name',
         'description' => 'Old description',
     ]);
 
     $existingCriteria->createVersion([
-        'code' => 'AC-001',
-        'name' => 'Old scenario name',
+        'code'        => 'AC-001',
+        'name'        => 'Old scenario name',
         'description' => 'Old description',
     ], auth()->id());
 
@@ -115,8 +112,8 @@ GHERKIN;
     $file = UploadedFile::fake()->createWithContent('test.feature', $gherkinContent);
 
     $response = $this->post(route('acceptance-criteria.import.process'), [
-        'project_id' => $project->id,
-        'file' => $file,
+        'project_id'         => $project->id,
+        'file'               => $file,
         'overwrite_existing' => true,
     ]);
 
@@ -126,15 +123,15 @@ GHERKIN;
     $newCriteria = AcceptanceCriteria::where('project_id', $project->id)
         ->where('name', 'New scenario name')
         ->first();
-    
+
     expect($newCriteria)->not->toBeNull();
     expect($newCriteria->description)->toContain('I am on the login page');
 
     // Check that a version was created for the new criteria
     $this->assertDatabaseHas('acceptance_criteria_versions', [
         'acceptance_criteria_id' => $newCriteria->id,
-        'name' => 'New scenario name',
-        'version_number' => 1,
+        'name'                   => 'New scenario name',
+        'version_number'         => 1,
     ]);
 });
 
@@ -146,8 +143,8 @@ it('skips existing acceptance criteria when overwrite is false', function () {
     // Create existing acceptance criteria
     AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'code' => 'AC-001',
-        'name' => 'Existing scenario',
+        'code'       => 'AC-001',
+        'name'       => 'Existing scenario',
     ]);
 
     $gherkinContent = <<<'GHERKIN'
@@ -167,8 +164,8 @@ GHERKIN;
     $file = UploadedFile::fake()->createWithContent('test.feature', $gherkinContent);
 
     $response = $this->post(route('acceptance-criteria.import.process'), [
-        'project_id' => $project->id,
-        'file' => $file,
+        'project_id'         => $project->id,
+        'file'               => $file,
         'overwrite_existing' => false,
     ]);
 
@@ -177,8 +174,8 @@ GHERKIN;
     // Check that only the new scenario was created
     $this->assertDatabaseHas('acceptance_criteria', [
         'project_id' => $project->id,
-        'code' => 'AC-002',
-        'name' => 'New scenario',
+        'code'       => 'AC-002',
+        'name'       => 'New scenario',
     ]);
 
     // Check that the existing criteria was not updated
@@ -201,7 +198,7 @@ it('validates project exists', function () {
 
     $response = $this->post(route('acceptance-criteria.import.process'), [
         'project_id' => 999,
-        'file' => $file,
+        'file'       => $file,
     ]);
 
     $response->assertSessionHasErrors(['project_id']);
@@ -215,7 +212,7 @@ it('validates file type', function () {
 
     $response = $this->post(route('acceptance-criteria.import.process'), [
         'project_id' => $project->id,
-        'file' => $file,
+        'file'       => $file,
     ]);
 
     $response->assertSessionHasErrors(['file']);
@@ -235,7 +232,7 @@ GHERKIN;
 
     $response = $this->post(route('acceptance-criteria.import.process'), [
         'project_id' => $project->id,
-        'file' => $file,
+        'file'       => $file,
     ]);
 
     $response->assertSessionHasErrors(['file']);
@@ -249,7 +246,7 @@ it('handles empty gherkin file', function () {
 
     $response = $this->post(route('acceptance-criteria.import.process'), [
         'project_id' => $project->id,
-        'file' => $file,
+        'file'       => $file,
     ]);
 
     $response->assertSessionHasErrors(['file']);
@@ -282,8 +279,8 @@ GHERKIN;
     $file = UploadedFile::fake()->createWithContent('test.feature', $gherkinContent);
 
     $response = $this->post(route('acceptance-criteria.import.process'), [
-        'project_id' => $project->id,
-        'file' => $file,
+        'project_id'         => $project->id,
+        'file'               => $file,
         'overwrite_existing' => false,
     ]);
 
@@ -292,20 +289,20 @@ GHERKIN;
     // Check that all scenarios were created with unique codes
     $this->assertDatabaseHas('acceptance_criteria', [
         'project_id' => $project->id,
-        'code' => 'AC-001',
-        'name' => 'First scenario',
+        'code'       => 'AC-001',
+        'name'       => 'First scenario',
     ]);
 
     $this->assertDatabaseHas('acceptance_criteria', [
         'project_id' => $project->id,
-        'code' => 'AC-002',
-        'name' => 'Second scenario',
+        'code'       => 'AC-002',
+        'name'       => 'Second scenario',
     ]);
 
     $this->assertDatabaseHas('acceptance_criteria', [
         'project_id' => $project->id,
-        'code' => 'AC-003',
-        'name' => 'Third scenario',
+        'code'       => 'AC-003',
+        'name'       => 'Third scenario',
     ]);
 });
 
@@ -331,8 +328,8 @@ GHERKIN;
     $file = UploadedFile::fake()->createWithContent('test.feature', $gherkinContent);
 
     $response = $this->post(route('acceptance-criteria.import.process'), [
-        'project_id' => $project->id,
-        'file' => $file,
+        'project_id'         => $project->id,
+        'file'               => $file,
         'overwrite_existing' => false,
     ]);
 
@@ -341,8 +338,8 @@ GHERKIN;
     // Check that scenario outline was created
     $this->assertDatabaseHas('acceptance_criteria', [
         'project_id' => $project->id,
-        'code' => 'AC-001',
-        'name' => 'Login with different credentials',
+        'code'       => 'AC-001',
+        'name'       => 'Login with different credentials',
     ]);
 });
 
@@ -382,8 +379,8 @@ GHERKIN;
     $file = UploadedFile::fake()->createWithContent('test.feature', $gherkinContent);
 
     $response = $this->post(route('acceptance-criteria.import.process'), [
-        'project_id' => $project->id,
-        'file' => $file,
+        'project_id'         => $project->id,
+        'file'               => $file,
         'overwrite_existing' => false,
     ]);
 
@@ -392,14 +389,14 @@ GHERKIN;
     // Check that both scenarios were created
     $this->assertDatabaseHas('acceptance_criteria', [
         'project_id' => $project->id,
-        'code' => 'AC-001',
-        'name' => 'Successful login with valid credentials',
+        'code'       => 'AC-001',
+        'name'       => 'Successful login with valid credentials',
     ]);
 
     $this->assertDatabaseHas('acceptance_criteria', [
         'project_id' => $project->id,
-        'code' => 'AC-002',
-        'name' => 'Failed login with invalid credentials',
+        'code'       => 'AC-002',
+        'name'       => 'Failed login with invalid credentials',
     ]);
 
     // Check that descriptions include all steps
@@ -418,35 +415,35 @@ it('can group acceptance criteria by feature', function () {
     // Create features
     $authFeature = \App\Models\Feature::create([
         'project_id' => $project->id,
-        'name' => 'User Authentication',
-        'is_active' => true,
+        'name'       => 'User Authentication',
+        'is_active'  => true,
     ]);
 
     $regFeature = \App\Models\Feature::create([
         'project_id' => $project->id,
-        'name' => 'User Registration',
-        'is_active' => true,
+        'name'       => 'User Registration',
+        'is_active'  => true,
     ]);
 
     // Create acceptance criteria with different features
     AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'code' => 'AC-001',
-        'name' => 'Login scenario',
+        'code'       => 'AC-001',
+        'name'       => 'Login scenario',
         'feature_id' => $authFeature->id,
     ]);
 
     AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'code' => 'AC-002',
-        'name' => 'Registration scenario',
+        'code'       => 'AC-002',
+        'name'       => 'Registration scenario',
         'feature_id' => $regFeature->id,
     ]);
 
     AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'code' => 'AC-003',
-        'name' => 'Another login scenario',
+        'code'       => 'AC-003',
+        'name'       => 'Another login scenario',
         'feature_id' => $authFeature->id,
     ]);
 
@@ -472,28 +469,28 @@ it('can filter acceptance criteria by feature', function () {
     // Create features
     $authFeature = \App\Models\Feature::create([
         'project_id' => $project->id,
-        'name' => 'User Authentication',
-        'is_active' => true,
+        'name'       => 'User Authentication',
+        'is_active'  => true,
     ]);
 
     $regFeature = \App\Models\Feature::create([
         'project_id' => $project->id,
-        'name' => 'User Registration',
-        'is_active' => true,
+        'name'       => 'User Registration',
+        'is_active'  => true,
     ]);
 
     // Create acceptance criteria with different features
     AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'code' => 'AC-001',
-        'name' => 'Login scenario',
+        'code'       => 'AC-001',
+        'name'       => 'Login scenario',
         'feature_id' => $authFeature->id,
     ]);
 
     AcceptanceCriteria::factory()->create([
         'project_id' => $project->id,
-        'code' => 'AC-002',
-        'name' => 'Registration scenario',
+        'code'       => 'AC-002',
+        'name'       => 'Registration scenario',
         'feature_id' => $regFeature->id,
     ]);
 
@@ -507,4 +504,3 @@ it('can filter acceptance criteria by feature', function () {
     $response->assertSee('Login scenario');
     $response->assertDontSee('Registration scenario');
 });
-

@@ -22,10 +22,10 @@ class ClientLoginSession extends Model
     ];
 
     protected $casts = [
-        'logged_in_at' => 'datetime',
+        'logged_in_at'  => 'datetime',
         'logged_out_at' => 'datetime',
-        'is_active' => 'boolean',
-        'metadata' => 'array',
+        'is_active'     => 'boolean',
+        'metadata'      => 'array',
     ];
 
     /**
@@ -67,7 +67,7 @@ class ClientLoginSession extends Model
     {
         $this->update([
             'logged_out_at' => now(),
-            'is_active' => false,
+            'is_active'     => false,
         ]);
     }
 
@@ -93,25 +93,25 @@ class ClientLoginSession extends Model
         }
 
         $minutes = $this->duration_in_minutes;
-        
+
         if ($minutes < 60) {
-            return $minutes . ' minutes';
+            return $minutes.' minutes';
         }
 
         $hours = floor($minutes / 60);
         $remainingMinutes = $minutes % 60;
 
         if ($hours < 24) {
-            return $remainingMinutes > 0 
-                ? $hours . 'h ' . $remainingMinutes . 'm'
-                : $hours . ' hours';
+            return $remainingMinutes > 0
+                ? $hours.'h '.$remainingMinutes.'m'
+                : $hours.' hours';
         }
 
         $days = floor($hours / 24);
         $remainingHours = $hours % 24;
 
-        return $remainingHours > 0 
-            ? $days . 'd ' . $remainingHours . 'h'
-            : $days . ' days';
+        return $remainingHours > 0
+            ? $days.'d '.$remainingHours.'h'
+            : $days.' days';
     }
 }

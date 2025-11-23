@@ -20,8 +20,8 @@
     "@vitejs/plugin-vue": "^5.0.0",
     "@vue/compiler-sfc": "^3.4.0",
     "dayjs": "^1.8.29",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.2.3",
+    "eslint": "^9.39.1",
+    "eslint-plugin-vue": "^10.5.1",
     "lodash": "^4.17.19",
     "mitt": "^3.0.1",
     "pinia": "^2.1.7",
@@ -38,7 +38,7 @@
     "@vitest/ui": "^3.2.4",
     "autoprefixer": "^10.4.21",
     "laravel-vite-plugin": "^1.3.0",
-    "vite": "^6.3.6",
+    "vite": "^6.4.1",
     "vitest": "^3.2.4"
   }
 }

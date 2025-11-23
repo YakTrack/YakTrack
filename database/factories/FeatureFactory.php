@@ -26,10 +26,10 @@ class FeatureFactory extends Factory
     public function definition(): array
     {
         return [
-            'project_id' => Project::factory(),
-            'name' => $this->faker->words(2, true),
+            'project_id'  => Project::factory(),
+            'name'        => $this->faker->words(2, true),
             'description' => $this->faker->optional()->paragraph(),
-            'is_active' => true,
+            'is_active'   => true,
         ];
     }
 
