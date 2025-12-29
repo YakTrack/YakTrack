@@ -106,8 +106,8 @@ class TestRunController extends Controller
             ->get();
 
         return Inertia::render('TestRun/Show', [
-            'testRun' => $testRun,
-            'summary' => $testRun->getSummaryStatistics(),
+            'testRun'           => $testRun,
+            'summary'           => $testRun->getSummaryStatistics(),
             'availableCriteria' => $availableCriteria,
         ]);
     }

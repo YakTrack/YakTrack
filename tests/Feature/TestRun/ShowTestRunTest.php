@@ -369,7 +369,8 @@ it('includes available acceptance criteria in show page', function () {
     $response = $this->get(route('test-run.show', $testRun));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->has('availableCriteria')
         ->where('availableCriteria.0.id', $criteria2->id)
     );
