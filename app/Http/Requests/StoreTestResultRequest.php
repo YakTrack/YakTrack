@@ -45,9 +45,8 @@ class StoreTestResultRequest extends FormRequest
     {
         return [
             'acceptance_criteria_id.required' => 'Please select an acceptance criteria.',
-            'acceptance_criteria_id.exists' => 'The selected acceptance criteria does not exist.',
-            'status.enum' => 'The test result status must be one of: passed, failed, skipped, blocked.',
+            'acceptance_criteria_id.exists'   => 'The selected acceptance criteria does not exist.',
+            'status.enum'                     => 'The test result status must be one of: passed, failed, skipped, blocked.',
         ];
     }
 }
-
