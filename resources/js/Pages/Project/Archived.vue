@@ -59,6 +59,15 @@
                 No archived projects found.
             </div>
         </div>
+
+        <confirm-modal
+            :is-open="showConfirmModal"
+            :title="confirmModalTitle"
+            :description="confirmModalDescription"
+            :confirm-text="confirmModalConfirmText"
+            @close="closeConfirmModal"
+            @confirm="executeConfirmAction"
+        />
     </layout>
 </template>
 
@@ -68,6 +77,7 @@ import { Link } from '@inertiajs/vue3';
 import breadcrumbs from '@/Shared/Breadcrumbs.vue';
 import layout from '@/Shared/Layout.vue';
 import actionsDropdown from '@/Shared/ActionsDropdown.vue';
+import confirmModal from '@/Shared/ConfirmModal.vue';
 
 export default {
     props: ['projects'],
@@ -77,6 +87,16 @@ export default {
         breadcrumbs: breadcrumbs,
         layout: layout,
         actionsDropdown: actionsDropdown,
+        confirmModal: confirmModal,
+    },
+    data() {
+        return {
+            showConfirmModal: false,
+            confirmModalTitle: '',
+            confirmModalDescription: '',
+            confirmModalConfirmText: 'Confirm',
+            pendingAction: null,
+        };
     },
     methods: {
         getProjectActions(project) {
@@ -90,14 +110,36 @@ export default {
                 {
                     name: 'Unarchive Project',
                     callback: () => {
-                        if (confirm('Are you sure you want to unarchive this project?')) {
-                            this.$inertia.patch(route('project.unarchive', project.id));
-                        }
+                        this.openConfirmModal(
+                            'Unarchive Project',
+                            'Are you sure you want to unarchive this project?',
+                            'Unarchive',
+                            () => {
+                                this.$inertia.patch(route('project.unarchive', project.id));
+                            }
+                        );
                     }
                 }
             ];
             
             return actions;
+        },
+        openConfirmModal(title, description, confirmText, action) {
+            this.confirmModalTitle = title;
+            this.confirmModalDescription = description;
+            this.confirmModalConfirmText = confirmText;
+            this.pendingAction = action;
+            this.showConfirmModal = true;
+        },
+        closeConfirmModal() {
+            this.showConfirmModal = false;
+            this.pendingAction = null;
+        },
+        executeConfirmAction() {
+            if (this.pendingAction) {
+                this.pendingAction();
+            }
+            this.closeConfirmModal();
         },
         formatDate(date) {
             return new Date(date).toLocaleDateString('en-US', {

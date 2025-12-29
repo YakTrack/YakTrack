@@ -75,6 +75,15 @@
                 </page-selector>
             </div>
         </div>
+
+        <confirm-modal
+            :is-open="showConfirmModal"
+            :title="confirmModalTitle"
+            :description="confirmModalDescription"
+            :confirm-text="confirmModalConfirmText"
+            @close="closeConfirmModal"
+            @confirm="executeConfirmAction"
+        />
     </layout>
 </template>
 
@@ -86,6 +95,7 @@ import deleteButton from '@/Shared/DeleteButton.vue';
 import layout from '@/Shared/Layout.vue';
 import pageSelector from '@/components/PageSelector.vue';
 import actionsDropdown from '@/Shared/ActionsDropdown.vue';
+import confirmModal from '@/Shared/ConfirmModal.vue';
 
 export default {
     props: [
@@ -98,6 +108,16 @@ export default {
         layout: layout,
         pageSelector: pageSelector,
         actionsDropdown: actionsDropdown,
+        confirmModal: confirmModal,
+    },
+    data() {
+        return {
+            showConfirmModal: false,
+            confirmModalTitle: '',
+            confirmModalDescription: '',
+            confirmModalConfirmText: 'Confirm',
+            pendingAction: null,
+        };
     },
     methods: {
         selectPage(page) {
@@ -116,13 +136,35 @@ export default {
                 {
                     name: 'Delete Invoice',
                     callback: () => {
-                        if (confirm('Are you sure you want to delete this invoice?')) {
-                            this.$inertia.delete(route('invoice.destroy', invoice.id));
-                        }
+                        this.openConfirmModal(
+                            'Delete Invoice',
+                            'Are you sure you want to delete this invoice?',
+                            'Delete',
+                            () => {
+                                this.$inertia.delete(route('invoice.destroy', invoice.id));
+                            }
+                        );
                     }
                 }
             ];
-        }
+        },
+        openConfirmModal(title, description, confirmText, action) {
+            this.confirmModalTitle = title;
+            this.confirmModalDescription = description;
+            this.confirmModalConfirmText = confirmText;
+            this.pendingAction = action;
+            this.showConfirmModal = true;
+        },
+        closeConfirmModal() {
+            this.showConfirmModal = false;
+            this.pendingAction = null;
+        },
+        executeConfirmAction() {
+            if (this.pendingAction) {
+                this.pendingAction();
+            }
+            this.closeConfirmModal();
+        },
     },
 }
 

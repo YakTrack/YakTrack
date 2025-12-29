@@ -160,18 +160,35 @@
                 </div>
             </div>
         </div>
+
+        <confirm-modal
+            :is-open="showConfirmModal"
+            :title="confirmModalTitle"
+            :description="confirmModalDescription"
+            :confirm-text="confirmModalConfirmText"
+            @close="closeConfirmModal"
+            @confirm="executeConfirmAction"
+        />
     </layout>
 </template>
 
 <script setup>
 import { Link, router } from '@inertiajs/vue3'
+import { ref } from 'vue'
 import layout from '@/Shared/Layout.vue'
 import breadcrumbs from '@/Shared/Breadcrumbs.vue'
 import buttonLink from '@/Shared/ButtonLink.vue'
+import confirmModal from '@/Shared/ConfirmModal.vue'
 
 const props = defineProps({
     clientUser: Object,
 })
+
+const showConfirmModal = ref(false)
+const confirmModalTitle = ref('')
+const confirmModalDescription = ref('')
+const confirmModalConfirmText = ref('Confirm')
+const pendingAction = ref(null)
 
 const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-US', {
@@ -183,27 +200,57 @@ const formatDate = (date) => {
     })
 }
 
-const logoutAllSessions = () => {
-    if (confirm('Are you sure you want to logout all active sessions for this user?')) {
-        const form = document.createElement('form')
-        form.method = 'POST'
-        form.action = route('client-users.logout-all-sessions', props.clientUser.id)
-        
-        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        const csrfInput = document.createElement('input')
-        csrfInput.type = 'hidden'
-        csrfInput.name = '_token'
-        csrfInput.value = csrfToken
-        form.appendChild(csrfInput)
-        
-        document.body.appendChild(form)
-        form.submit()
+const openConfirmModal = (title, description, confirmText, action) => {
+    confirmModalTitle.value = title
+    confirmModalDescription.value = description
+    confirmModalConfirmText.value = confirmText
+    pendingAction.value = action
+    showConfirmModal.value = true
+}
+
+const closeConfirmModal = () => {
+    showConfirmModal.value = false
+    pendingAction.value = null
+}
+
+const executeConfirmAction = () => {
+    if (pendingAction.value) {
+        pendingAction.value()
     }
+    closeConfirmModal()
+}
+
+const logoutAllSessions = () => {
+    openConfirmModal(
+        'Logout All Sessions',
+        'Are you sure you want to logout all active sessions for this user?',
+        'Logout All',
+        () => {
+            const form = document.createElement('form')
+            form.method = 'POST'
+            form.action = route('client-users.logout-all-sessions', props.clientUser.id)
+            
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            const csrfInput = document.createElement('input')
+            csrfInput.type = 'hidden'
+            csrfInput.name = '_token'
+            csrfInput.value = csrfToken
+            form.appendChild(csrfInput)
+            
+            document.body.appendChild(form)
+            form.submit()
+        }
+    )
 }
 
 const deleteUser = () => {
-    if (confirm('Are you sure you want to delete this client user? This action cannot be undone.')) {
-        router.delete(route('client-users.destroy', props.clientUser.id))
-    }
+    openConfirmModal(
+        'Delete Client User',
+        'Are you sure you want to delete this client user? This action cannot be undone.',
+        'Delete',
+        () => {
+            router.delete(route('client-users.destroy', props.clientUser.id))
+        }
+    )
 }
 </script>

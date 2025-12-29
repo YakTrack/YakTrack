@@ -60,6 +60,15 @@
                 You have not created any projects yet.
             </div>
         </div>
+
+        <confirm-modal
+            :is-open="showConfirmModal"
+            :title="confirmModalTitle"
+            :description="confirmModalDescription"
+            :confirm-text="confirmModalConfirmText"
+            @close="closeConfirmModal"
+            @confirm="executeConfirmAction"
+        />
     </layout>
 </template>
 
@@ -70,6 +79,7 @@ import breadcrumbs from '@/Shared/Breadcrumbs.vue';
 import deleteButton from '@/Shared/DeleteButton.vue';
 import layout from '@/Shared/Layout.vue';
 import actionsDropdown from '@/Shared/ActionsDropdown.vue';
+import confirmModal from '@/Shared/ConfirmModal.vue';
 
 export default {
     props: ['projects'],
@@ -80,6 +90,16 @@ export default {
         deleteButton: deleteButton,
         layout: layout,
         actionsDropdown: actionsDropdown,
+        confirmModal: confirmModal,
+    },
+    data() {
+        return {
+            showConfirmModal: false,
+            confirmModalTitle: '',
+            confirmModalDescription: '',
+            confirmModalConfirmText: 'Confirm',
+            pendingAction: null,
+        };
     },
     methods: {
         getProjectActions(project) {
@@ -96,9 +116,14 @@ export default {
                 actions.push({
                     name: 'Delete Project',
                     callback: () => {
-                        if (confirm('Are you sure you want to delete this project?')) {
-                            this.$inertia.delete(route('project.destroy', project.id));
-                        }
+                        this.openConfirmModal(
+                            'Delete Project',
+                            'Are you sure you want to delete this project?',
+                            'Delete',
+                            () => {
+                                this.$inertia.delete(route('project.destroy', project.id));
+                            }
+                        );
                     }
                 });
             }
@@ -108,24 +133,51 @@ export default {
                 actions.push({
                     name: 'Unarchive Project',
                     callback: () => {
-                        if (confirm('Are you sure you want to unarchive this project?')) {
-                            this.$inertia.patch(route('project.unarchive', project.id));
-                        }
+                        this.openConfirmModal(
+                            'Unarchive Project',
+                            'Are you sure you want to unarchive this project?',
+                            'Unarchive',
+                            () => {
+                                this.$inertia.patch(route('project.unarchive', project.id));
+                            }
+                        );
                     }
                 });
             } else {
                 actions.push({
                     name: 'Archive Project',
                     callback: () => {
-                        if (confirm('Are you sure you want to archive this project?')) {
-                            this.$inertia.patch(route('project.archive', project.id));
-                        }
+                        this.openConfirmModal(
+                            'Archive Project',
+                            'Are you sure you want to archive this project?',
+                            'Archive',
+                            () => {
+                                this.$inertia.patch(route('project.archive', project.id));
+                            }
+                        );
                     }
                 });
             }
             
             return actions;
-        }
+        },
+        openConfirmModal(title, description, confirmText, action) {
+            this.confirmModalTitle = title;
+            this.confirmModalDescription = description;
+            this.confirmModalConfirmText = confirmText;
+            this.pendingAction = action;
+            this.showConfirmModal = true;
+        },
+        closeConfirmModal() {
+            this.showConfirmModal = false;
+            this.pendingAction = null;
+        },
+        executeConfirmAction() {
+            if (this.pendingAction) {
+                this.pendingAction();
+            }
+            this.closeConfirmModal();
+        },
     }
 }
 

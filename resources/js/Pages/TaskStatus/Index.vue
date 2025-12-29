@@ -98,6 +98,15 @@
                 Create First Status
             </button-link>
         </div>
+
+        <confirm-modal
+            :is-open="showConfirmModal"
+            :title="confirmModalTitle"
+            :description="confirmModalDescription"
+            :confirm-text="confirmModalConfirmText"
+            @close="closeConfirmModal"
+            @confirm="executeConfirmAction"
+        />
     </layout>
 </template>
 
@@ -107,6 +116,7 @@ import breadcrumbs from '@/Shared/Breadcrumbs.vue';
 import deleteButton from '@/Shared/DeleteButton.vue';
 import layout from '@/Shared/Layout.vue';
 import actionsDropdown from '@/Shared/ActionsDropdown.vue';
+import confirmModal from '@/Shared/ConfirmModal.vue';
 
 export default {
     props: [
@@ -120,10 +130,16 @@ export default {
         deleteButton: deleteButton,
         layout: layout,
         actionsDropdown: actionsDropdown,
+        confirmModal: confirmModal,
     },
     data() {
         return {
             selectedProjectId: this.project ? this.project.id : '',
+            showConfirmModal: false,
+            confirmModalTitle: '',
+            confirmModalDescription: '',
+            confirmModalConfirmText: 'Confirm',
+            pendingAction: null,
         }
     },
     methods: {
@@ -150,15 +166,37 @@ export default {
                 actions.push({
                     name: 'Delete Status',
                     callback: () => {
-                        if (confirm('Are you sure you want to delete this task status?')) {
-                            this.$inertia.delete(route('task-status.destroy', status.id));
-                        }
+                        this.openConfirmModal(
+                            'Delete Task Status',
+                            'Are you sure you want to delete this task status?',
+                            'Delete',
+                            () => {
+                                this.$inertia.delete(route('task-status.destroy', status.id));
+                            }
+                        );
                     }
                 });
             }
             
             return actions;
-        }
+        },
+        openConfirmModal(title, description, confirmText, action) {
+            this.confirmModalTitle = title;
+            this.confirmModalDescription = description;
+            this.confirmModalConfirmText = confirmText;
+            this.pendingAction = action;
+            this.showConfirmModal = true;
+        },
+        closeConfirmModal() {
+            this.showConfirmModal = false;
+            this.pendingAction = null;
+        },
+        executeConfirmAction() {
+            if (this.pendingAction) {
+                this.pendingAction();
+            }
+            this.closeConfirmModal();
+        },
     },
     computed: {
         breadcrumbItems() {

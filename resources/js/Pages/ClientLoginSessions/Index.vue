@@ -213,15 +213,25 @@
                 </div>
             </div>
         </div>
+
+        <confirm-modal
+            :is-open="showConfirmModal"
+            :title="confirmModalTitle"
+            :description="confirmModalDescription"
+            :confirm-text="confirmModalConfirmText"
+            @close="closeConfirmModal"
+            @confirm="executeConfirmAction"
+        />
     </layout>
 </template>
 
 <script setup>
 import { Link, router } from '@inertiajs/vue3'
-import { reactive } from 'vue'
+import { reactive, ref } from 'vue'
 import layout from '@/Shared/Layout.vue'
 import breadcrumbs from '@/Shared/Breadcrumbs.vue'
 import actionsDropdown from '@/Shared/ActionsDropdown.vue'
+import confirmModal from '@/Shared/ConfirmModal.vue'
 
 const props = defineProps({
     sessions: Object,
@@ -235,6 +245,12 @@ const filters = reactive({
     date_to: props.filters.date_to || '',
     active_only: props.filters.active_only || false,
 })
+
+const showConfirmModal = ref(false)
+const confirmModalTitle = ref('')
+const confirmModalDescription = ref('')
+const confirmModalConfirmText = ref('Confirm')
+const pendingAction = ref(null)
 
 const formatDate = (date) => {
     return new Date(date).toLocaleDateString('en-US', {
@@ -265,6 +281,26 @@ const clearFilters = () => {
     })
 }
 
+const openConfirmModal = (title, description, confirmText, action) => {
+    confirmModalTitle.value = title
+    confirmModalDescription.value = description
+    confirmModalConfirmText.value = confirmText
+    pendingAction.value = action
+    showConfirmModal.value = true
+}
+
+const closeConfirmModal = () => {
+    showConfirmModal.value = false
+    pendingAction.value = null
+}
+
+const executeConfirmAction = () => {
+    if (pendingAction.value) {
+        pendingAction.value()
+    }
+    closeConfirmModal()
+}
+
 const getSessionActions = (session) => {
     const actions = [
         {
@@ -285,21 +321,26 @@ const getSessionActions = (session) => {
         actions.push({
             name: 'Logout Session',
             callback: () => {
-                if (confirm('Are you sure you want to logout this session?')) {
-                    const form = document.createElement('form')
-                    form.method = 'POST'
-                    form.action = route('client-login-sessions.logout', session.id)
-                    
-                    const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                    const csrfInput = document.createElement('input')
-                    csrfInput.type = 'hidden'
-                    csrfInput.name = '_token'
-                    csrfInput.value = csrfToken
-                    form.appendChild(csrfInput)
-                    
-                    document.body.appendChild(form)
-                    form.submit()
-                }
+                openConfirmModal(
+                    'Logout Session',
+                    'Are you sure you want to logout this session?',
+                    'Logout',
+                    () => {
+                        const form = document.createElement('form')
+                        form.method = 'POST'
+                        form.action = route('client-login-sessions.logout', session.id)
+                        
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                        const csrfInput = document.createElement('input')
+                        csrfInput.type = 'hidden'
+                        csrfInput.name = '_token'
+                        csrfInput.value = csrfToken
+                        form.appendChild(csrfInput)
+                        
+                        document.body.appendChild(form)
+                        form.submit()
+                    }
+                )
             }
         })
     }

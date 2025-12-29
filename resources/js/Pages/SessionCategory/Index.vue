@@ -61,6 +61,15 @@
                 Create your first session category
             </Link>
         </div>
+
+        <confirm-modal
+            :is-open="showConfirmModal"
+            :title="confirmModalTitle"
+            :description="confirmModalDescription"
+            :confirm-text="confirmModalConfirmText"
+            @close="closeConfirmModal"
+            @confirm="executeConfirmAction"
+        />
     </layout>
 </template>
 
@@ -71,6 +80,7 @@ import Breadcrumbs from '@/Shared/Breadcrumbs.vue'
 import ButtonLink from '@/Shared/ButtonLink.vue'
 import DeleteButton from '@/Shared/DeleteButton.vue'
 import ActionsDropdown from '@/Shared/ActionsDropdown.vue'
+import ConfirmModal from '@/Shared/ConfirmModal.vue'
 
 export default {
     components: {
@@ -80,6 +90,16 @@ export default {
         ButtonLink,
         DeleteButton,
         ActionsDropdown,
+        ConfirmModal,
+    },
+    data() {
+        return {
+            showConfirmModal: false,
+            confirmModalTitle: '',
+            confirmModalDescription: '',
+            confirmModalConfirmText: 'Confirm',
+            pendingAction: null,
+        };
     },
     methods: {
         getSessionCategoryActions(sessionCategory) {
@@ -93,13 +113,35 @@ export default {
                 {
                     name: 'Delete Category',
                     callback: () => {
-                        if (confirm('Are you sure you want to delete this session category?')) {
-                            this.$inertia.delete(route('session-category.destroy', sessionCategory.id));
-                        }
+                        this.openConfirmModal(
+                            'Delete Session Category',
+                            'Are you sure you want to delete this session category?',
+                            'Delete',
+                            () => {
+                                this.$inertia.delete(route('session-category.destroy', sessionCategory.id));
+                            }
+                        );
                     }
                 }
             ];
-        }
+        },
+        openConfirmModal(title, description, confirmText, action) {
+            this.confirmModalTitle = title;
+            this.confirmModalDescription = description;
+            this.confirmModalConfirmText = confirmText;
+            this.pendingAction = action;
+            this.showConfirmModal = true;
+        },
+        closeConfirmModal() {
+            this.showConfirmModal = false;
+            this.pendingAction = null;
+        },
+        executeConfirmAction() {
+            if (this.pendingAction) {
+                this.pendingAction();
+            }
+            this.closeConfirmModal();
+        },
     },
     props: {
         sessionCategories: Array,

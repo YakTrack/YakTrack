@@ -74,6 +74,15 @@
         <div class="card-body" v-else>
             You have not created any tasks yet.
         </div>
+
+        <confirm-modal
+            :is-open="showConfirmModal"
+            :title="confirmModalTitle"
+            :description="confirmModalDescription"
+            :confirm-text="confirmModalConfirmText"
+            @close="closeConfirmModal"
+            @confirm="executeConfirmAction"
+        />
     </layout>
 </template>
 
@@ -84,6 +93,7 @@
     import deleteButton from '@/Shared/DeleteButton.vue';
     import layout from '@/Shared/Layout.vue';
     import actionsDropdown from '@/Shared/ActionsDropdown.vue';
+    import confirmModal from '@/Shared/ConfirmModal.vue';
 
     export default {
         props: [
@@ -95,6 +105,16 @@
             deleteButton: deleteButton,
             layout: layout,
             actionsDropdown: actionsDropdown,
+            confirmModal: confirmModal,
+        },
+        data() {
+            return {
+                showConfirmModal: false,
+                confirmModalTitle: '',
+                confirmModalDescription: '',
+                confirmModalConfirmText: 'Confirm',
+                pendingAction: null,
+            };
         },
         methods: {
             getTaskActions(task) {
@@ -108,13 +128,35 @@
                     {
                         name: 'Delete Task',
                         callback: () => {
-                            if (confirm('Are you sure you want to delete this task?')) {
-                                this.$inertia.delete(route('task.destroy', task.id));
-                            }
+                            this.openConfirmModal(
+                                'Delete Task',
+                                'Are you sure you want to delete this task?',
+                                'Delete',
+                                () => {
+                                    this.$inertia.delete(route('task.destroy', task.id));
+                                }
+                            );
                         }
                     }
                 ];
-            }
+            },
+            openConfirmModal(title, description, confirmText, action) {
+                this.confirmModalTitle = title;
+                this.confirmModalDescription = description;
+                this.confirmModalConfirmText = confirmText;
+                this.pendingAction = action;
+                this.showConfirmModal = true;
+            },
+            closeConfirmModal() {
+                this.showConfirmModal = false;
+                this.pendingAction = null;
+            },
+            executeConfirmAction() {
+                if (this.pendingAction) {
+                    this.pendingAction();
+                }
+                this.closeConfirmModal();
+            },
         }
     }
 
