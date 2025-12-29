@@ -143,23 +143,23 @@ it('can edit a session with a json patch request', function () {
 
 it('excludes completed tasks from the task dropdown when editing a session', function () {
     $project = Project::factory()->create();
-    
+
     $completedStatus = TaskStatus::factory()->completed()->create(['project_id' => $project->id]);
     $incompleteStatus = TaskStatus::factory()->create(['project_id' => $project->id]);
-    
+
     $completedTask = Task::factory()->create([
         'project_id' => $project->id,
-        'status_id' => $completedStatus->id,
+        'status_id'  => $completedStatus->id,
     ]);
-    
+
     $incompleteTask = Task::factory()->create([
         'project_id' => $project->id,
-        'status_id' => $incompleteStatus->id,
+        'status_id'  => $incompleteStatus->id,
     ]);
-    
+
     $taskWithoutStatus = Task::factory()->create([
         'project_id' => $project->id,
-        'status_id' => null,
+        'status_id'  => null,
     ]);
 
     $session = Session::factory()->create([
@@ -174,15 +174,15 @@ it('excludes completed tasks from the task dropdown when editing a session', fun
 
     $response->assertHasProp('tasks', function ($tasks) use ($completedTask, $incompleteTask, $taskWithoutStatus) {
         expect($tasks)->toBeArray();
-        
+
         $taskIds = collect($tasks)->pluck('id')->toArray();
-        
+
         // Completed task should NOT be in the list
         expect($taskIds)->not->toContain($completedTask->id);
-        
+
         // Incomplete task should be in the list
         expect($taskIds)->toContain($incompleteTask->id);
-        
+
         // Task without status should be in the list
         expect($taskIds)->toContain($taskWithoutStatus->id);
     });
@@ -190,12 +190,12 @@ it('excludes completed tasks from the task dropdown when editing a session', fun
 
 it('includes the currently selected completed task when editing a session', function () {
     $project = Project::factory()->create();
-    
+
     $completedStatus = TaskStatus::factory()->completed()->create(['project_id' => $project->id]);
-    
+
     $completedTask = Task::factory()->create([
         'project_id' => $project->id,
-        'status_id' => $completedStatus->id,
+        'status_id'  => $completedStatus->id,
     ]);
 
     $session = Session::factory()->create([
@@ -210,9 +210,9 @@ it('includes the currently selected completed task when editing a session', func
 
     $response->assertHasProp('tasks', function ($tasks) use ($completedTask) {
         expect($tasks)->toBeArray();
-        
+
         $taskIds = collect($tasks)->pluck('id')->toArray();
-        
+
         // The currently selected completed task should be included
         expect($taskIds)->toContain($completedTask->id);
     });
@@ -221,11 +221,11 @@ it('includes the currently selected completed task when editing a session', func
 it('excludes tasks from archived projects from the task dropdown when editing a session', function () {
     $activeProject = Project::factory()->create();
     $archivedProject = Project::factory()->create(['archived_at' => now()]);
-    
+
     $taskFromActiveProject = Task::factory()->create([
         'project_id' => $activeProject->id,
     ]);
-    
+
     $taskFromArchivedProject = Task::factory()->create([
         'project_id' => $archivedProject->id,
     ]);
@@ -242,12 +242,12 @@ it('excludes tasks from archived projects from the task dropdown when editing a 
 
     $response->assertHasProp('tasks', function ($tasks) use ($taskFromActiveProject, $taskFromArchivedProject) {
         expect($tasks)->toBeArray();
-        
+
         $taskIds = collect($tasks)->pluck('id')->toArray();
-        
+
         // Task from active project should be in the list
         expect($taskIds)->toContain($taskFromActiveProject->id);
-        
+
         // Task from archived project should NOT be in the list
         expect($taskIds)->not->toContain($taskFromArchivedProject->id);
     });
@@ -255,7 +255,7 @@ it('excludes tasks from archived projects from the task dropdown when editing a 
 
 it('includes the currently selected task from an archived project when editing a session', function () {
     $archivedProject = Project::factory()->create(['archived_at' => now()]);
-    
+
     $taskFromArchivedProject = Task::factory()->create([
         'project_id' => $archivedProject->id,
     ]);
@@ -272,9 +272,9 @@ it('includes the currently selected task from an archived project when editing a
 
     $response->assertHasProp('tasks', function ($tasks) use ($taskFromArchivedProject) {
         expect($tasks)->toBeArray();
-        
+
         $taskIds = collect($tasks)->pluck('id')->toArray();
-        
+
         // The currently selected task from archived project should be included
         expect($taskIds)->toContain($taskFromArchivedProject->id);
     });
