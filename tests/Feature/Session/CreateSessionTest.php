@@ -118,17 +118,17 @@ it('excludes completed tasks from the task dropdown when creating a session', fu
 
     $completedTask = Task::factory()->create([
         'project_id' => $project->id,
-        'status_id' => $completedStatus->id,
+        'status_id'  => $completedStatus->id,
     ]);
 
     $incompleteTask = Task::factory()->create([
         'project_id' => $project->id,
-        'status_id' => $incompleteStatus->id,
+        'status_id'  => $incompleteStatus->id,
     ]);
 
     $taskWithoutStatus = Task::factory()->create([
         'project_id' => $project->id,
-        'status_id' => null,
+        'status_id'  => null,
     ]);
 
     $this->actingAsUser();
