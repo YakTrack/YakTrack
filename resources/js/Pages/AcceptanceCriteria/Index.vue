@@ -80,6 +80,7 @@
                     <tr>
                         <th>Code</th>
                         <th>Name</th>
+                        <th>Description</th>
                         <th>Feature</th>
                         <th>Project</th>
                         <th>Versions</th>
@@ -99,6 +100,12 @@
                             <Link :href="route('acceptance-criteria.show', criterion.id)">
                                 {{ criterion.name }}
                             </Link>
+                        </td>
+                        <td>
+                            <div v-if="criterion.description" class="max-w-md">
+                                <GherkinText :text="criterion.description" size="xs" />
+                            </div>
+                            <span v-else class="text-gray-400 italic">No description</span>
                         </td>
                         <td>
                             <span v-if="criterion.feature" class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
@@ -142,6 +149,7 @@ import { reactive } from 'vue'
 import breadcrumbs from '@/Shared/Breadcrumbs.vue'
 import layout from '@/Shared/Layout.vue'
 import actionsDropdown from '@/Shared/ActionsDropdown.vue'
+import GherkinText from '@/Shared/GherkinText.vue'
 
 export default {
     props: [
@@ -155,6 +163,7 @@ export default {
         breadcrumbs: breadcrumbs,
         layout: layout,
         actionsDropdown: actionsDropdown,
+        GherkinText: GherkinText,
     },
     setup(props) {
         const filters = reactive({

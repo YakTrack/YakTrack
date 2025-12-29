@@ -131,11 +131,16 @@
             <tr v-for="result in testRun.test_results" :key="result.id">
               <td class="px-6 py-4">
                 <div>
-                  <div class="text-sm font-medium text-gray-900 dark:text-white">
-                    {{ result.acceptance_criteria.name }}
+                  <div class="flex items-center">
+                    <div v-if="result.acceptance_criteria.code" class="text-base font-medium text-gray-900 dark:text-gray-400 font-mono mr-2">
+                      {{ result.acceptance_criteria.code }}
+                    </div>
+                    <div class="text-sm text-gray-600 dark:text-white">
+                      {{ result.acceptance_criteria.name }}
+                    </div>
                   </div>
-                  <div v-if="result.acceptance_criteria.code" class="text-xs text-gray-500 dark:text-gray-400 font-mono">
-                    {{ result.acceptance_criteria.code }}
+                  <div v-if="result.acceptance_criteria.description" class="mt-1">
+                    <GherkinText :text="result.acceptance_criteria.description" size="xs" />
                   </div>
                 </div>
               </td>
@@ -385,6 +390,7 @@ import { Link, router } from '@inertiajs/vue3'
 import { reactive, ref, nextTick } from 'vue'
 import breadcrumbs from '@/Shared/Breadcrumbs.vue'
 import layout from '@/Shared/Layout.vue'
+import GherkinText from '@/Shared/GherkinText.vue'
 
 const props = defineProps({
   testRun: Object,
