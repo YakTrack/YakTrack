@@ -23,6 +23,7 @@ class DashboardController extends Controller
         $clientUser = auth('client')->user();
 
         $projects = $clientUser->client->projects()
+            ->notArchived()
             ->with(['tasks' => function ($query) {
                 $query->with(['taskStatus', 'sessions' => function ($sessionQuery) {
                     $sessionQuery->whereBillable()

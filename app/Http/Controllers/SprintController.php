@@ -34,7 +34,7 @@ class SprintController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Sprint/Edit', ['projects' => Project::all()]);
+        return Inertia::render('Sprint/Edit', ['projects' => Project::notArchived()->orderBy('name')->get()]);
     }
 
     /**
@@ -83,7 +83,7 @@ class SprintController extends Controller
     public function edit(Sprint $sprint): Response
     {
         return Inertia::render('Sprint/Edit', [
-            'projects' => Project::all(),
+            'projects' => Project::notArchived()->orderBy('name')->get(),
             'sprint'   => $sprint,
         ]);
     }

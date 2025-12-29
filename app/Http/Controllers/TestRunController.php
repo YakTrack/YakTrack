@@ -42,7 +42,7 @@ class TestRunController extends Controller
             : collect();
 
         return Inertia::render('TestRun/Create', [
-            'projects'          => Project::orderBy('name')->get(),
+            'projects'          => Project::notArchived()->orderBy('name')->get(),
             'criteria'          => $criteria,
             'selectedProjectId' => $projectId,
         ]);

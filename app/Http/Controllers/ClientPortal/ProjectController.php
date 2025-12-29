@@ -27,6 +27,7 @@ class ProjectController extends Controller
         $clientUser = auth('client')->user();
 
         $projects = $clientUser->client->projects()
+            ->notArchived()
             ->with(['tasks' => function ($query) {
                 $query->with(['taskStatus', 'sessions' => function ($sessionQuery) {
                     $sessionQuery->whereBillable()
@@ -52,6 +53,11 @@ class ProjectController extends Controller
         // Ensure the project belongs to the client
         if ($project->client_id !== $clientUser->client_id) {
             abort(403, 'Unauthorized access to project.');
+        }
+
+        // Ensure the project is not archived
+        if ($project->isArchived()) {
+            abort(404, 'Project not found.');
         }
 
         $project->load(['tasks' => function ($query) {
@@ -81,6 +87,11 @@ class ProjectController extends Controller
             abort(403, 'Unauthorized access to project.');
         }
 
+        // Ensure the project is not archived
+        if ($project->isArchived()) {
+            abort(404, 'Project not found.');
+        }
+
         $project->load(['tasks' => function ($query) {
             $query->with(['taskStatus', 'sessions' => function ($sessionQuery) {
                 $sessionQuery->whereBillable()
@@ -108,6 +119,11 @@ class ProjectController extends Controller
         // Ensure the project belongs to the client
         if ($project->client_id !== $clientUser->client_id) {
             abort(403, 'Unauthorized access to project.');
+        }
+
+        // Ensure the project is not archived
+        if ($project->isArchived()) {
+            abort(404, 'Project not found.');
         }
 
         $project->load(['tasks' => function ($query) {

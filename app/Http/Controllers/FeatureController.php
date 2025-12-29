@@ -37,7 +37,7 @@ class FeatureController extends Controller
     public function create(): Response
     {
         return Inertia::render('Features/Edit', [
-            'projects' => Project::orderBy('name')->get(),
+            'projects' => Project::notArchived()->orderBy('name')->get(),
         ]);
     }
 
@@ -66,7 +66,7 @@ class FeatureController extends Controller
 
         return Inertia::render('Features/Edit', [
             'feature'  => $feature,
-            'projects' => Project::orderBy('name')->get(),
+            'projects' => Project::notArchived()->orderBy('name')->get(),
         ]);
     }
 

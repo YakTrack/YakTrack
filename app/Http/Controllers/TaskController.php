@@ -32,7 +32,7 @@ class TaskController extends Controller
     public function create(): Response
     {
         return Inertia::render('Task/Edit', [
-            'projects' => Project::with(['sprints', 'tasks', 'taskStatuses'])->orderBy('name')->get(),
+            'projects' => Project::notArchived()->with(['sprints', 'tasks', 'taskStatuses'])->orderBy('name')->get(),
             'tasks'    => Task::orderBy('id', 'desc')->get(),
         ]);
     }
@@ -100,7 +100,7 @@ class TaskController extends Controller
         return Inertia::render('Task/Edit', [
             'task'     => $task->load('taskStatus'),
             'tasks'    => Task::all(),
-            'projects' => Project::with('taskStatuses')->get(),
+            'projects' => Project::notArchived()->with('taskStatuses')->get(),
         ]);
     }
 

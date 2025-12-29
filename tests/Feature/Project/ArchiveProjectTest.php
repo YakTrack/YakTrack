@@ -100,3 +100,101 @@ it('project scopes work correctly', function () {
     expect($activeProjects)->toHaveCount(1);
     expect($activeProjects->first()->id)->toBe($activeProject->id);
 });
+
+it('excludes archived projects from client portal projects index', function () {
+    $client = \App\Models\Client::factory()->create();
+    $clientUser = \App\Models\ClientUser::factory()->create([
+        'client_id' => $client->id,
+    ]);
+    $activeProject = Project::factory()->create([
+        'client_id' => $client->id,
+    ]);
+    $archivedProject = Project::factory()->create([
+        'client_id' => $client->id,
+        'archived_at' => now(),
+    ]);
+
+    $response = $this->actingAs($clientUser, 'client')
+        ->get('/client-portal/projects');
+
+    $response->assertSuccessful();
+    $response->assertInertia(
+        fn ($page) => $page
+        ->component('ClientPortal/Projects/Index')
+        ->has('projects', 1)
+        ->where('projects.0.id', $activeProject->id)
+    );
+});
+
+it('excludes archived projects from client portal dashboard', function () {
+    $client = \App\Models\Client::factory()->create();
+    $clientUser = \App\Models\ClientUser::factory()->create([
+        'client_id' => $client->id,
+    ]);
+    $activeProject = Project::factory()->create([
+        'client_id' => $client->id,
+    ]);
+    $archivedProject = Project::factory()->create([
+        'client_id' => $client->id,
+        'archived_at' => now(),
+    ]);
+
+    $response = $this->actingAs($clientUser, 'client')
+        ->get('/client-portal');
+
+    $response->assertSuccessful();
+    $response->assertInertia(
+        fn ($page) => $page
+        ->component('ClientPortal/Dashboard')
+        ->has('projects', 1)
+        ->where('projects.0.id', $activeProject->id)
+    );
+});
+
+it('prevents accessing archived project via client portal show', function () {
+    $client = \App\Models\Client::factory()->create();
+    $clientUser = \App\Models\ClientUser::factory()->create([
+        'client_id' => $client->id,
+    ]);
+    $archivedProject = Project::factory()->create([
+        'client_id' => $client->id,
+        'archived_at' => now(),
+    ]);
+
+    $response = $this->actingAs($clientUser, 'client')
+        ->get('/client-portal/projects/'.$archivedProject->id);
+
+    $response->assertNotFound();
+});
+
+it('prevents accessing archived project via client portal report download', function () {
+    $client = \App\Models\Client::factory()->create();
+    $clientUser = \App\Models\ClientUser::factory()->create([
+        'client_id' => $client->id,
+    ]);
+    $archivedProject = Project::factory()->create([
+        'client_id' => $client->id,
+        'archived_at' => now(),
+    ]);
+
+    $response = $this->actingAs($clientUser, 'client')
+        ->get('/client-portal/projects/'.$archivedProject->id.'/report');
+
+    $response->assertNotFound();
+});
+
+it('prevents accessing archived project via client portal report view', function () {
+    $client = \App\Models\Client::factory()->create();
+    $clientUser = \App\Models\ClientUser::factory()->create([
+        'client_id' => $client->id,
+    ]);
+    $archivedProject = Project::factory()->create([
+        'client_id' => $client->id,
+        'archived_at' => now(),
+    ]);
+
+    $response = $this->actingAs($clientUser, 'client')
+        ->get('/client-portal/projects/'.$archivedProject->id.'/report/view');
+
+    $response->assertNotFound();
+});

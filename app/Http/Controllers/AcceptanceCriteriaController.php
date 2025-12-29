@@ -53,7 +53,7 @@ class AcceptanceCriteriaController extends Controller
     public function create(): Response
     {
         return Inertia::render('AcceptanceCriteria/Edit', [
-            'projects' => Project::orderBy('name')->get(),
+            'projects' => Project::notArchived()->orderBy('name')->get(),
             'features' => Feature::where('is_active', true)->orderBy('name')->get(),
         ]);
     }
@@ -88,7 +88,7 @@ class AcceptanceCriteriaController extends Controller
     {
         return Inertia::render('AcceptanceCriteria/Edit', [
             'criteria' => $acceptance_criterion,
-            'projects' => Project::orderBy('name')->get(),
+            'projects' => Project::notArchived()->orderBy('name')->get(),
             'features' => Feature::where('is_active', true)->orderBy('name')->get(),
         ]);
     }

@@ -64,6 +64,7 @@ it('can view a single sprint', function () {
                         ->where('is_billable', 0)
                         ->where('created_at', $project->created_at->toIsoString())
                         ->where('updated_at', $project->updated_at->toIsoString())
+                        ->etc()
                     )->has(
                         'sessions',
                         fn (Assert $page) => $page

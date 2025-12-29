@@ -49,7 +49,7 @@ class TaskStatusController extends Controller
         $project = $projectId ? Project::findOrFail($projectId) : null;
 
         return Inertia::render('TaskStatus/Edit', [
-            'projects' => Project::orderBy('name')->get(),
+            'projects' => Project::notArchived()->orderBy('name')->get(),
             'project'  => $project,
         ]);
     }
@@ -103,7 +103,7 @@ class TaskStatusController extends Controller
     {
         return Inertia::render('TaskStatus/Edit', [
             'taskStatus' => $taskStatus->load('project'),
-            'projects'   => Project::orderBy('name')->get(),
+            'projects'   => Project::notArchived()->orderBy('name')->get(),
             'project'    => $taskStatus->project,
         ]);
     }
