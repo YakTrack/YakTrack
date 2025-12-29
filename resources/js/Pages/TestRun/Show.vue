@@ -152,13 +152,48 @@
                 </select>
               </td>
               <td class="px-6 py-4">
-                <textarea
-                  :value="result.notes"
-                  @blur="updateNotes(result, $event.target.value)"
-                  placeholder="Add notes..."
-                  class="text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 rounded-md w-full"
-                  rows="2"
-                ></textarea>
+                <div v-if="editingNotesId !== result.id">
+                  <div class="flex items-start justify-between gap-2">
+                    <div class="flex-1">
+                      <p v-if="result.notes" class="text-sm text-gray-900 dark:text-white whitespace-pre-wrap">
+                        {{ result.notes }}
+                      </p>
+                      <p v-else class="text-sm text-gray-400 dark:text-gray-500 italic">
+                        No notes
+                      </p>
+                    </div>
+                    <button
+                      @click="startEditingNotes(result)"
+                      class="text-indigo-600 hover:text-indigo-900 dark:text-indigo-400 dark:hover:text-indigo-300 text-sm flex-shrink-0"
+                      title="Edit notes"
+                    >
+                      <i class="fa fa-edit"></i>
+                    </button>
+                  </div>
+                </div>
+                <div v-else class="space-y-2">
+                  <textarea
+                    v-model="editingNotes"
+                    placeholder="Add notes..."
+                    class="text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 rounded-md w-full"
+                    rows="3"
+                    ref="notesTextarea"
+                  ></textarea>
+                  <div class="flex gap-2">
+                    <button
+                      @click="saveNotes(result)"
+                      class="px-3 py-1 text-xs bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                    >
+                      Save
+                    </button>
+                    <button
+                      @click="cancelEditingNotes"
+                      class="px-3 py-1 text-xs bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
               </td>
               <td class="px-6 py-4">
                 <div class="flex flex-wrap gap-1">
@@ -287,7 +322,7 @@
 
 <script setup>
 import { Link, router } from '@inertiajs/vue3'
-import { reactive, ref } from 'vue'
+import { reactive, ref, nextTick } from 'vue'
 import breadcrumbs from '@/Shared/Breadcrumbs.vue'
 import layout from '@/Shared/Layout.vue'
 
@@ -299,6 +334,9 @@ const props = defineProps({
 const showModal = ref(false)
 const selectedResult = ref(null)
 const fileInput = ref(null)
+const editingNotesId = ref(null)
+const editingNotes = ref('')
+const notesTextarea = ref(null)
 
 const evidenceForm = reactive({
   type: 'image',
@@ -322,10 +360,30 @@ const updateStatus = (result, status) => {
   })
 }
 
-const updateNotes = (result, notes) => {
-  router.patch(route('test-result.update', result.id), { notes }, {
+const startEditingNotes = (result) => {
+  editingNotesId.value = result.id
+  editingNotes.value = result.notes || ''
+  // Focus the textarea after it's rendered
+  nextTick(() => {
+    if (notesTextarea.value) {
+      notesTextarea.value.focus()
+    }
+  })
+}
+
+const cancelEditingNotes = () => {
+  editingNotesId.value = null
+  editingNotes.value = ''
+}
+
+const saveNotes = (result) => {
+  router.patch(route('test-result.update', result.id), { notes: editingNotes.value }, {
     preserveState: true,
     preserveScroll: true,
+    onSuccess: () => {
+      editingNotesId.value = null
+      editingNotes.value = ''
+    },
   })
 }
 

@@ -278,3 +278,38 @@ it('can update test result multiple times', function () {
         'notes'  => 'Second update',
     ]);
 });
+
+it('can update notes independently without status', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+    $user = User::factory()->create();
+    $testRun = TestRun::factory()->create([
+        'project_id'          => $project->id,
+        'executed_by_user_id' => $user->id,
+    ]);
+
+    $criteria = AcceptanceCriteria::factory()->create([
+        'project_id' => $project->id,
+        'name'       => 'Test Criteria',
+    ]);
+
+    $testResult = TestResult::factory()->create([
+        'test_run_id'            => $testRun->id,
+        'acceptance_criteria_id' => $criteria->id,
+        'status'                 => TestResultStatus::Passed,
+        'notes'                  => null,
+    ]);
+
+    $response = $this->patch(route('test-result.update', $testResult), [
+        'notes' => 'Updated notes without changing status',
+    ]);
+
+    $response->assertRedirect();
+
+    $this->assertDatabaseHas('test_results', [
+        'id'     => $testResult->id,
+        'status' => TestResultStatus::Passed->value,
+        'notes'  => 'Updated notes without changing status',
+    ]);
+});

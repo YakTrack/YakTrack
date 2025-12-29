@@ -25,7 +25,7 @@ class UpdateTestResultRequest extends FormRequest
     {
         return [
             'status' => [
-                'required',
+                'nullable',
                 Rule::enum(TestResultStatus::class),
             ],
             'notes' => 'nullable|string',
@@ -40,8 +40,7 @@ class UpdateTestResultRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'status.required' => 'The test result status is required.',
-            'status.enum'     => 'The test result status must be one of: passed, failed, skipped, blocked.',
+            'status.enum' => 'The test result status must be one of: passed, failed, skipped, blocked.',
         ];
     }
 }
