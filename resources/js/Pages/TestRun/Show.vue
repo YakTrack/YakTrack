@@ -196,16 +196,28 @@
                 </div>
               </td>
               <td class="px-6 py-4">
-                <div class="flex flex-wrap gap-1">
+                <div class="flex flex-wrap gap-2">
                   <div
                     v-for="evidence in result.evidence"
                     :key="evidence.id"
-                    class="flex items-center space-x-1"
+                    class="flex items-center"
                   >
-                    <span v-if="evidence.type === 'image'" class="text-xs text-blue-600 dark:text-blue-400">
+                    <!-- Image Evidence - Show Thumbnail -->
+                    <div v-if="evidence.type === 'image' && evidence.file_url" class="cursor-pointer" @click="viewImage(evidence.file_url)">
+                      <img
+                        :src="evidence.file_url"
+                        :alt="'Evidence image ' + evidence.id"
+                        class="w-12 h-12 object-cover rounded border border-gray-300 dark:border-gray-600 hover:opacity-80 hover:ring-2 hover:ring-indigo-500 transition-all"
+                        @error="handleImageError"
+                        title="Click to view full size"
+                      />
+                    </div>
+                    <!-- Image Evidence - Fallback if no URL -->
+                    <span v-else-if="evidence.type === 'image'" class="text-xs text-blue-600 dark:text-blue-400">
                       📷
                     </span>
-                    <span v-else class="text-xs text-green-600 dark:text-green-400">
+                    <!-- Text Evidence -->
+                    <span v-else class="text-xs text-green-600 dark:text-green-400" title="Text note">
                       📝
                     </span>
                   </div>
@@ -230,32 +242,61 @@
 
     <!-- Evidence Modal -->
     <div v-if="showModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white dark:bg-gray-800">
+      <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white dark:bg-gray-800">
         <div class="mt-3">
           <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
             Evidence for {{ selectedResult?.acceptance_criteria.name }}
           </h3>
           
           <!-- Evidence List -->
-          <div class="space-y-2 mb-4">
+          <div class="space-y-2 mb-4 max-h-96 overflow-y-auto">
             <div
               v-for="evidence in selectedResult?.evidence"
               :key="evidence.id"
-              class="flex items-center justify-between p-2 bg-gray-50 dark:bg-gray-700 rounded"
+              class="p-2 bg-gray-50 dark:bg-gray-700 rounded"
             >
-              <div class="flex items-center space-x-2">
-                <span v-if="evidence.type === 'image'" class="text-blue-600 dark:text-blue-400">📷</span>
-                <span v-else class="text-green-600 dark:text-green-400">📝</span>
-                <span class="text-sm text-gray-900 dark:text-white">
-                  {{ evidence.type === 'image' ? 'Image' : 'Text Note' }}
-                </span>
+              <div class="flex items-start justify-between gap-2">
+                <div class="flex-1">
+                  <!-- Image Evidence -->
+                  <div v-if="evidence.type === 'image'" class="space-y-2">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="text-blue-600 dark:text-blue-400">📷</span>
+                      <span class="text-sm font-medium text-gray-900 dark:text-white">Image</span>
+                    </div>
+                    <div v-if="evidence.file_url" class="cursor-pointer" @click="viewImage(evidence.file_url)">
+                      <img
+                        :src="evidence.file_url"
+                        :alt="'Evidence image ' + evidence.id"
+                        class="max-w-full h-auto max-h-32 rounded border border-gray-300 dark:border-gray-600 hover:opacity-80 transition-opacity"
+                        @error="handleImageError"
+                      />
+                      <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Click to view full size</p>
+                    </div>
+                    <div v-else class="text-sm text-gray-500 dark:text-gray-400">
+                      Image URL not available
+                    </div>
+                  </div>
+                  
+                  <!-- Text Evidence -->
+                  <div v-else class="space-y-2">
+                    <div class="flex items-center space-x-2 mb-2">
+                      <span class="text-green-600 dark:text-green-400">📝</span>
+                      <span class="text-sm font-medium text-gray-900 dark:text-white">Text Note</span>
+                    </div>
+                    <p class="text-sm text-gray-900 dark:text-white whitespace-pre-wrap">{{ evidence.content }}</p>
+                  </div>
+                </div>
+                <button
+                  @click="removeEvidence(evidence)"
+                  class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-sm flex-shrink-0 ml-2"
+                  title="Remove evidence"
+                >
+                  <i class="fa fa-trash"></i>
+                </button>
               </div>
-              <button
-                @click="removeEvidence(evidence)"
-                class="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 text-sm"
-              >
-                Remove
-              </button>
+            </div>
+            <div v-if="selectedResult?.evidence.length === 0" class="text-sm text-gray-500 dark:text-gray-400 italic text-center py-4">
+              No evidence added yet
             </div>
           </div>
 
@@ -317,6 +358,25 @@
         </div>
       </div>
         </div>
+
+    <!-- Image Viewer Modal -->
+    <div v-if="imageViewerUrl" class="fixed inset-0 bg-black bg-opacity-75 z-[60] flex items-center justify-center p-4" @click="closeImageViewer">
+      <div class="relative max-w-7xl max-h-full">
+        <button
+          @click="closeImageViewer"
+          class="absolute top-4 right-4 text-white hover:text-gray-300 text-2xl font-bold bg-black bg-opacity-50 rounded-full w-10 h-10 flex items-center justify-center"
+          title="Close"
+        >
+          ×
+        </button>
+        <img
+          :src="imageViewerUrl"
+          alt="Evidence image"
+          class="max-w-full max-h-[90vh] rounded shadow-2xl"
+          @click.stop
+        />
+      </div>
+    </div>
     </layout>
 </template>
 
@@ -337,6 +397,7 @@ const fileInput = ref(null)
 const editingNotesId = ref(null)
 const editingNotes = ref('')
 const notesTextarea = ref(null)
+const imageViewerUrl = ref(null)
 
 const evidenceForm = reactive({
   type: 'image',
@@ -425,6 +486,25 @@ const removeEvidence = (evidence) => {
     preserveState: true,
     preserveScroll: true,
   })
+}
+
+const viewImage = (url) => {
+  imageViewerUrl.value = url
+}
+
+const closeImageViewer = () => {
+  imageViewerUrl.value = null
+}
+
+const handleImageError = (event) => {
+  event.target.style.display = 'none'
+  const parent = event.target.parentElement
+  if (parent) {
+    const errorMsg = document.createElement('p')
+    errorMsg.className = 'text-sm text-red-600 dark:text-red-400'
+    errorMsg.textContent = 'Failed to load image'
+    parent.appendChild(errorMsg)
+  }
 }
 </script>
 

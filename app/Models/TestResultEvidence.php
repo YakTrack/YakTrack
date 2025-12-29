@@ -6,6 +6,7 @@ use App\EvidenceType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Storage;
 
 class TestResultEvidence extends Model
 {
@@ -22,6 +23,10 @@ class TestResultEvidence extends Model
 
     protected $casts = [
         'type' => EvidenceType::class,
+    ];
+
+    protected $appends = [
+        'file_url',
     ];
 
     /**
@@ -45,7 +50,7 @@ class TestResultEvidence extends Model
     public function getFileUrlAttribute(): ?string
     {
         if ($this->isImage() && $this->file_path) {
-            return asset('storage/test-evidence/'.basename($this->file_path));
+            return Storage::disk('public')->url($this->file_path);
         }
 
         return null;
