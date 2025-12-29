@@ -47,12 +47,12 @@ it('redirects back to the previous page when updating a task', function () {
 
     // Simulate coming from a project page by setting the intended URL in session
     $projectUrl = route('project.show', $newProject);
-    
+
     // First visit the edit page (which should set the intended URL)
     $this->get(route('task.edit', ['task' => $task]), [
-        'HTTP_REFERER' => $projectUrl
+        'HTTP_REFERER' => $projectUrl,
     ]);
-    
+
     // Then update the task
     $response = $this->patch(route('task.update', ['task' => $task]), [
         'name'        => 'Updated Task Name',
@@ -88,7 +88,7 @@ it('sets intended URL in session when visiting edit page', function () {
     $this->actingAsUser();
 
     $response = $this->get(route('task.edit', ['task' => $task]), [
-        'HTTP_REFERER' => route('project.show', $project)
+        'HTTP_REFERER' => route('project.show', $project),
     ]);
 
     $response->assertSuccessful();
