@@ -30,8 +30,9 @@ class AcceptanceCriteriaController extends Controller
             $query->where('feature_id', $request->feature_id);
         }
 
-        $criteria = $query->orderBy('feature_id')
-            ->orderBy('name')
+        $criteria = $query->orderByRaw('code IS NULL ASC')
+            ->orderBy('code', 'asc')
+            ->orderBy('name', 'asc')
             ->paginate(15)
             ->withQueryString()
             ->through(fn ($criterion) => $criterion->append(['version_count', 'linked_tasks_count']));
