@@ -110,7 +110,7 @@ it('excludes archived projects from client portal projects index', function () {
         'client_id' => $client->id,
     ]);
     $archivedProject = Project::factory()->create([
-        'client_id' => $client->id,
+        'client_id'   => $client->id,
         'archived_at' => now(),
     ]);
 
@@ -135,7 +135,7 @@ it('excludes archived projects from client portal dashboard', function () {
         'client_id' => $client->id,
     ]);
     $archivedProject = Project::factory()->create([
-        'client_id' => $client->id,
+        'client_id'   => $client->id,
         'archived_at' => now(),
     ]);
 
@@ -157,7 +157,7 @@ it('prevents accessing archived project via client portal show', function () {
         'client_id' => $client->id,
     ]);
     $archivedProject = Project::factory()->create([
-        'client_id' => $client->id,
+        'client_id'   => $client->id,
         'archived_at' => now(),
     ]);
 
@@ -173,7 +173,7 @@ it('prevents accessing archived project via client portal report download', func
         'client_id' => $client->id,
     ]);
     $archivedProject = Project::factory()->create([
-        'client_id' => $client->id,
+        'client_id'   => $client->id,
         'archived_at' => now(),
     ]);
 
@@ -189,7 +189,7 @@ it('prevents accessing archived project via client portal report view', function
         'client_id' => $client->id,
     ]);
     $archivedProject = Project::factory()->create([
-        'client_id' => $client->id,
+        'client_id'   => $client->id,
         'archived_at' => now(),
     ]);
 
