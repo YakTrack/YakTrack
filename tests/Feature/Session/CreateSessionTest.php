@@ -112,20 +112,20 @@ it('can create a session with a post request with the minimum required fields', 
 
 it('excludes completed tasks from the task dropdown when creating a session', function () {
     $project = Project::factory()->create();
-    
+
     $completedStatus = TaskStatus::factory()->completed()->create(['project_id' => $project->id]);
     $incompleteStatus = TaskStatus::factory()->create(['project_id' => $project->id]);
-    
+
     $completedTask = Task::factory()->create([
         'project_id' => $project->id,
         'status_id' => $completedStatus->id,
     ]);
-    
+
     $incompleteTask = Task::factory()->create([
         'project_id' => $project->id,
         'status_id' => $incompleteStatus->id,
     ]);
-    
+
     $taskWithoutStatus = Task::factory()->create([
         'project_id' => $project->id,
         'status_id' => null,
@@ -139,16 +139,47 @@ it('excludes completed tasks from the task dropdown when creating a session', fu
 
     $response->assertHasProp('tasks', function ($tasks) use ($completedTask, $incompleteTask, $taskWithoutStatus) {
         expect($tasks)->toBeArray();
-        
+
         $taskIds = collect($tasks)->pluck('id')->toArray();
-        
+
         // Completed task should NOT be in the list
         expect($taskIds)->not->toContain($completedTask->id);
-        
+
         // Incomplete task should be in the list
         expect($taskIds)->toContain($incompleteTask->id);
-        
+
         // Task without status should be in the list
         expect($taskIds)->toContain($taskWithoutStatus->id);
+    });
+});
+
+it('excludes tasks from archived projects from the task dropdown when creating a session', function () {
+    $activeProject = Project::factory()->create();
+    $archivedProject = Project::factory()->create(['archived_at' => now()]);
+
+    $taskFromActiveProject = Task::factory()->create([
+        'project_id' => $activeProject->id,
+    ]);
+
+    $taskFromArchivedProject = Task::factory()->create([
+        'project_id' => $archivedProject->id,
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->get(route('session.create'));
+
+    $response->assertSuccessful();
+
+    $response->assertHasProp('tasks', function ($tasks) use ($taskFromActiveProject, $taskFromArchivedProject) {
+        expect($tasks)->toBeArray();
+
+        $taskIds = collect($tasks)->pluck('id')->toArray();
+
+        // Task from active project should be in the list
+        expect($taskIds)->toContain($taskFromActiveProject->id);
+
+        // Task from archived project should NOT be in the list
+        expect($taskIds)->not->toContain($taskFromArchivedProject->id);
     });
 });

@@ -74,6 +74,9 @@ class SessionController extends Controller
             'sprints'           => Sprint::with('project.client')->orderBy('id', 'desc')->get(),
             'sessionCategories' => SessionCategory::all(),
             'tasks'             => Task::with('project.client', 'taskStatus')
+                ->whereHas('project', function ($query) {
+                    $query->whereNull('archived_at');
+                })
                 ->where(function ($query) {
                     $query->whereNull('status_id')
                         ->orWhereHas('taskStatus', function ($q) {
@@ -124,11 +127,17 @@ class SessionController extends Controller
             'session'           => $session,
             'tasks'             => Task::with('project.client', 'taskStatus')
                 ->where(function ($query) use ($session) {
-                    $query->whereNull('status_id')
-                        ->orWhereHas('taskStatus', function ($q) {
-                            $q->where('is_completed', false);
-                        })
-                        ->orWhere('id', $session->task_id);
+                    $query->whereHas('project', function ($q) {
+                        $q->whereNull('archived_at');
+                    })->where(function ($q) {
+                        $q->whereNull('status_id')
+                            ->orWhereHas('taskStatus', function ($statusQuery) {
+                                $statusQuery->where('is_completed', false);
+                            });
+                    });
+                    if ($session->task_id) {
+                        $query->orWhere('id', $session->task_id);
+                    }
                 })
                 ->orderBy('id', 'desc')
                 ->get(),

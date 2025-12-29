@@ -217,3 +217,65 @@ it('includes the currently selected completed task when editing a session', func
         expect($taskIds)->toContain($completedTask->id);
     });
 });
+
+it('excludes tasks from archived projects from the task dropdown when editing a session', function () {
+    $activeProject = Project::factory()->create();
+    $archivedProject = Project::factory()->create(['archived_at' => now()]);
+    
+    $taskFromActiveProject = Task::factory()->create([
+        'project_id' => $activeProject->id,
+    ]);
+    
+    $taskFromArchivedProject = Task::factory()->create([
+        'project_id' => $archivedProject->id,
+    ]);
+
+    $session = Session::factory()->create([
+        'task_id' => $taskFromActiveProject->id,
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->get(route('session.edit', ['session' => $session]));
+
+    $response->assertSuccessful();
+
+    $response->assertHasProp('tasks', function ($tasks) use ($taskFromActiveProject, $taskFromArchivedProject) {
+        expect($tasks)->toBeArray();
+        
+        $taskIds = collect($tasks)->pluck('id')->toArray();
+        
+        // Task from active project should be in the list
+        expect($taskIds)->toContain($taskFromActiveProject->id);
+        
+        // Task from archived project should NOT be in the list
+        expect($taskIds)->not->toContain($taskFromArchivedProject->id);
+    });
+});
+
+it('includes the currently selected task from an archived project when editing a session', function () {
+    $archivedProject = Project::factory()->create(['archived_at' => now()]);
+    
+    $taskFromArchivedProject = Task::factory()->create([
+        'project_id' => $archivedProject->id,
+    ]);
+
+    $session = Session::factory()->create([
+        'task_id' => $taskFromArchivedProject->id,
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->get(route('session.edit', ['session' => $session]));
+
+    $response->assertSuccessful();
+
+    $response->assertHasProp('tasks', function ($tasks) use ($taskFromArchivedProject) {
+        expect($tasks)->toBeArray();
+        
+        $taskIds = collect($tasks)->pluck('id')->toArray();
+        
+        // The currently selected task from archived project should be included
+        expect($taskIds)->toContain($taskFromArchivedProject->id);
+    });
+});
