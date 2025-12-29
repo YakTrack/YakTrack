@@ -73,7 +73,15 @@ class SessionController extends Controller
             'invoices'          => Invoice::all(),
             'sprints'           => Sprint::with('project.client')->orderBy('id', 'desc')->get(),
             'sessionCategories' => SessionCategory::all(),
-            'tasks'             => Task::with('project.client')->orderBy('id', 'desc')->get(),
+            'tasks'             => Task::with('project.client', 'taskStatus')
+                ->where(function ($query) {
+                    $query->whereNull('status_id')
+                        ->orWhereHas('taskStatus', function ($q) {
+                            $q->where('is_completed', false);
+                        });
+                })
+                ->orderBy('id', 'desc')
+                ->get(),
         ]);
     }
 
@@ -114,7 +122,16 @@ class SessionController extends Controller
     {
         return Inertia::render('Session/Edit', [
             'session'           => $session,
-            'tasks'             => Task::with('project.client')->orderBy('id', 'desc')->get(),
+            'tasks'             => Task::with('project.client', 'taskStatus')
+                ->where(function ($query) use ($session) {
+                    $query->whereNull('status_id')
+                        ->orWhereHas('taskStatus', function ($q) {
+                            $q->where('is_completed', false);
+                        })
+                        ->orWhere('id', $session->task_id);
+                })
+                ->orderBy('id', 'desc')
+                ->get(),
             'invoices'          => Invoice::orderBy('id', 'desc')->get(),
             'sprints'           => Sprint::with('project.client')->orderBy('id', 'desc')->get(),
             'sessionCategories' => SessionCategory::all(),

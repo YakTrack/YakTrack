@@ -1,10 +1,12 @@
 <?php
 
 use App\Models\Invoice;
+use App\Models\Project;
 use App\Models\Session;
 use App\Models\SessionCategory;
 use App\Models\Sprint;
 use App\Models\Task;
+use App\Models\TaskStatus;
 use Carbon\Carbon;
 
 it('can load the page to edit a session', function () {
@@ -137,4 +139,81 @@ it('can edit a session with a json patch request', function () {
     ]);
 
     Carbon::setTestNow();
+});
+
+it('excludes completed tasks from the task dropdown when editing a session', function () {
+    $project = Project::factory()->create();
+    
+    $completedStatus = TaskStatus::factory()->completed()->create(['project_id' => $project->id]);
+    $incompleteStatus = TaskStatus::factory()->create(['project_id' => $project->id]);
+    
+    $completedTask = Task::factory()->create([
+        'project_id' => $project->id,
+        'status_id' => $completedStatus->id,
+    ]);
+    
+    $incompleteTask = Task::factory()->create([
+        'project_id' => $project->id,
+        'status_id' => $incompleteStatus->id,
+    ]);
+    
+    $taskWithoutStatus = Task::factory()->create([
+        'project_id' => $project->id,
+        'status_id' => null,
+    ]);
+
+    $session = Session::factory()->create([
+        'task_id' => $incompleteTask->id,
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->get(route('session.edit', ['session' => $session]));
+
+    $response->assertSuccessful();
+
+    $response->assertHasProp('tasks', function ($tasks) use ($completedTask, $incompleteTask, $taskWithoutStatus) {
+        expect($tasks)->toBeArray();
+        
+        $taskIds = collect($tasks)->pluck('id')->toArray();
+        
+        // Completed task should NOT be in the list
+        expect($taskIds)->not->toContain($completedTask->id);
+        
+        // Incomplete task should be in the list
+        expect($taskIds)->toContain($incompleteTask->id);
+        
+        // Task without status should be in the list
+        expect($taskIds)->toContain($taskWithoutStatus->id);
+    });
+});
+
+it('includes the currently selected completed task when editing a session', function () {
+    $project = Project::factory()->create();
+    
+    $completedStatus = TaskStatus::factory()->completed()->create(['project_id' => $project->id]);
+    
+    $completedTask = Task::factory()->create([
+        'project_id' => $project->id,
+        'status_id' => $completedStatus->id,
+    ]);
+
+    $session = Session::factory()->create([
+        'task_id' => $completedTask->id,
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->get(route('session.edit', ['session' => $session]));
+
+    $response->assertSuccessful();
+
+    $response->assertHasProp('tasks', function ($tasks) use ($completedTask) {
+        expect($tasks)->toBeArray();
+        
+        $taskIds = collect($tasks)->pluck('id')->toArray();
+        
+        // The currently selected completed task should be included
+        expect($taskIds)->toContain($completedTask->id);
+    });
 });
