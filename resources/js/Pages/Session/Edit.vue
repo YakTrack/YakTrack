@@ -26,7 +26,7 @@
                 </div>
                 <div class="form-group">
                     <label for="sprint_id"> Sprint </label>
-                    <sprint-select :sprints="sprints" :sprint="form.sprint_id" :on-change="selectSprint"></sprint-select>
+                    <sprint-select :sprints="filteredSprints" :sprint="form.sprint_id" :on-change="selectSprint"></sprint-select>
                 </div>
                 <div class="form-group">
                     <label for="invoice_id"> Invoice </label>
@@ -109,6 +109,18 @@
             },
             selectTask(taskId) {
                 this.form.task_id = taskId;
+                
+                // Clear sprint if it doesn't belong to the selected task's project
+                if (taskId && this.form.sprint_id) {
+                    const selectedTask = this.tasks.find(task => task.id == taskId);
+                    const selectedSprint = this.sprints.find(sprint => sprint.id == this.form.sprint_id);
+                    
+                    if (selectedTask && selectedTask.project && selectedSprint && selectedSprint.project) {
+                        if (selectedTask.project.id !== selectedSprint.project.id) {
+                            this.form.sprint_id = null;
+                        }
+                    }
+                }
             },
             submit() {
                 this.$inertia[this.isCreateForm ? 'post' : 'patch'](
@@ -120,6 +132,25 @@
         computed: {
             isCreateForm() {
                 return this.session == null;
+            },
+            filteredSprints() {
+                // If no task is selected, show all sprints
+                if (!this.form.task_id) {
+                    return this.sprints;
+                }
+                
+                // Find the selected task
+                const selectedTask = this.tasks.find(task => task.id == this.form.task_id);
+                
+                // If task not found or has no project, show all sprints
+                if (!selectedTask || !selectedTask.project) {
+                    return this.sprints;
+                }
+                
+                // Filter sprints to only those belonging to the task's project
+                return this.sprints.filter(sprint => {
+                    return sprint.project && sprint.project.id === selectedTask.project.id;
+                });
             },
         }
     }

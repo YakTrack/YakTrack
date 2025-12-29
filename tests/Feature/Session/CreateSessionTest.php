@@ -24,6 +24,41 @@ it('can view the page to create a session', function () {
     $response->assertSee($task->name);
 });
 
+it('loads tasks and sprints with project relationships for filtering', function () {
+    $project1 = \App\Models\Project::factory()->create();
+    $project2 = \App\Models\Project::factory()->create();
+
+    $task1 = Task::factory()->create(['project_id' => $project1->id]);
+    $task2 = Task::factory()->create(['project_id' => $project2->id]);
+
+    $sprint1 = Sprint::factory()->create(['project_id' => $project1->id]);
+    $sprint2 = Sprint::factory()->create(['project_id' => $project2->id]);
+
+    $this->actingAsUser();
+
+    $response = $this->get(route('session.create'));
+
+    $response->assertSuccessful();
+
+    // Verify tasks are loaded with project relationship
+    $response->assertHasProp('tasks', function ($tasks) use ($task1, $project1) {
+        expect($tasks)->toBeArray();
+        $task1Data = collect($tasks)->firstWhere('id', $task1->id);
+        expect($task1Data)->not->toBeNull();
+        expect($task1Data['project'])->not->toBeNull();
+        expect($task1Data['project']['id'])->toBe($project1->id);
+    });
+
+    // Verify sprints are loaded with project relationship
+    $response->assertHasProp('sprints', function ($sprints) use ($sprint1, $project1) {
+        expect($sprints)->toBeArray();
+        $sprint1Data = collect($sprints)->firstWhere('id', $sprint1->id);
+        expect($sprint1Data)->not->toBeNull();
+        expect($sprint1Data['project'])->not->toBeNull();
+        expect($sprint1Data['project']['id'])->toBe($project1->id);
+    });
+});
+
 it('can create a session with a post request', function () {
     $invoice = Invoice::factory()->create();
     $sprint = Sprint::factory()->create();

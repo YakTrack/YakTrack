@@ -71,9 +71,9 @@ class SessionController extends Controller
     {
         return Inertia::render('Session/Edit', [
             'invoices'          => Invoice::all(),
-            'sprints'           => Sprint::all(),
+            'sprints'           => Sprint::with('project.client')->orderBy('id', 'desc')->get(),
             'sessionCategories' => SessionCategory::all(),
-            'tasks'             => Task::all(),
+            'tasks'             => Task::with('project.client')->orderBy('id', 'desc')->get(),
         ]);
     }
 
