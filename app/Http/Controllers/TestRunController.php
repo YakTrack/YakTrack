@@ -82,6 +82,13 @@ class TestRunController extends Controller
         $testRun->load([
             'project',
             'executedByUser',
+            'testResults' => function ($query) {
+                $query->join('acceptance_criteria', 'test_results.acceptance_criteria_id', '=', 'acceptance_criteria.id')
+                    ->orderByRaw('acceptance_criteria.code IS NULL ASC')
+                    ->orderBy('acceptance_criteria.code', 'asc')
+                    ->orderBy('acceptance_criteria.name', 'asc')
+                    ->select('test_results.*');
+            },
             'testResults.acceptanceCriteria',
             'testResults.acceptanceCriteriaVersion',
             'testResults.evidence',
