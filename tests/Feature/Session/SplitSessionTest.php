@@ -46,7 +46,7 @@ it('can split a completed session', function () {
 
     // Check that the new session has the same properties as the original
     expect($newSession->task_id)->toBe($session->task_id);
-    expect($newSession->is_billable)->toBe(1);
+    expect($newSession->is_billable)->toBeTrue();
     expect($newSession->comment)->toBe($session->comment);
 });
 

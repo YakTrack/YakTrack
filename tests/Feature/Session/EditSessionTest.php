@@ -21,6 +21,38 @@ it('can load the page to edit a session', function () {
     $response->assertHasProp('session', $session->fresh()->toArray());
 });
 
+it('reflects the correct billable state when editing a billable session', function () {
+    $this->withoutExceptionHandling();
+
+    $session = Session::factory()->create([
+        'is_billable' => true,
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->get(route('session.edit', ['session' => $session]));
+
+    $response->assertHasProp('session', function ($sessionProp) {
+        expect($sessionProp['is_billable'])->toBeTrue();
+    });
+});
+
+it('reflects the correct billable state when editing a non-billable session', function () {
+    $this->withoutExceptionHandling();
+
+    $session = Session::factory()->create([
+        'is_billable' => false,
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->get(route('session.edit', ['session' => $session]));
+
+    $response->assertHasProp('session', function ($sessionProp) {
+        expect($sessionProp['is_billable'])->toBeFalse();
+    });
+});
+
 it('can load the page to edit a session in progress', function () {
     $this->withoutExceptionHandling();
 

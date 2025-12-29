@@ -33,6 +33,13 @@ class Session extends Model
      */
     protected $dates = ['started_at', 'ended_at'];
 
+    /**
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'is_billable' => 'boolean',
+    ];
+
     protected $appends = [
         'durationForHumans',
         'durationInSeconds',
