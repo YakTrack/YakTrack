@@ -243,6 +243,15 @@
           </tbody>
         </table>
             </div>
+            <div v-if="availableCriteria && availableCriteria.length > 0" class="card-body border-t border-gray-200 dark:border-gray-700 pt-4">
+                <button
+                    @click="openAddCriteriaModal"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
+                >
+                    <i class="fa fa-plus mr-2"></i>
+                    Add Criteria
+                </button>
+            </div>
         </div>
 
     <!-- Evidence Modal -->
@@ -382,6 +391,82 @@
         />
       </div>
     </div>
+
+    <!-- Add Criteria Modal -->
+    <div v-if="showAddCriteriaModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+      <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white dark:bg-gray-800">
+        <div class="mt-3">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">
+            Add Acceptance Criteria to Test Run
+          </h3>
+          
+          <form @submit.prevent="addCriteria" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Acceptance Criteria <span class="text-red-500">*</span>
+              </label>
+              <select
+                v-model="criteriaForm.acceptance_criteria_id"
+                required
+                class="w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 rounded-md"
+              >
+                <option value="">Select an acceptance criteria...</option>
+                <option
+                  v-for="criterion in availableCriteria"
+                  :key="criterion.id"
+                  :value="criterion.id"
+                >
+                  {{ criterion.code ? criterion.code + ' - ' : '' }}{{ criterion.name }}
+                </option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Initial Status
+              </label>
+              <select
+                v-model="criteriaForm.status"
+                class="w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 rounded-md"
+              >
+                <option value="skipped">Skipped</option>
+                <option value="passed">Passed</option>
+                <option value="failed">Failed</option>
+                <option value="blocked">Blocked</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                Notes (Optional)
+              </label>
+              <textarea
+                v-model="criteriaForm.notes"
+                rows="3"
+                placeholder="Add any initial notes..."
+                class="w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 rounded-md"
+              ></textarea>
+            </div>
+
+            <div class="flex justify-end space-x-2">
+              <button
+                type="button"
+                @click="closeAddCriteriaModal"
+                class="px-3 py-2 bg-gray-300 border border-transparent rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest hover:bg-gray-400 focus:bg-gray-400 active:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                class="px-3 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
+              >
+                Add Criteria
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
     </layout>
 </template>
 
@@ -395,6 +480,10 @@ import GherkinText from '@/Shared/GherkinText.vue'
 const props = defineProps({
   testRun: Object,
   summary: Object,
+  availableCriteria: {
+    type: Array,
+    default: () => [],
+  },
 })
 
 const showModal = ref(false)
@@ -404,10 +493,17 @@ const editingNotesId = ref(null)
 const editingNotes = ref('')
 const notesTextarea = ref(null)
 const imageViewerUrl = ref(null)
+const showAddCriteriaModal = ref(false)
 
 const evidenceForm = reactive({
   type: 'image',
   content: '',
+})
+
+const criteriaForm = reactive({
+  acceptance_criteria_id: '',
+  status: 'skipped',
+  notes: '',
 })
 
 const formatDate = (date) => {
@@ -511,6 +607,30 @@ const handleImageError = (event) => {
     errorMsg.textContent = 'Failed to load image'
     parent.appendChild(errorMsg)
   }
+}
+
+const openAddCriteriaModal = () => {
+  showAddCriteriaModal.value = true
+  criteriaForm.acceptance_criteria_id = ''
+  criteriaForm.status = 'skipped'
+  criteriaForm.notes = ''
+}
+
+const closeAddCriteriaModal = () => {
+  showAddCriteriaModal.value = false
+  criteriaForm.acceptance_criteria_id = ''
+  criteriaForm.status = 'skipped'
+  criteriaForm.notes = ''
+}
+
+const addCriteria = () => {
+  router.post(route('test-run.test-result.store', props.testRun.id), criteriaForm, {
+    preserveState: true,
+    preserveScroll: true,
+    onSuccess: () => {
+      closeAddCriteriaModal()
+    },
+  })
 }
 </script>
 

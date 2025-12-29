@@ -64,6 +64,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     // Test Run Routes
     Route::resource('test-run', 'TestRunController');
+    Route::post('test-run/{testRun}/test-result', 'TestRunController@storeTestResult')->name('test-run.test-result.store');
 
     // Test Result Routes
     Route::patch('test-result/{testResult}', 'TestResultController@update')->name('test-result.update');

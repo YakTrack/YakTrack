@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTestResultRequest;
 use App\Http\Requests\StoreTestRunRequest;
 use App\Models\AcceptanceCriteria;
 use App\Models\Project;
@@ -94,10 +95,56 @@ class TestRunController extends Controller
             'testResults.evidence',
         ]);
 
+        // Get available acceptance criteria (not already in test run)
+        $existingCriteriaIds = $testRun->testResults()->pluck('acceptance_criteria_id')->toArray();
+        $availableCriteria = AcceptanceCriteria::where('project_id', $testRun->project_id)
+            ->where('is_active', true)
+            ->whereNotIn('id', $existingCriteriaIds)
+            ->orderByRaw('code IS NULL ASC')
+            ->orderBy('code', 'asc')
+            ->orderBy('name', 'asc')
+            ->get();
+
         return Inertia::render('TestRun/Show', [
             'testRun' => $testRun,
             'summary' => $testRun->getSummaryStatistics(),
+            'availableCriteria' => $availableCriteria,
         ]);
+    }
+
+    public function storeTestResult(StoreTestResultRequest $request, TestRun $testRun): RedirectResponse
+    {
+        $validated = $request->validated();
+
+        // Check if acceptance criteria already exists in test run
+        $existingResult = $testRun->testResults()
+            ->where('acceptance_criteria_id', $validated['acceptance_criteria_id'])
+            ->first();
+
+        if ($existingResult) {
+            return redirect()->back()
+                ->with('error', 'This acceptance criteria is already in the test run.');
+        }
+
+        // Verify the acceptance criteria belongs to the test run's project
+        $criteria = AcceptanceCriteria::findOrFail($validated['acceptance_criteria_id']);
+        if ($criteria->project_id !== $testRun->project_id) {
+            return redirect()->back()
+                ->with('error', 'The acceptance criteria must belong to the same project as the test run.');
+        }
+
+        $latestVersion = $criteria->getCurrentVersion();
+
+        TestResult::create([
+            'test_run_id'                    => $testRun->id,
+            'acceptance_criteria_id'         => $validated['acceptance_criteria_id'],
+            'acceptance_criteria_version_id' => $latestVersion?->id,
+            'status'                         => $validated['status'] ?? 'skipped',
+            'notes'                          => $validated['notes'] ?? null,
+        ]);
+
+        return redirect()->back()
+            ->with('success', 'Acceptance criteria has been added to the test run.');
     }
 
     public function destroy(TestRun $testRun): RedirectResponse

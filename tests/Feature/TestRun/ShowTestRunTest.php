@@ -220,3 +220,157 @@ it('shows evidence for test results', function () {
 
     $response->assertSuccessful();
 });
+
+it('can add acceptance criteria to existing test run', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+    $user = User::factory()->create();
+    $testRun = TestRun::factory()->create([
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
+        'executed_by_user_id' => $user->id,
+    ]);
+
+    $criteria1 = AcceptanceCriteria::factory()->create([
+        'project_id' => $project->id,
+        'name'       => 'Criteria 1',
+    ]);
+
+    $criteria2 = AcceptanceCriteria::factory()->create([
+        'project_id' => $project->id,
+        'name'       => 'Criteria 2',
+    ]);
+
+    // Add first criteria to test run
+    TestResult::factory()->create([
+        'test_run_id'            => $testRun->id,
+        'acceptance_criteria_id' => $criteria1->id,
+        'status'                 => TestResultStatus::Passed,
+    ]);
+
+    // Add second criteria via the new endpoint
+    $response = $this->post(route('test-run.test-result.store', $testRun), [
+        'acceptance_criteria_id' => $criteria2->id,
+        'status'                 => 'skipped',
+        'notes'                  => 'Initial notes',
+    ]);
+
+    $response->assertRedirect();
+    $response->assertSessionHas('success');
+
+    $this->assertDatabaseHas('test_results', [
+        'test_run_id'            => $testRun->id,
+        'acceptance_criteria_id' => $criteria2->id,
+        'status'                 => TestResultStatus::Skipped,
+        'notes'                  => 'Initial notes',
+    ]);
+});
+
+it('prevents adding duplicate acceptance criteria to test run', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+    $user = User::factory()->create();
+    $testRun = TestRun::factory()->create([
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
+        'executed_by_user_id' => $user->id,
+    ]);
+
+    $criteria = AcceptanceCriteria::factory()->create([
+        'project_id' => $project->id,
+        'name'       => 'Criteria 1',
+    ]);
+
+    // Add criteria to test run
+    TestResult::factory()->create([
+        'test_run_id'            => $testRun->id,
+        'acceptance_criteria_id' => $criteria->id,
+        'status'                 => TestResultStatus::Passed,
+    ]);
+
+    // Try to add the same criteria again
+    $response = $this->post(route('test-run.test-result.store', $testRun), [
+        'acceptance_criteria_id' => $criteria->id,
+        'status'                 => 'skipped',
+    ]);
+
+    $response->assertRedirect();
+    $response->assertSessionHas('error');
+
+    // Verify only one test result exists for this criteria
+    $this->assertEquals(1, TestResult::where('test_run_id', $testRun->id)
+        ->where('acceptance_criteria_id', $criteria->id)
+        ->count());
+});
+
+it('prevents adding acceptance criteria from different project', function () {
+    $this->actingAsUser();
+
+    $project1 = Project::factory()->create();
+    $project2 = Project::factory()->create();
+    $user = User::factory()->create();
+    $testRun = TestRun::factory()->create([
+        'project_id'          => $project1->id,
+        'name'                => 'Test Run',
+        'executed_by_user_id' => $user->id,
+    ]);
+
+    $criteria = AcceptanceCriteria::factory()->create([
+        'project_id' => $project2->id,
+        'name'       => 'Criteria from different project',
+    ]);
+
+    // Try to add criteria from different project
+    $response = $this->post(route('test-run.test-result.store', $testRun), [
+        'acceptance_criteria_id' => $criteria->id,
+        'status'                 => 'skipped',
+    ]);
+
+    $response->assertRedirect();
+    $response->assertSessionHas('error');
+
+    // Verify no test result was created
+    $this->assertDatabaseMissing('test_results', [
+        'test_run_id'            => $testRun->id,
+        'acceptance_criteria_id' => $criteria->id,
+    ]);
+});
+
+it('includes available acceptance criteria in show page', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+    $user = User::factory()->create();
+    $testRun = TestRun::factory()->create([
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
+        'executed_by_user_id' => $user->id,
+    ]);
+
+    $criteria1 = AcceptanceCriteria::factory()->create([
+        'project_id' => $project->id,
+        'name'       => 'Criteria 1',
+    ]);
+
+    $criteria2 = AcceptanceCriteria::factory()->create([
+        'project_id' => $project->id,
+        'name'       => 'Criteria 2',
+    ]);
+
+    // Add only first criteria to test run
+    TestResult::factory()->create([
+        'test_run_id'            => $testRun->id,
+        'acceptance_criteria_id' => $criteria1->id,
+        'status'                 => TestResultStatus::Passed,
+    ]);
+
+    $response = $this->get(route('test-run.show', $testRun));
+
+    $response->assertSuccessful();
+    $response->assertInertia(fn ($page) => $page
+        ->has('availableCriteria')
+        ->where('availableCriteria.0.id', $criteria2->id)
+    );
+});
