@@ -13,8 +13,27 @@ class ProjectsTableSeeder extends Seeder
      */
     public function run()
     {
-        Client::all()->each(function ($client) {
-            Project::factory(3)->create(['client_id' => $client->id]);
+        $projectNames = [
+            'Website Redesign',
+            'Mobile App Development',
+            'API Integration',
+            'E-commerce Platform',
+            'Dashboard Analytics',
+            'Content Management System',
+            'Customer Portal',
+            'Payment Gateway',
+            'Data Migration',
+        ];
+
+        $projectIndex = 0;
+        Client::all()->each(function ($client) use (&$projectIndex, $projectNames) {
+            for ($i = 0; $i < 3; $i++) {
+                Project::factory()->create([
+                    'client_id' => $client->id,
+                    'name' => $projectNames[$projectIndex],
+                ]);
+                $projectIndex++;
+            }
         });
     }
 }

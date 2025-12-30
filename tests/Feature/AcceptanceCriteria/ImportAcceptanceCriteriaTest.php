@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\AcceptanceCriteria;
+use App\Models\Feature;
 use App\Models\Project;
 use Illuminate\Http\UploadedFile;
 
@@ -503,4 +504,261 @@ it('can filter acceptance criteria by feature', function () {
     $response->assertSuccessful();
     $response->assertSee('Login scenario');
     $response->assertDontSee('Registration scenario');
+});
+
+it('creates features with codes when feature codes are provided during import', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+
+    $gherkinContent = <<<'GHERKIN'
+Feature: User Authentication
+  As a user
+  I want to be able to log in
+  So that I can access my account
+
+  Scenario: Successful login with valid credentials
+    Given I am on the login page
+    When I enter valid username and password
+    Then I should be redirected to the dashboard
+
+  Scenario: Failed login with invalid credentials
+    Given I am on the login page
+    When I enter invalid username and password
+    Then I should see an error message
+GHERKIN;
+
+    $file = UploadedFile::fake()->createWithContent('test.feature', $gherkinContent);
+
+    $response = $this->post(route('acceptance-criteria.import.process'), [
+        'project_id'    => $project->id,
+        'file'          => $file,
+        'feature_codes' => 'User Authentication: FEAT-001',
+        'overwrite_existing' => false,
+    ]);
+
+    $response->assertRedirect(route('acceptance-criteria.index'));
+
+    // Check that feature was created with the specified code
+    $feature = \App\Models\Feature::where('project_id', $project->id)
+        ->where('name', 'User Authentication')
+        ->first();
+
+    expect($feature)->not->toBeNull();
+    expect($feature->code)->toBe('FEAT-001');
+
+    // Check that acceptance criteria codes are prepended with feature code
+    $this->assertDatabaseHas('acceptance_criteria', [
+        'project_id' => $project->id,
+        'code'       => 'FEAT-001:AC-001',
+        'name'       => 'Successful login with valid credentials',
+        'feature_id' => $feature->id,
+    ]);
+
+    $this->assertDatabaseHas('acceptance_criteria', [
+        'project_id' => $project->id,
+        'code'       => 'FEAT-001:AC-002',
+        'name'       => 'Failed login with invalid credentials',
+        'feature_id' => $feature->id,
+    ]);
+});
+
+it('handles multiple feature codes mapping during import', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+
+    $gherkinContent = <<<'GHERKIN'
+Feature: User Authentication
+  Scenario: Login scenario
+    Given I am on the login page
+    When I enter credentials
+    Then I should be logged in
+
+Feature: Dashboard
+  Scenario: View dashboard
+    Given I am logged in
+    When I visit the dashboard
+    Then I should see my projects
+GHERKIN;
+
+    $file = UploadedFile::fake()->createWithContent('test.feature', $gherkinContent);
+
+    $response = $this->post(route('acceptance-criteria.import.process'), [
+        'project_id'    => $project->id,
+        'file'          => $file,
+        'feature_codes' => "User Authentication: FEAT-001\nDashboard: FEAT-002",
+        'overwrite_existing' => false,
+    ]);
+
+    $response->assertRedirect(route('acceptance-criteria.index'));
+
+    // Check that both features were created with their codes
+    $authFeature = \App\Models\Feature::where('project_id', $project->id)
+        ->where('name', 'User Authentication')
+        ->first();
+
+    $dashboardFeature = \App\Models\Feature::where('project_id', $project->id)
+        ->where('name', 'Dashboard')
+        ->first();
+
+    expect($authFeature)->not->toBeNull();
+    expect($authFeature->code)->toBe('FEAT-001');
+    expect($dashboardFeature)->not->toBeNull();
+    expect($dashboardFeature->code)->toBe('FEAT-002');
+
+    // Check that acceptance criteria codes are prepended correctly
+    $this->assertDatabaseHas('acceptance_criteria', [
+        'project_id' => $project->id,
+        'code'       => 'FEAT-001:AC-001',
+        'feature_id' => $authFeature->id,
+    ]);
+
+    $this->assertDatabaseHas('acceptance_criteria', [
+        'project_id' => $project->id,
+        'code'       => 'FEAT-002:AC-002',
+        'feature_id' => $dashboardFeature->id,
+    ]);
+});
+
+it('creates features without codes when feature codes are not provided', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+
+    $gherkinContent = <<<'GHERKIN'
+Feature: User Authentication
+  Scenario: Login scenario
+    Given I am on the login page
+    When I enter credentials
+    Then I should be logged in
+GHERKIN;
+
+    $file = UploadedFile::fake()->createWithContent('test.feature', $gherkinContent);
+
+    $response = $this->post(route('acceptance-criteria.import.process'), [
+        'project_id'    => $project->id,
+        'file'          => $file,
+        'overwrite_existing' => false,
+    ]);
+
+    $response->assertRedirect(route('acceptance-criteria.index'));
+
+    // Check that feature was created without a code
+    $feature = \App\Models\Feature::where('project_id', $project->id)
+        ->where('name', 'User Authentication')
+        ->first();
+
+    expect($feature)->not->toBeNull();
+    expect($feature->code)->toBeNull();
+
+    // Check that acceptance criteria code is not prepended
+    $this->assertDatabaseHas('acceptance_criteria', [
+        'project_id' => $project->id,
+        'code'       => 'AC-001',
+        'feature_id' => $feature->id,
+    ]);
+});
+
+it('does not create duplicate feature codes when code already exists for different feature', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+
+    // Create an existing feature with code FEAT-001
+    \App\Models\Feature::factory()->withCode('FEAT-001')->forProject($project)->create([
+        'name' => 'Existing Feature',
+    ]);
+
+    $gherkinContent = <<<'GHERKIN'
+Feature: User Authentication
+  Scenario: Login scenario
+    Given I am on the login page
+    When I enter credentials
+    Then I should be logged in
+GHERKIN;
+
+    $file = UploadedFile::fake()->createWithContent('test.feature', $gherkinContent);
+
+    $response = $this->post(route('acceptance-criteria.import.process'), [
+        'project_id'    => $project->id,
+        'file'          => $file,
+        'feature_codes' => 'User Authentication: FEAT-001', // Same code as existing feature
+        'overwrite_existing' => false,
+    ]);
+
+    $response->assertRedirect(route('acceptance-criteria.index'));
+
+    // Check that the feature was created but without the conflicting code
+    $feature = \App\Models\Feature::where('project_id', $project->id)
+        ->where('name', 'User Authentication')
+        ->first();
+
+    expect($feature)->not->toBeNull();
+    // Feature should exist but may not have the code if it conflicts
+    // The important thing is that no error occurred and acceptance criteria was created
+    $this->assertDatabaseHas('acceptance_criteria', [
+        'project_id' => $project->id,
+        'name'       => 'Login scenario',
+        'feature_id' => $feature->id,
+    ]);
+
+    // Verify that only one feature has FEAT-001 code
+    $featuresWithCode = \App\Models\Feature::where('project_id', $project->id)
+        ->where('code', 'FEAT-001')
+        ->count();
+    expect($featuresWithCode)->toBe(1);
+});
+
+it('prepends feature code to acceptance criteria codes when feature has code', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+    $feature = Feature::factory()->withCode('FEAT-001')->forProject($project)->create([
+        'name' => 'User Authentication',
+    ]);
+
+    $gherkinContent = <<<'GHERKIN'
+Feature: User Authentication
+  As a user
+  I want to be able to log in
+  So that I can access my account
+
+  Scenario: Successful login with valid credentials
+    Given I am on the login page
+    When I enter valid username and password
+    Then I should be redirected to the dashboard
+
+  Scenario: Failed login with invalid credentials
+    Given I am on the login page
+    When I enter invalid username and password
+    Then I should see an error message
+GHERKIN;
+
+    $file = UploadedFile::fake()->createWithContent('test.feature', $gherkinContent);
+
+    $response = $this->post(route('acceptance-criteria.import.process'), [
+        'project_id'         => $project->id,
+        'file'               => $file,
+        'overwrite_existing' => false,
+    ]);
+
+    $response->assertRedirect(route('acceptance-criteria.index'));
+
+    // Check that acceptance criteria codes are prepended with feature code
+    $this->assertDatabaseHas('acceptance_criteria', [
+        'project_id' => $project->id,
+        'code'       => 'FEAT-001:AC-001',
+        'name'       => 'Successful login with valid credentials',
+        'feature_id' => $feature->id,
+        'is_active'  => true,
+    ]);
+
+    $this->assertDatabaseHas('acceptance_criteria', [
+        'project_id' => $project->id,
+        'code'       => 'FEAT-001:AC-002',
+        'name'       => 'Failed login with invalid credentials',
+        'feature_id' => $feature->id,
+        'is_active'  => true,
+    ]);
 });

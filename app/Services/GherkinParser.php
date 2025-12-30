@@ -8,14 +8,21 @@ use App\Models\Project;
 class GherkinParser
 {
     /**
+     * Mapping of feature names to codes.
+     *
+     * @var array<string, string>
+     */
+    private array $featureCodes = [];
+    /**
      * Parse a Gherkin file content and extract acceptance criteria.
      *
-     * @param string  $content The Gherkin file content
-     * @param Project $project The project to associate with the criteria
+     * @param string                $content      The Gherkin file content
+     * @param Project                $project      The project to associate with the criteria
+     * @param array<string, string> $featureCodes Mapping of feature names to codes
      *
      * @return array<int, array{code: string|null, name: string, description: string, feature_id: int|null}>
      */
-    public function parse(string $content, Project $project): array
+    public function parse(string $content, Project $project, array $featureCodes = []): array
     {
         $lines = explode("\n", $content);
         $criteria = [];
@@ -23,6 +30,7 @@ class GherkinParser
         $currentScenario = null;
         $currentDescription = [];
         $scenarioCount = 0;
+        $this->featureCodes = $featureCodes;
 
         foreach ($lines as $line) {
             $line = trim($line);
@@ -34,7 +42,13 @@ class GherkinParser
 
             // Feature line
             if (str_starts_with($line, 'Feature:')) {
+                // Save current scenario before switching to new feature
+                $this->saveCurrentScenario($criteria, $currentScenario, $currentDescription, $scenarioCount, $currentFeature, $project);
+                
                 $currentFeature = trim(substr($line, 8));
+                $currentScenario = null;
+                $currentDescription = [];
+                // Don't reset scenarioCount - keep it global across features for unique codes
                 continue;
             }
 
@@ -106,8 +120,12 @@ class GherkinParser
             return;
         }
 
-        // Generate code based on project and scenario count
-        $code = $this->generateCode($project, $scenarioCount);
+        // Get or create feature first to access its code
+        $featureCode = $feature && isset($this->featureCodes[$feature]) ? $this->featureCodes[$feature] : null;
+        $featureModel = $feature ? Feature::findOrCreateByName($feature, $project->id, $featureCode) : null;
+
+        // Generate code based on project and scenario count, prepending feature code if available
+        $code = $this->generateCode($project, $scenarioCount, $featureModel);
 
         // Create description from steps
         $descriptionText = implode("\n", $description);
@@ -116,14 +134,14 @@ class GherkinParser
             'code'        => $code,
             'name'        => $scenario,
             'description' => $descriptionText,
-            'feature_id'  => $feature ? Feature::findOrCreateByName($feature, $project->id)->id : null,
+            'feature_id'  => $featureModel?->id,
         ];
     }
 
     /**
      * Generate a unique code for the acceptance criteria.
      */
-    private function generateCode(Project $project, int $scenarioCount): string
+    private function generateCode(Project $project, int $scenarioCount, ?Feature $feature = null): string
     {
         // Get existing codes for this project to avoid duplicates
         $existingCodes = $project->acceptanceCriteria()
@@ -132,6 +150,16 @@ class GherkinParser
             ->toArray();
 
         $baseCode = 'AC-'.str_pad($scenarioCount, 3, '0', STR_PAD_LEFT);
+
+        // Prepend feature code if feature has a code
+        if ($feature && $feature->code) {
+            $featureCodePrefix = $feature->code.':';
+            // Check if baseCode already starts with feature code to avoid duplication
+            if (!str_starts_with($baseCode, $featureCodePrefix)) {
+                $baseCode = $feature->code.':'.$baseCode;
+            }
+        }
+
         $code = $baseCode;
         $counter = 1;
 

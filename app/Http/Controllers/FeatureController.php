@@ -16,13 +16,17 @@ class FeatureController extends Controller
     public function index(Request $request): Response
     {
         $query = Feature::with(['project', 'acceptanceCriteria'])
-            ->where('is_active', true);
+            ->join('projects', 'features.project_id', '=', 'projects.id')
+            ->where('features.is_active', true)
+            ->select('features.*');
 
         if ($request->has('project_id')) {
-            $query->where('project_id', $request->project_id);
+            $query->where('features.project_id', $request->project_id);
         }
 
-        $features = $query->orderBy('name')
+        $features = $query->orderBy('projects.name')
+            ->orderBy('features.code')
+            ->orderBy('features.name')
             ->paginate(15)
             ->withQueryString()
             ->through(fn ($feature) => $feature->append(['acceptance_criteria_count']));

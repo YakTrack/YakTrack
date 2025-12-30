@@ -2,6 +2,7 @@
 
 use App\Models\AcceptanceCriteria;
 use App\Models\AcceptanceCriteriaVersion;
+use App\Models\Feature;
 use App\Models\Project;
 
 it('can view the edit page', function () {
@@ -236,4 +237,89 @@ it('can cancel editing and return to show page', function () {
     $response = $this->get(route('acceptance-criteria.show', $criteria));
 
     $response->assertSuccessful();
+});
+
+it('automatically prepends feature code when updating acceptance criteria with feature', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+    $feature = Feature::factory()->withCode('FEAT-001')->forProject($project)->create();
+    $criteria = AcceptanceCriteria::factory()->create([
+        'project_id' => $project->id,
+        'code'       => 'AC-001',
+        'name'       => 'Original Name',
+    ]);
+
+    $response = $this->put(route('acceptance-criteria.update', $criteria), [
+        'project_id' => $project->id,
+        'feature_id' => $feature->id,
+        'code'       => 'AC-002',
+        'name'       => 'Updated Name',
+    ]);
+
+    $response->assertRedirect(route('acceptance-criteria.show', $criteria));
+
+    $this->assertDatabaseHas('acceptance_criteria', [
+        'id'         => $criteria->id,
+        'feature_id' => $feature->id,
+        'code'       => 'FEAT-001:AC-002',
+        'name'       => 'Updated Name',
+    ]);
+});
+
+it('does not duplicate feature code prefix when updating if code already starts with feature code', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+    $feature = Feature::factory()->withCode('FEAT-001')->forProject($project)->create();
+    $criteria = AcceptanceCriteria::factory()->create([
+        'project_id' => $project->id,
+        'feature_id' => $feature->id,
+        'code'       => 'AC-001',
+        'name'       => 'Original Name',
+    ]);
+
+    $response = $this->put(route('acceptance-criteria.update', $criteria), [
+        'project_id' => $project->id,
+        'feature_id' => $feature->id,
+        'code'       => 'FEAT-001:AC-002',
+        'name'       => 'Updated Name',
+    ]);
+
+    $response->assertRedirect(route('acceptance-criteria.show', $criteria));
+
+    $this->assertDatabaseHas('acceptance_criteria', [
+        'id'         => $criteria->id,
+        'feature_id' => $feature->id,
+        'code'       => 'FEAT-001:AC-002',
+        'name'       => 'Updated Name',
+    ]);
+});
+
+it('does not prepend feature code when updating if feature has no code', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+    $feature = Feature::factory()->forProject($project)->create(['code' => null]);
+    $criteria = AcceptanceCriteria::factory()->create([
+        'project_id' => $project->id,
+        'code'       => 'AC-001',
+        'name'       => 'Original Name',
+    ]);
+
+    $response = $this->put(route('acceptance-criteria.update', $criteria), [
+        'project_id' => $project->id,
+        'feature_id' => $feature->id,
+        'code'       => 'AC-002',
+        'name'       => 'Updated Name',
+    ]);
+
+    $response->assertRedirect(route('acceptance-criteria.show', $criteria));
+
+    $this->assertDatabaseHas('acceptance_criteria', [
+        'id'         => $criteria->id,
+        'feature_id' => $feature->id,
+        'code'       => 'AC-002',
+        'name'       => 'Updated Name',
+    ]);
 });

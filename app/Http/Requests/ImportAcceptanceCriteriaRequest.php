@@ -25,6 +25,7 @@ class ImportAcceptanceCriteriaRequest extends FormRequest
         return [
             'project_id'         => 'required|exists:projects,id',
             'file'               => 'required|file|mimes:feature,txt|max:10240', // 10MB max
+            'feature_codes'      => 'nullable|string|max:5000',
             'overwrite_existing' => 'boolean',
         ];
     }
@@ -43,7 +44,42 @@ class ImportAcceptanceCriteriaRequest extends FormRequest
             'file.file'           => 'The uploaded file is not valid.',
             'file.mimes'          => 'The file must be a .feature or .txt file.',
             'file.max'            => 'The file size must not exceed 10MB.',
+            'feature_codes.max'   => 'Feature codes text must not exceed 5000 characters.',
         ];
+    }
+
+    /**
+     * Get parsed feature codes mapping.
+     *
+     * @return array<string, string>
+     */
+    public function getFeatureCodesMapping(): array
+    {
+        $featureCodes = $this->input('feature_codes');
+        if (empty($featureCodes)) {
+            return [];
+        }
+
+        $mapping = [];
+        $lines = explode("\n", $featureCodes);
+
+        foreach ($lines as $line) {
+            $line = trim($line);
+            if (empty($line)) {
+                continue;
+            }
+
+            // Parse format: "Feature Name: CODE" or "Feature Name:CODE"
+            if (preg_match('/^(.+?)\s*:\s*(.+)$/', $line, $matches)) {
+                $featureName = trim($matches[1]);
+                $code = trim($matches[2]);
+                if (!empty($featureName) && !empty($code)) {
+                    $mapping[$featureName] = $code;
+                }
+            }
+        }
+
+        return $mapping;
     }
 
     /**

@@ -51,17 +51,41 @@ class Feature extends Model
     /**
      * Find or create a feature by name and project.
      */
-    public static function findOrCreateByName(string $name, int $projectId): self
+    public static function findOrCreateByName(string $name, int $projectId, ?string $code = null): self
     {
-        return static::firstOrCreate(
+        $feature = static::firstOrCreate(
             [
                 'project_id' => $projectId,
                 'name'       => $name,
             ],
             [
+                'code'      => null, // Don't set code on create to avoid constraint violations
                 'is_active' => true,
             ]
         );
+
+        // Update code if provided and feature doesn't have one
+        // Check if code is already used by another feature in the same project
+        if ($code && !$feature->code) {
+            $codeExists = static::where('project_id', $projectId)
+                ->where('code', $code)
+                ->where('id', '!=', $feature->id)
+                ->exists();
+
+            if (!$codeExists) {
+                try {
+                    $feature->update(['code' => $code]);
+                } catch (\Illuminate\Database\QueryException $e) {
+                    // Handle race condition where code was assigned between check and update
+                    // Feature will remain without code in this case
+                    if ($e->getCode() !== '23000') {
+                        throw $e;
+                    }
+                }
+            }
+        }
+
+        return $feature;
     }
 
     /**

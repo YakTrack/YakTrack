@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Feature;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -67,5 +68,30 @@ class UpdateAcceptanceCriteriaRequest extends FormRequest
             'name.required'       => 'The acceptance criteria name is required.',
             'name.max'            => 'The acceptance criteria name may not be greater than 255 characters.',
         ];
+    }
+
+    /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $code = $this->code ?: null;
+
+        // Prepend feature code if feature is selected and has a code
+        if ($this->feature_id && $code) {
+            $feature = Feature::find($this->feature_id);
+
+            if ($feature && $feature->code) {
+                // Check if code already starts with feature code to avoid duplication
+                $featureCodePrefix = $feature->code.':';
+                if (!str_starts_with($code, $featureCodePrefix)) {
+                    $code = $feature->code.':'.$code;
+                }
+            }
+        }
+
+        $this->merge([
+            'code' => $code,
+        ]);
     }
 }

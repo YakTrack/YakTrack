@@ -103,6 +103,27 @@
                         </div>
                     </div>
 
+                    <!-- Feature Codes Mapping -->
+                    <div class="mb-6">
+                        <label for="feature_codes" class="block text-sm font-medium text-gray-700 mb-2">
+                            Feature Codes (Optional)
+                        </label>
+                        <textarea
+                            id="feature_codes"
+                            v-model="form.feature_codes"
+                            rows="4"
+                            placeholder="User Authentication: FEAT-001&#10;Dashboard: FEAT-002&#10;Task Management: FEAT-003"
+                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            :class="{ 'border-red-500': errors.feature_codes }"
+                        ></textarea>
+                        <p class="mt-1 text-xs text-gray-500">
+                            Enter feature names and their codes, one per line, in the format: <code class="bg-gray-100 px-1 rounded">Feature Name: CODE</code>
+                        </p>
+                        <div v-if="errors.feature_codes" class="mt-1 text-sm text-red-600">
+                            {{ errors.feature_codes }}
+                        </div>
+                    </div>
+
                     <!-- Overwrite Option -->
                     <div class="mb-6">
                         <div class="flex items-center">
@@ -167,6 +188,7 @@ const props = defineProps({
 const form = reactive({
     project_id: '',
     file: null,
+    feature_codes: '',
     overwrite_existing: false,
 })
 
@@ -189,6 +211,9 @@ const submit = () => {
     const formData = new FormData()
     formData.append('project_id', form.project_id)
     formData.append('file', form.file)
+    if (form.feature_codes) {
+        formData.append('feature_codes', form.feature_codes)
+    }
     formData.append('overwrite_existing', form.overwrite_existing ? '1' : '0')
 
     router.post(route('acceptance-criteria.import.process'), formData, {

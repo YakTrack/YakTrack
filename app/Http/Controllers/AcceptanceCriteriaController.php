@@ -125,9 +125,10 @@ class AcceptanceCriteriaController extends Controller
         $content = file_get_contents($file->getPathname());
         $project = Project::findOrFail($request->project_id);
         $overwriteExisting = $request->boolean('overwrite_existing');
+        $featureCodes = $request->getFeatureCodesMapping();
 
         $parser = new GherkinParser();
-        $criteriaData = $parser->parse($content, $project);
+        $criteriaData = $parser->parse($content, $project, $featureCodes);
 
         $importedCount = 0;
         $skippedCount = 0;

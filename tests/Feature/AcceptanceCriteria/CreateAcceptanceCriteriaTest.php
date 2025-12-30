@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\AcceptanceCriteria;
+use App\Models\Feature;
 use App\Models\Project;
 
 it('can view the page to create acceptance criteria', function () {
@@ -118,5 +119,117 @@ it('can create acceptance criteria with same code for different projects', funct
         'project_id' => $project2->id,
         'code'       => 'AC-001',
         'name'       => 'Another criteria',
+    ]);
+});
+
+it('automatically prepends feature code to acceptance criteria code when feature has code', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+    $feature = Feature::factory()->withCode('FEAT-001')->forProject($project)->create();
+
+    $response = $this->post(route('acceptance-criteria.store'), [
+        'project_id' => $project->id,
+        'feature_id' => $feature->id,
+        'code'       => 'AC-001',
+        'name'       => 'User can login',
+    ]);
+
+    $response->assertRedirect(route('acceptance-criteria.index'));
+
+    $this->assertDatabaseHas('acceptance_criteria', [
+        'project_id' => $project->id,
+        'feature_id' => $feature->id,
+        'code'       => 'FEAT-001:AC-001',
+        'name'       => 'User can login',
+    ]);
+});
+
+it('does not prepend feature code when feature has no code', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+    $feature = Feature::factory()->forProject($project)->create(['code' => null]);
+
+    $response = $this->post(route('acceptance-criteria.store'), [
+        'project_id' => $project->id,
+        'feature_id' => $feature->id,
+        'code'       => 'AC-001',
+        'name'       => 'User can login',
+    ]);
+
+    $response->assertRedirect(route('acceptance-criteria.index'));
+
+    $this->assertDatabaseHas('acceptance_criteria', [
+        'project_id' => $project->id,
+        'feature_id' => $feature->id,
+        'code'       => 'AC-001',
+        'name'       => 'User can login',
+    ]);
+});
+
+it('does not duplicate feature code prefix if code already starts with feature code', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+    $feature = Feature::factory()->withCode('FEAT-001')->forProject($project)->create();
+
+    $response = $this->post(route('acceptance-criteria.store'), [
+        'project_id' => $project->id,
+        'feature_id' => $feature->id,
+        'code'       => 'FEAT-001:AC-001',
+        'name'       => 'User can login',
+    ]);
+
+    $response->assertRedirect(route('acceptance-criteria.index'));
+
+    $this->assertDatabaseHas('acceptance_criteria', [
+        'project_id' => $project->id,
+        'feature_id' => $feature->id,
+        'code'       => 'FEAT-001:AC-001',
+        'name'       => 'User can login',
+    ]);
+});
+
+it('does not prepend feature code when no feature is selected', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+
+    $response = $this->post(route('acceptance-criteria.store'), [
+        'project_id' => $project->id,
+        'code'       => 'AC-001',
+        'name'       => 'User can login',
+    ]);
+
+    $response->assertRedirect(route('acceptance-criteria.index'));
+
+    $this->assertDatabaseHas('acceptance_criteria', [
+        'project_id' => $project->id,
+        'feature_id' => null,
+        'code'       => 'AC-001',
+        'name'       => 'User can login',
+    ]);
+});
+
+it('does not prepend feature code when acceptance criteria code is empty', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+    $feature = Feature::factory()->withCode('FEAT-001')->forProject($project)->create();
+
+    $response = $this->post(route('acceptance-criteria.store'), [
+        'project_id' => $project->id,
+        'feature_id' => $feature->id,
+        'name'       => 'User can login',
+    ]);
+
+    $response->assertRedirect(route('acceptance-criteria.index'));
+
+    $this->assertDatabaseHas('acceptance_criteria', [
+        'project_id' => $project->id,
+        'feature_id' => $feature->id,
+        'code'       => null,
+        'name'       => 'User can login',
     ]);
 });
