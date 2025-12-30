@@ -531,9 +531,9 @@ GHERKIN;
     $file = UploadedFile::fake()->createWithContent('test.feature', $gherkinContent);
 
     $response = $this->post(route('acceptance-criteria.import.process'), [
-        'project_id'    => $project->id,
-        'file'          => $file,
-        'feature_codes' => 'User Authentication: FEAT-001',
+        'project_id'         => $project->id,
+        'file'               => $file,
+        'feature_codes'      => 'User Authentication: FEAT-001',
         'overwrite_existing' => false,
     ]);
 
@@ -585,9 +585,9 @@ GHERKIN;
     $file = UploadedFile::fake()->createWithContent('test.feature', $gherkinContent);
 
     $response = $this->post(route('acceptance-criteria.import.process'), [
-        'project_id'    => $project->id,
-        'file'          => $file,
-        'feature_codes' => "User Authentication: FEAT-001\nDashboard: FEAT-002",
+        'project_id'         => $project->id,
+        'file'               => $file,
+        'feature_codes'      => "User Authentication: FEAT-001\nDashboard: FEAT-002",
         'overwrite_existing' => false,
     ]);
 
@@ -637,8 +637,8 @@ GHERKIN;
     $file = UploadedFile::fake()->createWithContent('test.feature', $gherkinContent);
 
     $response = $this->post(route('acceptance-criteria.import.process'), [
-        'project_id'    => $project->id,
-        'file'          => $file,
+        'project_id'         => $project->id,
+        'file'               => $file,
         'overwrite_existing' => false,
     ]);
 
@@ -681,9 +681,9 @@ GHERKIN;
     $file = UploadedFile::fake()->createWithContent('test.feature', $gherkinContent);
 
     $response = $this->post(route('acceptance-criteria.import.process'), [
-        'project_id'    => $project->id,
-        'file'          => $file,
-        'feature_codes' => 'User Authentication: FEAT-001', // Same code as existing feature
+        'project_id'         => $project->id,
+        'file'               => $file,
+        'feature_codes'      => 'User Authentication: FEAT-001', // Same code as existing feature
         'overwrite_existing' => false,
     ]);
 

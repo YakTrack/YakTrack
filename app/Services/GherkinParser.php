@@ -13,11 +13,12 @@ class GherkinParser
      * @var array<string, string>
      */
     private array $featureCodes = [];
+
     /**
      * Parse a Gherkin file content and extract acceptance criteria.
      *
      * @param string                $content      The Gherkin file content
-     * @param Project                $project      The project to associate with the criteria
+     * @param Project               $project      The project to associate with the criteria
      * @param array<string, string> $featureCodes Mapping of feature names to codes
      *
      * @return array<int, array{code: string|null, name: string, description: string, feature_id: int|null}>
@@ -44,7 +45,7 @@ class GherkinParser
             if (str_starts_with($line, 'Feature:')) {
                 // Save current scenario before switching to new feature
                 $this->saveCurrentScenario($criteria, $currentScenario, $currentDescription, $scenarioCount, $currentFeature, $project);
-                
+
                 $currentFeature = trim(substr($line, 8));
                 $currentScenario = null;
                 $currentDescription = [];
