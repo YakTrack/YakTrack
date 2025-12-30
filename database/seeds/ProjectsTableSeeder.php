@@ -30,7 +30,7 @@ class ProjectsTableSeeder extends Seeder
             for ($i = 0; $i < 3; $i++) {
                 Project::factory()->create([
                     'client_id' => $client->id,
-                    'name' => $projectNames[$projectIndex],
+                    'name'      => $projectNames[$projectIndex],
                 ]);
                 $projectIndex++;
             }
