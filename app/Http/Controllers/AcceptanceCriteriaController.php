@@ -56,7 +56,7 @@ class AcceptanceCriteriaController extends Controller
         return Inertia::render('AcceptanceCriteria/Edit', [
             'projects' => Project::notArchived()->orderBy('name')->get(),
             'features' => Feature::where('is_active', true)->orderBy('name')->get(),
-            'prefill' => [
+            'prefill'  => [
                 'project_id' => $request->query('project_id'),
                 'feature_id' => $request->query('feature_id'),
             ],
