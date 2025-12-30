@@ -1,98 +1,95 @@
 <template>
     <layout>
-        <breadcrumbs :items="breadcrumbs" />
+        <template #breadcrumbs>
+            <breadcrumbs :breadcrumbs="[
+                {title: 'Home', url: route('home')},
+                {title: 'Features', url: route('features.index')},
+                {title: feature.name},
+            ]"></breadcrumbs>
+        </template>
+        <template #title>
+            <span v-if="feature.code" class="font-mono bg-gray-100 px-2 py-1 rounded text-sm mr-2">
+                {{ feature.code }}
+            </span>
+            {{ feature.name }}
+        </template>
+        <template #top-right-toolbar>
+            <button-link :href="route('features.edit', feature.id)" color="blue">
+                <i class="fa fa-edit text-blue-100 mr-2"></i>
+                Edit Feature
+            </button-link>
+        </template>
 
-        <!-- Header -->
-        <div class="card-header">
-            <div class="flex justify-between items-center">
-                <div>
-                    <div class="flex items-center gap-2">
-                        <h1 class="text-2xl font-bold text-gray-900">{{ feature.name }}</h1>
-                        <span v-if="feature.code" class="font-mono bg-gray-100 px-2 py-1 rounded text-sm">
-                            {{ feature.code }}
-                        </span>
-                    </div>
-                    <p class="text-gray-600 mt-1">
-                        <Link :href="route('project.show', feature.project)" v-if="feature.project">
-                            {{ feature.project.name }}
-                        </Link>
-                    </p>
-                </div>
-                <div class="flex gap-2">
-                    <Link
-                        :href="route('features.edit', feature.id)"
-                        class="px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150"
-                    >
-                        Edit Feature
-                    </Link>
-                    <Link
-                        :href="route('features.index')"
-                        class="px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150"
-                    >
-                        Back to Features
+        <div class="card">
+            <div class="card-body">
+                <div v-if="feature.project" class="mb-4">
+                    <i class="fa fa-briefcase text-2xl text-gray-300 mr-2"></i>
+                    <Link :href="route('project.show', feature.project)" class="text-2xl font-light">
+                        {{ feature.project.name }}
                     </Link>
                 </div>
+                <p v-if="feature.description" class="mt-4">
+                    {{ feature.description }}
+                </p>
             </div>
-        </div>
-
-        <!-- Description -->
-        <div class="card-body" v-if="feature.description">
-            <h3 class="text-lg font-medium text-gray-900 mb-2">Description</h3>
-            <p class="text-gray-600">{{ feature.description }}</p>
         </div>
 
         <!-- Acceptance Criteria -->
-        <div class="card-body">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-medium text-gray-900">Acceptance Criteria</h3>
-                <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
-                    {{ feature.acceptance_criteria.length }} criteria
-                </span>
+        <div class="card mt-4">
+            <div class="card-header">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-lg font-medium text-gray-dark">Acceptance Criteria</h2>
+                    <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
+                        {{ feature.acceptance_criteria.length }} criteria
+                    </span>
+                </div>
             </div>
-
-            <div v-if="feature.acceptance_criteria.length" class="space-y-4">
-                <div
-                    v-for="criteria in feature.acceptance_criteria"
-                    :key="criteria.id"
-                    class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50"
-                >
-                    <div class="flex justify-between items-start">
-                        <div class="flex-1">
-                            <div class="flex items-center gap-2 mb-2">
-                                <span v-if="criteria.code" class="font-mono bg-gray-100 px-2 py-1 rounded text-xs">
-                                    {{ criteria.code }}
-                                </span>
-                                <Link
-                                    :href="route('acceptance-criteria.show', criteria.id)"
-                                    class="text-lg font-medium text-gray-900 hover:text-blue-600"
-                                >
-                                    {{ criteria.name }}
-                                </Link>
+            <div class="card-body">
+                <div v-if="feature.acceptance_criteria.length" class="space-y-4">
+                    <div
+                        v-for="criteria in feature.acceptance_criteria"
+                        :key="criteria.id"
+                        class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50"
+                    >
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span v-if="criteria.code" class="font-mono bg-gray-100 px-2 py-1 rounded text-xs">
+                                        {{ criteria.code }}
+                                    </span>
+                                    <Link
+                                        :href="route('acceptance-criteria.show', criteria.id)"
+                                        class="text-lg font-medium text-gray-900 hover:text-blue-600"
+                                    >
+                                        {{ criteria.name }}
+                                    </Link>
+                                </div>
+                                <p v-if="criteria.description" class="text-gray-600 text-sm">
+                                    {{ criteria.description }}
+                                </p>
                             </div>
-                            <p v-if="criteria.description" class="text-gray-600 text-sm">
-                                {{ criteria.description }}
-                            </p>
-                        </div>
-                        <div class="flex gap-2 ml-4">
-                            <Link
-                                :href="route('acceptance-criteria.edit', criteria.id)"
-                                class="text-gray-400 hover:text-gray-600"
-                            >
-                                <i class="fa fa-edit text-xs"></i>
-                            </Link>
+                            <div class="flex gap-2 ml-4">
+                                <button-link
+                                    :href="route('acceptance-criteria.edit', criteria.id)"
+                                    class="text-gray-500 hover:text-gray-700"
+                                >
+                                    <i class="fa fa-edit"></i>
+                                </button-link>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div v-else class="text-center py-8 text-gray-500">
-                <i class="fa fa-clipboard-list text-4xl mb-4"></i>
-                <p>No acceptance criteria found for this feature.</p>
-                <Link
-                    :href="route('acceptance-criteria.create')"
-                    class="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                >
-                    Create Acceptance Criteria
-                </Link>
+                <div v-else class="text-center py-8 text-gray-500">
+                    <i class="fa fa-clipboard-list text-4xl mb-4"></i>
+                    <p class="text-lg mb-2">No acceptance criteria found for this feature.</p>
+                    <button-link
+                        :href="route('acceptance-criteria.create')"
+                        color="blue"
+                    >
+                        <i class="fa fa-plus mr-2"></i>
+                        Create Acceptance Criteria
+                    </button-link>
+                </div>
             </div>
         </div>
     </layout>
@@ -102,6 +99,7 @@
 import { Link } from '@inertiajs/vue3'
 import breadcrumbs from '@/Shared/Breadcrumbs.vue'
 import layout from '@/Shared/Layout.vue'
+import buttonLink from '@/Shared/ButtonLink.vue'
 
 export default {
     props: [
@@ -111,14 +109,7 @@ export default {
         Link,
         breadcrumbs: breadcrumbs,
         layout: layout,
-    },
-    computed: {
-        breadcrumbs() {
-            return [
-                { label: 'Features', href: route('features.index') },
-                { label: this.feature.name, href: route('features.show', this.feature.id) },
-            ]
-        },
+        buttonLink: buttonLink,
     },
 }
 </script>
