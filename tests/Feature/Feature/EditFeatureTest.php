@@ -141,3 +141,86 @@ it('can cancel editing and return to show page', function () {
         ->has('feature')
     );
 });
+
+it('can update a feature with a code', function () {
+    $this->actingAsUser();
+
+    $feature = Feature::factory()->create([
+        'code' => null,
+    ]);
+
+    $response = $this->put(route('features.update', $feature), [
+        'project_id' => $feature->project_id,
+        'name'       => $feature->name,
+        'code'       => 'FEAT-001',
+    ]);
+
+    $response->assertRedirect(route('features.show', $feature));
+
+    $feature->refresh();
+    expect($feature->code)->toBe('FEAT-001');
+});
+
+it('can update a feature to remove code', function () {
+    $this->actingAsUser();
+
+    $feature = Feature::factory()->create([
+        'code' => 'FEAT-001',
+    ]);
+
+    $response = $this->put(route('features.update', $feature), [
+        'project_id' => $feature->project_id,
+        'name'       => $feature->name,
+        'code'       => '',
+    ]);
+
+    $response->assertRedirect(route('features.show', $feature));
+
+    $feature->refresh();
+    expect($feature->code)->toBeNull();
+});
+
+it('cannot update with duplicate code for same project', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+    $feature1 = Feature::factory()->create([
+        'project_id' => $project->id,
+        'code'       => 'FEAT-001',
+    ]);
+    $feature2 = Feature::factory()->create([
+        'project_id' => $project->id,
+        'code'       => 'FEAT-002',
+    ]);
+
+    $response = $this->put(route('features.update', $feature2), [
+        'project_id' => $project->id,
+        'name'       => $feature2->name,
+        'code'       => 'FEAT-001',
+    ]);
+
+    $response->assertSessionHasErrors(['code']);
+});
+
+it('can update with same code for different projects', function () {
+    $this->actingAsUser();
+
+    $project1 = Project::factory()->create();
+    $project2 = Project::factory()->create();
+    $feature = Feature::factory()->create([
+        'project_id' => $project1->id,
+        'code'       => 'FEAT-001',
+    ]);
+
+    $response = $this->put(route('features.update', $feature), [
+        'project_id' => $project2->id,
+        'name'       => $feature->name,
+        'code'       => 'FEAT-001',
+    ]);
+
+    $response->assertRedirect(route('features.show', $feature));
+
+    $feature->refresh();
+    expect($feature->project_id)->toBe($project2->id);
+    expect($feature->code)->toBe('FEAT-001');
+});

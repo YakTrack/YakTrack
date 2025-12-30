@@ -57,6 +57,7 @@
             <table class="table card-body">
                 <thead>
                     <tr>
+                        <th>Code</th>
                         <th>Name</th>
                         <th>Project</th>
                         <th>Description</th>
@@ -66,6 +67,12 @@
                 </thead>
                 <tbody>
                     <tr v-for="feature in features.data" :key="feature.id" class="item-container">
+                        <td>
+                            <span v-if="feature.code" class="font-mono bg-gray-100 px-2 py-1 rounded text-xs">
+                                {{ feature.code }}
+                            </span>
+                            <span v-else class="text-gray-400 italic">—</span>
+                        </td>
                         <td>
                             <Link :href="route('features.show', feature.id)">
                                 {{ feature.name }}

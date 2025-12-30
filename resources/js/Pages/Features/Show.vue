@@ -6,7 +6,12 @@
         <div class="card-header">
             <div class="flex justify-between items-center">
                 <div>
-                    <h1 class="text-2xl font-bold text-gray-900">{{ feature.name }}</h1>
+                    <div class="flex items-center gap-2">
+                        <h1 class="text-2xl font-bold text-gray-900">{{ feature.name }}</h1>
+                        <span v-if="feature.code" class="font-mono bg-gray-100 px-2 py-1 rounded text-sm">
+                            {{ feature.code }}
+                        </span>
+                    </div>
                     <p class="text-gray-600 mt-1">
                         <Link :href="route('project.show', feature.project)" v-if="feature.project">
                             {{ feature.project.name }}

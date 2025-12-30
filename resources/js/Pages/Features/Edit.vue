@@ -30,8 +30,19 @@
                     />
                 </div>
 
+                <!-- Code -->
+                <div>
+                    <form-field
+                        v-model="form.code"
+                        type="text"
+                        label="Code"
+                        placeholder="Enter feature code (optional)"
+                        :error="errors.code"
+                    />
+                </div>
+
                 <!-- Feature Name -->
-                <div class="md:col-span-2">
+                <div>
                     <form-field
                         v-model="form.name"
                         type="text"
@@ -82,6 +93,7 @@ export default {
     setup(props) {
         const form = reactive({
             project_id: props.feature?.project_id || '',
+            code: props.feature?.code || '',
             name: props.feature?.name || '',
             description: props.feature?.description || '',
         })

@@ -24,6 +24,14 @@ class StoreFeatureRequest extends FormRequest
     {
         return [
             'project_id' => ['required', 'integer', 'exists:projects,id'],
+            'code'       => [
+                'nullable',
+                'string',
+                'max:255',
+                Rule::unique('features')->where(function ($query) {
+                    return $query->where('project_id', $this->project_id);
+                }),
+            ],
             'name'       => [
                 'required',
                 'string',
@@ -45,6 +53,8 @@ class StoreFeatureRequest extends FormRequest
         return [
             'project_id.required' => 'Please select a project.',
             'project_id.exists'   => 'The selected project does not exist.',
+            'code.unique'         => 'A feature with this code already exists for the selected project.',
+            'code.max'            => 'Feature code must not exceed 255 characters.',
             'name.required'       => 'Feature name is required.',
             'name.unique'         => 'A feature with this name already exists for the selected project.',
             'name.max'            => 'Feature name must not exceed 255 characters.',
@@ -57,6 +67,7 @@ class StoreFeatureRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
+            'code'        => $this->code ?: null,
             'description' => $this->description ?: null,
         ]);
     }

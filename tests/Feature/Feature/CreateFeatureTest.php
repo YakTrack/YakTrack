@@ -111,3 +111,90 @@ it('requires authentication to create a feature', function () {
 
     $response->assertRedirect(route('login'));
 });
+
+it('can create a feature with a code', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+
+    $response = $this->post(route('features.store'), [
+        'project_id'  => $project->id,
+        'name'        => 'User Authentication',
+        'code'        => 'FEAT-001',
+        'description' => 'Features related to user login and authentication',
+    ]);
+
+    $response->assertRedirect(route('features.show', Feature::latest()->first()));
+
+    $this->assertDatabaseHas('features', [
+        'project_id'  => $project->id,
+        'name'        => 'User Authentication',
+        'code'        => 'FEAT-001',
+        'description' => 'Features related to user login and authentication',
+        'is_active'   => true,
+    ]);
+});
+
+it('can create a feature without a code', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+
+    $response = $this->post(route('features.store'), [
+        'project_id' => $project->id,
+        'name'       => 'User Authentication',
+    ]);
+
+    $response->assertRedirect(route('features.show', Feature::latest()->first()));
+
+    $this->assertDatabaseHas('features', [
+        'project_id' => $project->id,
+        'name'       => 'User Authentication',
+        'code'       => null,
+        'is_active'  => true,
+    ]);
+});
+
+it('cannot create a feature with duplicate code for same project', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+    Feature::factory()->create([
+        'project_id' => $project->id,
+        'code'       => 'FEAT-001',
+    ]);
+
+    $response = $this->post(route('features.store'), [
+        'project_id' => $project->id,
+        'name'       => 'User Authentication',
+        'code'       => 'FEAT-001',
+    ]);
+
+    $response->assertSessionHasErrors(['code']);
+});
+
+it('can create a feature with same code for different projects', function () {
+    $this->actingAsUser();
+
+    $project1 = Project::factory()->create();
+    $project2 = Project::factory()->create();
+
+    Feature::factory()->create([
+        'project_id' => $project1->id,
+        'code'       => 'FEAT-001',
+    ]);
+
+    $response = $this->post(route('features.store'), [
+        'project_id' => $project2->id,
+        'name'       => 'User Authentication',
+        'code'       => 'FEAT-001',
+    ]);
+
+    $response->assertRedirect();
+
+    $this->assertDatabaseHas('features', [
+        'project_id' => $project2->id,
+        'name'       => 'User Authentication',
+        'code'       => 'FEAT-001',
+    ]);
+});

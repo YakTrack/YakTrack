@@ -27,6 +27,7 @@ class FeatureFactory extends Factory
     {
         return [
             'project_id'  => Project::factory(),
+            'code'        => null,
             'name'        => $this->faker->words(2, true),
             'description' => $this->faker->optional()->paragraph(),
             'is_active'   => true,
@@ -50,6 +51,16 @@ class FeatureFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'project_id' => $project->id,
+        ]);
+    }
+
+    /**
+     * Indicate that the feature should have a code.
+     */
+    public function withCode(?string $code = null): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'code' => $code ?? 'FEAT-'.str_pad((string) $this->faker->numberBetween(1, 999), 3, '0', STR_PAD_LEFT),
         ]);
     }
 }

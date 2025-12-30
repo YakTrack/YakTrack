@@ -14,6 +14,7 @@ class Feature extends Model
 
     protected $fillable = [
         'project_id',
+        'code',
         'name',
         'description',
         'is_active',
