@@ -39,9 +39,18 @@
             <div class="card-header">
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-medium text-gray-dark">Acceptance Criteria</h2>
-                    <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
-                        {{ feature.acceptance_criteria.length }} criteria
-                    </span>
+                    <div class="flex items-center gap-3">
+                        <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
+                            {{ feature.acceptance_criteria.length }} criteria
+                        </span>
+                        <button-link
+                            :href="createAcceptanceCriteriaUrl"
+                            color="blue"
+                        >
+                            <i class="fa fa-plus mr-2"></i>
+                            Create Acceptance Criteria
+                        </button-link>
+                    </div>
                 </div>
             </div>
             <div class="card-body">
