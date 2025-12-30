@@ -15,6 +15,27 @@ it('can view the page to create acceptance criteria', function () {
     $response->assertSee($project->name);
 });
 
+it('prefills project and feature when query parameters are provided', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+    $feature = Feature::factory()->forProject($project)->create();
+
+    $response = $this->get(route('acceptance-criteria.create', [
+        'project_id' => $project->id,
+        'feature_id' => $feature->id,
+    ]));
+
+    $response->assertSuccessful();
+    $response->assertInertia(
+        fn ($page) => $page
+            ->component('AcceptanceCriteria/Edit')
+            ->has('prefill')
+            ->where('prefill.project_id', (string) $project->id)
+            ->where('prefill.feature_id', (string) $feature->id)
+    );
+});
+
 it('can submit a post request to create acceptance criteria', function () {
     $this->withoutExceptionHandling();
 

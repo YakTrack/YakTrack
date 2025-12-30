@@ -93,6 +93,7 @@ export default {
         'projects',
         'features',
         'errors',
+        'prefill',
     ],
     components: {
         Link,
@@ -110,8 +111,8 @@ export default {
                 name: this.criteria.name || '',
                 description: this.criteria.description || '',
             } : {
-                project_id: '',
-                feature_id: '',
+                project_id: this.prefill?.project_id || '',
+                feature_id: this.prefill?.feature_id || '',
                 code: '',
                 name: '',
                 description: '',

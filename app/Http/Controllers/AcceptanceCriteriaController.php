@@ -51,11 +51,15 @@ class AcceptanceCriteriaController extends Controller
         ]);
     }
 
-    public function create(): Response
+    public function create(Request $request): Response
     {
         return Inertia::render('AcceptanceCriteria/Edit', [
             'projects' => Project::notArchived()->orderBy('name')->get(),
             'features' => Feature::where('is_active', true)->orderBy('name')->get(),
+            'prefill' => [
+                'project_id' => $request->query('project_id'),
+                'feature_id' => $request->query('feature_id'),
+            ],
         ]);
     }
 

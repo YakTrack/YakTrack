@@ -83,7 +83,7 @@
                     <i class="fa fa-clipboard-list text-4xl mb-4"></i>
                     <p class="text-lg mb-2">No acceptance criteria found for this feature.</p>
                     <button-link
-                        :href="route('acceptance-criteria.create')"
+                        :href="createAcceptanceCriteriaUrl"
                         color="blue"
                     >
                         <i class="fa fa-plus mr-2"></i>
@@ -110,6 +110,22 @@ export default {
         breadcrumbs: breadcrumbs,
         layout: layout,
         buttonLink: buttonLink,
+    },
+    computed: {
+        createAcceptanceCriteriaUrl() {
+            const baseUrl = route('acceptance-criteria.create');
+            const params = new URLSearchParams();
+            
+            if (this.feature.project_id) {
+                params.append('project_id', this.feature.project_id);
+            }
+            if (this.feature.id) {
+                params.append('feature_id', this.feature.id);
+            }
+            
+            const queryString = params.toString();
+            return queryString ? `${baseUrl}?${queryString}` : baseUrl;
+        },
     },
 }
 </script>
