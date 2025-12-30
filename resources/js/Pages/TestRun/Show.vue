@@ -142,7 +142,7 @@
             </tr>
           </thead>
           <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-            <tr v-for="result in testRun.test_results" :key="result.id">
+            <tr v-for="result in testRun.test_results" :key="result.id" :class="getStatusRowClass(result.status)">
               <td class="px-6 py-4">
                 <div>
                   <div class="flex items-center">
@@ -530,6 +530,17 @@ const formatDate = (date) => {
     hour: '2-digit',
     minute: '2-digit',
   })
+}
+
+const getStatusRowClass = (status) => {
+  const classes = {
+    pending: 'bg-blue-50 dark:bg-blue-900/20',
+    passed: 'bg-green-50 dark:bg-green-900/20',
+    failed: 'bg-red-50 dark:bg-red-900/20',
+    skipped: 'bg-yellow-50 dark:bg-yellow-900/20',
+    blocked: 'bg-gray-50 dark:bg-gray-700/50',
+  }
+  return classes[status] || ''
 }
 
 const updateStatus = (result, status) => {
