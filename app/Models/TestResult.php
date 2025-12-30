@@ -77,6 +77,11 @@ class TestResult extends Model
         return $this->status === TestResultStatus::Blocked;
     }
 
+    public function isPending(): bool
+    {
+        return $this->status === TestResultStatus::Pending;
+    }
+
     public function getEvidenceCountAttribute(): int
     {
         return $this->evidence()->count();

@@ -70,7 +70,7 @@ class TestRunController extends Controller
                 'test_run_id'                    => $testRun->id,
                 'acceptance_criteria_id'         => $criteriaId,
                 'acceptance_criteria_version_id' => $latestVersion?->id,
-                'status'                         => 'skipped', // Default status
+                'status'                         => 'pending', // Default status
             ]);
         }
 
@@ -139,7 +139,7 @@ class TestRunController extends Controller
             'test_run_id'                    => $testRun->id,
             'acceptance_criteria_id'         => $validated['acceptance_criteria_id'],
             'acceptance_criteria_version_id' => $latestVersion?->id,
-            'status'                         => $validated['status'] ?? 'skipped',
+            'status'                         => $validated['status'] ?? 'pending',
             'notes'                          => $validated['notes'] ?? null,
         ]);
 

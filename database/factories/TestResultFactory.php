@@ -70,6 +70,16 @@ class TestResultFactory extends Factory
     }
 
     /**
+     * Indicate that the test result is pending.
+     */
+    public function pending(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'status' => TestResultStatus::Pending,
+        ]);
+    }
+
+    /**
      * Indicate that the test result has no notes.
      */
     public function withoutNotes(): static

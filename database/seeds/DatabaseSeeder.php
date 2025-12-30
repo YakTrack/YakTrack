@@ -2,6 +2,7 @@
 
 use Database\Seeders\ClientUserSeeder;
 use Database\Seeders\FeaturesTableSeeder;
+use Database\Seeds\AcceptanceCriteriaSeeder;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -23,5 +24,6 @@ class DatabaseSeeder extends Seeder
         $this->call(InvoicesTableSeeder::class);
         $this->call(TargetsTableSeeder::class);
         $this->call(ClientUserSeeder::class);
+        $this->call(AcceptanceCriteriaSeeder::class);
     }
 }

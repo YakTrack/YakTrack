@@ -267,6 +267,37 @@ it('can add acceptance criteria to existing test run', function () {
     ]);
 });
 
+it('defaults to pending status when adding acceptance criteria without specifying status', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+    $user = User::factory()->create();
+    $testRun = TestRun::factory()->create([
+        'project_id'          => $project->id,
+        'name'                => 'Test Run',
+        'executed_by_user_id' => $user->id,
+    ]);
+
+    $criteria = AcceptanceCriteria::factory()->create([
+        'project_id' => $project->id,
+        'name'       => 'Criteria 1',
+    ]);
+
+    // Add criteria without specifying status
+    $response = $this->post(route('test-run.test-result.store', $testRun), [
+        'acceptance_criteria_id' => $criteria->id,
+    ]);
+
+    $response->assertRedirect();
+    $response->assertSessionHas('success');
+
+    $this->assertDatabaseHas('test_results', [
+        'test_run_id'            => $testRun->id,
+        'acceptance_criteria_id' => $criteria->id,
+        'status'                 => TestResultStatus::Pending,
+    ]);
+});
+
 it('prevents adding duplicate acceptance criteria to test run', function () {
     $this->actingAsUser();
 

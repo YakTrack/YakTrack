@@ -46,12 +46,12 @@ it('can submit a post request to create test run', function () {
     $this->assertDatabaseHas('test_results', [
         'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria1->id,
-        'status'                 => TestResultStatus::Skipped,
+        'status'                 => TestResultStatus::Pending,
     ]);
     $this->assertDatabaseHas('test_results', [
         'test_run_id'            => $testRun->id,
         'acceptance_criteria_id' => $criteria2->id,
-        'status'                 => TestResultStatus::Skipped,
+        'status'                 => TestResultStatus::Pending,
     ]);
 });
 

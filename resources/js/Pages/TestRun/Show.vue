@@ -32,17 +32,31 @@
         </div>
 
         <!-- Summary Statistics -->
-        <div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="mb-6 grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <div class="w-8 h-8 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                                <span class="text-gray-600 dark:text-gray-300 font-semibold text-sm">{{ summary.total }}</span>
+                            </div>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Tests</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="card">
                 <div class="card-body">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
                             <div class="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                                <span class="text-blue-600 dark:text-blue-400 font-semibold text-sm">{{ summary.total }}</span>
+                                <span class="text-blue-600 dark:text-blue-400 font-semibold text-sm">{{ summary.pending }}</span>
                             </div>
                         </div>
                         <div class="ml-3">
-                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Tests</p>
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Pending</p>
                         </div>
                     </div>
                 </div>
@@ -150,6 +164,7 @@
                   @change="updateStatus(result, $event.target.value)"
                   class="text-sm border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 rounded-md"
                 >
+                  <option value="pending">Pending</option>
                   <option value="passed">Passed</option>
                   <option value="failed">Failed</option>
                   <option value="skipped">Skipped</option>
@@ -429,9 +444,10 @@
                 v-model="criteriaForm.status"
                 class="w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:border-indigo-500 focus:ring-indigo-500 rounded-md"
               >
-                <option value="skipped">Skipped</option>
+                <option value="pending">Pending</option>
                 <option value="passed">Passed</option>
                 <option value="failed">Failed</option>
+                <option value="skipped">Skipped</option>
                 <option value="blocked">Blocked</option>
               </select>
             </div>
@@ -502,7 +518,7 @@ const evidenceForm = reactive({
 
 const criteriaForm = reactive({
   acceptance_criteria_id: '',
-  status: 'skipped',
+  status: 'pending',
   notes: '',
 })
 
@@ -612,14 +628,14 @@ const handleImageError = (event) => {
 const openAddCriteriaModal = () => {
   showAddCriteriaModal.value = true
   criteriaForm.acceptance_criteria_id = ''
-  criteriaForm.status = 'skipped'
+  criteriaForm.status = 'pending'
   criteriaForm.notes = ''
 }
 
 const closeAddCriteriaModal = () => {
   showAddCriteriaModal.value = false
   criteriaForm.acceptance_criteria_id = ''
-  criteriaForm.status = 'skipped'
+  criteriaForm.status = 'pending'
   criteriaForm.notes = ''
 }
 

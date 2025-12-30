@@ -22,8 +22,6 @@ class AcceptanceCriteriaSeeder extends Seeder
         $project = Project::first();
 
         if (!$user || !$project) {
-            $this->command->info('No user or project found. Please run UserSeeder and ProjectSeeder first.');
-
             return;
         }
 
@@ -52,6 +50,30 @@ class AcceptanceCriteriaSeeder extends Seeder
             'is_active'   => true,
         ]);
 
+        $criteria4 = AcceptanceCriteria::create([
+            'project_id'  => $project->id,
+            'code'        => 'AC-004',
+            'name'        => 'Data Export',
+            'description' => 'Users should be able to export project data in CSV and PDF formats.',
+            'is_active'   => true,
+        ]);
+
+        $criteria5 = AcceptanceCriteria::create([
+            'project_id'  => $project->id,
+            'code'        => 'AC-005',
+            'name'        => 'Search Functionality',
+            'description' => 'Users should be able to search across projects, tasks, and users with filters.',
+            'is_active'   => true,
+        ]);
+
+        $criteria6 = AcceptanceCriteria::create([
+            'project_id'  => $project->id,
+            'code'        => 'AC-006',
+            'name'        => 'Notification System',
+            'description' => 'Users should receive notifications for important events and updates.',
+            'is_active'   => true,
+        ]);
+
         // Create initial versions for each criteria
         $criteria1->createVersion([
             'code'        => 'AC-001',
@@ -69,6 +91,24 @@ class AcceptanceCriteriaSeeder extends Seeder
             'code'        => 'AC-003',
             'name'        => 'Task Management',
             'description' => 'Users should be able to create, edit, and delete tasks within projects.',
+        ], $user->id);
+
+        $criteria4->createVersion([
+            'code'        => 'AC-004',
+            'name'        => 'Data Export',
+            'description' => 'Users should be able to export project data in CSV and PDF formats.',
+        ], $user->id);
+
+        $criteria5->createVersion([
+            'code'        => 'AC-005',
+            'name'        => 'Search Functionality',
+            'description' => 'Users should be able to search across projects, tasks, and users with filters.',
+        ], $user->id);
+
+        $criteria6->createVersion([
+            'code'        => 'AC-006',
+            'name'        => 'Notification System',
+            'description' => 'Users should receive notifications for important events and updates.',
         ], $user->id);
 
         // Link criteria to existing tasks if any
@@ -89,7 +129,7 @@ class AcceptanceCriteriaSeeder extends Seeder
             'executed_by_user_id' => $user->id,
         ]);
 
-        // Create test results
+        // Create test results for first test run
         TestResult::create([
             'test_run_id'                    => $testRun->id,
             'acceptance_criteria_id'         => $criteria1->id,
@@ -110,11 +150,42 @@ class AcceptanceCriteriaSeeder extends Seeder
             'test_run_id'                    => $testRun->id,
             'acceptance_criteria_id'         => $criteria3->id,
             'acceptance_criteria_version_id' => $criteria3->getCurrentVersion()->id,
-            'status'                         => TestResultStatus::Skipped,
-            'notes'                          => 'Task management features not yet implemented.',
+            'status'                         => TestResultStatus::Pending,
+            'notes'                          => 'Task management features in progress.',
         ]);
 
-        $this->command->info('Acceptance criteria system seeded successfully!');
-        $this->command->info('Created 3 acceptance criteria, 1 test run, and 3 test results.');
+        // Create a second test run with pending statuses (demonstrating the new default)
+        $testRun2 = TestRun::create([
+            'project_id'          => $project->id,
+            'name'                => 'Sprint 2 Testing',
+            'description'         => 'Testing new features - many tests pending',
+            'executed_at'         => now()->subDays(1),
+            'executed_by_user_id' => $user->id,
+        ]);
+
+        // Create test results with various statuses, including pending (the new default)
+        TestResult::create([
+            'test_run_id'                    => $testRun2->id,
+            'acceptance_criteria_id'         => $criteria4->id,
+            'acceptance_criteria_version_id' => $criteria4->getCurrentVersion()->id,
+            'status'                         => TestResultStatus::Pending,
+            'notes'                          => null,
+        ]);
+
+        TestResult::create([
+            'test_run_id'                    => $testRun2->id,
+            'acceptance_criteria_id'         => $criteria5->id,
+            'acceptance_criteria_version_id' => $criteria5->getCurrentVersion()->id,
+            'status'                         => TestResultStatus::Pending,
+            'notes'                          => null,
+        ]);
+
+        TestResult::create([
+            'test_run_id'                    => $testRun2->id,
+            'acceptance_criteria_id'         => $criteria6->id,
+            'acceptance_criteria_version_id' => $criteria6->getCurrentVersion()->id,
+            'status'                         => TestResultStatus::Blocked,
+            'notes'                          => 'Waiting for API integration to be completed.',
+        ]);
     }
 }
