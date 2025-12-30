@@ -159,17 +159,29 @@ it('only shows active acceptance criteria', function () {
     );
 });
 
-it('orders acceptance criteria by name', function () {
+it('orders acceptance criteria by code then by name', function () {
     $this->actingAsUser();
 
     $feature = Feature::factory()->create();
     AcceptanceCriteria::factory()->create([
         'feature_id' => $feature->id,
+        'code'       => 'AC-002',
         'name'       => 'Z Criteria',
     ]);
     AcceptanceCriteria::factory()->create([
         'feature_id' => $feature->id,
+        'code'       => 'AC-001',
         'name'       => 'A Criteria',
+    ]);
+    AcceptanceCriteria::factory()->create([
+        'feature_id' => $feature->id,
+        'code'       => null,
+        'name'       => 'B Criteria',
+    ]);
+    AcceptanceCriteria::factory()->create([
+        'feature_id' => $feature->id,
+        'code'       => null,
+        'name'       => 'A Criteria No Code',
     ]);
 
     $response = $this->get(route('features.show', $feature));
@@ -178,8 +190,12 @@ it('orders acceptance criteria by name', function () {
     $response->assertInertia(
         fn ($page) => $page
         ->component('Features/Show')
-        ->has('feature.acceptance_criteria', 2)
+        ->has('feature.acceptance_criteria', 4)
+        ->where('feature.acceptance_criteria.0.code', 'AC-001')
         ->where('feature.acceptance_criteria.0.name', 'A Criteria')
+        ->where('feature.acceptance_criteria.1.code', 'AC-002')
         ->where('feature.acceptance_criteria.1.name', 'Z Criteria')
+        ->where('feature.acceptance_criteria.2.name', 'A Criteria No Code')
+        ->where('feature.acceptance_criteria.3.name', 'B Criteria')
     );
 });

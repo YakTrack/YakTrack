@@ -56,7 +56,10 @@ class FeatureController extends Controller
     public function show(Feature $feature): Response
     {
         $feature->load(['project', 'acceptanceCriteria' => function ($query) {
-            $query->where('is_active', true)->orderBy('name');
+            $query->where('is_active', true)
+                ->orderByRaw('code IS NULL ASC')
+                ->orderBy('code', 'asc')
+                ->orderBy('name', 'asc');
         }]);
 
         return Inertia::render('Features/Show', [
