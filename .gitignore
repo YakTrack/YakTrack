@@ -18,3 +18,4 @@ public/build/assets
 public/build
 public/hot
 storage/framework/testing/disks/public/test-evidence/68f49cdb0464a.jpg
+.claude/settings.local.json
