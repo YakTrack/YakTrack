@@ -53,6 +53,14 @@ class Task extends Model
     }
 
     /**
+     * @return HasMany<Task, $this>
+     */
+    public function children(): HasMany
+    {
+        return $this->hasMany(self::class, 'parent_id');
+    }
+
+    /**
      * @return BelongsTo<TaskStatus, $this>
      */
     public function taskStatus(): BelongsTo

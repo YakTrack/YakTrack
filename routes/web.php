@@ -32,6 +32,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('client', 'ClientController');
     Route::resource('project', 'ProjectController');
+    Route::get('project/{project}/kanban', 'ProjectController@kanban')->name('project.kanban');
     Route::patch('project/{project}/archive', 'ProjectController@archive')->name('project.archive');
     Route::patch('project/{project}/unarchive', 'ProjectController@unarchive')->name('project.unarchive');
     Route::get('project-archived', 'ProjectController@archived')->name('project.archived');
@@ -39,6 +40,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('sprint.invoice', 'Sprint\InvoiceController');
     Route::resource('target', 'TargetController');
     Route::resource('task', 'TaskController');
+    Route::patch('task/{task}/status', 'TaskController@updateStatus')->name('task.updateStatus');
     Route::resource('task-status', 'TaskStatusController');
     Route::resource('session-category', 'SessionCategoryController');
     Route::resource('third-party-application', 'ThirdPartyApplicationController');

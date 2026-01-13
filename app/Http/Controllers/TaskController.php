@@ -131,6 +131,31 @@ class TaskController extends Controller
     }
 
     /**
+     * Update the task status (for kanban drag-and-drop).
+     */
+    public function updateStatus(Request $request, Task $task): \Illuminate\Http\JsonResponse
+    {
+        $request->validate([
+            'status_id' => [
+                'required',
+                'exists:task_statuses,id',
+                Rule::exists('task_statuses', 'id')->where(function ($query) use ($task) {
+                    $query->where('project_id', $task->project_id);
+                }),
+            ],
+        ]);
+
+        $task->update([
+            'status_id' => $request->input('status_id'),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'task'    => $task->fresh(['taskStatus']),
+        ]);
+    }
+
+    /**
      * Delete a task from the database.
      */
     public function destroy(Task $task): RedirectResponse

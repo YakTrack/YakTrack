@@ -86,6 +86,33 @@ class ProjectController extends Controller
     }
 
     /**
+     * Show the kanban board for a project.
+     */
+    public function kanban(Project $project): Response
+    {
+        $tasks = $project->tasks()
+            ->whereNull('parent_id')
+            ->with('taskStatus')
+            ->withCount('children')
+            ->orderBy('created_at')
+            ->get();
+
+        return Inertia::render('Project/Kanban', [
+            'project' => $project->load([
+                'client',
+                'taskStatuses' => function ($query) use ($project) {
+                    $query->withCount([
+                        'tasks' => function ($q) {
+                            $q->whereNull('parent_id');
+                        },
+                    ])->orderBy('sort_order');
+                },
+            ]),
+            'tasks' => $tasks,
+        ]);
+    }
+
+    /**
      * Show the form for editing the specified project.
      *
      * @param Project $project
