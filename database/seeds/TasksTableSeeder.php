@@ -3,7 +3,6 @@
 use App\Models\Project;
 use App\Models\Sprint;
 use App\Models\Task;
-use App\Models\TaskStatus;
 use Illuminate\Database\Seeder;
 
 class TasksTableSeeder extends Seeder

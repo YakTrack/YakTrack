@@ -100,7 +100,7 @@ class ProjectController extends Controller
         return Inertia::render('Project/Kanban', [
             'project' => $project->load([
                 'client',
-                'taskStatuses' => function ($query) use ($project) {
+                'taskStatuses' => function ($query) {
                     $query->withCount([
                         'tasks' => function ($q) {
                             $q->whereNull('parent_id');
