@@ -120,7 +120,7 @@
 
 <script>
 import draggable from 'vuedraggable';
-import taskCard from '@/Components/TaskCard.vue';
+import taskCard from '@/components/TaskCard.vue';
 import breadcrumbs from '@/Shared/Breadcrumbs.vue';
 import layout from '@/Shared/Layout.vue';
 
