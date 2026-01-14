@@ -23,6 +23,7 @@ class TaskStatusFactory extends Factory
             'sort_order'   => $this->faker->numberBetween(0, 10),
             'is_default'   => false,
             'is_completed' => false,
+            'is_closed'    => false,
             'project_id'   => Project::factory(),
         ];
     }
@@ -44,6 +45,16 @@ class TaskStatusFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'is_completed' => true,
+        ]);
+    }
+
+    /**
+     * Indicate that the task status represents closed tasks.
+     */
+    public function closed(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'is_closed' => true,
         ]);
     }
 }

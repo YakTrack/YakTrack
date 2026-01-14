@@ -18,12 +18,14 @@ class TaskStatus extends Model
         'sort_order',
         'is_default',
         'is_completed',
+        'is_closed',
         'project_id',
     ];
 
     protected $casts = [
         'is_default'   => 'boolean',
         'is_completed' => 'boolean',
+        'is_closed'    => 'boolean',
     ];
 
     /**

@@ -110,7 +110,7 @@ it('can create a session with a post request with the minimum required fields', 
     expect($previouslyRunningSession->fresh()->isRunning)->toBeFalse();
 });
 
-it('excludes completed tasks from the task dropdown when creating a session', function () {
+it('includes completed tasks in the task dropdown when creating a session', function () {
     $project = Project::factory()->create();
 
     $completedStatus = TaskStatus::factory()->completed()->create(['project_id' => $project->id]);
@@ -142,14 +142,49 @@ it('excludes completed tasks from the task dropdown when creating a session', fu
 
         $taskIds = collect($tasks)->pluck('id')->toArray();
 
-        // Completed task should NOT be in the list
-        expect($taskIds)->not->toContain($completedTask->id);
+        // Completed task SHOULD be in the list (only closed tasks are excluded)
+        expect($taskIds)->toContain($completedTask->id);
 
         // Incomplete task should be in the list
         expect($taskIds)->toContain($incompleteTask->id);
 
         // Task without status should be in the list
         expect($taskIds)->toContain($taskWithoutStatus->id);
+    });
+});
+
+it('excludes closed tasks from the task dropdown when creating a session', function () {
+    $project = Project::factory()->create();
+
+    $closedStatus = TaskStatus::factory()->closed()->create(['project_id' => $project->id]);
+    $openStatus = TaskStatus::factory()->create(['project_id' => $project->id]);
+
+    $closedTask = Task::factory()->create([
+        'project_id' => $project->id,
+        'status_id'  => $closedStatus->id,
+    ]);
+
+    $openTask = Task::factory()->create([
+        'project_id' => $project->id,
+        'status_id'  => $openStatus->id,
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->get(route('session.create'));
+
+    $response->assertSuccessful();
+
+    $response->assertHasProp('tasks', function ($tasks) use ($closedTask, $openTask) {
+        expect($tasks)->toBeArray();
+
+        $taskIds = collect($tasks)->pluck('id')->toArray();
+
+        // Closed task should NOT be in the list
+        expect($taskIds)->not->toContain($closedTask->id);
+
+        // Open task should be in the list
+        expect($taskIds)->toContain($openTask->id);
     });
 });
 

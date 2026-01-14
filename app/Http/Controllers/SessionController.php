@@ -80,7 +80,7 @@ class SessionController extends Controller
                 ->where(function ($query) {
                     $query->whereNull('status_id')
                         ->orWhereHas('taskStatus', function ($q) {
-                            $q->where('is_completed', false);
+                            $q->where('is_closed', false);
                         });
                 })
                 ->orderBy('id', 'desc')
@@ -132,7 +132,7 @@ class SessionController extends Controller
                     })->where(function ($q) {
                         $q->whereNull('status_id')
                             ->orWhereHas('taskStatus', function ($statusQuery) {
-                                $statusQuery->where('is_completed', false);
+                                $statusQuery->where('is_closed', false);
                             });
                     });
                     if ($session->task_id) {

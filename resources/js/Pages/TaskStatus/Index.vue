@@ -33,6 +33,7 @@
                         <th>Order</th>
                         <th>Default</th>
                         <th>Completed</th>
+                        <th>Closed</th>
                         <th>Task Count</th>
                         <th><span class="float-right">Actions</span></th>
                     </tr>
@@ -71,6 +72,10 @@
                         </td>
                         <td>
                             <i v-if="status.is_completed" class="fa fa-check text-green-500"></i>
+                            <span v-else class="text-gray-400">-</span>
+                        </td>
+                        <td>
+                            <i v-if="status.is_closed" class="fa fa-check text-green-500"></i>
                             <span v-else class="text-gray-400">-</span>
                         </td>
                         <td>

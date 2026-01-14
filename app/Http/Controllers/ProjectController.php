@@ -101,11 +101,12 @@ class ProjectController extends Controller
             'project' => $project->load([
                 'client',
                 'taskStatuses' => function ($query) {
-                    $query->withCount([
-                        'tasks' => function ($q) {
-                            $q->whereNull('parent_id');
-                        },
-                    ])->orderBy('sort_order');
+                    $query->where('is_closed', false)
+                        ->withCount([
+                            'tasks' => function ($q) {
+                                $q->whereNull('parent_id');
+                            },
+                        ])->orderBy('sort_order');
                 },
             ]),
             'tasks' => $tasks,

@@ -66,6 +66,7 @@ class TaskStatusController extends Controller
             'sort_order'   => 'nullable|integer|min:0',
             'is_default'   => 'boolean',
             'is_completed' => 'boolean',
+            'is_closed'    => 'boolean',
         ]);
 
         $maxSortOrder = TaskStatus::where('project_id', $request->project_id)->max('sort_order') ?? -1;
@@ -83,6 +84,7 @@ class TaskStatusController extends Controller
             'sort_order'   => $sortOrder,
             'is_default'   => $request->is_default ?? false,
             'is_completed' => $request->is_completed ?? false,
+            'is_closed'    => $request->is_closed ?? false,
         ]);
 
         if ($request->is_default) {
@@ -119,10 +121,11 @@ class TaskStatusController extends Controller
             'sort_order'   => 'nullable|integer|min:0',
             'is_default'   => 'boolean',
             'is_completed' => 'boolean',
+            'is_closed'    => 'boolean',
         ]);
 
         $data = $request->only([
-            'name', 'color', 'is_default', 'is_completed',
+            'name', 'color', 'is_default', 'is_completed', 'is_closed',
         ]);
 
         // Handle empty sort_order

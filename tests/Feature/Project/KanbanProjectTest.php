@@ -249,3 +249,46 @@ it('includes task status relationship in task data', function () {
     expect($tasks[0]['task_status']['name'])->toBe('In Progress');
     expect($tasks[0]['task_status']['color'])->toBe('#ff6b6b');
 });
+
+it('excludes closed statuses from the kanban board', function () {
+    $project = Project::factory()->create();
+
+    $openStatus = TaskStatus::factory()->create([
+        'project_id' => $project->id,
+        'name'       => 'In Progress',
+        'is_closed'  => false,
+    ]);
+
+    $closedStatus = TaskStatus::factory()->closed()->create([
+        'project_id' => $project->id,
+        'name'       => 'Closed',
+    ]);
+
+    Task::factory()->create([
+        'project_id' => $project->id,
+        'parent_id'  => null,
+        'status_id'  => $openStatus->id,
+    ]);
+
+    Task::factory()->create([
+        'project_id' => $project->id,
+        'parent_id'  => null,
+        'status_id'  => $closedStatus->id,
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->get(route('project.kanban', $project));
+
+    $response->assertSuccessful();
+    $response->assertHasProp('project.task_statuses');
+
+    $taskStatuses = $response->props()['project']['task_statuses'];
+    $statusIds = collect($taskStatuses)->pluck('id')->toArray();
+
+    // Open status should be included
+    expect($statusIds)->toContain($openStatus->id);
+
+    // Closed status should NOT be included
+    expect($statusIds)->not->toContain($closedStatus->id);
+});

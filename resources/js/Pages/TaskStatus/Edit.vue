@@ -103,15 +103,30 @@
             <div class="form-group">
                 <div class="flex items-center space-x-4">
                     <label class="flex items-center">
-                        <input 
-                            type="checkbox" 
-                            name="is_completed" 
+                        <input
+                            type="checkbox"
+                            name="is_completed"
                             class="form-checkbox mr-2"
                             v-model="form.is_completed"
                         />
                         Completed Status
                     </label>
                     <small class="text-gray-500">Tasks with this status are considered completed</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="flex items-center space-x-4">
+                    <label class="flex items-center">
+                        <input
+                            type="checkbox"
+                            name="is_closed"
+                            class="form-checkbox mr-2"
+                            v-model="form.is_closed"
+                        />
+                        Closed Status
+                    </label>
+                    <small class="text-gray-500">Tasks with this status will be hidden from the kanban board and session task selects</small>
                 </div>
             </div>
 
@@ -166,6 +181,7 @@ export default {
                 sort_order: this.taskStatus ? this.taskStatus.sort_order : '',
                 is_default: this.taskStatus ? this.taskStatus.is_default : false,
                 is_completed: this.taskStatus ? this.taskStatus.is_completed : false,
+                is_closed: this.taskStatus ? this.taskStatus.is_closed : false,
             },
             presetColors: [
                 '#EF4444', // red

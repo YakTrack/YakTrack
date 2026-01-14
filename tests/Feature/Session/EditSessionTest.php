@@ -173,7 +173,7 @@ it('can edit a session with a json patch request', function () {
     Carbon::setTestNow();
 });
 
-it('excludes completed tasks from the task dropdown when editing a session', function () {
+it('includes completed tasks in the task dropdown when editing a session', function () {
     $project = Project::factory()->create();
 
     $completedStatus = TaskStatus::factory()->completed()->create(['project_id' => $project->id]);
@@ -209,8 +209,8 @@ it('excludes completed tasks from the task dropdown when editing a session', fun
 
         $taskIds = collect($tasks)->pluck('id')->toArray();
 
-        // Completed task should NOT be in the list
-        expect($taskIds)->not->toContain($completedTask->id);
+        // Completed task SHOULD be in the list (only closed tasks are excluded)
+        expect($taskIds)->toContain($completedTask->id);
 
         // Incomplete task should be in the list
         expect($taskIds)->toContain($incompleteTask->id);
@@ -247,6 +247,75 @@ it('includes the currently selected completed task when editing a session', func
 
         // The currently selected completed task should be included
         expect($taskIds)->toContain($completedTask->id);
+    });
+});
+
+it('excludes closed tasks from the task dropdown when editing a session', function () {
+    $project = Project::factory()->create();
+
+    $closedStatus = TaskStatus::factory()->closed()->create(['project_id' => $project->id]);
+    $openStatus = TaskStatus::factory()->create(['project_id' => $project->id]);
+
+    $closedTask = Task::factory()->create([
+        'project_id' => $project->id,
+        'status_id'  => $closedStatus->id,
+    ]);
+
+    $openTask = Task::factory()->create([
+        'project_id' => $project->id,
+        'status_id'  => $openStatus->id,
+    ]);
+
+    $session = Session::factory()->create([
+        'task_id' => $openTask->id,
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->get(route('session.edit', ['session' => $session]));
+
+    $response->assertSuccessful();
+
+    $response->assertHasProp('tasks', function ($tasks) use ($closedTask, $openTask) {
+        expect($tasks)->toBeArray();
+
+        $taskIds = collect($tasks)->pluck('id')->toArray();
+
+        // Closed task should NOT be in the list
+        expect($taskIds)->not->toContain($closedTask->id);
+
+        // Open task should be in the list
+        expect($taskIds)->toContain($openTask->id);
+    });
+});
+
+it('includes the currently selected closed task when editing a session', function () {
+    $project = Project::factory()->create();
+
+    $closedStatus = TaskStatus::factory()->closed()->create(['project_id' => $project->id]);
+
+    $closedTask = Task::factory()->create([
+        'project_id' => $project->id,
+        'status_id'  => $closedStatus->id,
+    ]);
+
+    $session = Session::factory()->create([
+        'task_id' => $closedTask->id,
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->get(route('session.edit', ['session' => $session]));
+
+    $response->assertSuccessful();
+
+    $response->assertHasProp('tasks', function ($tasks) use ($closedTask) {
+        expect($tasks)->toBeArray();
+
+        $taskIds = collect($tasks)->pluck('id')->toArray();
+
+        // The currently selected closed task should be included
+        expect($taskIds)->toContain($closedTask->id);
     });
 });
 
