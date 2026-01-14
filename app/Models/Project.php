@@ -214,7 +214,7 @@ class Project extends Model
         $tasks = $this->tasks()->pluck('name');
 
         // Extract numbers from task names that match the pattern
-        $pattern = '/^' . preg_quote($this->task_code_prefix, '/') . '-(\d+):/';
+        $pattern = '/^'.preg_quote($this->task_code_prefix, '/').'-(\d+):/';
         $numbers = [];
 
         foreach ($tasks as $taskName) {
