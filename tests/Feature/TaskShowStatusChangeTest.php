@@ -24,7 +24,8 @@ it('displays task status on show page', function () {
     $response = $this->actingAs($user)->get(route('task.show', $task));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Task/Show')
         ->has('task.task_status')
         ->where('task.task_status.id', $status->id)
@@ -54,7 +55,8 @@ it('loads available task statuses on show page', function () {
     $response = $this->actingAs($user)->get(route('task.show', $task));
 
     $response->assertSuccessful();
-    $response->assertInertia(fn ($page) => $page
+    $response->assertInertia(
+        fn ($page) => $page
         ->component('Task/Show')
         ->has('task.project.task_statuses', 2)
     );
