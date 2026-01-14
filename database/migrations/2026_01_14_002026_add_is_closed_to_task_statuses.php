@@ -6,8 +6,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class() extends Migration {
     /**
      * Run the migrations.
      */
@@ -29,13 +28,13 @@ return new class extends Migration
                 $maxSortOrder = TaskStatus::where('project_id', $project->id)->max('sort_order') ?? 0;
 
                 TaskStatus::create([
-                    'project_id' => $project->id,
-                    'name' => 'Closed',
-                    'color' => '#8b5cf6',
-                    'sort_order' => $maxSortOrder + 1,
-                    'is_default' => false,
+                    'project_id'   => $project->id,
+                    'name'         => 'Closed',
+                    'color'        => '#8b5cf6',
+                    'sort_order'   => $maxSortOrder + 1,
+                    'is_default'   => false,
                     'is_completed' => false,
-                    'is_closed' => true,
+                    'is_closed'    => true,
                 ]);
             }
         });
