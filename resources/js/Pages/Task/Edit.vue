@@ -162,10 +162,70 @@
             },
         },
         watch: {
-            selectedProject(newProject) {
+            selectedProject(newProject, oldProject) {
                 // Reset status when project changes
                 this.selectedStatus = null;
+
+                // Update task name with next task code when project changes (only on create form)
+                if (this.isCreateForm && newProject && newProject.task_code_prefix) {
+                    // Get all tasks for this project
+                    const projectTasks = this.tasks.filter(task => task.project_id === newProject.id);
+
+                    // Extract numbers from task names that match the pattern
+                    const pattern = new RegExp(`^${this.escapeRegExp(newProject.task_code_prefix)}-(\\d+):`);
+                    const numbers = projectTasks
+                        .map(task => {
+                            const match = task.name.match(pattern);
+                            return match ? parseInt(match[1], 10) : null;
+                        })
+                        .filter(num => num !== null);
+
+                    // Get the next number (or start at 1 if no tasks exist)
+                    const nextNumber = numbers.length > 0 ? Math.max(...numbers) + 1 : 1;
+
+                    // Format with leading zeros (4 digits)
+                    const nextCode = `${newProject.task_code_prefix}-${String(nextNumber).padStart(4, '0')}: `;
+
+                    // Only update if name is empty or was the previous project's code
+                    const oldCode = oldProject && oldProject.task_code_prefix
+                        ? new RegExp(`^${this.escapeRegExp(oldProject.task_code_prefix)}-\\d+: `)
+                        : null;
+
+                    if (!this.form.name || (oldCode && oldCode.test(this.form.name))) {
+                        this.form.name = nextCode;
+                    }
+                } else if (this.isCreateForm && (!newProject || !newProject.task_code_prefix)) {
+                    // Clear the name if switching to a project without a prefix
+                    const anyCodePattern = /^[A-Z]+-\d+: /;
+                    if (anyCodePattern.test(this.form.name)) {
+                        this.form.name = '';
+                    }
+                }
             }
-        }
+        },
+        methods: {
+            submit() {
+                this.$inertia[this.isCreateForm ? 'post' : 'patch'](
+                    this.isCreateForm ? route('task.store') : route('task.update', this.task.id),
+                    {
+                        ...this.form,
+                        ...{
+                            project_id: this.selectedProjectId,
+                            parent_id: this.selectedParentTaskId,
+                            status_id: this.selectedStatusId,
+                        }
+                    }
+                );
+            },
+            findTaskStatus() {
+                if (!this.task || !this.task.status_id) return null;
+                const project = this.projects.find(p => p.id == this.task.project_id);
+                if (!project || !project.task_statuses) return null;
+                return project.task_statuses.find(s => s.id == this.task.status_id) || null;
+            },
+            escapeRegExp(string) {
+                return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            }
+        },
     }
 </script>

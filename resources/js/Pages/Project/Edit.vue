@@ -35,6 +35,13 @@
             />
 
             <form-field
+                v-model="form.task_code_prefix"
+                type="text"
+                label="Task Code Prefix (Optional)"
+                placeholder="e.g., ABCD"
+            />
+
+            <form-field
                 v-model="form.client_id"
                 type="select"
                 label="Client"

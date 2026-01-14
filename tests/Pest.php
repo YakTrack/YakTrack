@@ -21,7 +21,7 @@ pest()->extend(Tests\TestCase::class)
 
 pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
-    ->in('Unit/SessionTest.php');
+    ->in('Unit/SessionTest.php', 'Unit/ProjectTaskCodeTest.php');
 
 // Browser testing configuration
 pest()->extend(Tests\TestCase::class)

@@ -16,6 +16,7 @@ class Project extends Model
     protected $fillable = [
         'name',
         'description',
+        'task_code_prefix',
         'client_id',
         'archived_at',
     ];
@@ -198,5 +199,34 @@ class Project extends Model
     public function scopeNotArchived($query)
     {
         return $query->whereNull('archived_at');
+    }
+
+    /**
+     * Get the next task code for this project.
+     */
+    public function getNextTaskCode(): ?string
+    {
+        if (!$this->task_code_prefix) {
+            return null;
+        }
+
+        // Get all tasks for this project
+        $tasks = $this->tasks()->pluck('name');
+
+        // Extract numbers from task names that match the pattern
+        $pattern = '/^' . preg_quote($this->task_code_prefix, '/') . '-(\d+):/';
+        $numbers = [];
+
+        foreach ($tasks as $taskName) {
+            if (preg_match($pattern, $taskName, $matches)) {
+                $numbers[] = (int) $matches[1];
+            }
+        }
+
+        // Get the next number (or start at 1 if no tasks exist)
+        $nextNumber = empty($numbers) ? 1 : max($numbers) + 1;
+
+        // Format with leading zeros (4 digits)
+        return sprintf('%s-%04d: ', $this->task_code_prefix, $nextNumber);
     }
 }

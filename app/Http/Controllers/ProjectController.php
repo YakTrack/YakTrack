@@ -42,14 +42,16 @@ class ProjectController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $this->validate($request, [
-            'name'      => 'required',
-            'client_id' => 'exists:clients,id',
+            'name'             => 'required',
+            'client_id'        => 'exists:clients,id',
+            'task_code_prefix' => 'nullable|string|max:20',
         ]);
 
         $project = Project::create([
-            'name'        => $request->input('name'),
-            'description' => $request->input('description'),
-            'client_id'   => $request->input('client_id'),
+            'name'             => $request->input('name'),
+            'description'      => $request->input('description'),
+            'task_code_prefix' => $request->input('task_code_prefix'),
+            'client_id'        => $request->input('client_id'),
         ]);
 
         return redirect()
@@ -135,8 +137,9 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project): RedirectResponse
     {
         $this->validate($request, [
-            'name'      => 'required',
-            'client_id' => 'exists:clients,id',
+            'name'             => 'required',
+            'client_id'        => 'exists:clients,id',
+            'task_code_prefix' => 'nullable|string|max:20',
         ]);
 
         $project->update($request->all());
