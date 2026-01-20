@@ -168,6 +168,15 @@
 
                 // Update task name with next task code when project changes (only on create form)
                 if (this.isCreateForm && newProject && newProject.task_code_prefix) {
+                    // Check if the current name already has the new project's prefix
+                    const newProjectPrefixPattern = new RegExp(`^${this.escapeRegExp(newProject.task_code_prefix)}-\\d+: `);
+                    const alreadyHasPrefix = this.form.name && newProjectPrefixPattern.test(this.form.name);
+
+                    // If the name already has the matching prefix, don't change it
+                    if (alreadyHasPrefix) {
+                        return;
+                    }
+
                     // Get all tasks for this project
                     const projectTasks = this.tasks.filter(task => task.project_id === newProject.id);
 
@@ -186,14 +195,14 @@
                     // Format with leading zeros (4 digits)
                     const nextCode = `${newProject.task_code_prefix}-${String(nextNumber).padStart(4, '0')}: `;
 
-                    // Only update if name is empty or was the previous project's code
-                    const oldCode = oldProject && oldProject.task_code_prefix
-                        ? new RegExp(`^${this.escapeRegExp(oldProject.task_code_prefix)}-\\d+: `)
-                        : null;
-
-                    if (!this.form.name || (oldCode && oldCode.test(this.form.name))) {
+                    // If name is empty, set it to the next code
+                    if (!this.form.name) {
                         this.form.name = nextCode;
+                        return;
                     }
+
+                    // Otherwise, prepend the prefix to the existing name
+                    this.form.name = nextCode + this.form.name;
                 } else if (this.isCreateForm && (!newProject || !newProject.task_code_prefix)) {
                     // Clear the name if switching to a project without a prefix
                     const anyCodePattern = /^[A-Z]+-\d+: /;
