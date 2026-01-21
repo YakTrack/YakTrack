@@ -22,7 +22,7 @@
     "dayjs": "^1.8.29",
     "eslint": "^9.39.1",
     "eslint-plugin-vue": "^10.5.1",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.23",
     "mitt": "^3.0.1",
     "pinia": "^2.1.7",
     "playwright": "^1.57.0",
