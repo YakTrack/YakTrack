@@ -1,5 +1,5 @@
 <template>
-    <nav class="font-sans w-full pb-4">
+    <nav class="font-sans w-full pb-4 sm:pb-6">
         <ol class="list-reset flex text-gray-600">
             <li class="" v-for="(breadcrumb, index) in breadcrumbs">
                 <Link

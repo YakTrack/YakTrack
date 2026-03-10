@@ -15,9 +15,9 @@
         <sidebar v-if="!hideSidebar" ref="sidebarRef" :open="sidebarOpen" @update:open="sidebarOpen = $event"></sidebar>
 
         <!-- Main content area -->
-        <main class="py-10 lg:pl-72">
-            <div class="px-4 sm:px-6 lg:px-8">
-                <div class="px-2 sm:px-0">
+        <main class="pt-2 pb-10 sm:pt-16 lg:pl-72">
+            <div class="px-3 pt-6 sm:px-6 lg:px-8">
+                <div>
                     <slot name="breadcrumbs"></slot>
                     <messages></messages>
                     <div

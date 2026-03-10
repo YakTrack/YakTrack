@@ -140,7 +140,7 @@ input.form-control, textarea.form-control, select.form-control, .form-group text
 }
 
 .card {
-    @apply bg-white rounded shadow p-4;
+    @apply bg-white rounded shadow p-4 sm:p-6;
 }
 
 .card .card-header {
