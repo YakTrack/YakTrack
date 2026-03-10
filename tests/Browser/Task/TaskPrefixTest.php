@@ -3,7 +3,7 @@
 use App\Models\Project;
 use App\Models\User;
 
-it('prepends prefix when selecting project with prefix and task name has no prefix', function () {
+it('does not change task name when selecting project with prefix and name is not empty', function () {
     $user = User::factory()->create();
     $project = Project::factory()->create([
         'task_code_prefix' => 'TEST',
@@ -16,7 +16,8 @@ it('prepends prefix when selecting project with prefix and task name has no pref
         ->type('Task Name', 'My Task Name')
         ->click('Select a project')
         ->click($project->name)
-        ->assertSee('TEST-0001: My Task Name');
+        ->assertSee('My Task Name')
+        ->assertDontSee('TEST-0001:');
 });
 
 it('does not change task name when it already has matching prefix', function () {
@@ -49,4 +50,20 @@ it('sets prefix when task name is empty and project is selected', function () {
         ->click('Select a project')
         ->click($project->name)
         ->assertSee('TEST-0001:');
+});
+
+it('does not change task name when selecting project without a prefix', function () {
+    $user = User::factory()->create();
+    $project = Project::factory()->create([
+        'task_code_prefix' => null,
+    ]);
+
+    $this->actingAs($user);
+
+    $page = visit(route('task.create'))
+        ->assertSee('Create Task')
+        ->type('Task Name', 'LEP-1234: Fix the bug')
+        ->click('Select a project')
+        ->click($project->name)
+        ->assertSee('LEP-1234: Fix the bug');
 });
