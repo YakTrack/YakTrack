@@ -23,7 +23,7 @@ it('can store a new sprint with a post request', function () {
     $response = $this->post(route('sprint.store'), [
         'name'        => 'New sprint',
         'project_ids' => [$project->id],
-        'is_open'    => array_random([0, 1]),
+        'is_open'     => array_random([0, 1]),
     ]);
 
     $response->assertRedirect(route('sprint.index'));

@@ -43,10 +43,10 @@ class SprintController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $this->validate($request, [
-            'name'        => 'required|unique:sprints,name',
+            'name'          => 'required|unique:sprints,name',
             'project_ids'   => 'required|array|min:1',
             'project_ids.*' => 'exists:projects,id',
-            'is_open'     => 'boolean',
+            'is_open'       => 'boolean',
         ]);
 
         $sprint = Sprint::create($request->only(['name', 'is_open']));
@@ -97,7 +97,7 @@ class SprintController extends Controller
     public function update(Request $request, Sprint $sprint): RedirectResponse
     {
         $this->validate($request, [
-            'name'         => 'required|unique:sprints,name,'.$sprint->id,
+            'name'          => 'required|unique:sprints,name,'.$sprint->id,
             'project_ids'   => 'required|array|min:1',
             'project_ids.*' => 'exists:projects,id',
         ]);
