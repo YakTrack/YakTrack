@@ -46,8 +46,10 @@
                 </div>
                 <button
                   v-if="showCloseButton"
+                  type="button"
+                  :disabled="confirmLoading"
                   @click="close"
-                  class="text-gray-400 hover:text-gray-600 transition-colors duration-200 p-1 rounded-lg hover:bg-gray-100"
+                  class="text-gray-400 hover:text-gray-600 transition-colors duration-200 p-1 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
                   aria-label="Close modal"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -71,16 +73,21 @@
                 <slot name="footer">
                   <button
                     v-if="showDefaultFooter"
+                    type="button"
+                    :disabled="confirmLoading"
                     @click="close"
-                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:pointer-events-none"
                   >
                     {{ cancelText }}
                   </button>
                   <button
                     v-if="showDefaultFooter"
+                    type="button"
+                    :disabled="confirmLoading"
                     @click="confirm"
-                    class="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+                    class="inline-flex items-center justify-center min-w-[5.5rem] px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 disabled:opacity-75 disabled:pointer-events-none"
                   >
+                    <i v-if="confirmLoading" class="fa fa-spinner fa-spin mr-2" aria-hidden="true"></i>
                     {{ confirmText }}
                   </button>
                 </slot>
@@ -133,6 +140,10 @@ const props = defineProps({
   closeOnEscape: {
     type: Boolean,
     default: true
+  },
+  confirmLoading: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -157,12 +168,18 @@ const confirm = () => {
 }
 
 const handleBackdropClick = () => {
+  if (props.confirmLoading) {
+    return
+  }
   if (props.closeOnBackdrop) {
     close()
   }
 }
 
 const handleEscapeKey = (event) => {
+  if (props.confirmLoading) {
+    return
+  }
   if (props.closeOnEscape && event.key === 'Escape') {
     close()
   }

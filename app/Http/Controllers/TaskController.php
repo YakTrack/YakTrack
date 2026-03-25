@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BulkAssignTasksToProjectRequest;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\TaskStatus;
@@ -23,7 +24,39 @@ class TaskController extends Controller
             'tasks' => Task::orderBy('id', 'desc')
                 ->with('project.client', 'parent', 'taskStatus')
                 ->get(),
+            'projects' => Project::notArchived()->orderBy('name')->get(['id', 'name']),
         ]);
+    }
+
+    public function bulkAssignProject(BulkAssignTasksToProjectRequest $request): RedirectResponse
+    {
+        $project = Project::query()->notArchived()->findOrFail($request->validated('project_id'));
+        $tasks = Task::whereIn('id', $request->validated('task_ids'))->get();
+
+        foreach ($tasks as $task) {
+            $previousStatusId = $task->status_id;
+            $statusId = $previousStatusId !== null
+                && TaskStatus::query()->where('id', $previousStatusId)->where('project_id', $project->id)->exists()
+                ? $previousStatusId
+                : (TaskStatus::query()->where('project_id', $project->id)->where('is_default', true)->first()?->id
+                    ?? TaskStatus::query()->where('project_id', $project->id)->orderBy('sort_order')->first()?->id);
+
+            $task->update([
+                'project_id' => $project->id,
+                'status_id'  => $statusId,
+            ]);
+        }
+
+        $count = $tasks->count();
+
+        return redirect()
+            ->route('task.index')
+            ->with('success', sprintf(
+                '%d %s assigned to "%s".',
+                $count,
+                $count === 1 ? 'task' : 'tasks',
+                $project->name,
+            ));
     }
 
     /**

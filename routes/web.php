@@ -39,6 +39,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('sprint', 'SprintController');
     Route::resource('sprint.invoice', 'Sprint\InvoiceController');
     Route::resource('target', 'TargetController');
+    Route::patch('task/bulk-assign-project', 'TaskController@bulkAssignProject')->name('task.bulk-assign-project');
     Route::resource('task', 'TaskController');
     Route::patch('task/{task}/status', 'TaskController@updateStatus')->name('task.updateStatus');
     Route::resource('task-status', 'TaskStatusController');
