@@ -156,9 +156,6 @@
                                     Name
                                 </th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Parent
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Status
                                 </th>
                                 <th class="pl-6 pr-0 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -172,12 +169,6 @@
                                     <a :href="route('task.show', task.id)" class="text-blue-600 hover:text-blue-900 text-sm font-medium">
                                         {{ task.name }}
                                     </a>
-                                </td>
-                                <td class="px-6 py-1 whitespace-nowrap text-sm text-gray-900">
-                                    <a v-if="task.parent" :href="route('task.show', task.parent.id)" class="text-blue-600 hover:text-blue-900">
-                                        {{ task.parent.name }}
-                                    </a>
-                                    <span v-else class="text-gray-400">-</span>
                                 </td>
                                 <td class="px-6 py-1 whitespace-nowrap">
                                     <span v-if="task.task_status" 

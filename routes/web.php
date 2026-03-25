@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,6 +13,14 @@ use Illuminate\Support\Facades\Route;
 | and give it the controller to call when that URI is requested.
 |
 */
+
+if (app()->environment('testing')) {
+    Route::get('/__testing/browser-login/{user}', function (User $user) {
+        auth()->login($user);
+
+        return redirect()->route('home');
+    })->name('testing.browser-login');
+}
 
 // Auth
 Route::get('login')->name('login')->uses('Auth\LoginController@showLoginForm')->middleware('guest');

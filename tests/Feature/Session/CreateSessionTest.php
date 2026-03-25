@@ -33,8 +33,11 @@ it('loads tasks and sprints with project relationships for filtering', function 
     $task1 = Task::factory()->create(['project_id' => $project1->id]);
     $task2 = Task::factory()->create(['project_id' => $project2->id]);
 
-    $sprint1 = Sprint::factory()->create(['project_id' => $project1->id]);
-    $sprint2 = Sprint::factory()->create(['project_id' => $project2->id]);
+    $sprint1 = Sprint::factory()->create();
+    $sprint1->projects()->sync([$project1->id]);
+
+    $sprint2 = Sprint::factory()->create();
+    $sprint2->projects()->sync([$project2->id]);
 
     $this->actingAsUser();
 
@@ -51,13 +54,13 @@ it('loads tasks and sprints with project relationships for filtering', function 
         expect($task1Data['project']['id'])->toBe($project1->id);
     });
 
-    // Verify sprints are loaded with project relationship
+    // Verify sprints are loaded with projects relationship
     $response->assertHasProp('sprints', function ($sprints) use ($sprint1, $project1) {
         expect($sprints)->toBeArray();
         $sprint1Data = collect($sprints)->firstWhere('id', $sprint1->id);
         expect($sprint1Data)->not->toBeNull();
-        expect($sprint1Data['project'])->not->toBeNull();
-        expect($sprint1Data['project']['id'])->toBe($project1->id);
+        expect($sprint1Data['projects'])->toBeArray();
+        expect(collect($sprint1Data['projects'])->pluck('id')->all())->toContain($project1->id);
     });
 });
 

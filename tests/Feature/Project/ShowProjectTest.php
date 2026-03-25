@@ -64,14 +64,9 @@ it('includes paginated tasks data', function () {
 it('displays task names with proper structure', function () {
     $project = Project::factory()->create();
     $taskStatus = TaskStatus::factory()->create(['project_id' => $project->id]);
-    $parentTask = Task::factory()->create([
+    Task::factory()->create([
         'project_id' => $project->id,
-        'name'       => 'Parent Task',
-    ]);
-    $childTask = Task::factory()->create([
-        'project_id' => $project->id,
-        'name'       => 'Child Task',
-        'parent_id'  => $parentTask->id,
+        'name'       => 'Example Task',
         'status_id'  => $taskStatus->id,
     ]);
 
@@ -81,16 +76,13 @@ it('displays task names with proper structure', function () {
 
     $response->assertSuccessful();
 
-    // Assert task data structure includes relationships
     $taskData = $response->props()['tasks']['data'];
 
-    $childTaskData = collect($taskData)->firstWhere('name', 'Child Task');
-    expect($childTaskData)->not->toBeNull();
-    expect($childTaskData['name'])->toBe('Child Task');
-    expect($childTaskData)->toHaveKey('parent');
-    expect($childTaskData)->toHaveKey('task_status');
-    expect($childTaskData['parent']['name'])->toBe('Parent Task');
-    expect($childTaskData['task_status']['name'])->toBe($taskStatus->name);
+    $row = collect($taskData)->firstWhere('name', 'Example Task');
+    expect($row)->not->toBeNull();
+    expect($row['name'])->toBe('Example Task');
+    expect($row)->toHaveKey('task_status');
+    expect($row['task_status']['name'])->toBe($taskStatus->name);
 });
 
 it('handles empty tasks list', function () {

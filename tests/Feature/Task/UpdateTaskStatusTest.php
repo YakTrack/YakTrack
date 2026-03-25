@@ -158,41 +158,37 @@ it('prevents unauthorized users from updating task status', function () {
     ]);
 });
 
-it('can update parent task status without affecting children', function () {
+it('updating one task status does not change another task', function () {
     $project = Project::factory()->create();
     $status1 = TaskStatus::factory()->create(['project_id' => $project->id]);
     $status2 = TaskStatus::factory()->create(['project_id' => $project->id]);
     $status3 = TaskStatus::factory()->create(['project_id' => $project->id]);
 
-    $parentTask = Task::factory()->create([
+    $taskA = Task::factory()->create([
         'project_id' => $project->id,
-        'parent_id'  => null,
         'status_id'  => $status1->id,
     ]);
 
-    $childTask = Task::factory()->create([
+    $taskB = Task::factory()->create([
         'project_id' => $project->id,
-        'parent_id'  => $parentTask->id,
         'status_id'  => $status2->id,
     ]);
 
     $this->actingAsUser();
 
-    $response = $this->patchJson(route('task.updateStatus', $parentTask), [
+    $response = $this->patchJson(route('task.updateStatus', $taskA), [
         'status_id' => $status3->id,
     ]);
 
     $response->assertSuccessful();
 
-    // Parent task status should be updated
     $this->assertDatabaseHas('tasks', [
-        'id'        => $parentTask->id,
+        'id'        => $taskA->id,
         'status_id' => $status3->id,
     ]);
 
-    // Child task status should remain unchanged
     $this->assertDatabaseHas('tasks', [
-        'id'        => $childTask->id,
+        'id'        => $taskB->id,
         'status_id' => $status2->id,
     ]);
 });

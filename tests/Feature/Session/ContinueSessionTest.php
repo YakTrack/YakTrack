@@ -16,13 +16,14 @@ it('can create a new session with the same details as an existing session', func
 
     $project = Project::factory()->create();
     $previousSprint = Sprint::factory()->create([
-        'project_id' => $project->id,
-        'is_open'    => 0,
+        'is_open' => 0,
     ]);
+    $previousSprint->projects()->sync([$project->id]);
+
     $currentSprint = Sprint::factory()->create([
-        'project_id' => $project->id,
-        'is_open'    => 1,
+        'is_open' => 1,
     ]);
+    $currentSprint->projects()->sync([$project->id]);
     $sessionCategory = SessionCategory::factory()->create();
 
     $task = Task::factory()->create([
@@ -64,9 +65,9 @@ it('can create a new session with the same details as an existing session when t
 
     $project = Project::factory()->create();
     $previousSprint = Sprint::factory()->create([
-        'project_id' => $project->id,
-        'is_open'    => 0,
+        'is_open' => 0,
     ]);
+    $previousSprint->projects()->sync([$project->id]);
     $sessionCategory = SessionCategory::factory()->create();
 
     $task = Task::factory()->create([

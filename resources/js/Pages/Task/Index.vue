@@ -46,7 +46,6 @@
                             />
                         </th>
                         <th> Name </th>
-                        <th> Parent </th>
                         <th> Project </th>
                         <th> Client </th>
                         <th> Status </th>
@@ -70,11 +69,6 @@
                         <td>
                             <Link :href="route('task.show', task)">
                                 {{ task.shortName }}
-                            </Link>
-                        </td>
-                        <td>
-                            <Link :href="route('task.show', task.parent)" v-if="task.parent">
-                                {{ task.parent.shortName }}
                             </Link>
                         </td>
                         <td>

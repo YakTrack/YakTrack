@@ -45,22 +45,6 @@ class Task extends Model
     }
 
     /**
-     * @return BelongsTo<Task, $this>
-     */
-    public function parent(): BelongsTo
-    {
-        return $this->belongsTo(self::class, 'parent_id');
-    }
-
-    /**
-     * @return HasMany<Task, $this>
-     */
-    public function children(): HasMany
-    {
-        return $this->hasMany(self::class, 'parent_id');
-    }
-
-    /**
      * @return BelongsTo<TaskStatus, $this>
      */
     public function taskStatus(): BelongsTo
@@ -89,11 +73,6 @@ class Task extends Model
     public function getProject(): Project
     {
         return $this->getRelation(Project::class);
-    }
-
-    public function getParent(): Task
-    {
-        return $this->parent ?? new Task();
     }
 
     public function getShortNameAttribute(): string

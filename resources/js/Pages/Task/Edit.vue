@@ -38,23 +38,11 @@
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Project
                 </label>
-                <multi-select 
-                    :options="projects" 
-                    label="name" 
+                <multi-select
+                    :options="projects"
+                    label="name"
                     v-model="selectedProject"
                     placeholder="Select a project"
-                />
-            </div>
-
-            <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Parent Task
-                </label>
-                <multi-select 
-                    :options="selectableParentTasks" 
-                    label="name" 
-                    v-model="selectedParentTask"
-                    placeholder="Select a parent task (optional)"
                 />
             </div>
 
@@ -62,22 +50,22 @@
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                     Status
                 </label>
-                <multi-select 
-                    :options="selectedProject.task_statuses" 
-                    label="name" 
+                <multi-select
+                    :options="selectedProject.task_statuses"
+                    label="name"
                     v-model="selectedStatus"
                     placeholder="Select a status"
                 >
                     <template slot="option" slot-scope="props">
                         <div class="flex items-center">
-                            <div :style="{ backgroundColor: props.option.color }" 
+                            <div :style="{ backgroundColor: props.option.color }"
                                  class="w-3 h-3 rounded-full mr-2"></div>
                             {{ props.option.name }}
                         </div>
                     </template>
                     <template slot="singleLabel" slot-scope="props">
                         <div class="flex items-center">
-                            <div :style="{ backgroundColor: props.option.color }" 
+                            <div :style="{ backgroundColor: props.option.color }"
                                  class="w-3 h-3 rounded-full mr-2"></div>
                             {{ props.option.name }}
                         </div>
@@ -96,18 +84,26 @@
     import formField from '@/Shared/FormField.vue';
 
     export default {
-        props: [
-            'projects',
-            'task',
-            'tasks',
-        ],
+        props: {
+            projects: {
+                type: Array,
+                required: true,
+            },
+            task: {
+                type: Object,
+                default: null,
+            },
+            tasks: {
+                type: Array,
+                default: () => [],
+            },
+        },
         data() {
             return {
                 selectedProject: (this.task && this.task.project_id) ? this.projects.find(p => p.id == this.task.project_id) : null,
-                selectedParentTask: (this.task && this.task.parent_id) ? this.tasks.find(t => t.id == this.task.parent_id) : null,
                 selectedStatus: (this.task && this.task.status_id) ? this.findTaskStatus() : null,
                 form: this.task || {},
-            }
+            };
         },
         components: {
             multiSelect: multiSelect,
@@ -116,27 +112,6 @@
             formLayout: formLayout,
             formField: formField,
         },
-        methods: {
-            submit() {
-                this.$inertia[this.isCreateForm ? 'post' : 'patch'](
-                    this.isCreateForm ? route('task.store') : route('task.update', this.task.id),
-                    {
-                        ...this.form,
-                        ...{
-                            project_id: this.selectedProjectId,
-                            parent_id: this.selectedParentTaskId,
-                            status_id: this.selectedStatusId,
-                        }
-                    }
-                );
-            },
-            findTaskStatus() {
-                if (!this.task || !this.task.status_id) return null;
-                const project = this.projects.find(p => p.id == this.task.project_id);
-                if (!project || !project.task_statuses) return null;
-                return project.task_statuses.find(s => s.id == this.task.status_id) || null;
-            }
-        },
         computed: {
             isCreateForm() {
                 return this.task == null;
@@ -144,18 +119,8 @@
             selectedProjectId() {
                 return this.selectedProject ? this.selectedProject.id : null;
             },
-            selectedParentTaskId() {
-                return this.selectedParentTask ? this.selectedParentTask.id : null;
-            },
             selectedStatusId() {
                 return this.selectedStatus ? this.selectedStatus.id : null;
-            },
-            selectableParentTasks() {
-                var _this = this;
-
-                return this.selectedProject ? this.tasks.filter(function (task) {
-                    return task.project_id === _this.selectedProjectId;
-                }) : this.tasks;
             },
             processing() {
                 return this.$inertia.processing;
@@ -163,10 +128,8 @@
         },
         watch: {
             selectedProject(newProject) {
-                // Reset status when project changes
                 this.selectedStatus = null;
 
-                // Only set name to next task code when: create form, project has prefix, and name is empty
                 if (!this.isCreateForm || !newProject || !newProject.task_code_prefix || this.form.name) {
                     return;
                 }
@@ -181,7 +144,7 @@
                     .filter(num => num !== null);
                 const nextNumber = numbers.length > 0 ? Math.max(...numbers) + 1 : 1;
                 this.form.name = `${newProject.task_code_prefix}-${String(nextNumber).padStart(4, '0')}: `;
-            }
+            },
         },
         methods: {
             submit() {
@@ -189,23 +152,24 @@
                     this.isCreateForm ? route('task.store') : route('task.update', this.task.id),
                     {
                         ...this.form,
-                        ...{
-                            project_id: this.selectedProjectId,
-                            parent_id: this.selectedParentTaskId,
-                            status_id: this.selectedStatusId,
-                        }
-                    }
+                        project_id: this.selectedProjectId,
+                        status_id: this.selectedStatusId,
+                    },
                 );
             },
             findTaskStatus() {
-                if (!this.task || !this.task.status_id) return null;
+                if (!this.task || !this.task.status_id) {
+                    return null;
+                }
                 const project = this.projects.find(p => p.id == this.task.project_id);
-                if (!project || !project.task_statuses) return null;
+                if (!project || !project.task_statuses) {
+                    return null;
+                }
                 return project.task_statuses.find(s => s.id == this.task.status_id) || null;
             },
             escapeRegExp(string) {
                 return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            }
+            },
         },
-    }
+    };
 </script>

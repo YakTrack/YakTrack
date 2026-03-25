@@ -119,16 +119,6 @@
                     </a>
                 </div>
 
-                <!-- Parent Task -->
-                <div v-if="task.parent">
-                    <label class="block text-sm font-medium text-gray-500 mb-2">
-                        <i class="fa fa-sitemap mr-2"></i>Parent Task
-                    </label>
-                    <a :href="route('task.show', task.parent.id)" class="text-blue-600 hover:text-blue-900 text-base font-medium">
-                        {{ task.parent.name }}
-                    </a>
-                </div>
-
                 <!-- Total Time -->
                 <div>
                     <label class="block text-sm font-medium text-gray-500 mb-2">

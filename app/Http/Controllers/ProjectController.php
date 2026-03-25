@@ -71,7 +71,7 @@ class ProjectController extends Controller
             ->paginate(15);
 
         $tasks = $project->tasks()
-            ->with(['taskStatus', 'parent'])
+            ->with(['taskStatus'])
             ->orderBy('name')
             ->paginate(15, ['*'], 'tasks_page');
 
@@ -93,9 +93,7 @@ class ProjectController extends Controller
     public function kanban(Project $project): Response
     {
         $tasks = $project->tasks()
-            ->whereNull('parent_id')
             ->with('taskStatus')
-            ->withCount('children')
             ->orderBy('created_at')
             ->get();
 
@@ -104,11 +102,8 @@ class ProjectController extends Controller
                 'client',
                 'taskStatuses' => function ($query) {
                     $query->where('is_closed', false)
-                        ->withCount([
-                            'tasks' => function ($q) {
-                                $q->whereNull('parent_id');
-                            },
-                        ])->orderBy('sort_order');
+                        ->withCount('tasks')
+                        ->orderBy('sort_order');
                 },
             ]),
             'tasks' => $tasks,

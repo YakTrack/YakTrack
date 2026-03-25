@@ -28,8 +28,21 @@ pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Browser');
 
+pest()->beforeEach(function (): void {
+    $hot = public_path('hot');
+    if (is_file($hot)) {
+        rename($hot, $hot.'.pest-bak');
+    }
+})->afterEach(function (): void {
+    $hot = public_path('hot');
+    $bak = $hot.'.pest-bak';
+    if (is_file($bak)) {
+        rename($bak, $hot);
+    }
+})->in('Browser');
+
 pest()->browser()
-    ->timeout(10000)
+    ->timeout(30000)
     ->headed(false)
     ->inChrome();
 

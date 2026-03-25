@@ -7,7 +7,7 @@ it('can view the page to create a task', function () {
     $this->actingAsUser();
 
     $project = Project::factory()->create();
-    $parentTask = Task::factory()->create([
+    Task::factory()->create([
         'project_id' => $project->id,
     ]);
 
@@ -16,7 +16,6 @@ it('can view the page to create a task', function () {
     $response->assertSuccessful();
 
     $response->assertSee($project->name);
-    $response->assertSee($parentTask->name);
 });
 
 it('can submit a post request to create a task', function () {
@@ -25,15 +24,11 @@ it('can submit a post request to create a task', function () {
     $this->actingAsUser();
 
     $project = Project::factory()->create();
-    $parentTask = Task::factory()->create([
-        'project_id' => $project->id,
-    ]);
 
     $response = $this->post(route('task.store'), [
         'name'        => 'Test Task',
         'description' => 'Test task description.',
         'project_id'  => $project->id,
-        'parent_id'   => $parentTask->id,
     ]);
 
     $response->assertRedirect(route('task.index'));
@@ -42,7 +37,6 @@ it('can submit a post request to create a task', function () {
         'name'        => 'Test Task',
         'description' => 'Test task description.',
         'project_id'  => $project->id,
-        'parent_id'   => $parentTask->id,
     ]);
 });
 
@@ -51,13 +45,10 @@ it('can submit a post request to create a task with required fields only', funct
 
     $this->actingAsUser();
 
-    $project = Project::factory()->create();
-    $parentTask = Task::factory()->create([
-        'project_id' => $project->id,
-    ]);
+    Project::factory()->create();
 
     $response = $this->post(route('task.store'), [
-        'name'        => 'Test Task',
+        'name' => 'Test Task',
     ]);
 
     $response->assertRedirect(route('task.index'));
@@ -66,7 +57,6 @@ it('can submit a post request to create a task with required fields only', funct
         'name'        => 'Test Task',
         'description' => '',
         'project_id'  => null,
-        'parent_id'   => null,
     ]);
 });
 

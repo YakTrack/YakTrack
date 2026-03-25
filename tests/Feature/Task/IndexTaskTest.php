@@ -3,8 +3,7 @@
 use App\Models\Task;
 
 it('can see a list of tasks', function () {
-    $parentTask = Task::factory()->create();
-    $task = Task::factory()->create(['parent_id' => $parentTask->id]);
+    $task = Task::factory()->create();
 
     $this->actingAsUser();
 
@@ -13,6 +12,5 @@ it('can see a list of tasks', function () {
     $response->assertSuccessful();
 
     $response->assertSee($task->name);
-    $response->assertSee($task->parent->shortName);
     $response->assertSee($task->project->name);
 });
