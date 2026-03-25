@@ -58,7 +58,7 @@ class SessionFactory extends Factory
             if ($task && $task->project && $task->project->client) {
                 $session->update([
                     'task_id'    => $task->id,
-                    'sprint_id'  => $task->project->client->sprints->random()?->id,
+                    'sprint_id'  => $task->project->client->sprints()->get()->random()?->id,
                     'invoice_id' => $task->project->client->invoices->random()?->id,
                 ]);
             }

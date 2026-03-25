@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Sprint extends Model
@@ -15,14 +15,13 @@ class Sprint extends Model
     protected $guarded = [];
 
     /**
-     * The relationship to the project which this sprint belongs to.
-     **/
-    /**
-     * @return BelongsTo<Project, $this>
+     * The projects included in this sprint.
+     *
+     * @return BelongsToMany<Project, $this>
      */
-    public function project(): BelongsTo
+    public function projects(): BelongsToMany
     {
-        return $this->belongsTo(Project::class);
+        return $this->belongsToMany(Project::class, 'project_sprint');
     }
 
     /**

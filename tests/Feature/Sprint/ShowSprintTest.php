@@ -10,8 +10,8 @@ it('can view a single sprint', function () {
     $this->withoutExceptionHandling();
 
     $project = Project::factory()->create();
-    $sprint = Sprint::factory()->create(['project_id' => $project->id]);
-    $otherSprint = Sprint::factory()->create(['project_id' => $project->id]);
+    $sprint = Sprint::factory()->afterCreating(fn (Sprint $s) => $s->projects()->sync([$project->id]))->create(['is_open' => 0]);
+    $otherSprint = Sprint::factory()->afterCreating(fn (Sprint $s) => $s->projects()->sync([$project->id]))->create();
     $task = Task::factory()->create([
         'project_id' => $project->id,
     ]);
@@ -50,22 +50,23 @@ it('can view a single sprint', function () {
                 fn (Assert $page) => $page
                     ->where('id', $sprint->id)
                     ->where('name', $sprint->name)
-                    ->where('project_id', $sprint->project_id)
                     ->where('created_at', $sprint->created_at->toIsoString())
                     ->where('updated_at', $sprint->updated_at->toIsoString())
                     ->where('is_open', 0)
                     ->has(
-                        'project',
+                        'projects',
+                        1,
                         fn (Assert $page) => $page
-                        ->where('id', $project->id)
-                        ->where('name', $project->name)
-                        ->where('description', $project->description)
-                        ->where('client_id', $project->client_id)
-                        ->where('is_billable', 0)
-                        ->where('created_at', $project->created_at->toIsoString())
-                        ->where('updated_at', $project->updated_at->toIsoString())
-                        ->etc()
-                    )->has(
+                            ->where('id', $project->id)
+                            ->where('name', $project->name)
+                            ->where('description', $project->description)
+                            ->where('client_id', $project->client_id)
+                            ->where('is_billable', 0)
+                            ->where('created_at', $project->created_at->toIsoString())
+                            ->where('updated_at', $project->updated_at->toIsoString())
+                            ->etc()
+                    )
+                    ->has(
                         'sessions',
                         fn (Assert $page) => $page
                         ->has(

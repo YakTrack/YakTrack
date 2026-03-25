@@ -22,7 +22,7 @@ it('can delete a project', function () {
 
 it('cannot delete a project with sprints', function () {
     $project = Project::factory()->create(['name' => 'Test Project']);
-    $sprint = Sprint::factory()->create(['project_id' => $project->id]);
+    $sprint = Sprint::factory()->afterCreating(fn (Sprint $s) => $s->projects()->sync([$project->id]))->create();
 
     $this->actingAsUser();
 

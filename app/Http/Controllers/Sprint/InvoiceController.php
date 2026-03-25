@@ -19,7 +19,7 @@ class InvoiceController extends Controller
             'due_date'        => request('due_date') ?: null,
             'amount'          => request('amount') ? intval(floatval(request('amount')) * 100) : null,
             'total_hours'     => $billableSessions->totalDurationInHours(),
-            'client_id'       => $sprint->project->client_id,
+            'client_id'       => $sprint->projects()->first()->client_id,
             'is_sent'         => request('is_sent') ?: false,
             'is_paid'         => request('is_paid') ?: false,
             'description'     => request('description') ?? '',

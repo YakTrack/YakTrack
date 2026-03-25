@@ -21,10 +21,10 @@
                 <h2 class="text-gray-700"> {{ sprint.name }} </h2>
             </div>
             <div class="mt-2">
-                <span>
-                    <Link :href="route('sprint.show', sprint)" class="no-underline text-xl text-gray-600">
-                        {{ sprint.project.name }}
-                    </Link>
+                <span v-if="sprint.projects && sprint.projects.length">
+                    <template v-for="(project, index) in sprint.projects" :key="project.id">
+                        <Link :href="route('project.show', project.id)" class="no-underline text-xl text-gray-600">{{ project.name }}</Link><span v-if="index < sprint.projects.length - 1">, </span>
+                    </template>
                 </span>
             </div>
             <div class="mt-2">

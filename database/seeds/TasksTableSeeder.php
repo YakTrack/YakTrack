@@ -15,10 +15,11 @@ class TasksTableSeeder extends Seeder
     public function run()
     {
         // Create tasks for sprints
-        Sprint::all()->each(function ($sprint) {
-            Task::factory(3)->create([
-                'project_id' => $sprint->project->id,
-            ]);
+        Sprint::with('projects')->get()->each(function ($sprint) {
+            $project = $sprint->projects->first();
+            if ($project) {
+                Task::factory(3)->create(['project_id' => $project->id]);
+            }
         });
 
         // Create additional demo tasks for the first project to showcase kanban board

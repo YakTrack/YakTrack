@@ -6,6 +6,7 @@ use App\Models\Collections\ProjectCollection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
@@ -62,14 +63,13 @@ class Project extends Model
     }
 
     /**
-     * The sprints that belong to the project.
-     **/
-    /**
-     * @return HasMany<Sprint, $this>
+     * The sprints that include this project.
+     *
+     * @return BelongsToMany<Sprint, $this>
      */
-    public function sprints(): HasMany
+    public function sprints(): BelongsToMany
     {
-        return $this->hasMany(Sprint::class);
+        return $this->belongsToMany(Sprint::class, 'project_sprint');
     }
 
     /**

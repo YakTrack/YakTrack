@@ -28,14 +28,15 @@
 
             <div class="mb-6">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Project
+                    Projects
                 </label>
                 <multi-select
                     :options="projects"
                     label="name"
                     track-by="id"
-                    v-model="selectedProject"
-                    placeholder="Select a project"
+                    v-model="selectedProjects"
+                    placeholder="Select projects"
+                    :multiple="true"
                 />
             </div>
 
@@ -69,8 +70,8 @@
         },
         data() {
             return {
-                selectedProject: (this.sprint && this.sprint.project_id) ? this.projects.find(p => p.id == this.sprint.project_id) : null,
-                form: this.sprint || {
+                selectedProjects: this.initialSelectedProjects(),
+                form: this.sprint ? { ...this.sprint, is_open: this.sprint.is_open } : {
                     name: '',
                     is_open: false,
                 },
@@ -80,21 +81,25 @@
             isCreateForm() {
                 return this.form.id == null;
             },
-            selectedProjectId() {
-                return this.selectedProject ? this.selectedProject.id : null;
+            selectedProjectIds() {
+                return (this.selectedProjects || []).map(p => p.id);
             },
             processing() {
                 return this.$inertia.processing;
             },
         },
         methods: {
+            initialSelectedProjects() {
+                if (!this.sprint || !this.sprint.projects) return [];
+                return this.sprint.projects.map(p => ({ id: p.id, name: p.name }));
+            },
             submit() {
-                let verb = this.isCreateForm ? 'post' : 'patch';
-                let url = this.isCreateForm ? route('sprint.store') : route('sprint.update', this.sprint.id);
+                const verb = this.isCreateForm ? 'post' : 'patch';
+                const url = this.isCreateForm ? route('sprint.store') : route('sprint.update', this.sprint.id);
 
                 this.$inertia[verb](url, {
                     ...this.form,
-                    project_id: this.selectedProjectId,
+                    project_ids: this.selectedProjectIds,
                 });
             },
         }

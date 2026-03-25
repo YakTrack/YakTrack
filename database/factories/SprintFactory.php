@@ -19,8 +19,8 @@ class SprintFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'       => $this->faker->word(),
-            'project_id' => Project::factory(),
+            'name'    => $this->faker->word(),
+            'is_open' => true,
         ];
     }
 
@@ -30,13 +30,19 @@ class SprintFactory extends Factory
     public function configure(): static
     {
         return $this->afterCreating(function (Sprint $sprint) {
-            $sprint->name = implode(' ', [
-                $sprint->project->name,
-                '-',
-                'Sprint',
-                ($sprint->id % $sprint->project->sprints()->count()) + 1,
-            ]);
-            $sprint->save();
+            if ($sprint->projects()->count() === 0) {
+                $sprint->projects()->attach(Project::factory()->create());
+            }
+            $first = $sprint->projects()->first();
+            if ($first) {
+                $sprint->name = implode(' ', [
+                    $first->name,
+                    '-',
+                    'Sprint',
+                    ($sprint->id % $sprint->projects()->count()) + 1,
+                ]);
+                $sprint->save();
+            }
         });
     }
 }

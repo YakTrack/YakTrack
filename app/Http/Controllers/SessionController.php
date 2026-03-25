@@ -58,7 +58,7 @@ class SessionController extends Controller
         return Inertia::render('Session/Index', [
             'invoices'               => Invoice::all(),
             'thirdPartyApplications' => ThirdPartyApplication::all(),
-            'sprints'                => Sprint::with('project.client')->orderBy('id', 'desc')->get(),
+            'sprints'                => Sprint::with('projects.client')->orderBy('id', 'desc')->get(),
             'days'                   => $days,
             'total'                  => (int) $total = Session::count(),
             'perPage'                => (int) request('per-page'),
@@ -71,7 +71,7 @@ class SessionController extends Controller
     {
         return Inertia::render('Session/Edit', [
             'invoices'          => Invoice::all(),
-            'sprints'           => Sprint::with('project.client')->orderBy('id', 'desc')->get(),
+            'sprints'           => Sprint::with('projects.client')->orderBy('id', 'desc')->get(),
             'sessionCategories' => SessionCategory::all(),
             'tasks'             => Task::with('project.client', 'taskStatus')
                 ->whereHas('project', function ($query) {
@@ -142,7 +142,7 @@ class SessionController extends Controller
                 ->orderBy('id', 'desc')
                 ->get(),
             'invoices'          => Invoice::orderBy('id', 'desc')->get(),
-            'sprints'           => Sprint::with('project.client')->orderBy('id', 'desc')->get(),
+            'sprints'           => Sprint::with('projects.client')->orderBy('id', 'desc')->get(),
             'sessionCategories' => SessionCategory::all(),
         ]);
     }
@@ -195,7 +195,9 @@ class SessionController extends Controller
         });
 
         if ($session->sprint_id) {
-            $openSprints = $session->sprint->project->sprints()->open()->orderBy('id', 'desc')->get();
+            $projectIds = $session->sprint->projects()->pluck('id');
+            $openSprints = Sprint::open()->whereHas('projects', fn ($q) => $q->whereIn('id', $projectIds))
+                ->orderBy('id', 'desc')->get();
             $newSprintId = $openSprints->isEmpty()
                 ? $session->sprint_id
                 : $openSprints->first()->id;

@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Client extends Model
 {
@@ -31,11 +31,13 @@ class Client extends Model
     }
 
     /**
-     * @return HasManyThrough<Sprint, Project, $this>
+     * Sprints that include at least one of this client's projects.
+     *
+     * @return Builder<Sprint>
      */
-    public function sprints(): HasManyThrough
+    public function sprints(): Builder
     {
-        return $this->hasManyThrough(Sprint::class, Project::class);
+        return Sprint::query()->whereHas('projects', fn (Builder $q) => $q->where('client_id', $this->id));
     }
 
     /**

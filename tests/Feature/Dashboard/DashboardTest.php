@@ -16,9 +16,8 @@ it('can view the dashboard', function () {
     $project = Project::factory()->create([
         'client_id' => $client->id,
     ]);
-    $clientZeroSprint = Sprint::factory()->create([
-        'project_id' => $project->id,
-        'is_open'    => 1,
+    $clientZeroSprint = Sprint::factory()->afterCreating(fn (Sprint $s) => $s->projects()->sync([$project->id]))->create([
+        'is_open' => 1,
     ]);
 
     $task = Task::factory()->create([

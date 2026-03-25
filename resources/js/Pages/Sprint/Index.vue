@@ -40,9 +40,11 @@
                             </Link>
                         </td>
                         <td>
-                            <Link :href="route('project.show', sprint.project_id)">
-                                {{ sprint.project ? sprint.project.name : '' }}
-                            </Link>
+                            <template v-if="sprint.projects && sprint.projects.length">
+                                <template v-for="(project, index) in sprint.projects" :key="project.id">
+                                    <Link :href="route('project.show', project.id)">{{ project.name }}</Link><span v-if="index < sprint.projects.length - 1">, </span>
+                                </template>
+                            </template>
                         </td>
                         <td>
                             <div class="text-green" v-if="sprint.is_open"> Open </div>

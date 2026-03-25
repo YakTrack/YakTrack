@@ -25,22 +25,14 @@ it('can submit a patch request to update a sprint', function () {
 
     $this->actingAsUser();
 
-    $response = $this->patch(route('sprint.update', ['sprint' => $sprint]), $newSprintDetails = [
-        'name'       => 'New sprint name',
-        'project_id' => $newProject->id,
-        'is_open'    => 'is_open',
+    $response = $this->patch(route('sprint.update', ['sprint' => $sprint]), [
+        'name'        => 'New sprint name',
+        'project_ids' => [$newProject->id],
+        'is_open'     => 'is_open',
     ]);
 
     $response->assertRedirect(route('sprint.index'));
 
-    $this->assertDatabaseHas(
-        'sprints',
-        array_merge(
-            $newSprintDetails,
-            [
-                'id'      => $sprint->id,
-                'is_open' => 1,
-            ],
-        )
-    );
+    $this->assertDatabaseHas('sprints', ['id' => $sprint->id, 'name' => 'New sprint name', 'is_open' => 1]);
+    expect($sprint->fresh()->projects()->pluck('id')->toArray())->toContain($newProject->id);
 });

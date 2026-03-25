@@ -18,7 +18,7 @@ class SprintController extends Controller
     {
         return Inertia::render('Sprint/Index', [
             'sprints' => Sprint::orderBy('id', 'desc')
-                ->with('project', 'sessions')
+                ->with('projects', 'sessions')
                 ->get()
                 ->map(function ($sprint) {
                     $sprint->totalDurationForHumans = $sprint->sessions->totalDurationForHumans();
@@ -43,16 +43,14 @@ class SprintController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $this->validate($request, [
-            'name'       => 'required|unique:sprints,name',
-            'project_id' => 'required|exists:projects,id',
-            'is_open'    => 'boolean',
+            'name'        => 'required|unique:sprints,name',
+            'project_ids'   => 'required|array|min:1',
+            'project_ids.*' => 'exists:projects,id',
+            'is_open'     => 'boolean',
         ]);
 
-        $sprint = Sprint::create($request->only([
-            'name',
-            'project_id',
-            'is_open',
-        ]));
+        $sprint = Sprint::create($request->only(['name', 'is_open']));
+        $sprint->projects()->attach($request->project_ids);
 
         return redirect()
             ->route('sprint.index')
@@ -65,7 +63,7 @@ class SprintController extends Controller
     public function show(Sprint $sprint): Response
     {
         return Inertia::render('Sprint/Show', [
-            'sprint' => $sprint->load('project', 'sessions.task.project'),
+            'sprint' => $sprint->load('projects', 'sessions.task.project'),
             'tasks'  => $sprint->sessions->groupBy('task_id')->map(function ($sessionsForTask) {
                 $task = $sessionsForTask->first()->task;
 
@@ -84,7 +82,7 @@ class SprintController extends Controller
     {
         return Inertia::render('Sprint/Edit', [
             'projects' => Project::notArchived()->orderBy('name')->get(),
-            'sprint'   => $sprint,
+            'sprint'   => $sprint->load('projects'),
         ]);
     }
 
@@ -99,15 +97,13 @@ class SprintController extends Controller
     public function update(Request $request, Sprint $sprint): RedirectResponse
     {
         $this->validate($request, [
-            'name'       => 'required|unique:sprints,name,'.$sprint->id,
-            'project_id' => 'required|exists:projects,id',
+            'name'         => 'required|unique:sprints,name,'.$sprint->id,
+            'project_ids'   => 'required|array|min:1',
+            'project_ids.*' => 'exists:projects,id',
         ]);
 
-        $sprint->update([
-            'name'       => $request->name,
-            'project_id' => $request->project_id,
-            'is_open'    => $request->is_open == 'is_open' ? 1 : 0,
-        ]);
+        $sprint->update(['name' => $request->name, 'is_open' => $request->is_open == 'is_open' ? 1 : 0]);
+        $sprint->projects()->sync($request->project_ids);
 
         return redirect()
             ->route('sprint.index')

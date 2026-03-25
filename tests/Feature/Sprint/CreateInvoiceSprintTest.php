@@ -38,7 +38,7 @@ it('can create an invoice from a sprint', function () {
         'number'        => $number,
         'amount'        => $amount * 100,
         'description'   => $description,
-        'client_id'     => $sprint->project->client->id,
+        'client_id'     => $sprint->projects()->first()->client_id,
         'total_hours'   => $sessions->totalDurationInHours(),
     ]);
 
