@@ -12,7 +12,7 @@
         <div class="relative">
             <!-- Text Input -->
             <input
-                v-if="type === 'text' || type === 'email' || type === 'password' || type === 'number'"
+                v-if="type === 'text' || type === 'email' || type === 'password' || type === 'number' || type === 'date'"
                 :id="fieldId"
                 :type="type"
                 :value="modelValue"
