@@ -3,13 +3,11 @@
         <multi-select v-model="selectedSprint" label="name" :custom-label="customLabel" :options="sprints">
             <template slot="option" slot-scope="slot" v-if="slot.option">
                 {{ slot.option.name }}
-                <span class="text-gray-600 ml-2" v-if="slot.option.project">{{ slot.option.project.name }}</span>
-                <span class="text-gray-500 ml-2" v-if="slot.option.project && slot.option.project.client">{{ slot.option.project.client.name }}</span>
+                <span class="text-gray-600 ml-2" v-if="projectNames(slot.option)">{{ projectNames(slot.option) }}</span>
             </template>
             <template slot="singleLabel" slot-scope="slot" v-if="slot.option">
                 {{ slot.option.name }}
-                <span class="text-gray-600 ml-2" v-if="slot.option.project">{{ slot.option.project.name }}</span>
-                <span class="text-gray-500 ml-2" v-if="slot.option.project && slot.option.project.client">{{ slot.option.project.client.name }}</span>
+                <span class="text-gray-600 ml-2" v-if="projectNames(slot.option)">{{ projectNames(slot.option) }}</span>
             </template>
         </multi-select>
         <input type="hidden" name="sprint_id" :value="sprintId">
@@ -57,11 +55,21 @@
             }
         },
         methods: {
+            projectNames(option) {
+                if (Array.isArray(option.projects) && option.projects.length > 0) {
+                    return option.projects.map(project => project.name).join(', ');
+                }
+
+                if (option.project) {
+                    return option.project.name;
+                }
+
+                return '';
+            },
             customLabel(option) {
                 return [
                     option.name,
-                    option.project ? option.project.name : '',
-                    (option.project && option.project.client) ? option.project.client.name : '',
+                    this.projectNames(option),
                 ].filter(s => s.length > 0).join(' ');
             }
         }

@@ -70,21 +70,16 @@ class SessionController extends Controller
     public function create(): Response
     {
         return Inertia::render('Session/Edit', [
-            'invoices'          => Invoice::all(),
-            'sprints'           => Sprint::with('projects.client')->orderBy('id', 'desc')->get(),
-            'sessionCategories' => SessionCategory::all(),
-            'tasks'             => Task::with('project.client', 'taskStatus')
-                ->whereHas('project', function ($query) {
-                    $query->whereNull('archived_at');
-                })
-                ->where(function ($query) {
-                    $query->whereNull('status_id')
-                        ->orWhereHas('taskStatus', function ($q) {
-                            $q->where('is_closed', false);
-                        });
-                })
-                ->orderBy('id', 'desc')
+            'invoices'          => Invoice::query()->select(['id', 'number'])->orderByDesc('id')->get(),
+            'sprints'           => Sprint::query()
+                ->select(['id', 'name'])
+                ->with(['projects' => function ($query) {
+                    $query->select(['projects.id', 'projects.name']);
+                }])
+                ->orderByDesc('id')
                 ->get(),
+            'sessionCategories' => SessionCategory::query()->select(['id', 'name'])->get(),
+            'tasks'             => $this->sessionFormTasks(),
         ]);
     }
 
@@ -125,26 +120,47 @@ class SessionController extends Controller
     {
         return Inertia::render('Session/Edit', [
             'session'           => $session,
-            'tasks'             => Task::with('project.client', 'taskStatus')
-                ->where(function ($query) use ($session) {
-                    $query->whereHas('project', function ($q) {
-                        $q->whereNull('archived_at');
-                    })->where(function ($q) {
-                        $q->whereNull('status_id')
-                            ->orWhereHas('taskStatus', function ($statusQuery) {
-                                $statusQuery->where('is_closed', false);
-                            });
-                    });
-                    if ($session->task_id) {
-                        $query->orWhere('id', $session->task_id);
-                    }
-                })
-                ->orderBy('id', 'desc')
+            'tasks'             => $this->sessionFormTasks($session),
+            'invoices'          => Invoice::query()->select(['id', 'number'])->orderByDesc('id')->get(),
+            'sprints'           => Sprint::query()
+                ->select(['id', 'name'])
+                ->with(['projects' => function ($query) {
+                    $query->select(['projects.id', 'projects.name']);
+                }])
+                ->orderByDesc('id')
                 ->get(),
-            'invoices'          => Invoice::orderBy('id', 'desc')->get(),
-            'sprints'           => Sprint::with('projects.client')->orderBy('id', 'desc')->get(),
-            'sessionCategories' => SessionCategory::all(),
+            'sessionCategories' => SessionCategory::query()->select(['id', 'name'])->get(),
         ]);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Collection<int, Task>
+     */
+    private function sessionFormTasks(?Session $session = null): \Illuminate\Database\Eloquent\Collection
+    {
+        return Task::query()
+            ->select(['id', 'name', 'project_id', 'status_id'])
+            ->with([
+                'project:id,name,client_id',
+                'project.client:id,name',
+                'taskStatus:id,is_closed',
+            ])
+            ->where(function ($query) use ($session) {
+                $query->whereHas('project', function ($projectQuery) {
+                    $projectQuery->whereNull('archived_at');
+                })->where(function ($taskQuery) {
+                    $taskQuery->whereNull('status_id')
+                        ->orWhereHas('taskStatus', function ($statusQuery) {
+                            $statusQuery->where('is_closed', false);
+                        });
+                });
+
+                if ($session?->task_id) {
+                    $query->orWhere('id', $session->task_id);
+                }
+            })
+            ->orderByDesc('id')
+            ->get();
     }
 
     public function update(Session $session): RedirectResponse
