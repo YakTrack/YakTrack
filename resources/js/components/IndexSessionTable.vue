@@ -89,9 +89,9 @@
                         </div>
                     </div>
                     <div class="flex items-center space-x-4">
-                        <div class="text-right">
+                        <div class="text-right" v-if="selectedSessions.length > 0">
                             <div class="text-sm text-gray-500">Total Duration</div>
-                            <div class="text-lg font-mono font-semibold text-gray-900">{{ totalDuration }}</div>
+                            <div class="text-lg font-mono font-semibold text-gray-900">{{ selectedTotalDuration }}</div>
                         </div>
                             <dropdown :options="actionsDropdown" direction="left"></dropdown>
                     </div>
@@ -573,8 +573,8 @@
             filteredDays() {
                 return this.days.filter(day => day.sessions.length > 0);
             },
-            totalDuration() {
-                return this.dateTime.durationForHumans(this.sessions.reduce(function (accumulator, session) {
+            selectedTotalDuration() {
+                return this.dateTime.durationForHumans(this.selectedSessions.reduce(function (accumulator, session) {
                     return session.durationInSeconds + accumulator
                 }, 0));
             },
