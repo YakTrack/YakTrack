@@ -21,6 +21,27 @@ it('can load the page to edit a session', function () {
     $response->assertHasProp('session', $session->fresh()->toArray());
 });
 
+it('loads sprints with projects for the session edit form', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+    $sprint = Sprint::factory()->create();
+    $sprint->projects()->sync([$project->id]);
+
+    $session = Session::factory()->create();
+
+    $response = $this->get(route('session.edit', ['session' => $session]));
+
+    $response->assertSuccessful();
+    $response->assertHasProp('sprints', function ($sprints) use ($sprint, $project) {
+        expect($sprints)->toBeArray();
+        $match = collect($sprints)->firstWhere('id', $sprint->id);
+        expect($match)->not->toBeNull();
+        expect($match['projects'])->toBeArray();
+        expect(collect($match['projects'])->pluck('id')->all())->toContain($project->id);
+    });
+});
+
 it('reflects the correct billable state when editing a billable session', function () {
     $this->withoutExceptionHandling();
 

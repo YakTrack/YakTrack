@@ -101,6 +101,13 @@
             };
         },
         methods: {
+            sprintIncludesProject(sprint, projectId) {
+                if (!sprint || !projectId || !sprint.projects || !Array.isArray(sprint.projects)) {
+                    return false;
+                }
+
+                return sprint.projects.some((p) => p.id == projectId);
+            },
             selectSprint(sprintId) {
                 this.form.sprint_id = sprintId;
             },
@@ -115,8 +122,8 @@
                     const selectedTask = this.tasks.find(task => task.id == taskId);
                     const selectedSprint = this.sprints.find(sprint => sprint.id == this.form.sprint_id);
                     
-                    if (selectedTask && selectedTask.project && selectedSprint && selectedSprint.project) {
-                        if (selectedTask.project.id !== selectedSprint.project.id) {
+                    if (selectedTask && selectedTask.project && selectedSprint) {
+                        if (!this.sprintIncludesProject(selectedSprint, selectedTask.project.id)) {
                             this.form.sprint_id = null;
                         }
                     }
@@ -147,9 +154,9 @@
                     return this.sprints;
                 }
                 
-                // Filter sprints to only those belonging to the task's project
-                return this.sprints.filter(sprint => {
-                    return sprint.project && sprint.project.id === selectedTask.project.id;
+                // Filter sprints to only those linked to the task's project
+                return this.sprints.filter((sprint) => {
+                    return this.sprintIncludesProject(sprint, selectedTask.project.id);
                 });
             },
         }
