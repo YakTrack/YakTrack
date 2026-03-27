@@ -212,15 +212,19 @@ export default {
         },
     },
     created() {
-        events.on('toggle-show-filters', (perPage) => {
+        this._onToggleShowFilters = () => {
             this.$inertia.visit(this.urlParser.current({
                 showFilters: !this.showFilters,
             }), {
                 replace: true,
                 preserveScroll: true,
             });
-        });
-    }
+        };
+        events.on('toggle-show-filters', this._onToggleShowFilters);
+    },
+    beforeUnmount() {
+        events.off('toggle-show-filters', this._onToggleShowFilters);
+    },
 }
 
 </script>

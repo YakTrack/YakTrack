@@ -118,11 +118,16 @@
             }
         },
         mounted() {
-            // Session action events
-            events.on('edit-session', (session) => this.$inertia.visit(route('session.edit', session.id)))
-            events.on('confirm-delete-session', (session) => {
+            this._onEditSession = (session) => this.$inertia.visit(route('session.edit', session.id));
+            this._onConfirmDeleteSession = (session) => {
                 this.sessionToDelete = session;
-            })
+            };
+            events.on('edit-session', this._onEditSession);
+            events.on('confirm-delete-session', this._onConfirmDeleteSession);
+        },
+        beforeUnmount() {
+            events.off('edit-session', this._onEditSession);
+            events.off('confirm-delete-session', this._onConfirmDeleteSession);
         },
         methods: {
             getSessionActions(session) {

@@ -57,11 +57,19 @@
             }
         },
         created() {
-            events.on(this.openOn, (payload) => {
+            this.openEventHandler = (payload) => {
                 this.payload = payload;
-                this.modalIsOpen = true
-            });
-            events.on(this.closeOn, () => this.modalIsOpen = false);
+                this.modalIsOpen = true;
+            };
+            this.closeEventHandler = () => {
+                this.modalIsOpen = false;
+            };
+            events.on(this.openOn, this.openEventHandler);
+            events.on(this.closeOn, this.closeEventHandler);
+        },
+        beforeUnmount() {
+            events.off(this.openOn, this.openEventHandler);
+            events.off(this.closeOn, this.closeEventHandler);
         },
         methods: {
             toggleModal() {

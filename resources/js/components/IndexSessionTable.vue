@@ -661,26 +661,42 @@
                 false
             );
 
-            events.on('set-per-page', (perPage) => {
+            this._onSetPerPage = (perPage) => {
                 this.$inertia.visit(this.urlParser.current({
                     perPage: perPage,
                 }), {
                     replace: true,
                     preserveScroll: true,
                 });
-            });
-
-            events.on('sessions.mark-as-billable', () => this.updateSelectedSessions({ is_billable: 1 }))
-            events.on('sessions.mark-as-non-billable', () => this.updateSelectedSessions({ is_billable: 0 }))
-            
-            // Session action events
-            events.on('stop-session', (session) => this.stopSession(session))
-            events.on('continue-session', (session) => this.continueSession(session))
-            events.on('split-session', (session) => this.splitSession(session))
-            events.on('edit-session', (session) => this.$inertia.visit(session.editUrl))
-            events.on('confirm-delete-session', (session) => {
+            };
+            this._onMarkAsBillable = () => this.updateSelectedSessions({ is_billable: 1 });
+            this._onMarkAsNonBillable = () => this.updateSelectedSessions({ is_billable: 0 });
+            this._onStopSession = (session) => this.stopSession(session);
+            this._onContinueSession = (session) => this.continueSession(session);
+            this._onSplitSession = (session) => this.splitSession(session);
+            this._onEditSession = (session) => this.$inertia.visit(session.editUrl);
+            this._onConfirmDeleteSession = (session) => {
                 this.sessionToDelete = session;
-            })
+            };
+
+            events.on('set-per-page', this._onSetPerPage);
+            events.on('sessions.mark-as-billable', this._onMarkAsBillable);
+            events.on('sessions.mark-as-non-billable', this._onMarkAsNonBillable);
+            events.on('stop-session', this._onStopSession);
+            events.on('continue-session', this._onContinueSession);
+            events.on('split-session', this._onSplitSession);
+            events.on('edit-session', this._onEditSession);
+            events.on('confirm-delete-session', this._onConfirmDeleteSession);
+        },
+        beforeUnmount() {
+            events.off('set-per-page', this._onSetPerPage);
+            events.off('sessions.mark-as-billable', this._onMarkAsBillable);
+            events.off('sessions.mark-as-non-billable', this._onMarkAsNonBillable);
+            events.off('stop-session', this._onStopSession);
+            events.off('continue-session', this._onContinueSession);
+            events.off('split-session', this._onSplitSession);
+            events.off('edit-session', this._onEditSession);
+            events.off('confirm-delete-session', this._onConfirmDeleteSession);
         },
         methods: {
             loadFilterPreset(presetKey) {
