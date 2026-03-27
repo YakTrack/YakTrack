@@ -44,6 +44,23 @@
                   </div>
               </template>
           </modal>
+          <modal
+              open-on="sessions.link-to-task"
+              close-on="sessions.linked-to-task"
+              :on-submit="linkSelectedSessionsToTask"
+          >
+              <template #default="modal">
+                  <h3 class="text-center"> Link Selected Sessions To Task </h3>
+                  <div class="mt-8 form-group">
+                      <label for="task_id"> Select Task </label>
+                      <task-select
+                          :tasks="tasks"
+                          :task="selectedTaskId"
+                          :on-change="selectTask"
+                      ></task-select>
+                  </div>
+              </template>
+          </modal>
           <split-session-modal
               :is-open="showSplitSessionModal"
               :session="sessionToSplit"
@@ -92,6 +109,7 @@ import urlParser from '@/UrlParser.js';
 import modal from '@/components/LegacyModal.vue'
 import invoiceSelect from '@/Shared/InvoiceSelect.vue';
 import sprintSelect from '@/Shared/SprintSelect.vue';
+import taskSelect from '@/Shared/TaskSelect.vue';
 import splitSessionModal from '@/components/SplitSessionModal.vue';
 import modernModal from '@/components/Modal.vue';
 
@@ -101,6 +119,7 @@ export default {
             showFilters: searchParams.get('show-filters') == 'true',
             urlParser: urlParser,
             selectedSprintId: null,
+            selectedTaskId: null,
             sessionToSplit: null,
             splitTime: null,
             showSplitSessionModal: false,
@@ -113,12 +132,14 @@ export default {
         modal: modal,
         invoiceSelect: invoiceSelect,
         sprintSelect: sprintSelect,
+        taskSelect: taskSelect,
         splitSessionModal: splitSessionModal,
         modernModal: modernModal,
     },
     props: {
         days: Array,
         invoices: Array,
+        tasks: Array,
         sprints: Array,
         thirdPartyApplications: Array,
         page: Number,
@@ -154,8 +175,22 @@ export default {
                 }, {})
             });
         },
+        linkSelectedSessionsToTask() {
+            events.emit('sessions.linked-to-task');
+
+            this.$inertia.patch(route('sessions.update'), {
+                sessions: this.selectedSessionIds.reduce((sessions, sessionId) => {
+                    sessions[sessionId] = { task_id: this.selectedTaskId }
+
+                    return sessions
+                }, {}),
+            });
+        },
         selectSprint(sprintId) {
             this.selectedSprintId = sprintId;
+        },
+        selectTask(taskId) {
+            this.selectedTaskId = taskId;
         },
         onChangeSelectedSessionIds(newValue) {
           this.selectedSessionIds = newValue

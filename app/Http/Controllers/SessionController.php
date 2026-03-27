@@ -59,6 +59,7 @@ class SessionController extends Controller
             'invoices'               => Invoice::all(),
             'thirdPartyApplications' => ThirdPartyApplication::all(),
             'sprints'                => Sprint::with('projects.client')->orderBy('id', 'desc')->get(),
+            'tasks'                  => $this->sessionFormTasks(),
             'days'                   => $days,
             'total'                  => (int) $total = Session::count(),
             'perPage'                => (int) request('per-page'),

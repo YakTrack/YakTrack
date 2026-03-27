@@ -631,6 +631,10 @@
                         event: 'sessions.link-to-sprint',
                     },
                     {
+                        name: 'Link to task',
+                        event: 'sessions.link-to-task',
+                    },
+                    {
                         name: 'Mark as billable',
                         event: 'sessions.mark-as-billable',
                     },
