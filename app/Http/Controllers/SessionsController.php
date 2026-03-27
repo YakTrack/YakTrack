@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\DestroyManySessionsRequest;
 use App\Models\Session;
 use Illuminate\Http\RedirectResponse;
 
@@ -33,5 +34,19 @@ class SessionsController extends Controller
             });
 
         return redirect()->back();
+    }
+
+    public function destroyMany(DestroyManySessionsRequest $request): RedirectResponse
+    {
+        /** @var array<int, int> $sessionIds */
+        $sessionIds = $request->validated('session_ids');
+
+        $deleted = Session::query()->whereIn('id', $sessionIds)->delete();
+
+        $message = $deleted === 1
+            ? '1 session deleted.'
+            : "{$deleted} sessions deleted.";
+
+        return redirect()->back()->with('success', $message);
     }
 }

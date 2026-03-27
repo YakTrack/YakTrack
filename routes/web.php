@@ -65,6 +65,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::resource('session', 'SessionController');
     Route::patch('sessions', 'SessionsController@update')->name('sessions.update');
+    Route::post('sessions/destroy-many', 'SessionsController@destroyMany')->name('sessions.destroy-many');
 
     // Acceptance Criteria Routes
     Route::resource('acceptance-criteria', 'AcceptanceCriteriaController');

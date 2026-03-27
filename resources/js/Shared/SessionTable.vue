@@ -68,6 +68,7 @@
             close-on="close-delete-modal"
             primary-button-text="Delete"
             cancel-button-text="Cancel"
+            :primary-danger="true"
             :on-submit="confirmDeleteSession"
         >
             <template #default="{ payload }">

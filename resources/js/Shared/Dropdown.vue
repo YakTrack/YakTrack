@@ -48,6 +48,11 @@ const props = defineProps({
 })
 
 const optionWasClicked = (option) => {
+    if (option.callback) {
+        option.callback();
+
+        return;
+    }
     typeof option.event == 'string' ? events.emit(option.event) : events.emit(option.event.name, option.event.args);
 }
 

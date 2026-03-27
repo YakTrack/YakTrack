@@ -12,7 +12,10 @@
                 <button @click="toggleModal" class="btn mr-auto">
                     {{ cancelButtonText }}
                 </button>
-                <button @click="submit" class="btn btn-green">
+                <button
+                    @click="submit"
+                    :class="primaryDanger ? 'btn btn-red' : 'btn btn-green'"
+                >
                     {{ primaryButtonText }}
                 </button>
             </div>
@@ -41,6 +44,10 @@
             onSubmit: {
                 type: Function,
                 default: () => null,
+            },
+            primaryDanger: {
+                type: Boolean,
+                default: false,
             },
         },
         data: function () {

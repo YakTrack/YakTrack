@@ -435,6 +435,7 @@
             close-on="close-delete-modal"
             primary-button-text="Delete"
             cancel-button-text="Cancel"
+            :primary-danger="true"
             :on-submit="confirmDeleteSession"
         >
             <template #default="{ payload }">
@@ -454,6 +455,25 @@
                             <strong>Comment:</strong> {{ payload.comment }}
                         </div>
                     </div>
+                </div>
+            </template>
+        </modal>
+
+        <!-- Bulk delete confirmation -->
+        <modal
+            open-on="confirm-bulk-delete-sessions"
+            close-on="close-bulk-delete-modal"
+            primary-button-text="Delete"
+            cancel-button-text="Cancel"
+            :primary-danger="true"
+            :on-submit="confirmBulkDeleteSessions"
+        >
+            <template #default="{ payload }">
+                <div v-if="payload && payload.length" class="mb-4">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Delete selected sessions</h3>
+                    <p class="text-sm text-gray-500 mb-4">
+                        Are you sure you want to delete {{ payload.length }} session{{ payload.length !== 1 ? 's' : '' }}? This action cannot be undone.
+                    </p>
                 </div>
             </template>
         </modal>
@@ -508,28 +528,6 @@
                 selectedInvoiceId: null,
                 sessionToDelete: null,
                 hoveredSessionId: null,
-                actionsDropdown: [
-                    {
-                        name: 'Link to invoice',
-                        event: 'sessions.link-to-invoice',
-                        disabled: () => this.selectedSessions.length > 0,
-                    },
-                    {
-                        name: 'Link to sprint',
-                        event: 'sessions.link-to-sprint',
-                        disabled: () => this.selectedSessions.length > 0,
-                    },
-                    {
-                        name: 'Mark as billable',
-                        event: 'sessions.mark-as-billable',
-                        disabled: () => this.selectedSessions.length > 0,
-                    },
-                    {
-                        name: 'Mark as non-billable',
-                        event: 'sessions.mark-as-non-billable',
-                        disabled: () => this.selectedSessions.length > 0,
-                    },
-                ],
                 dateFormat: DATE_FORMAT,
                 filters: {
                     startedAfter: null,
@@ -621,7 +619,36 @@
                 return this.perPageOptions.find(option =>{
                     return Number.parseInt(option.name) == searchParams.get('per-page');
                 });
-            }
+            },
+            actionsDropdown() {
+                return [
+                    {
+                        name: 'Link to invoice',
+                        event: 'sessions.link-to-invoice',
+                    },
+                    {
+                        name: 'Link to sprint',
+                        event: 'sessions.link-to-sprint',
+                    },
+                    {
+                        name: 'Mark as billable',
+                        event: 'sessions.mark-as-billable',
+                    },
+                    {
+                        name: 'Mark as non-billable',
+                        event: 'sessions.mark-as-non-billable',
+                    },
+                    {
+                        name: 'Delete selected',
+                        callback: () => {
+                            if (this.selectedSessions.length === 0) {
+                                return;
+                            }
+                            events.emit('confirm-bulk-delete-sessions', this.selectedSessions);
+                        },
+                    },
+                ];
+            },
         },
         mounted() {
             this.setDateTimeFilters(
@@ -810,6 +837,14 @@
                     this.$inertia.delete(route('session.destroy', session.id));
                 }
                 events.emit('close-delete-modal');
+            },
+            confirmBulkDeleteSessions(sessions) {
+                if (sessions && sessions.length > 0) {
+                    this.$inertia.post(route('sessions.destroy-many'), {
+                        session_ids: sessions.map((session) => session.id),
+                    });
+                }
+                events.emit('close-bulk-delete-modal');
             },
         },
         watch: {
