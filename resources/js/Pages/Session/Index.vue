@@ -8,13 +8,13 @@
                 ]"
             ></breadcrumbs>
         </template>
-        <template slot="modals">
+        <template #modals>
           <modal
               open-on="sessions.link-to-invoice"
               close-on="sessions.linked-to-invoice"
               :on-submit="linkSelectedSessionsToInvoice"
           >
-              <template slot-scope="modal">
+              <template #default="modal">
                   <h3 class="text-center"> Link Selected Sessions To Invoice </h3>
                   <div class="mt-8 form-group">
                       {{ modal.payload }}
@@ -32,7 +32,7 @@
               close-on="sessions.linked-to-sprint"
               :on-submit="linkSelectedSessionsToSprint"
           >
-              <template slot-scope="modal">
+              <template #default="modal">
                   <h3 class="text-center"> Link Selected Sessions To Sprint </h3>
                   <div class="mt-8 form-group">
                       <label for="sprint_id"> Select Sprint </label>
