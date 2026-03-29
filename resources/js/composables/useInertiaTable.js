@@ -12,17 +12,27 @@ import { computed, reactive, ref, watch } from 'vue'
  * @param {string} options.routeName Ziggy route name for router.get
  * @param {string} [options.tableKey='table'] Page prop key holding table state
  * @param {Record<string, string|number|''>} [options.filterDefaults] Initial / cleared filter values (e.g. { q: '', client_id: '' })
+ * @param {{ sort: string, direction: string }} [options.sortDefaults] Defaults for sort / direction (clear + server fallback)
+ * @param {number} [options.perPageDefault=15] Default rows per page
  */
-export function useInertiaTable({ routeName, tableKey = 'table', filterDefaults = {} }) {
+export function useInertiaTable({
+    routeName,
+    tableKey = 'table',
+    filterDefaults = {},
+    sortDefaults: sortDefaultsInput = {},
+    perPageDefault = 15,
+}) {
     const page = usePage()
 
     const table = computed(() => page.props[tableKey] ?? {})
 
+    const sortDefaults = { sort: 'name', direction: 'asc', ...sortDefaultsInput }
+
     const filterInitial = { ...filterDefaults }
     const filters = reactive({ ...filterInitial })
-    const sort = ref('name')
-    const direction = ref('asc')
-    const perPage = ref(15)
+    const sort = ref(sortDefaults.sort)
+    const direction = ref(sortDefaults.direction)
+    const perPage = ref(perPageDefault)
 
     watch(
         table,
@@ -31,9 +41,9 @@ export function useInertiaTable({ routeName, tableKey = 'table', filterDefaults 
                 return
             }
             Object.assign(filters, t.filters ?? {})
-            sort.value = t.sort ?? 'name'
-            direction.value = t.direction ?? 'asc'
-            perPage.value = t.per_page ?? 15
+            sort.value = t.sort ?? sortDefaults.sort
+            direction.value = t.direction ?? sortDefaults.direction
+            perPage.value = t.per_page ?? perPageDefault
         },
         { immediate: true, deep: true },
     )
@@ -77,9 +87,9 @@ export function useInertiaTable({ routeName, tableKey = 'table', filterDefaults 
             const initial = filterInitial[key]
             filters[key] = initial !== undefined && initial !== null ? initial : ''
         })
-        sort.value = 'name'
-        direction.value = 'asc'
-        perPage.value = 15
+        sort.value = sortDefaults.sort
+        direction.value = sortDefaults.direction
+        perPage.value = perPageDefault
         visit({ page: 1 })
     }
 

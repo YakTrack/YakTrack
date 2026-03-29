@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\BulkAssignTasksToProjectRequest;
+use App\Http\Requests\TaskIndexRequest;
 use App\Models\Project;
 use App\Models\Task;
 use App\Models\TaskStatus;
@@ -18,13 +19,74 @@ class TaskController extends Controller
     /**
      * Show a list of tasks.
      */
-    public function index(): Response
+    public function index(TaskIndexRequest $request): Response
     {
+        $state = $request->tableState();
+
+        $query = Task::query()
+            ->select('tasks.*')
+            ->leftJoin('projects', 'tasks.project_id', '=', 'projects.id')
+            ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
+            ->leftJoin('task_statuses', 'tasks.status_id', '=', 'task_statuses.id')
+            ->with(['project.client', 'taskStatus']);
+
+        if ($state['q'] !== '') {
+            $term = '%'.addcslashes($state['q'], '%_\\').'%';
+            $query->where(function ($q) use ($term): void {
+                $q->where('tasks.name', 'like', $term)
+                    ->orWhere('tasks.description', 'like', $term)
+                    ->orWhere('projects.name', 'like', $term)
+                    ->orWhere('clients.name', 'like', $term);
+            });
+        }
+
+        if ($state['project_id'] !== null) {
+            $query->where('tasks.project_id', $state['project_id']);
+        }
+
+        if ($state['status_id'] !== null) {
+            $query->where('tasks.status_id', $state['status_id']);
+        }
+
+        match ($state['sort']) {
+            'name' => $query->orderBy('tasks.name', $state['direction']),
+            'project' => $query
+                ->orderBy('projects.name', $state['direction'])
+                ->orderBy('tasks.id', 'desc'),
+            'client' => $query
+                ->orderBy('clients.name', $state['direction'])
+                ->orderBy('tasks.id', 'desc'),
+            'status' => $query
+                ->orderBy('task_statuses.name', $state['direction'])
+                ->orderBy('tasks.id', 'desc'),
+            default => $query->orderBy('tasks.id', $state['direction']),
+        };
+
+        $tasks = $query
+            ->paginate($state['per_page'])
+            ->withQueryString();
+
+        $statuses = $state['project_id'] !== null
+            ? TaskStatus::query()
+                ->where('project_id', $state['project_id'])
+                ->orderBy('sort_order')
+                ->get(['id', 'name'])
+            : [];
+
         return Inertia::render('Task/Index', [
-            'tasks' => Task::orderBy('id', 'desc')
-                ->with('project.client', 'taskStatus')
-                ->get(),
+            'tasks'    => $tasks,
             'projects' => Project::notArchived()->orderBy('name')->get(['id', 'name']),
+            'statuses' => $statuses,
+            'table'    => [
+                'filters' => [
+                    'q'          => $state['q'],
+                    'project_id' => $state['project_id'] !== null ? (string) $state['project_id'] : '',
+                    'status_id'  => $state['status_id'] !== null ? (string) $state['status_id'] : '',
+                ],
+                'sort'      => $state['sort'],
+                'direction' => $state['direction'],
+                'per_page'  => $state['per_page'],
+            ],
         ]);
     }
 
