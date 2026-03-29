@@ -229,6 +229,12 @@ const executeConfirmAction = () => {
 const getProjectActions = (project) => {
     const actions = [
         {
+            name: 'View Project',
+            callback: () => {
+                router.visit(route('project.show', { project: project.id }))
+            },
+        },
+        {
             name: 'Edit Project',
             callback: () => {
                 router.visit(route('project.edit', { project }))

@@ -425,6 +425,12 @@ const executeConfirmAction = () => {
 
 const getTaskActions = (task) => [
     {
+        name: 'View Task',
+        callback: () => {
+            router.visit(route('task.show', task))
+        },
+    },
+    {
         name: 'Edit Task',
         callback: () => {
             router.visit(route('task.edit', task))
