@@ -97,10 +97,18 @@
                 type: Array,
                 default: () => [],
             },
+            prefill_project_id: {
+                type: Number,
+                default: null,
+            },
         },
         data() {
             return {
-                selectedProject: (this.task && this.task.project_id) ? this.projects.find(p => p.id == this.task.project_id) : null,
+                selectedProject: (this.task && this.task.project_id)
+                    ? this.projects.find(p => p.id == this.task.project_id)
+                    : (this.prefill_project_id
+                        ? this.projects.find(p => p.id == this.prefill_project_id)
+                        : null),
                 selectedStatus: (this.task && this.task.status_id) ? this.findTaskStatus() : null,
                 form: this.task || {},
             };

@@ -18,6 +18,49 @@ it('can view the page to create a task', function () {
     $response->assertSee($project->name);
 });
 
+it('passes prefill project id when project_id query matches a non-archived project', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+
+    $response = $this->get(route('task.create', ['project_id' => $project->id]));
+
+    $response->assertSuccessful();
+    $response->assertInertia(
+        fn ($page) => $page
+            ->component('Task/Edit')
+            ->where('prefill_project_id', $project->id)
+    );
+});
+
+it('does not prefill when project_id query refers to an archived project', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create(['archived_at' => now()]);
+
+    $response = $this->get(route('task.create', ['project_id' => $project->id]));
+
+    $response->assertSuccessful();
+    $response->assertInertia(
+        fn ($page) => $page
+            ->component('Task/Edit')
+            ->where('prefill_project_id', null)
+    );
+});
+
+it('does not prefill when project_id query is invalid', function () {
+    $this->actingAsUser();
+
+    $response = $this->get(route('task.create', ['project_id' => 999_999]));
+
+    $response->assertSuccessful();
+    $response->assertInertia(
+        fn ($page) => $page
+            ->component('Task/Edit')
+            ->where('prefill_project_id', null)
+    );
+});
+
 it('can submit a post request to create a task', function () {
     $this->withoutExceptionHandling();
 

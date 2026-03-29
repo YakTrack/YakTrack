@@ -62,11 +62,20 @@ class TaskController extends Controller
     /**
      * Show the form for creating a new task.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
+        $prefillProjectId = null;
+        if ($request->filled('project_id')) {
+            $id = (int) $request->query('project_id');
+            if ($id > 0 && Project::query()->notArchived()->whereKey($id)->exists()) {
+                $prefillProjectId = $id;
+            }
+        }
+
         return Inertia::render('Task/Edit', [
-            'projects' => Project::notArchived()->with(['sprints', 'tasks', 'taskStatuses'])->orderBy('name')->get(),
-            'tasks'    => Task::orderBy('id', 'desc')->get(),
+            'projects'           => Project::notArchived()->with(['sprints', 'tasks', 'taskStatuses'])->orderBy('name')->get(),
+            'tasks'              => Task::orderBy('id', 'desc')->get(),
+            'prefill_project_id' => $prefillProjectId,
         ]);
     }
 
