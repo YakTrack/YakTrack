@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProjectIndexRequest;
 use App\Models\Client;
 use App\Models\Project;
 use Illuminate\Http\RedirectResponse;
@@ -14,15 +15,54 @@ class ProjectController extends Controller
     /**
      * Show a list of projects.
      */
-    public function index(): Response
+    public function index(ProjectIndexRequest $request): Response
     {
+        $state = $request->tableState();
+
+        $query = Project::query()
+            ->notArchived()
+            ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
+            ->select('projects.*')
+            ->with(['client:id,name'])
+            ->withCount(['sprints', 'tasks', 'acceptanceCriteria', 'testRuns']);
+
+        if ($state['q'] !== '') {
+            $term = '%'.addcslashes($state['q'], '%_\\').'%';
+            $query->where(function ($q) use ($term): void {
+                $q->where('projects.name', 'like', $term)
+                    ->orWhere('projects.description', 'like', $term)
+                    ->orWhere('clients.name', 'like', $term);
+            });
+        }
+
+        if ($state['client_id'] !== null) {
+            $query->where('projects.client_id', $state['client_id']);
+        }
+
+        match ($state['sort']) {
+            'client' => $query
+                ->orderBy('clients.name', $state['direction'])
+                ->orderBy('projects.name'),
+            default => $query->orderBy('projects.name', $state['direction']),
+        };
+
+        $projects = $query
+            ->paginate($state['per_page'])
+            ->withQueryString()
+            ->through(fn (Project $project) => $project->append(['isDeletable', 'isArchived']));
+
         return Inertia::render('Project/Index', [
-            'projects' => Project::notArchived()
-                ->orderBy('name')
-                ->with('sprints', 'tasks', 'client')
-                ->get()
-                ->map
-                ->append(['isDeletable', 'isArchived']),
+            'projects' => $projects,
+            'clients'  => Client::query()->orderBy('name')->get(['id', 'name']),
+            'table'    => [
+                'filters' => [
+                    'q'         => $state['q'],
+                    'client_id' => $state['client_id'] !== null ? (string) $state['client_id'] : '',
+                ],
+                'sort'      => $state['sort'],
+                'direction' => $state['direction'],
+                'per_page'  => $state['per_page'],
+            ],
         ]);
     }
 

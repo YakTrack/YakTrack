@@ -129,6 +129,13 @@ class Project extends Model
 
     public function isDeletable(): bool
     {
+        if ($this->hasPrecomputedDeletableCounts()) {
+            return (int) $this->attributes['sprints_count'] === 0
+                && (int) $this->attributes['tasks_count'] === 0
+                && (int) $this->attributes['acceptance_criteria_count'] === 0
+                && (int) $this->attributes['test_runs_count'] === 0;
+        }
+
         if ($this->sprints->count() > 0) {
             return false;
         }
@@ -143,6 +150,17 @@ class Project extends Model
 
         if ($this->testRuns->count() > 0) {
             return false;
+        }
+
+        return true;
+    }
+
+    private function hasPrecomputedDeletableCounts(): bool
+    {
+        foreach (['sprints_count', 'tasks_count', 'acceptance_criteria_count', 'test_runs_count'] as $key) {
+            if (! array_key_exists($key, $this->attributes)) {
+                return false;
+            }
         }
 
         return true;
