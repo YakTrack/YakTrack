@@ -39,20 +39,20 @@ class SprintController extends Controller
         }
 
         match ($state['lifecycle']) {
-            'open' => $query->where('sprints.is_open', 1),
+            'open'   => $query->where('sprints.is_open', 1),
             'closed' => $query->where('sprints.is_open', 0),
-            default => null,
+            default  => null,
         };
 
         $minProjectSql = $this->minProjectNameSubquerySql();
         $durationSql = $this->durationSumSubquerySql();
 
         match ($state['sort']) {
-            'name' => $query->orderBy('sprints.name', $direction)->orderBy('sprints.id', 'desc'),
-            'project' => $query->orderByRaw("{$minProjectSql} {$direction}")->orderBy('sprints.id', 'desc'),
-            'status' => $query->orderBy('sprints.is_open', $direction)->orderBy('sprints.id', 'desc'),
+            'name'     => $query->orderBy('sprints.name', $direction)->orderBy('sprints.id', 'desc'),
+            'project'  => $query->orderByRaw("{$minProjectSql} {$direction}")->orderBy('sprints.id', 'desc'),
+            'status'   => $query->orderBy('sprints.is_open', $direction)->orderBy('sprints.id', 'desc'),
             'duration' => $query->orderByRaw("{$durationSql} {$direction}")->orderBy('sprints.id', 'desc'),
-            default => $query->orderBy('sprints.id', $direction),
+            default    => $query->orderBy('sprints.id', $direction),
         };
 
         /** @var LengthAwarePaginator<int, Sprint> $paginator */
@@ -94,7 +94,7 @@ class SprintController extends Controller
     {
         return match (DB::connection()->getDriverName()) {
             'sqlite' => '(SELECT COALESCE(SUM(CASE WHEN sessions.ended_at IS NOT NULL THEN (strftime(\'%s\', sessions.ended_at) - strftime(\'%s\', sessions.started_at)) ELSE 0 END), 0) FROM sessions WHERE sessions.sprint_id = sprints.id)',
-            default => '(SELECT COALESCE(SUM(CASE WHEN sessions.ended_at IS NOT NULL THEN TIMESTAMPDIFF(SECOND, sessions.started_at, sessions.ended_at) ELSE 0 END), 0) FROM sessions WHERE sessions.sprint_id = sprints.id)',
+            default  => '(SELECT COALESCE(SUM(CASE WHEN sessions.ended_at IS NOT NULL THEN TIMESTAMPDIFF(SECOND, sessions.started_at, sessions.ended_at) ELSE 0 END), 0) FROM sessions WHERE sessions.sprint_id = sprints.id)',
         };
     }
 
@@ -113,7 +113,7 @@ class SprintController extends Controller
 
         $sumExpr = match (DB::connection()->getDriverName()) {
             'sqlite' => 'SUM(CASE WHEN ended_at IS NOT NULL THEN (strftime(\'%s\', ended_at) - strftime(\'%s\', started_at)) ELSE 0 END)',
-            default => 'SUM(CASE WHEN ended_at IS NOT NULL THEN TIMESTAMPDIFF(SECOND, started_at, ended_at) ELSE 0 END)',
+            default  => 'SUM(CASE WHEN ended_at IS NOT NULL THEN TIMESTAMPDIFF(SECOND, started_at, ended_at) ELSE 0 END)',
         };
 
         /** @var Collection<int, float|int|string> $rows */

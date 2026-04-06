@@ -186,8 +186,8 @@ class ProjectController extends Controller
         }
 
         $query = match ($state['billable']) {
-            'yes' => $query->where('sessions.is_billable', true),
-            'no' => $query->where('sessions.is_billable', false),
+            'yes'   => $query->where('sessions.is_billable', true),
+            'no'    => $query->where('sessions.is_billable', false),
             default => $query,
         };
 
@@ -195,12 +195,12 @@ class ProjectController extends Controller
 
         $query = match ($state['sort']) {
             'started_at' => $query->orderBy('sessions.started_at', $dir)->orderBy('sessions.id', 'desc'),
-            'task' => $query->orderBy('tasks.name', $dir)->orderBy('sessions.id', 'desc'),
-            'sprint' => $query->orderBy('sprints.name', $dir)->orderBy('sessions.id', 'desc'),
-            'category' => $query->orderBy('session_categories.name', $dir)->orderBy('sessions.id', 'desc'),
-            'duration' => $query->orderByRaw('TIMESTAMPDIFF(SECOND, sessions.started_at, sessions.ended_at) '.$dir)->orderBy('sessions.id', 'desc'),
-            'billable' => $query->orderBy('sessions.is_billable', $dir)->orderBy('sessions.id', 'desc'),
-            default => $query->orderBy('sessions.ended_at', $dir)->orderBy('sessions.id', 'desc'),
+            'task'       => $query->orderBy('tasks.name', $dir)->orderBy('sessions.id', 'desc'),
+            'sprint'     => $query->orderBy('sprints.name', $dir)->orderBy('sessions.id', 'desc'),
+            'category'   => $query->orderBy('session_categories.name', $dir)->orderBy('sessions.id', 'desc'),
+            'duration'   => $query->orderByRaw('TIMESTAMPDIFF(SECOND, sessions.started_at, sessions.ended_at) '.$dir)->orderBy('sessions.id', 'desc'),
+            'billable'   => $query->orderBy('sessions.is_billable', $dir)->orderBy('sessions.id', 'desc'),
+            default      => $query->orderBy('sessions.ended_at', $dir)->orderBy('sessions.id', 'desc'),
         };
 
         return $query
