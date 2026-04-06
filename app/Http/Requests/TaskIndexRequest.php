@@ -52,7 +52,7 @@ class TaskIndexRequest extends FormRequest
             $projectId = $this->input('project_id');
             $statusId = $this->input('status_id');
             if ($projectId && $statusId
-                && ! TaskStatus::query()->whereKey($statusId)->where('project_id', $projectId)->exists()) {
+                && !TaskStatus::query()->whereKey($statusId)->where('project_id', $projectId)->exists()) {
                 $validator->errors()->add(
                     'status_id',
                     'The selected status is invalid for this project.',

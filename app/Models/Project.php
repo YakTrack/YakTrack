@@ -158,7 +158,7 @@ class Project extends Model
     private function hasPrecomputedDeletableCounts(): bool
     {
         foreach (['sprints_count', 'tasks_count', 'acceptance_criteria_count', 'test_runs_count'] as $key) {
-            if (! array_key_exists($key, $this->attributes)) {
+            if (!array_key_exists($key, $this->attributes)) {
                 return false;
             }
         }

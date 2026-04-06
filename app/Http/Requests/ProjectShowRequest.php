@@ -46,13 +46,13 @@ class ProjectShowRequest extends FormRequest
                     if ($value === null || $value === 'none') {
                         return;
                     }
-                    if (! is_numeric($value) || ! Sprint::query()->whereKey($value)->exists()) {
+                    if (!is_numeric($value) || !Sprint::query()->whereKey($value)->exists()) {
                         $fail('The selected sprint filter is invalid.');
                     }
                 },
             ],
-            'billable' => ['nullable', 'string', Rule::in(['yes', 'no'])],
-            'sort'     => ['required', 'string', Rule::in(['ended_at', 'started_at', 'task', 'sprint', 'category', 'duration', 'billable'])],
+            'billable'  => ['nullable', 'string', Rule::in(['yes', 'no'])],
+            'sort'      => ['required', 'string', Rule::in(['ended_at', 'started_at', 'task', 'sprint', 'category', 'duration', 'billable'])],
             'direction' => ['required', 'string', Rule::in(['asc', 'desc'])],
             'per_page'  => ['required', 'integer', Rule::in([10, 15, 25, 50])],
         ];

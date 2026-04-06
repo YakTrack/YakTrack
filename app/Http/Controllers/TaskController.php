@@ -49,7 +49,7 @@ class TaskController extends Controller
         }
 
         match ($state['sort']) {
-            'name' => $query->orderBy('tasks.name', $state['direction']),
+            'name'    => $query->orderBy('tasks.name', $state['direction']),
             'project' => $query
                 ->orderBy('projects.name', $state['direction'])
                 ->orderBy('tasks.id', 'desc'),
