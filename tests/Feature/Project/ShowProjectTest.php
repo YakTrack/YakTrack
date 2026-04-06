@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Project;
+use App\Models\Session;
+use App\Models\Sprint;
 use App\Models\Task;
 use App\Models\TaskStatus;
 
@@ -200,4 +202,64 @@ it('handles tasks without status', function () {
 
     $taskData = $response->props()['tasks']['data'][0];
     expect($taskData['task_status'])->toBeNull();
+});
+
+it('defaults to overview tab and does not load sessions data', function () {
+    $project = Project::factory()->create();
+
+    $this->actingAsUser();
+
+    $response = $this->get(route('project.show', $project));
+
+    $response->assertSuccessful();
+    expect($response->props()['tab'])->toBe('overview');
+    expect($response->props()['sessions'])->toBeNull();
+    expect($response->props()['sessionsTable'])->toBeNull();
+});
+
+it('loads paginated sessions on the sessions tab', function () {
+    $project = Project::factory()->create();
+    $task = Task::factory()->create(['project_id' => $project->id]);
+
+    Session::factory()->count(3)->create([
+        'task_id'    => $task->id,
+        'started_at' => now()->subHour(),
+        'ended_at'   => now(),
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->get(route('project.show', $project).'?tab=sessions');
+
+    $response->assertSuccessful();
+    expect($response->props()['tab'])->toBe('sessions');
+    $response->assertHasProp('sessions');
+    $response->assertHasProp('sessions.data');
+    expect($response->props()['sessions']['total'])->toBe(3);
+    expect($response->props()['sessionsTable']['sort'])->toBe('ended_at');
+});
+
+it('filters sessions by no sprint on the sessions tab', function () {
+    $project = Project::factory()->create();
+    $task = Task::factory()->create(['project_id' => $project->id]);
+
+    Session::factory()->create([
+        'task_id'    => $task->id,
+        'sprint_id'  => null,
+        'started_at' => now()->subHour(),
+        'ended_at'   => now(),
+    ]);
+    Session::factory()->create([
+        'task_id'    => $task->id,
+        'sprint_id'  => Sprint::factory()->create()->id,
+        'started_at' => now()->subHour(),
+        'ended_at'   => now(),
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->get(route('project.show', $project).'?tab=sessions&sprint_id=none');
+
+    $response->assertSuccessful();
+    expect($response->props()['sessions']['total'])->toBe(1);
 });

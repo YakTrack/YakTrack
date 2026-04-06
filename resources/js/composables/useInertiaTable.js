@@ -14,6 +14,9 @@ import { computed, reactive, ref, watch } from 'vue'
  * @param {Record<string, string|number|''>} [options.filterDefaults] Initial / cleared filter values (e.g. { q: '', client_id: '' })
  * @param {{ sort: string, direction: string }} [options.sortDefaults] Defaults for sort / direction (clear + server fallback)
  * @param {number} [options.perPageDefault=15] Default rows per page
+ * @param {() => import('ziggy-js').RouteParams} [options.routeBinding] Second argument to `route()` (e.g. model id for `project.show`)
+ * @param {string} [options.pageQueryKey='page'] Query key for pagination (e.g. `sessions_page`)
+ * @param {string[]} [options.ignoreFilterKeys=[]] Keys excluded from "has active filters"
  */
 export function useInertiaTable({
     routeName,
@@ -21,6 +24,9 @@ export function useInertiaTable({
     filterDefaults = {},
     sortDefaults: sortDefaultsInput = {},
     perPageDefault = 15,
+    routeBinding = null,
+    pageQueryKey = 'page',
+    ignoreFilterKeys = [],
 }) {
     const page = usePage()
 
@@ -57,13 +63,23 @@ export function useInertiaTable({
             ...extra,
         }
 
-        return Object.fromEntries(
+        const merged = Object.fromEntries(
             Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== ''),
         )
+
+        if (pageQueryKey !== 'page' && merged.page !== undefined) {
+            merged[pageQueryKey] = merged.page
+            delete merged.page
+        }
+
+        return merged
     }
 
     const visit = (extra = {}) => {
-        router.get(window.route(routeName), buildParams(extra), {
+        const url = routeBinding
+            ? window.route(routeName, routeBinding())
+            : window.route(routeName)
+        router.get(url, buildParams(extra), {
             preserveState: true,
             preserveScroll: true,
             replace: true,
@@ -118,7 +134,12 @@ export function useInertiaTable({
     }
 
     const hasActiveFilters = computed(() => {
-        return Object.entries(filters).some(([, v]) => v !== undefined && v !== null && String(v).trim() !== '')
+        return Object.entries(filters).some(([key, v]) => {
+            if (ignoreFilterKeys.includes(key)) {
+                return false
+            }
+            return v !== undefined && v !== null && String(v).trim() !== ''
+        })
     })
 
     return {

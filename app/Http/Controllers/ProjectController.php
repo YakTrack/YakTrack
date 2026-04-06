@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProjectIndexRequest;
+use App\Http\Requests\ProjectShowRequest;
 use App\Models\Client;
 use App\Models\Project;
+use App\Models\Session;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -102,18 +104,33 @@ class ProjectController extends Controller
     /**
      * Show a single project.
      */
-    public function show(Project $project): Response
+    public function show(ProjectShowRequest $request, Project $project): Response
     {
-        $sessions = $project->sessions()
-            ->with(['task', 'sessionCategory'])
-            ->whereNotNull('ended_at')
-            ->orderBy('ended_at', 'desc')
-            ->paginate(15);
+        $tab = $request->validated('tab');
 
         $tasks = $project->tasks()
             ->with(['taskStatus'])
             ->orderBy('name')
             ->paginate(15, ['*'], 'tasks_page');
+
+        $sessions = null;
+        $sessionsTable = null;
+
+        if ($tab === 'sessions') {
+            $state = $request->sessionsTableState();
+            $sessions = $this->paginateProjectSessions($project, $state);
+            $sessionsTable = [
+                'filters' => [
+                    'q'         => $state['q'],
+                    'tab'       => 'sessions',
+                    'sprint_id' => $state['sprint_id'] !== null ? (string) $state['sprint_id'] : '',
+                    'billable'  => $state['billable'] ?? '',
+                ],
+                'sort'      => $state['sort'],
+                'direction' => $state['direction'],
+                'per_page'  => $state['per_page'],
+            ];
+        }
 
         return Inertia::render('Project/Show', [
             'project' => $project->load([
@@ -122,9 +139,74 @@ class ProjectController extends Controller
                     $query->withCount('tasks')->orderBy('sort_order');
                 },
             ]),
-            'sessions' => $sessions,
-            'tasks'    => $tasks,
+            'tab'                  => $tab,
+            'tasks'                => $tasks,
+            'sessions'             => $sessions,
+            'sessionsTable'        => $sessionsTable,
+            'sessionSprintFilters' => $project->sprints()->orderBy('name')->get(['id', 'name']),
         ]);
+    }
+
+    /**
+     * @param array{
+     *     q: string,
+     *     sprint_id: int|string|null,
+     *     billable: string|null,
+     *     sort: string,
+     *     direction: string,
+     *     per_page: int
+     * } $state
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator<int, \App\Models\Session>
+     */
+    private function paginateProjectSessions(Project $project, array $state): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    {
+        $query = Session::query()
+            ->select('sessions.*')
+            ->join('tasks', 'sessions.task_id', '=', 'tasks.id')
+            ->where('tasks.project_id', $project->id)
+            ->whereNotNull('sessions.ended_at')
+            ->leftJoin('sprints', 'sessions.sprint_id', '=', 'sprints.id')
+            ->leftJoin('session_categories', 'sessions.session_category_id', '=', 'session_categories.id');
+
+        if ($state['q'] !== '') {
+            $term = '%'.addcslashes($state['q'], '%_\\').'%';
+            $query->where(function ($q) use ($term): void {
+                $q->where('tasks.name', 'like', $term)
+                    ->orWhere('sessions.comment', 'like', $term)
+                    ->orWhere('sprints.name', 'like', $term)
+                    ->orWhere('session_categories.name', 'like', $term);
+            });
+        }
+
+        if ($state['sprint_id'] === 'none') {
+            $query->whereNull('sessions.sprint_id');
+        } elseif ($state['sprint_id'] !== null) {
+            $query->where('sessions.sprint_id', (int) $state['sprint_id']);
+        }
+
+        $query = match ($state['billable']) {
+            'yes' => $query->where('sessions.is_billable', true),
+            'no' => $query->where('sessions.is_billable', false),
+            default => $query,
+        };
+
+        $dir = $state['direction'];
+
+        $query = match ($state['sort']) {
+            'started_at' => $query->orderBy('sessions.started_at', $dir)->orderBy('sessions.id', 'desc'),
+            'task' => $query->orderBy('tasks.name', $dir)->orderBy('sessions.id', 'desc'),
+            'sprint' => $query->orderBy('sprints.name', $dir)->orderBy('sessions.id', 'desc'),
+            'category' => $query->orderBy('session_categories.name', $dir)->orderBy('sessions.id', 'desc'),
+            'duration' => $query->orderByRaw('TIMESTAMPDIFF(SECOND, sessions.started_at, sessions.ended_at) '.$dir)->orderBy('sessions.id', 'desc'),
+            'billable' => $query->orderBy('sessions.is_billable', $dir)->orderBy('sessions.id', 'desc'),
+            default => $query->orderBy('sessions.ended_at', $dir)->orderBy('sessions.id', 'desc'),
+        };
+
+        return $query
+            ->with(['task', 'sessionCategory', 'sprint'])
+            ->paginate($state['per_page'], ['*'], 'sessions_page')
+            ->withQueryString();
     }
 
     /**

@@ -34,8 +34,33 @@
                     Board View
                 </a>
             </div>
+
+            <!-- Project tabs -->
+            <div class="mt-6 flex flex-wrap gap-2 border-t border-gray-200 pt-4 dark:border-gray-700">
+                <Link
+                    :href="route('project.show', project.id) + '?tab=overview'"
+                    class="px-4 py-2 rounded text-sm border transition"
+                    :class="tab === 'overview'
+                        ? 'bg-blue-50 border-blue-500 text-blue-700 dark:bg-blue-950/40 dark:border-blue-400 dark:text-blue-200'
+                        : 'border-gray-200 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800'"
+                >
+                    <i class="fa fa-th-large mr-1"></i>
+                    Overview
+                </Link>
+                <Link
+                    :href="route('project.show', project.id) + '?tab=sessions'"
+                    class="px-4 py-2 rounded text-sm border transition"
+                    :class="tab === 'sessions'
+                        ? 'bg-blue-50 border-blue-500 text-blue-700 dark:bg-blue-950/40 dark:border-blue-400 dark:text-blue-200'
+                        : 'border-gray-200 hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800'"
+                >
+                    <i class="fa fa-clock mr-1"></i>
+                    Sessions
+                </Link>
+            </div>
         </div>
 
+        <template v-if="tab === 'overview'">
         <!-- Task Statuses Section -->
         <div class="card mt-4">
             <div class="flex items-center justify-between mb-4">
@@ -250,157 +275,60 @@
                 </button-link>
             </div>
         </div>
+        </template>
 
-        <!-- Sessions Section -->
-        <div class="card mt-4">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-medium text-gray-dark">Recent Sessions</h2>
-            </div>
-
-            <div v-if="sessions.data && sessions.data.length > 0">
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th class="pl-0 pr-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Date
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Task
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Category
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Duration
-                                </th>
-                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Billable
-                                </th>
-                                <th class="pl-6 pr-0 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Comment
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200">
-                            <tr v-for="session in sessions.data" :key="session.id" class="hover:bg-gray-50">
-                                <td class="pr-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ formatDate(session.ended_at) }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    <a v-if="session.task" :href="route('task.show', session.task.id)" class="text-blue-600 hover:text-blue-900 text-sm font-medium">
-                                        {{ session.task.name }}
-                                    </a>
-                                    <span v-else class="text-sm text-gray-500"> - </span>
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ session.session_category ? session.session_category.name : '-' }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    {{ formatDuration(session.started_at, session.ended_at) }}
-                                </td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                    <span v-if="session.is_billable" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                                        Yes
-                                    </span>
-                                    <span v-else class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-800">
-                                        No
-                                    </span>
-                                </td>
-                                <td class="pl-6 py-4 text-sm text-gray-900 max-w-xs truncate">
-                                    {{ session.comment || '-' }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Pagination -->
-                <div v-if="sessions.links" class="mt-6">
-                    <nav class="flex items-center justify-between">
-                        <div class="flex-1 flex justify-between sm:hidden">
-                            <a v-if="sessions.prev_page_url" :href="sessions.prev_page_url" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                                Previous
-                            </a>
-                            <a v-if="sessions.next_page_url" :href="sessions.next_page_url" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                                Next
-                            </a>
-                        </div>
-                        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                            <div>
-                                <p class="text-sm text-gray-700">
-                                    Showing
-                                    <span class="font-medium">{{ sessions.from }}</span>
-                                    to
-                                    <span class="font-medium">{{ sessions.to }}</span>
-                                    of
-                                    <span class="font-medium">{{ sessions.total }}</span>
-                                    results
-                                </p>
-                            </div>
-                            <div>
-                                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                    <a v-if="sessions.prev_page_url" :href="sessions.prev_page_url" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                        Previous
-                                    </a>
-                                    <a v-if="sessions.next_page_url" :href="sessions.next_page_url" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                        Next
-                                    </a>
-                                </nav>
-                            </div>
-                        </div>
-                    </nav>
-                </div>
-            </div>
-
-            <div v-else class="text-center py-8 text-gray-500">
-                <i class="fa fa-clock text-4xl mb-4"></i>
-                <p class="text-lg mb-2">No sessions yet</p>
-                <p class="mb-4">Sessions will appear here as work is tracked on this project.</p>
-            </div>
+        <div v-else-if="tab === 'sessions' && sessions" class="mt-4">
+            <project-sessions-tab
+                :project="project"
+                :sessions="sessions"
+                :session-sprint-filters="sessionSprintFilters"
+            />
         </div>
     </layout>
 </template>
 
 <script>
 
+    import { Link } from '@inertiajs/vue3';
     import breadcrumbs from '@/Shared/Breadcrumbs.vue';
     import deleteButton from '@/Shared/DeleteButton.vue';
     import layout from '@/Shared/Layout.vue';
+    import ProjectSessionsTab from '@/Pages/Project/ProjectSessionsTab.vue';
 
     export default {
-        props: [
-            'project',
-            'sessions',
-            'tasks',
-        ],
+        props: {
+            project: {
+                type: Object,
+                required: true,
+            },
+            tab: {
+                type: String,
+                default: 'overview',
+            },
+            tasks: {
+                type: Object,
+                required: true,
+            },
+            sessions: {
+                type: Object,
+                default: null,
+            },
+            sessionsTable: {
+                type: Object,
+                default: null,
+            },
+            sessionSprintFilters: {
+                type: Array,
+                default: () => [],
+            },
+        },
         components: {
+            Link,
             breadcrumbs: breadcrumbs,
             deleteButton: deleteButton,
             layout: layout,
+            ProjectSessionsTab,
         },
-        methods: {
-            formatDate(date) {
-                return new Date(date).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                });
-            },
-            formatDuration(startedAt, endedAt) {
-                const start = new Date(startedAt);
-                const end = new Date(endedAt);
-                const diffMs = end - start;
-                const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-                const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-
-                if (diffHours > 0) {
-                    return `${diffHours}h ${diffMinutes}m`;
-                }
-
-                return `${diffMinutes}m`;
-            }
-        }
     }
 
 </script>
