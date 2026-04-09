@@ -20,6 +20,9 @@ pest()->extend(Tests\TestCase::class)
     ->in('Unit/Support', 'Unit/Statistics', 'Unit/Models');
 
 pest()->extend(Tests\TestCase::class)
+    ->in('Unit/Integrations');
+
+pest()->extend(Tests\TestCase::class)
     ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Unit/SessionTest.php', 'Unit/ProjectTaskCodeTest.php');
 

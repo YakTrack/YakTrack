@@ -61,6 +61,75 @@
         </div>
 
         <template v-if="tab === 'overview'">
+        <!-- Jira -->
+        <div class="card mt-4">
+            <h2 class="text-lg font-medium text-gray-dark dark:text-gray-100 mb-2">Jira</h2>
+            <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                Connect a Jira Cloud site so you can create Yaktrack tasks from Jira issues.
+                Create an API token in your
+                <a
+                    href="https://id.atlassian.com/manage-profile/security/api-tokens"
+                    class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >Atlassian account security settings</a>.
+            </p>
+
+            <div v-if="!jira.connected">
+                <form @submit.prevent="submitJiraConnect">
+                    <form-field
+                        v-model="jiraForm.site_host"
+                        type="text"
+                        label="Jira site host"
+                        placeholder="e.g. yourcompany.atlassian.net"
+                        :required="true"
+                        :error="errors.site_host"
+                    />
+                    <form-field
+                        v-model="jiraForm.account_email"
+                        type="email"
+                        label="Atlassian account email"
+                        placeholder="you@company.com"
+                        :required="true"
+                        :error="errors.account_email"
+                    />
+                    <form-field
+                        v-model="jiraForm.api_token"
+                        type="password"
+                        label="API token"
+                        placeholder="Your Jira API token"
+                        :required="true"
+                        :error="errors.api_token"
+                    />
+                    <button type="submit" class="btn btn-blue" :disabled="processing">
+                        Connect Jira
+                    </button>
+                </form>
+            </div>
+            <div v-else>
+                <p class="text-sm text-gray-700 dark:text-gray-300 mb-4">
+                    Connected to <strong class="font-medium">{{ jira.site_host }}</strong>
+                </p>
+                <button type="button" class="btn btn-default mb-6" @click="disconnectJira">
+                    Disconnect Jira
+                </button>
+
+                <form @submit.prevent="submitJiraImport">
+                    <form-field
+                        v-model="importIssueKey"
+                        type="text"
+                        label="Import issue as task"
+                        placeholder="e.g. PROJ-123"
+                        :required="true"
+                        :error="errors.issue_key"
+                    />
+                    <button type="submit" class="btn btn-blue" :disabled="processing">
+                        Create task from Jira issue
+                    </button>
+                </form>
+            </div>
+        </div>
+
         <!-- Task Statuses Section -->
         <div class="card mt-4">
             <div class="flex items-center justify-between mb-4">
@@ -292,6 +361,7 @@
     import { Link } from '@inertiajs/vue3';
     import breadcrumbs from '@/Shared/Breadcrumbs.vue';
     import deleteButton from '@/Shared/DeleteButton.vue';
+    import formField from '@/Shared/FormField.vue';
     import layout from '@/Shared/Layout.vue';
     import ProjectSessionsTab from '@/Pages/Project/ProjectSessionsTab.vue';
 
@@ -321,13 +391,54 @@
                 type: Array,
                 default: () => [],
             },
+            jira: {
+                type: Object,
+                default: () => ({
+                    connected: false,
+                    site_host: null,
+                }),
+            },
+        },
+        data() {
+            return {
+                jiraForm: {
+                    site_host: '',
+                    account_email: '',
+                    api_token: '',
+                },
+                importIssueKey: '',
+            };
         },
         components: {
             Link,
             breadcrumbs: breadcrumbs,
             deleteButton: deleteButton,
+            formField: formField,
             layout: layout,
             ProjectSessionsTab,
+        },
+        computed: {
+            errors() {
+                return this.$page.props.errors || {};
+            },
+            processing() {
+                return this.$inertia.processing;
+            },
+        },
+        methods: {
+            submitJiraConnect() {
+                this.$inertia.post(route('project.jira.store', this.project.id), this.jiraForm);
+            },
+            disconnectJira() {
+                if (confirm('Disconnect Jira from this project?')) {
+                    this.$inertia.delete(route('project.jira.destroy', this.project.id));
+                }
+            },
+            submitJiraImport() {
+                this.$inertia.post(route('project.jira.import', this.project.id), {
+                    issue_key: this.importIssueKey,
+                });
+            },
         },
     }
 

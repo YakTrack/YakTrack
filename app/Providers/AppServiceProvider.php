@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Integrations\ThirdPartyTasks\ExternalTaskIntegrationManager;
 use App\Models\User;
 use Auth;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +30,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->singleton(ExternalTaskIntegrationManager::class);
+
         Inertia::version(function () {
             return md5_file(public_path('mix-manifest.json'));
         });

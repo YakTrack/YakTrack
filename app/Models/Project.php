@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Project extends Model
 {
@@ -81,6 +82,16 @@ class Project extends Model
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);
+    }
+
+    /**
+     * Optional Jira Cloud connection for importing issues as tasks.
+     *
+     * @return HasOne<ProjectJiraIntegration, $this>
+     */
+    public function jiraIntegration(): HasOne
+    {
+        return $this->hasOne(ProjectJiraIntegration::class);
     }
 
     /**

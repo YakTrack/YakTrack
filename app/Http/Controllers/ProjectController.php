@@ -132,18 +132,25 @@ class ProjectController extends Controller
             ];
         }
 
+        $project->load([
+            'client',
+            'jiraIntegration',
+            'taskStatuses' => function ($query) {
+                $query->withCount('tasks')->orderBy('sort_order');
+            },
+        ]);
+
         return Inertia::render('Project/Show', [
-            'project' => $project->load([
-                'client',
-                'taskStatuses' => function ($query) {
-                    $query->withCount('tasks')->orderBy('sort_order');
-                },
-            ]),
-            'tab'                  => $tab,
-            'tasks'                => $tasks,
-            'sessions'             => $sessions,
-            'sessionsTable'        => $sessionsTable,
+            'project' => $project,
+            'tab' => $tab,
+            'tasks' => $tasks,
+            'sessions' => $sessions,
+            'sessionsTable' => $sessionsTable,
             'sessionSprintFilters' => $project->sprints()->orderBy('name')->get(['id', 'name']),
+            'jira' => [
+                'connected' => $project->jiraIntegration !== null,
+                'site_host' => $project->jiraIntegration?->site_host,
+            ],
         ]);
     }
 

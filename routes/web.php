@@ -42,6 +42,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('client', 'ClientController');
     Route::resource('project', 'ProjectController');
     Route::get('project/{project}/kanban', 'ProjectController@kanban')->name('project.kanban');
+    Route::post('project/{project}/jira', 'ProjectJiraController@store')->name('project.jira.store');
+    Route::delete('project/{project}/jira', 'ProjectJiraController@destroy')->name('project.jira.destroy');
+    Route::post('project/{project}/jira/import', 'ProjectJiraController@import')->name('project.jira.import');
     Route::patch('project/{project}/archive', 'ProjectController@archive')->name('project.archive');
     Route::patch('project/{project}/unarchive', 'ProjectController@unarchive')->name('project.unarchive');
     Route::get('project-archived', 'ProjectController@archived')->name('project.archived');
