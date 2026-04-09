@@ -111,18 +111,19 @@ class ProjectController extends Controller
         $tasks = $project->tasks()
             ->with(['taskStatus'])
             ->orderBy('name')
-            ->paginate(15, ['*'], 'tasks_page');
+            ->paginate(15, ['*'], 'tasks_page')
+            ->withQueryString();
 
         $sessions = null;
         $sessionsTable = null;
 
-        if ($tab === 'sessions') {
+        if ($tab === 'overview') {
             $state = $request->sessionsTableState();
             $sessions = $this->paginateProjectSessions($project, $state);
             $sessionsTable = [
                 'filters' => [
                     'q'         => $state['q'],
-                    'tab'       => 'sessions',
+                    'tab'       => 'overview',
                     'sprint_id' => $state['sprint_id'] !== null ? (string) $state['sprint_id'] : '',
                     'billable'  => $state['billable'] ?? '',
                 ],

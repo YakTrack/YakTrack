@@ -21,7 +21,7 @@ it('stores jira credentials when the jira api accepts them', function () {
         'api_token' => 'token-token-token-token',
     ]);
 
-    $response->assertRedirect(route('project.show', $project));
+    $response->assertRedirect(route('project.show', $project).'?tab=integrations');
 
     $this->assertDatabaseHas('project_jira_integrations', [
         'project_id' => $project->id,
@@ -46,7 +46,7 @@ it('rejects jira credentials when verification fails', function () {
         'api_token' => 'token-token-token-token',
     ]);
 
-    $response->assertRedirect(route('project.show', $project));
+    $response->assertRedirect(route('project.show', $project).'?tab=integrations');
     $response->assertSessionHasErrors('site_host');
 
     expect(ProjectJiraIntegration::query()->where('project_id', $project->id)->exists())->toBeFalse();
@@ -86,7 +86,7 @@ it('imports a jira issue as a task', function () {
         'issue_key' => 'KEY-1',
     ]);
 
-    $response->assertRedirect(route('project.show', $project));
+    $response->assertRedirect(route('project.show', $project).'?tab=tasks');
 
     $task = Task::query()->where('project_id', $project->id)->first();
     expect($task)->not->toBeNull();
@@ -125,7 +125,7 @@ it('does not import the same jira issue twice', function () {
         'issue_key' => 'KEY-1',
     ]);
 
-    $response->assertRedirect(route('project.show', $project));
+    $response->assertRedirect(route('project.show', $project).'?tab=integrations');
     $response->assertSessionHasErrors('issue_key');
 
     expect(Task::query()->where('project_id', $project->id)->count())->toBe(1);

@@ -20,6 +20,11 @@ class ProjectJiraController extends Controller
         private ExternalTaskIntegrationManager $externalTaskIntegrations
     ) {}
 
+    private function redirectToProjectTab(Project $project, string $tab): RedirectResponse
+    {
+        return redirect()->to(route('project.show', $project).'?tab='.urlencode($tab));
+    }
+
     public function store(StoreProjectJiraIntegrationRequest $request, Project $project): RedirectResponse
     {
         $validated = $request->validated();
@@ -31,8 +36,7 @@ class ProjectJiraController extends Controller
                 'api_token' => $validated['api_token'],
             ]);
         } catch (RequestException) {
-            return redirect()
-                ->route('project.show', $project)
+            return $this->redirectToProjectTab($project, 'integrations')
                 ->withErrors([
                     'site_host' => 'We could not verify these Jira credentials. Check the site host, email, and API token.',
                 ]);
@@ -47,8 +51,7 @@ class ProjectJiraController extends Controller
             ]
         );
 
-        return redirect()
-            ->route('project.show', $project)
+        return $this->redirectToProjectTab($project, 'integrations')
             ->with('success', 'Jira is connected to this project.');
     }
 
@@ -56,8 +59,7 @@ class ProjectJiraController extends Controller
     {
         $project->jiraIntegration?->delete();
 
-        return redirect()
-            ->route('project.show', $project)
+        return $this->redirectToProjectTab($project, 'integrations')
             ->with('success', 'Jira has been disconnected from this project.');
     }
 
@@ -66,8 +68,7 @@ class ProjectJiraController extends Controller
         $fetcher = $this->externalTaskIntegrations->fetcherForProject($project);
 
         if ($fetcher === null) {
-            return redirect()
-                ->route('project.show', $project)
+            return $this->redirectToProjectTab($project, 'integrations')
                 ->withErrors([
                     'issue_key' => 'Connect Jira to this project before importing issues.',
                 ]);
@@ -77,8 +78,7 @@ class ProjectJiraController extends Controller
         $normalizedKey = Str::upper($issueKeyInput);
 
         if (Task::query()->where('project_id', $project->id)->where('jira_issue_key', $normalizedKey)->exists()) {
-            return redirect()
-                ->route('project.show', $project)
+            return $this->redirectToProjectTab($project, 'integrations')
                 ->withErrors([
                     'issue_key' => 'This Jira issue has already been imported.',
                 ]);
@@ -88,8 +88,7 @@ class ProjectJiraController extends Controller
             $payload = $fetcher->fetch($issueKeyInput);
         } catch (RequestException $e) {
             if ($e->response !== null && $e->response->status() === 404) {
-                return redirect()
-                    ->route('project.show', $project)
+                return $this->redirectToProjectTab($project, 'integrations')
                     ->withErrors([
                         'issue_key' => 'That Jira issue could not be found.',
                     ]);
@@ -97,16 +96,14 @@ class ProjectJiraController extends Controller
 
             report($e);
 
-            return redirect()
-                ->route('project.show', $project)
+            return $this->redirectToProjectTab($project, 'integrations')
                 ->withErrors([
                     'issue_key' => 'Could not load that issue from Jira. Try again later.',
                 ]);
         }
 
         if (Task::query()->where('project_id', $project->id)->where('jira_issue_key', $payload->externalKey)->exists()) {
-            return redirect()
-                ->route('project.show', $project)
+            return $this->redirectToProjectTab($project, 'integrations')
                 ->withErrors([
                     'issue_key' => 'This Jira issue has already been imported.',
                 ]);
@@ -138,8 +135,7 @@ class ProjectJiraController extends Controller
             'jira_issue_key' => $payload->externalKey,
         ]);
 
-        return redirect()
-            ->route('project.show', $project)
+        return $this->redirectToProjectTab($project, 'tasks')
             ->with('success', sprintf('Created task from Jira issue %s.', $payload->externalKey));
     }
 }

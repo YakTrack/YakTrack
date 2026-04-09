@@ -38,7 +38,7 @@ class ProjectShowRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'tab'       => ['required', 'string', Rule::in(['overview', 'sessions'])],
+            'tab'       => ['required', 'string', Rule::in(['overview', 'tasks', 'integrations'])],
             'q'         => ['nullable', 'string', 'max:255'],
             'sprint_id' => [
                 'nullable',

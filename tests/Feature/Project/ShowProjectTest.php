@@ -108,15 +108,17 @@ it('paginates tasks correctly', function () {
 
     $this->actingAsUser();
 
+    $tasksTab = route('project.show', $project).'?tab=tasks';
+
     // Test first page
-    $response = $this->get(route('project.show', $project));
+    $response = $this->get($tasksTab);
     $response->assertSuccessful();
     $response->assertPropValue('tasks.current_page', 1);
     $response->assertPropValue('tasks.total', 20);
     $response->assertPropCount('tasks.data', 15);
 
     // Test second page with tasks_page parameter
-    $response = $this->get(route('project.show', $project).'?tasks_page=2');
+    $response = $this->get($tasksTab.'&tasks_page=2');
     $response->assertSuccessful();
     $response->assertPropValue('tasks.current_page', 2);
     $response->assertPropValue('tasks.total', 20);
@@ -204,7 +206,7 @@ it('handles tasks without status', function () {
     expect($taskData['task_status'])->toBeNull();
 });
 
-it('defaults to overview tab and does not load sessions data', function () {
+it('defaults to overview tab and loads sessions data', function () {
     $project = Project::factory()->create();
 
     $this->actingAsUser();
@@ -213,11 +215,12 @@ it('defaults to overview tab and does not load sessions data', function () {
 
     $response->assertSuccessful();
     expect($response->props()['tab'])->toBe('overview');
-    expect($response->props()['sessions'])->toBeNull();
-    expect($response->props()['sessionsTable'])->toBeNull();
+    $response->assertHasProp('sessions');
+    $response->assertHasProp('sessions.data');
+    expect($response->props()['sessionsTable']['sort'])->toBe('ended_at');
 });
 
-it('loads paginated sessions on the sessions tab', function () {
+it('loads paginated sessions on the overview tab', function () {
     $project = Project::factory()->create();
     $task = Task::factory()->create(['project_id' => $project->id]);
 
@@ -229,17 +232,17 @@ it('loads paginated sessions on the sessions tab', function () {
 
     $this->actingAsUser();
 
-    $response = $this->get(route('project.show', $project).'?tab=sessions');
+    $response = $this->get(route('project.show', $project).'?tab=overview');
 
     $response->assertSuccessful();
-    expect($response->props()['tab'])->toBe('sessions');
+    expect($response->props()['tab'])->toBe('overview');
     $response->assertHasProp('sessions');
     $response->assertHasProp('sessions.data');
     expect($response->props()['sessions']['total'])->toBe(3);
     expect($response->props()['sessionsTable']['sort'])->toBe('ended_at');
 });
 
-it('filters sessions by no sprint on the sessions tab', function () {
+it('filters sessions by no sprint on the overview tab', function () {
     $project = Project::factory()->create();
     $task = Task::factory()->create(['project_id' => $project->id]);
 
@@ -258,7 +261,7 @@ it('filters sessions by no sprint on the sessions tab', function () {
 
     $this->actingAsUser();
 
-    $response = $this->get(route('project.show', $project).'?tab=sessions&sprint_id=none');
+    $response = $this->get(route('project.show', $project).'?tab=overview&sprint_id=none');
 
     $response->assertSuccessful();
     expect($response->props()['sessions']['total'])->toBe(1);

@@ -251,7 +251,7 @@ const {
     pageQueryKey: 'sessions_page',
     ignoreFilterKeys: ['tab'],
     filterDefaults: {
-        tab: 'sessions',
+        tab: 'overview',
         q: '',
         sprint_id: '',
         billable: '',

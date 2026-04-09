@@ -20,23 +20,7 @@
                 {{ project.description }}
             </p>
 
-            <!-- View Switcher -->
-            <div class="mt-4 flex gap-2">
-                <a
-                    :href="route('project.show', project.id)"
-                    class="px-4 py-2 border rounded text-sm hover:bg-gray-50 transition"
-                >
-                    <i class="fa fa-list mr-1"></i>
-                    List View
-                </a>
-                <a
-                    :href="route('project.kanban', project.id)"
-                    class="px-4 py-2 border rounded text-sm bg-blue-50 border-blue-500 text-blue-700"
-                >
-                    <i class="fa fa-columns mr-1"></i>
-                    Board View
-                </a>
-            </div>
+            <project-tab-nav :project-id="project.id" active-tab="board" />
         </div>
 
         <!-- Kanban Board -->
@@ -123,6 +107,7 @@ import draggable from 'vuedraggable';
 import taskCard from '@/components/TaskCard.vue';
 import breadcrumbs from '@/Shared/Breadcrumbs.vue';
 import layout from '@/Shared/Layout.vue';
+import ProjectTabNav from '@/Pages/Project/ProjectTabNav.vue';
 
 export default {
     props: {
@@ -134,6 +119,7 @@ export default {
         taskCard,
         breadcrumbs,
         layout,
+        ProjectTabNav,
     },
     data() {
         return {
