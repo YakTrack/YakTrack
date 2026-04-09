@@ -33,7 +33,7 @@ class ProjectJiraIntegration extends Model
     {
         return [
             'account_email' => 'encrypted',
-            'api_token' => 'encrypted',
+            'api_token'     => 'encrypted',
         ];
     }
 }

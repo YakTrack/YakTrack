@@ -10,7 +10,8 @@ final class JiraRestClient
 {
     public function __construct(
         private ProjectJiraIntegration $integration
-    ) {}
+    ) {
+    }
 
     public static function verifyCredentials(string $siteHost, string $accountEmail, string $apiToken): void
     {

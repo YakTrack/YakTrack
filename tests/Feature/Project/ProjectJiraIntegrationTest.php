@@ -16,16 +16,16 @@ it('stores jira credentials when the jira api accepts them', function () {
     $this->actingAsUser();
 
     $response = $this->post(route('project.jira.store', $project), [
-        'site_host' => 'acme.atlassian.net',
+        'site_host'     => 'acme.atlassian.net',
         'account_email' => 'dev@example.com',
-        'api_token' => 'token-token-token-token',
+        'api_token'     => 'token-token-token-token',
     ]);
 
     $response->assertRedirect(route('project.show', $project).'?tab=integrations');
 
     $this->assertDatabaseHas('project_jira_integrations', [
         'project_id' => $project->id,
-        'site_host' => 'acme.atlassian.net',
+        'site_host'  => 'acme.atlassian.net',
     ]);
 
     expect(ProjectJiraIntegration::query()->where('project_id', $project->id)->exists())->toBeTrue();
@@ -41,9 +41,9 @@ it('rejects jira credentials when verification fails', function () {
     $this->actingAsUser();
 
     $response = $this->from(route('project.show', $project))->post(route('project.jira.store', $project), [
-        'site_host' => 'acme.atlassian.net',
+        'site_host'     => 'acme.atlassian.net',
         'account_email' => 'dev@example.com',
-        'api_token' => 'token-token-token-token',
+        'api_token'     => 'token-token-token-token',
     ]);
 
     $response->assertRedirect(route('project.show', $project).'?tab=integrations');
@@ -60,9 +60,9 @@ it('imports a jira issue as a task', function () {
 
         if (str_contains($request->url(), '/issue/KEY-1')) {
             return Http::response([
-                'key' => 'KEY-1',
+                'key'    => 'KEY-1',
                 'fields' => [
-                    'summary' => 'Fix the bug',
+                    'summary'     => 'Fix the bug',
                     'description' => null,
                 ],
             ], 200);
@@ -77,9 +77,9 @@ it('imports a jira issue as a task', function () {
     $this->actingAsUser();
 
     $this->post(route('project.jira.store', $project), [
-        'site_host' => 'acme.atlassian.net',
+        'site_host'     => 'acme.atlassian.net',
         'account_email' => 'dev@example.com',
-        'api_token' => 'token-token-token-token',
+        'api_token'     => 'token-token-token-token',
     ]);
 
     $response = $this->post(route('project.jira.import', $project), [
@@ -96,11 +96,11 @@ it('imports a jira issue as a task', function () {
 
 it('does not import the same jira issue twice', function () {
     Http::fake([
-        'https://acme.atlassian.net/rest/api/3/myself' => Http::response(['displayName' => 'Dev'], 200),
+        'https://acme.atlassian.net/rest/api/3/myself'  => Http::response(['displayName' => 'Dev'], 200),
         'https://acme.atlassian.net/rest/api/3/issue/*' => Http::response([
-            'key' => 'KEY-1',
+            'key'    => 'KEY-1',
             'fields' => [
-                'summary' => 'Fix the bug',
+                'summary'     => 'Fix the bug',
                 'description' => null,
             ],
         ], 200),
@@ -112,9 +112,9 @@ it('does not import the same jira issue twice', function () {
     $this->actingAsUser();
 
     $this->post(route('project.jira.store', $project), [
-        'site_host' => 'acme.atlassian.net',
+        'site_host'     => 'acme.atlassian.net',
         'account_email' => 'dev@example.com',
-        'api_token' => 'token-token-token-token',
+        'api_token'     => 'token-token-token-token',
     ]);
 
     $this->post(route('project.jira.import', $project), [
@@ -143,7 +143,7 @@ it('includes jira connection props on the project page', function () {
 
     ProjectJiraIntegration::factory()->create([
         'project_id' => $project->id,
-        'site_host' => 'acme.atlassian.net',
+        'site_host'  => 'acme.atlassian.net',
     ]);
 
     $response = $this->get(route('project.show', $project));

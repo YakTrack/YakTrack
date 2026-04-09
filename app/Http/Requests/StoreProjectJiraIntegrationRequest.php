@@ -17,16 +17,16 @@ class StoreProjectJiraIntegrationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'site_host' => ['required', 'string', 'max:255'],
+            'site_host'     => ['required', 'string', 'max:255'],
             'account_email' => ['required', 'email', 'max:255'],
-            'api_token' => ['required', 'string', 'min:8'],
+            'api_token'     => ['required', 'string', 'min:8'],
         ];
     }
 
     protected function prepareForValidation(): void
     {
         $host = $this->input('site_host');
-        if (! is_string($host)) {
+        if (!is_string($host)) {
             return;
         }
 
