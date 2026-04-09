@@ -5,7 +5,7 @@ namespace App\Integrations\ThirdPartyTasks\Jira;
 final class JiraAdfPlainText
 {
     /**
-     * @param  mixed  $description
+     * @param mixed $description
      */
     public static function fromIssueField(mixed $description): string
     {
@@ -17,7 +17,7 @@ final class JiraAdfPlainText
             return $description;
         }
 
-        if (! is_array($description)) {
+        if (!is_array($description)) {
             return '';
         }
 
@@ -25,7 +25,7 @@ final class JiraAdfPlainText
     }
 
     /**
-     * @param  array<string, mixed>  $node
+     * @param array<string, mixed> $node
      */
     private static function walk(array $node): string
     {

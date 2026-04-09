@@ -18,7 +18,8 @@ class ProjectJiraController extends Controller
 {
     public function __construct(
         private ExternalTaskIntegrationManager $externalTaskIntegrations
-    ) {}
+    ) {
+    }
 
     private function redirectToProjectTab(Project $project, string $tab): RedirectResponse
     {
@@ -31,9 +32,9 @@ class ProjectJiraController extends Controller
 
         try {
             $this->externalTaskIntegrations->verifierFor(ExternalTaskDriver::Jira)->verify([
-                'site_host' => $validated['site_host'],
+                'site_host'     => $validated['site_host'],
                 'account_email' => $validated['account_email'],
-                'api_token' => $validated['api_token'],
+                'api_token'     => $validated['api_token'],
             ]);
         } catch (RequestException) {
             return $this->redirectToProjectTab($project, 'integrations')
@@ -45,9 +46,9 @@ class ProjectJiraController extends Controller
         ProjectJiraIntegration::updateOrCreate(
             ['project_id' => $project->id],
             [
-                'site_host' => $validated['site_host'],
+                'site_host'     => $validated['site_host'],
                 'account_email' => $validated['account_email'],
-                'api_token' => $validated['api_token'],
+                'api_token'     => $validated['api_token'],
             ]
         );
 
@@ -127,11 +128,11 @@ class ProjectJiraController extends Controller
         }
 
         Task::create([
-            'name' => $name,
-            'description' => $payload->description,
-            'project_id' => $project->id,
-            'status_id' => $statusId,
-            'status' => 'incomplete',
+            'name'           => $name,
+            'description'    => $payload->description,
+            'project_id'     => $project->id,
+            'status_id'      => $statusId,
+            'status'         => 'incomplete',
             'jira_issue_key' => $payload->externalKey,
         ]);
 

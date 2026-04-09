@@ -11,7 +11,8 @@ final class JiraTaskFetcher implements ExternalTaskFetcher
 {
     public function __construct(
         private ProjectJiraIntegration $integration
-    ) {}
+    ) {
+    }
 
     public function fetch(string $reference): ExternalTaskPayload
     {

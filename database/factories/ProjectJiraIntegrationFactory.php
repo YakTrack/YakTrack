@@ -21,10 +21,10 @@ class ProjectJiraIntegrationFactory extends Factory
     public function definition(): array
     {
         return [
-            'project_id' => Project::factory(),
-            'site_host' => 'acme.atlassian.net',
+            'project_id'    => Project::factory(),
+            'site_host'     => 'acme.atlassian.net',
             'account_email' => 'dev@example.com',
-            'api_token' => 'fake-api-token-12345678',
+            'api_token'     => 'fake-api-token-12345678',
         ];
     }
 }

@@ -8,5 +8,6 @@ final readonly class ExternalTaskPayload
         public string $externalKey,
         public string $title,
         public string $description,
-    ) {}
+    ) {
+    }
 }

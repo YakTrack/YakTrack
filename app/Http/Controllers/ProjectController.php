@@ -142,13 +142,13 @@ class ProjectController extends Controller
         ]);
 
         return Inertia::render('Project/Show', [
-            'project' => $project,
-            'tab' => $tab,
-            'tasks' => $tasks,
-            'sessions' => $sessions,
-            'sessionsTable' => $sessionsTable,
+            'project'              => $project,
+            'tab'                  => $tab,
+            'tasks'                => $tasks,
+            'sessions'             => $sessions,
+            'sessionsTable'        => $sessionsTable,
             'sessionSprintFilters' => $project->sprints()->orderBy('name')->get(['id', 'name']),
-            'jira' => [
+            'jira'                 => [
                 'connected' => $project->jiraIntegration !== null,
                 'site_host' => $project->jiraIntegration?->site_host,
             ],

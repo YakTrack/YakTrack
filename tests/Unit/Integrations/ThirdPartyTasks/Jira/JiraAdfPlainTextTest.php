@@ -4,11 +4,11 @@ use App\Integrations\ThirdPartyTasks\Jira\JiraAdfPlainText;
 
 it('extracts plain text from atlassian document format', function () {
     $adf = [
-        'type' => 'doc',
+        'type'    => 'doc',
         'version' => 1,
         'content' => [
             [
-                'type' => 'paragraph',
+                'type'    => 'paragraph',
                 'content' => [
                     ['type' => 'text', 'text' => 'Hello '],
                     ['type' => 'text', 'text' => 'world'],
