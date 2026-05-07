@@ -131,7 +131,7 @@ it('can stop running sessions', function () {
 it('can continue a session', function () {
     $task = Task::factory()->create();
     $session = Session::factory()->create([
-        'task_id'    => $task->id,
+        'task_id'     => $task->id,
         'is_billable' => true,
     ]);
 
