@@ -17,10 +17,10 @@ class UpdateTaskRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'        => 'sometimes|required|string|max:255',
-            'description' => 'nullable|string',
-            'project_id'  => 'nullable|exists:projects,id',
-            'status_id'   => 'nullable|exists:task_statuses,id',
+            'name'         => 'sometimes|required|string|max:255',
+            'description'  => 'nullable|string',
+            'project_id'   => 'nullable|exists:projects,id',
+            'status_id'    => 'nullable|exists:task_statuses,id',
             'is_billable'  => 'nullable|boolean',
         ];
     }

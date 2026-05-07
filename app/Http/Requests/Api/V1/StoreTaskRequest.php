@@ -26,9 +26,9 @@ class StoreTaskRequest extends FormRequest
                     return $query->where('project_id', $this->input('project_id'));
                 }),
             ],
-            'description' => 'nullable|string',
-            'project_id'  => 'nullable|exists:projects,id',
-            'status_id'   => 'nullable|exists:task_statuses,id',
+            'description'  => 'nullable|string',
+            'project_id'   => 'nullable|exists:projects,id',
+            'status_id'    => 'nullable|exists:task_statuses,id',
             'is_billable'  => 'nullable|boolean',
         ];
     }
