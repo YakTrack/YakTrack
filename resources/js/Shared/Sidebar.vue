@@ -93,6 +93,7 @@ import {
   DocumentDuplicateIcon,
   FolderIcon,
   HomeIcon,
+  KeyIcon,
   UsersIcon,
   XMarkIcon,
   ClockIcon,
@@ -146,5 +147,6 @@ const navigation = [
   { name: 'Clients', route: 'client.index', icon: UsersIcon, current: route().current('client.*') },
   { name: 'Client Users', route: 'client-users.index', icon: UserGroupIcon, current: route().current('client-users.*') },
   { name: 'Login Sessions', route: 'client-login-sessions.index', icon: ChartBarIcon, current: route().current('client-login-sessions.*') },
+  { name: 'API Tokens', route: 'api-tokens.index', icon: KeyIcon, current: route().current('api-tokens.*') },
 ]
 </script>

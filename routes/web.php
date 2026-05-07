@@ -98,6 +98,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('client-login-sessions/{session}/logout', 'ClientLoginSessionController@logout')->name('client-login-sessions.logout');
     Route::get('client-users/{clientUser}/login-sessions', 'ClientLoginSessionController@forClientUser')->name('client-users.login-sessions');
     Route::post('client-users/{clientUser}/logout-all-sessions', 'ClientLoginSessionController@logoutAllForUser')->name('client-users.logout-all-sessions');
+
+    // API Token Management
+    Route::resource('api-tokens', 'ApiTokenController')->only(['index', 'create', 'store', 'destroy']);
 });
 
 // Client Portal Routes
