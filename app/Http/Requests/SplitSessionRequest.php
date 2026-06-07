@@ -53,13 +53,13 @@ class SplitSessionRequest extends FormRequest
             /** @var Session $session */
             $session = $this->route('session');
 
-            if ($session->isRunning() || ! $this->has('segments')) {
+            if ($session->isRunning() || !$this->has('segments')) {
                 return;
             }
 
             $segments = $this->input('segments', []);
 
-            if (! is_array($segments) || count($segments) < 2) {
+            if (!is_array($segments) || count($segments) < 2) {
                 return;
             }
 

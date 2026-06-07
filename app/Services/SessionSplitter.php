@@ -8,10 +8,13 @@ use Illuminate\Support\Facades\DB;
 
 class SessionSplitter
 {
-    public function __construct(private DateTimeFormatter $dateTimeFormatter) {}
+    public function __construct(private DateTimeFormatter $dateTimeFormatter)
+    {
+    }
 
     /**
-     * @param  array<int, array{started_at: string, ended_at: string, sprint_id?: int|null, task_id?: int|null}>  $segments
+     * @param array<int, array{started_at: string, ended_at: string, sprint_id?: int|null, task_id?: int|null}> $segments
+     *
      * @return array{original: Session, created: array<int, Session>}
      */
     public function split(Session $session, array $segments): array
@@ -38,7 +41,8 @@ class SessionSplitter
     }
 
     /**
-     * @param  array{started_at: string, ended_at: string, sprint_id?: int|null, task_id?: int|null}  $segment
+     * @param array{started_at: string, ended_at: string, sprint_id?: int|null, task_id?: int|null} $segment
+     *
      * @return array<string, mixed>
      */
     private function segmentAttributes(Session $session, array $segment): array

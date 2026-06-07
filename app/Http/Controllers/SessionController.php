@@ -251,7 +251,7 @@ class SessionController extends Controller
 
             return redirect()
                 ->route('session.index')
-                ->with('success', "Session {$session->id} split into ".($createdCount + 1)." sessions.");
+                ->with('success', "Session {$session->id} split into ".($createdCount + 1).' sessions.');
         }
 
         $result = $sessionSplitter->split($session, [
