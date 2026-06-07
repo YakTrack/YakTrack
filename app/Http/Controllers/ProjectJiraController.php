@@ -88,12 +88,8 @@ class ProjectJiraController extends Controller
             ], 502);
         }
 
-        $importedKeys = Task::query()
-            ->where('project_id', $project->id)
-            ->whereNotNull('jira_issue_key')
-            ->pluck('jira_issue_key')
-            ->map(fn (string $key): string => Str::upper($key))
-            ->flip();
+        $excludeTaskId = $request->filled('exclude_task_id') ? $request->integer('exclude_task_id') : null;
+        $importedKeys = $this->importedJiraKeysForProject($project, $excludeTaskId);
 
         $issues = array_map(function (array $issue) use ($importedKeys): array {
             $issue['already_imported'] = $importedKeys->has($issue['key']);
@@ -117,10 +113,8 @@ class ProjectJiraController extends Controller
         $issueKeyInput = $request->validated('issue_key');
         $normalizedKey = Str::upper($issueKeyInput);
 
-        $alreadyImported = Task::query()
-            ->where('project_id', $project->id)
-            ->where('jira_issue_key', $normalizedKey)
-            ->exists();
+        $excludeTaskId = $request->filled('exclude_task_id') ? $request->integer('exclude_task_id') : null;
+        $alreadyImported = $this->importedJiraKeysForProject($project, $excludeTaskId)->has($normalizedKey);
 
         try {
             $payload = $fetcher->fetch($issueKeyInput);
@@ -138,19 +132,34 @@ class ProjectJiraController extends Controller
             ], 502);
         }
 
-        $description = $payload->description;
-        if (strlen($description) > 500) {
-            $description = Str::limit($description, 497, '…');
-        }
-
         return response()->json([
             'issue' => [
                 'key'              => $payload->externalKey,
                 'summary'          => $payload->title,
-                'description'      => $description,
+                'description'      => $payload->description,
+                'name'             => sprintf('%s: %s', $payload->externalKey, $payload->title),
                 'already_imported' => $alreadyImported,
             ],
         ]);
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection<string, int>
+     */
+    private function importedJiraKeysForProject(Project $project, ?int $excludeTaskId = null): \Illuminate\Support\Collection
+    {
+        $query = Task::query()
+            ->where('project_id', $project->id)
+            ->whereNotNull('jira_issue_key');
+
+        if ($excludeTaskId !== null && $excludeTaskId > 0) {
+            $query->where('id', '!=', $excludeTaskId);
+        }
+
+        return $query
+            ->pluck('jira_issue_key')
+            ->map(fn (string $key): string => Str::upper($key))
+            ->flip();
     }
 
     public function import(ImportJiraIssueRequest $request, Project $project): RedirectResponse

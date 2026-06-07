@@ -20,7 +20,19 @@
             />
         </div>
 
+        <jira-issue-autocomplete
+            v-if="selectedProject?.jira_integration"
+            v-model="form.name"
+            :project-id="selectedProject.id"
+            :exclude-task-id="task?.id ?? null"
+            label="Task Name"
+            placeholder="Search Jira issues or enter a task name"
+            :required="true"
+            @issue-populated="onJiraIssuePopulated"
+        />
+
         <form-field
+            v-else
             v-model="form.name"
             type="text"
             label="Task Name"
@@ -74,6 +86,7 @@
 import { computed, reactive, ref, watch } from 'vue'
 import multiSelect from 'vue-multiselect'
 import formField from '@/Shared/FormField.vue'
+import JiraIssueAutocomplete from '@/Shared/JiraIssueAutocomplete.vue'
 
 const props = defineProps({
     projects: {
@@ -126,12 +139,23 @@ const selectedStatus = ref(findInitialStatus())
 const form = reactive({
     name: props.task?.name ?? '',
     description: props.task?.description ?? '',
+    jira_issue_key: props.task?.jira_issue_key ?? null,
 })
 
 const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
-watch(selectedProject, (newProject) => {
+const onJiraIssuePopulated = (issue) => {
+    form.name = issue.name
+    form.description = issue.description
+    form.jira_issue_key = issue.jira_issue_key
+}
+
+watch(selectedProject, (newProject, oldProject) => {
     selectedStatus.value = null
+
+    if (oldProject && newProject?.id !== oldProject?.id) {
+        form.jira_issue_key = null
+    }
 
     if (!isCreate.value || !newProject?.task_code_prefix || form.name) {
         return
@@ -154,6 +178,7 @@ const payload = () => ({
     description: form.description,
     project_id: selectedProject.value?.id ?? null,
     status_id: selectedStatus.value?.id ?? null,
+    jira_issue_key: form.jira_issue_key,
 })
 
 defineExpose({

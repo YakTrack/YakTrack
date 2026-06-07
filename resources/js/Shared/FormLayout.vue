@@ -5,7 +5,7 @@
                 <slot></slot>
                 
                 <!-- Form Actions -->
-                <div class="flex justify-end gap-4 pt-6 border-t border-gray-200 dark:border-gray-600">
+                <div class="flex items-center justify-between gap-4 pt-6 border-t border-gray-200 dark:border-gray-600">
                     <slot name="actions">
                         <Link
                             v-if="cancelUrl"

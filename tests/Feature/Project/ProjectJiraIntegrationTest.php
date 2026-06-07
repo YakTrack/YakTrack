@@ -224,7 +224,53 @@ it('previews a jira issue before import', function () {
     $response->assertJsonPath('issue.key', 'KEY-1');
     $response->assertJsonPath('issue.summary', 'Fix the bug');
     $response->assertJsonPath('issue.description', 'Detailed description here.');
+    $response->assertJsonPath('issue.name', 'KEY-1: Fix the bug');
     $response->assertJsonPath('issue.already_imported', false);
+});
+
+it('excludes the current task when checking if a jira issue is already linked', function () {
+    Http::fake([
+        'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response([
+            'sections' => [
+                [
+                    'id'     => 'cs',
+                    'label'  => 'Current Search',
+                    'issues' => [
+                        [
+                            'id'          => 10001,
+                            'key'         => 'KEY-1',
+                            'summary'     => 'Fix the bug',
+                            'summaryText' => 'Fix the bug',
+                        ],
+                    ],
+                ],
+            ],
+        ], 200),
+    ]);
+
+    $project = Project::factory()->create();
+    TaskStatus::factory()->default()->create(['project_id' => $project->id]);
+
+    ProjectJiraIntegration::factory()->create([
+        'project_id' => $project->id,
+        'site_host'  => 'acme.atlassian.net',
+    ]);
+
+    $task = Task::factory()->create([
+        'project_id'     => $project->id,
+        'status_id'      => TaskStatus::query()->where('project_id', $project->id)->value('id'),
+        'jira_issue_key' => 'KEY-1',
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->getJson(
+        route('project.jira.issues.search', $project).'?q=KEY&exclude_task_id='.$task->id
+    );
+
+    $response->assertSuccessful();
+    $response->assertJsonPath('issues.0.key', 'KEY-1');
+    $response->assertJsonPath('issues.0.already_imported', false);
 });
 
 it('rejects jira issue search when jira is not connected', function () {
