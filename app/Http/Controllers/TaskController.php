@@ -134,7 +134,7 @@ class TaskController extends Controller
             }
         }
 
-        return Inertia::render('Task/Edit', [
+        return Inertia::render('Task/Create', [
             'projects'           => Project::notArchived()->with(['sprints', 'tasks', 'taskStatuses'])->orderBy('name')->get(),
             'tasks'              => Task::orderBy('id', 'desc')->get(),
             'prefill_project_id' => $prefillProjectId,

@@ -28,7 +28,7 @@ it('passes prefill project id when project_id query matches a non-archived proje
     $response->assertSuccessful();
     $response->assertInertia(
         fn ($page) => $page
-            ->component('Task/Edit')
+            ->component('Task/Create')
             ->where('prefill_project_id', $project->id)
     );
 });
@@ -43,7 +43,7 @@ it('does not prefill when project_id query refers to an archived project', funct
     $response->assertSuccessful();
     $response->assertInertia(
         fn ($page) => $page
-            ->component('Task/Edit')
+            ->component('Task/Create')
             ->where('prefill_project_id', null)
     );
 });
@@ -56,7 +56,7 @@ it('does not prefill when project_id query is invalid', function () {
     $response->assertSuccessful();
     $response->assertInertia(
         fn ($page) => $page
-            ->component('Task/Edit')
+            ->component('Task/Create')
             ->where('prefill_project_id', null)
     );
 });
