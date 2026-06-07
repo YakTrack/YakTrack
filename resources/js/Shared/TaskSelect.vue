@@ -1,10 +1,20 @@
 <template>
-    <div>
-        <multi-select v-model="selectedTask" label="name" :options="tasks">
+    <div :class="{ 'multiselect-compact': compact }">
+        <multi-select
+            v-model="selectedTask"
+            label="name"
+            :options="tasks"
+            :use-teleport="useTeleport"
+        >
             <template slot="singleLabel" slot-scope="props">
-                <span class="option__desc"><span class="option__title">{{ props.option.name }}</span></span>
-                <span class="option__desc text-sm pl-2 font-light">{{ props.option.project ? props.option.project.name : '' }}</span>
-                <span class="option__desc text-sm pl-2 font-thin">{{ props.option.project.client ? props.option.project.client.name : '' }}</span>
+                <span v-if="compact" class="block truncate" :title="taskLabel(props.option)">
+                    {{ props.option.name }}
+                </span>
+                <template v-else>
+                    <span class="option__desc"><span class="option__title">{{ props.option.name }}</span></span>
+                    <span class="option__desc text-sm pl-2 font-light">{{ props.option.project ? props.option.project.name : '' }}</span>
+                    <span class="option__desc text-sm pl-2 font-thin">{{ props.option.project.client ? props.option.project.client.name : '' }}</span>
+                </template>
             </template>
             <template slot="option" slot-scope="props">
                 <div class="option__desc">
@@ -23,11 +33,19 @@
     import multiSelect from 'vue-multiselect';
 
     export default {
-        props: [
-            'tasks',
-            'task',
-            'onChange',
-        ],
+        props: {
+            tasks: Array,
+            task: null,
+            onChange: Function,
+            compact: {
+                type: Boolean,
+                default: false,
+            },
+            useTeleport: {
+                type: Boolean,
+                default: false,
+            },
+        },
         components: {
             multiSelect: multiSelect,
         },
@@ -54,8 +72,24 @@
                 if (this.onChange) {
                     this.onChange(newValue);
                 }
-            }
-        }
+            },
+            task(newValue) {
+                this.selectedTask = this.tasks.find(task => task.id == newValue) ?? null;
+            },
+        },
+        methods: {
+            taskLabel(option) {
+                if (!option) {
+                    return '';
+                }
+
+                return [
+                    option.name,
+                    option.project?.name,
+                    option.project?.client?.name,
+                ].filter(Boolean).join(' · ');
+            },
+        },
     }
 
 </script>
