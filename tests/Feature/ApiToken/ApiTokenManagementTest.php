@@ -50,8 +50,8 @@ it('can create a token', function () {
     $response->assertSessionHas('success');
 
     $this->assertDatabaseHas('personal_access_tokens', [
-        'name'          => 'CLI Token',
-        'tokenable_id'  => $user->id,
+        'name'           => 'CLI Token',
+        'tokenable_id'   => $user->id,
         'tokenable_type' => User::class,
     ]);
 });
