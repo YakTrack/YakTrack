@@ -11,30 +11,35 @@
     >
       <div
         v-if="isOpen"
-        class="fixed inset-0 z-50 flex items-center justify-center"
+        class="fixed inset-0 z-50 overflow-y-auto"
         @click.self="handleBackdropClick"
       >
         <!-- Backdrop -->
         <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" />
-        
-        <!-- Modal Container -->
-        <Transition
-          name="modal-content"
-          enter-active-class="transition-all duration-300 ease-out"
-          enter-from-class="opacity-0 scale-95 translate-y-4"
-          enter-to-class="opacity-100 scale-100 translate-y-0"
-          leave-active-class="transition-all duration-200 ease-in"
-          leave-from-class="opacity-100 scale-100 translate-y-0"
-          leave-to-class="opacity-0 scale-95 translate-y-4"
-        >
-          <div
-            v-if="isOpen"
-            class="relative bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 max-h-[90vh] overflow-hidden"
-            role="dialog"
-            aria-modal="true"
-            :aria-labelledby="titleId"
-            :aria-describedby="descriptionId"
+
+        <div class="relative flex min-h-full items-center justify-center p-4 md:p-8">
+          <!-- Modal Container -->
+          <Transition
+            name="modal-content"
+            enter-active-class="transition-all duration-300 ease-out"
+            enter-from-class="opacity-0 scale-95 translate-y-4"
+            enter-to-class="opacity-100 scale-100 translate-y-0"
+            leave-active-class="transition-all duration-200 ease-in"
+            leave-from-class="opacity-100 scale-100 translate-y-0"
+            leave-to-class="opacity-0 scale-95 translate-y-4"
           >
+            <div
+              v-if="isOpen"
+              class="relative bg-white rounded-xl shadow-2xl w-full flex flex-col"
+              :class="[
+                maxWidthClass,
+                scrollBehavior === 'body' ? 'max-h-[90vh] overflow-hidden' : '',
+              ]"
+              role="dialog"
+              aria-modal="true"
+              :aria-labelledby="titleId"
+              :aria-describedby="descriptionId"
+            >
             <!-- Header -->
             <div v-if="$slots.header || title" class="px-6 py-4 border-b border-gray-200">
               <div class="flex items-center justify-between">
@@ -60,7 +65,10 @@
             </div>
 
             <!-- Body -->
-            <div class="px-6 py-4 overflow-y-auto max-h-[60vh]">
+            <div
+              class="px-6 py-4"
+              :class="scrollBehavior === 'body' ? 'overflow-y-auto max-h-[60vh]' : ''"
+            >
               <div v-if="description" :id="descriptionId" class="text-sm text-gray-600 mb-4">
                 {{ description }}
               </div>
@@ -93,8 +101,9 @@
                 </slot>
               </div>
             </div>
-          </div>
-        </Transition>
+            </div>
+          </Transition>
+        </div>
       </div>
     </Transition>
   </Teleport>
@@ -144,7 +153,17 @@ const props = defineProps({
   confirmLoading: {
     type: Boolean,
     default: false
-  }
+  },
+  maxWidth: {
+    type: String,
+    default: 'md',
+    validator: (value) => ['sm', 'md', 'lg', 'xl', '2xl', '4xl'].includes(value),
+  },
+  scrollBehavior: {
+    type: String,
+    default: 'body',
+    validator: (value) => ['body', 'overlay'].includes(value),
+  },
 })
 
 // Emits
@@ -156,6 +175,14 @@ const isOpen = ref(props.isOpen)
 // Computed
 const titleId = computed(() => `modal-title-${Math.random().toString(36).substr(2, 9)}`)
 const descriptionId = computed(() => `modal-description-${Math.random().toString(36).substr(2, 9)}`)
+const maxWidthClass = computed(() => ({
+  sm: 'max-w-sm',
+  md: 'max-w-md',
+  lg: 'max-w-lg',
+  xl: 'max-w-xl',
+  '2xl': 'max-w-2xl',
+  '4xl': 'max-w-4xl',
+}[props.maxWidth] ?? 'max-w-md'))
 
 // Methods
 const close = () => {

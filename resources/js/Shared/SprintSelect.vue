@@ -1,13 +1,24 @@
 <template>
-    <div>
-        <multi-select v-model="selectedSprint" label="name" :custom-label="customLabel" :options="sprints">
+    <div :class="{ 'multiselect-compact': compact }">
+        <multi-select
+            v-model="selectedSprint"
+            label="name"
+            :custom-label="customLabel"
+            :options="sprints"
+            :use-teleport="useTeleport"
+        >
             <template slot="option" slot-scope="slot" v-if="slot.option">
                 {{ slot.option.name }}
                 <span class="text-gray-600 ml-2" v-if="projectNames(slot.option)">{{ projectNames(slot.option) }}</span>
             </template>
             <template slot="singleLabel" slot-scope="slot" v-if="slot.option">
-                {{ slot.option.name }}
-                <span class="text-gray-600 ml-2" v-if="projectNames(slot.option)">{{ projectNames(slot.option) }}</span>
+                <span v-if="compact" class="block truncate" :title="customLabel(slot.option)">
+                    {{ slot.option.name }}
+                </span>
+                <template v-else>
+                    {{ slot.option.name }}
+                    <span class="text-gray-600 ml-2" v-if="projectNames(slot.option)">{{ projectNames(slot.option) }}</span>
+                </template>
             </template>
         </multi-select>
         <input type="hidden" name="sprint_id" :value="sprintId">
@@ -31,6 +42,14 @@
             sprint: {
                 default: null,
             },
+            compact: {
+                type: Boolean,
+                default: false,
+            },
+            useTeleport: {
+                type: Boolean,
+                default: false,
+            },
         },
         components: {
             multiSelect: multiSelect,
@@ -52,7 +71,10 @@
         watch: {
             sprintId(newValue) {
                 this.onChange(newValue);
-            }
+            },
+            sprint(newValue) {
+                this.selectedSprint = this.sprints.find(sprint => sprint.id == newValue) ?? null;
+            },
         },
         methods: {
             projectNames(option) {

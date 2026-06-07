@@ -328,6 +328,19 @@ fieldset[disabled] .multiselect {
 
 .multiselect__single {
     @apply pl-1 mb-1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: block;
+    max-width: calc(100% - 2rem);
+}
+
+.multiselect-compact .multiselect__tags {
+    @apply min-w-0;
+}
+
+.multiselect-compact .multiselect__single {
+    max-width: calc(100% - 2.5rem);
 }
 
 .multiselect__tags {

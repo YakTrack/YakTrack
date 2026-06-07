@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SplitSessionRequest;
 use App\Models\Invoice;
 use App\Models\Queries\IndexSessionQuery;
 use App\Models\Session;
@@ -9,6 +10,7 @@ use App\Models\SessionCategory;
 use App\Models\Sprint;
 use App\Models\Task;
 use App\Models\ThirdPartyApplication;
+use App\Services\SessionSplitter;
 use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
@@ -233,42 +235,37 @@ class SessionController extends Controller
         return redirect(route('session.index'));
     }
 
-    public function split(Session $session): RedirectResponse
+    public function split(SplitSessionRequest $request, Session $session, SessionSplitter $sessionSplitter): RedirectResponse
     {
-        // Ensure we're not trying to split a running session
         if ($session->isRunning()) {
             return redirect()
                 ->route('session.index')
                 ->with('error', 'Cannot split a running session. Please stop the session first.');
         }
 
-        request()->validate([
-            'split_time' => [
-                'required',
-                'date',
-                'after:'.$session->localStartedAt->format('Y-m-d H:i:s'),
-                'before:'.$session->localEndedAt->format('Y-m-d H:i:s'),
+        if ($request->has('segments')) {
+            /** @var array<int, array{started_at: string, ended_at: string, sprint_id?: int|null, task_id?: int|null}> $segments */
+            $segments = $request->input('segments');
+            $result = $sessionSplitter->split($session, $segments);
+            $createdCount = count($result['created']);
+
+            return redirect()
+                ->route('session.index')
+                ->with('success', "Session {$session->id} split into ".($createdCount + 1)." sessions.");
+        }
+
+        $result = $sessionSplitter->split($session, [
+            [
+                'started_at' => $session->localStartedAt->format('Y-m-d H:i:s'),
+                'ended_at'   => $request->input('split_time'),
+            ],
+            [
+                'started_at' => $request->input('split_time'),
+                'ended_at'   => $session->localEndedAt->format('Y-m-d H:i:s'),
             ],
         ]);
 
-        $splitTime = $this->dateTimeFormatter->utcFormat(request('split_time'));
-
-        // Create the new session (second half)
-        $newSession = Session::create([
-            'started_at'            => $splitTime,
-            'ended_at'              => $session->ended_at,
-            'task_id'               => $session->task_id,
-            'invoice_id'            => $session->invoice_id,
-            'sprint_id'             => $session->sprint_id,
-            'session_category_id'   => $session->session_category_id,
-            'comment'               => $session->comment,
-            'is_billable'           => $session->is_billable,
-        ]);
-
-        // Update the original session (first half)
-        $session->update([
-            'ended_at' => $splitTime,
-        ]);
+        $newSession = $result['created'][0];
 
         return redirect()
             ->route('session.index')

@@ -64,6 +64,8 @@
           <split-session-modal
               :is-open="showSplitSessionModal"
               :session="sessionToSplit"
+              :sprints="sprints"
+              :tasks="tasks"
               :on-close="closeSplitSessionModal"
               :on-submit="handleSplitSession"
           ></split-session-modal>
@@ -204,9 +206,9 @@ export default {
             this.sessionToSplit = null;
             this.splitTime = null;
         },
-        handleSplitSession(session, splitTime) {
+        handleSplitSession(session, segments) {
             this.$inertia.post(route('session.split', session.id), {
-                split_time: splitTime
+                segments,
             });
             this.closeSplitSessionModal();
         },

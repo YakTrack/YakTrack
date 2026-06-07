@@ -3,6 +3,19 @@ module.exports = {
   content: [
     './resources/views/**/*.blade.php',
     './resources/js/**/*.vue',
+    './resources/js/**/*.js',
+  ],
+  safelist: [
+    {
+      pattern: /^(bg|border|ring|text)-(indigo|teal|violet|amber|rose|emerald|sky)-(50|300|400|500|600|700)$/,
+    },
+    'text-indigo-600/70',
+    'text-teal-600/70',
+    'text-violet-600/70',
+    'text-amber-600/70',
+    'text-rose-600/70',
+    'text-emerald-600/70',
+    'text-sky-600/70',
   ],
   theme: {
     extend: {
