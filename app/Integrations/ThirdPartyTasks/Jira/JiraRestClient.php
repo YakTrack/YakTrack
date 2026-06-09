@@ -57,12 +57,12 @@ final class JiraRestClient
         $seen = [];
 
         foreach ($data['sections'] ?? [] as $section) {
-            if (! is_array($section)) {
+            if (!is_array($section)) {
                 continue;
             }
 
             foreach ($section['issues'] ?? [] as $issue) {
-                if (! is_array($issue)) {
+                if (!is_array($issue)) {
                     continue;
                 }
 
