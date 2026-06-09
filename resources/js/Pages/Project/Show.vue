@@ -300,19 +300,10 @@
                         Disconnect Jira
                     </button>
 
-                    <form @submit.prevent="submitJiraImport">
-                        <form-field
-                            v-model="importIssueKey"
-                            type="text"
-                            label="Import issue as task"
-                            placeholder="e.g. PROJ-123"
-                            :required="true"
-                            :error="errors.issue_key"
-                        />
-                        <button type="submit" class="btn btn-blue" :disabled="processing">
-                            Create task from Jira issue
-                        </button>
-                    </form>
+                    <jira-issue-import
+                        :project-id="project.id"
+                        :server-error="errors.issue_key"
+                    />
                 </div>
             </div>
         </template>
@@ -325,6 +316,7 @@
     import deleteButton from '@/Shared/DeleteButton.vue';
     import formField from '@/Shared/FormField.vue';
     import layout from '@/Shared/Layout.vue';
+    import JiraIssueImport from '@/Pages/Project/JiraIssueImport.vue';
     import ProjectSessionsTab from '@/Pages/Project/ProjectSessionsTab.vue';
     import ProjectTabNav from '@/Pages/Project/ProjectTabNav.vue';
 
@@ -369,13 +361,13 @@
                     account_email: '',
                     api_token: '',
                 },
-                importIssueKey: '',
             };
         },
         components: {
             breadcrumbs: breadcrumbs,
             deleteButton: deleteButton,
             formField: formField,
+            JiraIssueImport,
             layout: layout,
             ProjectSessionsTab,
             ProjectTabNav,
@@ -396,11 +388,6 @@
                 if (confirm('Disconnect Jira from this project?')) {
                     this.$inertia.delete(route('project.jira.destroy', this.project.id));
                 }
-            },
-            submitJiraImport() {
-                this.$inertia.post(route('project.jira.import', this.project.id), {
-                    issue_key: this.importIssueKey,
-                });
             },
         },
     }

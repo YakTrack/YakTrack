@@ -28,7 +28,7 @@ it('passes prefill project id when project_id query matches a non-archived proje
     $response->assertSuccessful();
     $response->assertInertia(
         fn ($page) => $page
-            ->component('Task/Edit')
+            ->component('Task/Create')
             ->where('prefill_project_id', $project->id)
     );
 });
@@ -43,7 +43,7 @@ it('does not prefill when project_id query refers to an archived project', funct
     $response->assertSuccessful();
     $response->assertInertia(
         fn ($page) => $page
-            ->component('Task/Edit')
+            ->component('Task/Create')
             ->where('prefill_project_id', null)
     );
 });
@@ -56,9 +56,53 @@ it('does not prefill when project_id query is invalid', function () {
     $response->assertSuccessful();
     $response->assertInertia(
         fn ($page) => $page
-            ->component('Task/Edit')
+            ->component('Task/Create')
             ->where('prefill_project_id', null)
     );
+});
+
+it('includes jira integration data on projects when creating a task', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+
+    \App\Models\ProjectJiraIntegration::factory()->create([
+        'project_id' => $project->id,
+        'site_host'  => 'acme.atlassian.net',
+    ]);
+
+    $response = $this->get(route('task.create'));
+
+    $response->assertSuccessful();
+    $response->assertInertia(
+        fn ($page) => $page
+            ->component('Task/Create')
+            ->has('projects', 1)
+            ->where('projects.0.id', $project->id)
+            ->where('projects.0.jira_integration.site_host', 'acme.atlassian.net')
+    );
+});
+
+it('can create a task linked to a jira issue', function () {
+    $this->actingAsUser();
+
+    $project = Project::factory()->create();
+
+    $response = $this->post(route('task.store'), [
+        'name'           => 'KEY-1: Fix the bug',
+        'description'    => 'Detailed description here.',
+        'project_id'     => $project->id,
+        'jira_issue_key' => 'KEY-1',
+    ]);
+
+    $response->assertRedirect(route('task.index'));
+
+    $this->assertDatabaseHas('tasks', [
+        'name'           => 'KEY-1: Fix the bug',
+        'description'    => 'Detailed description here.',
+        'project_id'     => $project->id,
+        'jira_issue_key' => 'KEY-1',
+    ]);
 });
 
 it('can submit a post request to create a task', function () {

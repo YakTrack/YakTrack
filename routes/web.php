@@ -44,6 +44,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('project/{project}/kanban', 'ProjectController@kanban')->name('project.kanban');
     Route::post('project/{project}/jira', 'ProjectJiraController@store')->name('project.jira.store');
     Route::delete('project/{project}/jira', 'ProjectJiraController@destroy')->name('project.jira.destroy');
+    Route::get('project/{project}/jira/issues/search', 'ProjectJiraController@searchIssues')->name('project.jira.issues.search');
+    Route::get('project/{project}/jira/issues/preview', 'ProjectJiraController@previewIssue')->name('project.jira.issues.preview');
     Route::post('project/{project}/jira/import', 'ProjectJiraController@import')->name('project.jira.import');
     Route::patch('project/{project}/archive', 'ProjectController@archive')->name('project.archive');
     Route::patch('project/{project}/unarchive', 'ProjectController@unarchive')->name('project.unarchive');

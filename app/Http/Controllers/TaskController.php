@@ -134,8 +134,8 @@ class TaskController extends Controller
             }
         }
 
-        return Inertia::render('Task/Edit', [
-            'projects'           => Project::notArchived()->with(['sprints', 'tasks', 'taskStatuses'])->orderBy('name')->get(),
+        return Inertia::render('Task/Create', [
+            'projects'           => Project::notArchived()->with(['sprints', 'tasks', 'taskStatuses', 'jiraIntegration'])->orderBy('name')->get(),
             'tasks'              => Task::orderBy('id', 'desc')->get(),
             'prefill_project_id' => $prefillProjectId,
         ]);
@@ -147,9 +147,18 @@ class TaskController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $this->validate($request, [
-            'project_id' => 'exists:projects,id',
-            'status_id'  => 'nullable|exists:task_statuses,id',
-            'name'       => [
+            'project_id'     => 'exists:projects,id',
+            'status_id'      => 'nullable|exists:task_statuses,id',
+            'jira_issue_key' => [
+                'nullable',
+                'string',
+                'max:50',
+                'regex:/^[A-Za-z][A-Za-z0-9_]*-\d+$/',
+                Rule::unique('tasks', 'jira_issue_key')->where(function ($query) {
+                    return $query->where('project_id', request('project_id'));
+                }),
+            ],
+            'name'           => [
                 Rule::unique('tasks')->where(function ($query) {
                     return $query->where('project_id', request('project_id'));
                 }),
@@ -167,11 +176,12 @@ class TaskController extends Controller
         }
 
         $task = Task::create([
-            'name'        => request('name'),
-            'description' => request('description') ?? '',
-            'project_id'  => request('project_id') ?? null,
-            'status_id'   => $statusId,
-            'status'      => 'incomplete',
+            'name'           => request('name'),
+            'description'    => request('description') ?? '',
+            'project_id'     => request('project_id') ?? null,
+            'status_id'      => $statusId,
+            'status'         => 'incomplete',
+            'jira_issue_key' => request('jira_issue_key'),
         ]);
 
         return redirect()
@@ -202,7 +212,7 @@ class TaskController extends Controller
 
         return Inertia::render('Task/Edit', [
             'task'     => $task->load('taskStatus'),
-            'projects' => Project::notArchived()->with('taskStatuses')->get(),
+            'projects' => Project::notArchived()->with(['taskStatuses', 'jiraIntegration'])->get(),
         ]);
     }
 
@@ -212,17 +222,27 @@ class TaskController extends Controller
     public function update(Task $task): RedirectResponse
     {
         request()->validate([
-            'name'        => 'string',
-            'description' => 'string',
-            'project_id'  => 'exists:projects,id',
-            'status_id'   => 'nullable|exists:task_statuses,id',
+            'name'           => 'string',
+            'description'    => 'string',
+            'project_id'     => 'exists:projects,id',
+            'status_id'      => 'nullable|exists:task_statuses,id',
+            'jira_issue_key' => [
+                'nullable',
+                'string',
+                'max:50',
+                'regex:/^[A-Za-z][A-Za-z0-9_]*-\d+$/',
+                Rule::unique('tasks', 'jira_issue_key')
+                    ->where(fn ($query) => $query->where('project_id', request('project_id', $task->project_id)))
+                    ->ignore($task->id),
+            ],
         ]);
 
         $task->update([
-            'name'        => request('name', $task->name),
-            'description' => request('description', $task->description),
-            'project_id'  => request('project_id', $task->project_id),
-            'status_id'   => request('status_id', $task->status_id),
+            'name'           => request('name', $task->name),
+            'description'    => request('description', $task->description),
+            'project_id'     => request('project_id', $task->project_id),
+            'status_id'      => request('status_id', $task->status_id),
+            'jira_issue_key' => request()->has('jira_issue_key') ? request('jira_issue_key') : $task->jira_issue_key,
         ]);
 
         // Use Laravel's intended redirect with fallback

@@ -3,14 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ImportJiraIssueRequest;
+use App\Http\Requests\SearchJiraIssuesRequest;
 use App\Http\Requests\StoreProjectJiraIntegrationRequest;
 use App\Integrations\ThirdPartyTasks\ExternalTaskDriver;
 use App\Integrations\ThirdPartyTasks\ExternalTaskIntegrationManager;
+use App\Integrations\ThirdPartyTasks\Jira\JiraRestClient;
 use App\Models\Project;
 use App\Models\ProjectJiraIntegration;
 use App\Models\Task;
 use App\Models\TaskStatus;
 use Illuminate\Http\Client\RequestException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Str;
 
@@ -62,6 +65,101 @@ class ProjectJiraController extends Controller
 
         return $this->redirectToProjectTab($project, 'integrations')
             ->with('success', 'Jira has been disconnected from this project.');
+    }
+
+    public function searchIssues(SearchJiraIssuesRequest $request, Project $project): JsonResponse
+    {
+        $integration = $project->jiraIntegration;
+
+        if ($integration === null) {
+            return response()->json([
+                'message' => 'Connect Jira to this project before searching issues.',
+            ], 422);
+        }
+
+        try {
+            $client = new JiraRestClient($integration);
+            $issues = $client->searchIssues($request->validated('q'));
+        } catch (RequestException $e) {
+            report($e);
+
+            return response()->json([
+                'message' => 'Could not search Jira issues. Try again later.',
+            ], 502);
+        }
+
+        $excludeTaskId = $request->filled('exclude_task_id') ? $request->integer('exclude_task_id') : null;
+        $importedKeys = $this->importedJiraKeysForProject($project, $excludeTaskId);
+
+        $issues = array_map(function (array $issue) use ($importedKeys): array {
+            $issue['already_imported'] = $importedKeys->has($issue['key']);
+
+            return $issue;
+        }, $issues);
+
+        return response()->json(['issues' => $issues]);
+    }
+
+    public function previewIssue(ImportJiraIssueRequest $request, Project $project): JsonResponse
+    {
+        $fetcher = $this->externalTaskIntegrations->fetcherForProject($project);
+
+        if ($fetcher === null) {
+            return response()->json([
+                'message' => 'Connect Jira to this project before previewing issues.',
+            ], 422);
+        }
+
+        $issueKeyInput = $request->validated('issue_key');
+        $normalizedKey = Str::upper($issueKeyInput);
+
+        $excludeTaskId = $request->filled('exclude_task_id') ? $request->integer('exclude_task_id') : null;
+        $alreadyImported = $this->importedJiraKeysForProject($project, $excludeTaskId)->has($normalizedKey);
+
+        try {
+            $payload = $fetcher->fetch($issueKeyInput);
+        } catch (RequestException $e) {
+            if ($e->response !== null && $e->response->status() === 404) {
+                return response()->json([
+                    'message' => 'That Jira issue could not be found.',
+                ], 404);
+            }
+
+            report($e);
+
+            return response()->json([
+                'message' => 'Could not load that issue from Jira. Try again later.',
+            ], 502);
+        }
+
+        return response()->json([
+            'issue' => [
+                'key'              => $payload->externalKey,
+                'summary'          => $payload->title,
+                'description'      => $payload->description,
+                'name'             => sprintf('%s: %s', $payload->externalKey, $payload->title),
+                'already_imported' => $alreadyImported,
+            ],
+        ]);
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection<string, int>
+     */
+    private function importedJiraKeysForProject(Project $project, ?int $excludeTaskId = null): \Illuminate\Support\Collection
+    {
+        $query = Task::query()
+            ->where('project_id', $project->id)
+            ->whereNotNull('jira_issue_key');
+
+        if ($excludeTaskId !== null && $excludeTaskId > 0) {
+            $query->where('id', '!=', $excludeTaskId);
+        }
+
+        return $query
+            ->pluck('jira_issue_key')
+            ->map(fn (string $key): string => Str::upper($key))
+            ->flip();
     }
 
     public function import(ImportJiraIssueRequest $request, Project $project): RedirectResponse

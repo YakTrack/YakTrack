@@ -131,6 +131,159 @@ it('does not import the same jira issue twice', function () {
     expect(Task::query()->where('project_id', $project->id)->count())->toBe(1);
 });
 
+it('searches jira issues for autocomplete', function () {
+    Http::fake([
+        'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response([
+            'sections' => [
+                [
+                    'id'     => 'cs',
+                    'label'  => 'Current Search',
+                    'issues' => [
+                        [
+                            'id'          => 10001,
+                            'key'         => 'KEY-1',
+                            'summary'     => 'Fix the bug',
+                            'summaryText' => 'Fix the bug',
+                            'issueType'   => ['name' => 'Bug'],
+                            'avatarUrl'   => 'https://acme.atlassian.net/icon.png',
+                        ],
+                        [
+                            'id'          => 10002,
+                            'key'         => 'KEY-2',
+                            'summary'     => 'Already done',
+                            'summaryText' => 'Already done',
+                            'issueType'   => ['name' => 'Task'],
+                        ],
+                    ],
+                ],
+            ],
+        ], 200),
+    ]);
+
+    $project = Project::factory()->create();
+    TaskStatus::factory()->default()->create(['project_id' => $project->id]);
+
+    ProjectJiraIntegration::factory()->create([
+        'project_id' => $project->id,
+        'site_host'  => 'acme.atlassian.net',
+    ]);
+
+    Task::factory()->create([
+        'project_id'     => $project->id,
+        'status_id'      => TaskStatus::query()->where('project_id', $project->id)->value('id'),
+        'jira_issue_key' => 'KEY-2',
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->getJson(route('project.jira.issues.search', $project).'?q=KEY');
+
+    $response->assertSuccessful();
+    $response->assertJsonPath('issues.0.key', 'KEY-1');
+    $response->assertJsonPath('issues.0.summary', 'Fix the bug');
+    $response->assertJsonPath('issues.0.issue_type', 'Bug');
+    $response->assertJsonPath('issues.0.already_imported', false);
+    $response->assertJsonPath('issues.1.key', 'KEY-2');
+    $response->assertJsonPath('issues.1.already_imported', true);
+});
+
+it('previews a jira issue before import', function () {
+    Http::fake([
+        'https://acme.atlassian.net/rest/api/3/issue/KEY-1*' => Http::response([
+            'key'    => 'KEY-1',
+            'fields' => [
+                'summary'     => 'Fix the bug',
+                'description' => [
+                    'type'    => 'doc',
+                    'version' => 1,
+                    'content' => [
+                        [
+                            'type'    => 'paragraph',
+                            'content' => [
+                                ['type' => 'text', 'text' => 'Detailed description here.'],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ], 200),
+    ]);
+
+    $project = Project::factory()->create();
+
+    ProjectJiraIntegration::factory()->create([
+        'project_id' => $project->id,
+        'site_host'  => 'acme.atlassian.net',
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->getJson(route('project.jira.issues.preview', $project).'?issue_key=KEY-1');
+
+    $response->assertSuccessful();
+    $response->assertJsonPath('issue.key', 'KEY-1');
+    $response->assertJsonPath('issue.summary', 'Fix the bug');
+    $response->assertJsonPath('issue.description', 'Detailed description here.');
+    $response->assertJsonPath('issue.name', 'KEY-1: Fix the bug');
+    $response->assertJsonPath('issue.already_imported', false);
+});
+
+it('excludes the current task when checking if a jira issue is already linked', function () {
+    Http::fake([
+        'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response([
+            'sections' => [
+                [
+                    'id'     => 'cs',
+                    'label'  => 'Current Search',
+                    'issues' => [
+                        [
+                            'id'          => 10001,
+                            'key'         => 'KEY-1',
+                            'summary'     => 'Fix the bug',
+                            'summaryText' => 'Fix the bug',
+                        ],
+                    ],
+                ],
+            ],
+        ], 200),
+    ]);
+
+    $project = Project::factory()->create();
+    TaskStatus::factory()->default()->create(['project_id' => $project->id]);
+
+    ProjectJiraIntegration::factory()->create([
+        'project_id' => $project->id,
+        'site_host'  => 'acme.atlassian.net',
+    ]);
+
+    $task = Task::factory()->create([
+        'project_id'     => $project->id,
+        'status_id'      => TaskStatus::query()->where('project_id', $project->id)->value('id'),
+        'jira_issue_key' => 'KEY-1',
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->getJson(
+        route('project.jira.issues.search', $project).'?q=KEY&exclude_task_id='.$task->id
+    );
+
+    $response->assertSuccessful();
+    $response->assertJsonPath('issues.0.key', 'KEY-1');
+    $response->assertJsonPath('issues.0.already_imported', false);
+});
+
+it('rejects jira issue search when jira is not connected', function () {
+    $project = Project::factory()->create();
+
+    $this->actingAsUser();
+
+    $response = $this->getJson(route('project.jira.issues.search', $project).'?q=KEY');
+
+    $response->assertUnprocessable();
+    $response->assertJsonPath('message', 'Connect Jira to this project before searching issues.');
+});
+
 it('includes jira connection props on the project page', function () {
     $project = Project::factory()->create();
 
