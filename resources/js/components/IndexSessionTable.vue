@@ -93,7 +93,7 @@
                             <div class="text-sm text-gray-500">Total Duration</div>
                             <div class="text-lg font-mono font-semibold text-gray-900">{{ selectedTotalDuration }}</div>
                         </div>
-                            <dropdown :options="actionsDropdown" direction="left"></dropdown>
+                            <actions-dropdown :options="actionsDropdown" direction="left"></actions-dropdown>
                     </div>
                 </div>
             </div>
@@ -136,7 +136,7 @@
                                 </div>
                             </td>
                             <td class="pr-6 py-4 text-right">
-                                <dropdown :options="actionsDropdown" direction="left"></dropdown>
+                                <actions-dropdown :options="actionsDropdown" direction="left"></actions-dropdown>
                             </td>
                         </tr>
                     </thead>
