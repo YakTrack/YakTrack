@@ -69,6 +69,13 @@
               :on-close="closeSplitSessionModal"
               :on-submit="handleSplitSession"
           ></split-session-modal>
+          <edit-session-modal
+              ref="editSessionModal"
+              :is-open="showEditSessionModal"
+              :session="sessionToEdit"
+              :on-close="closeEditSessionModal"
+              :on-submit="handleEditSession"
+          ></edit-session-modal>
         </template>
         <template #title> Sessions </template>
         <template #top-right-toolbar>
@@ -96,6 +103,8 @@
             :show-filters="showFilters"
             :on-change-selected-session-ids="onChangeSelectedSessionIds"
             :on-split-session="openSplitSessionModal"
+            :on-edit-session="openEditSessionModal"
+            :highlighted-session-id="recentlyEditedSessionId"
         ></index-session-table>
 
     </layout>
@@ -113,6 +122,7 @@ import invoiceSelect from '@/Shared/InvoiceSelect.vue';
 import sprintSelect from '@/Shared/SprintSelect.vue';
 import taskSelect from '@/Shared/TaskSelect.vue';
 import splitSessionModal from '@/components/SplitSessionModal.vue';
+import editSessionModal from '@/components/EditSessionModal.vue';
 import modernModal from '@/components/Modal.vue';
 
 export default {
@@ -125,6 +135,10 @@ export default {
             sessionToSplit: null,
             splitTime: null,
             showSplitSessionModal: false,
+            sessionToEdit: null,
+            showEditSessionModal: false,
+            recentlyEditedSessionId: null,
+            recentlyEditedSessionTimeout: null,
         }
     },
     components: {
@@ -136,6 +150,7 @@ export default {
         sprintSelect: sprintSelect,
         taskSelect: taskSelect,
         splitSessionModal: splitSessionModal,
+        editSessionModal: editSessionModal,
         modernModal: modernModal,
     },
     props: {
@@ -212,6 +227,43 @@ export default {
             });
             this.closeSplitSessionModal();
         },
+        openEditSessionModal(session) {
+            this.sessionToEdit = session;
+            this.showEditSessionModal = true;
+        },
+        closeEditSessionModal() {
+            this.showEditSessionModal = false;
+            this.sessionToEdit = null;
+        },
+        handleEditSession(form) {
+            const sessionId = this.sessionToEdit.id;
+
+            this.$inertia.patch(route('session.update', { session: sessionId }), {
+                ...form,
+                from_modal: true,
+            }, {
+                preserveScroll: true,
+                onSuccess: () => {
+                    this.closeEditSessionModal();
+                    this.highlightEditedSession(sessionId);
+                },
+                onError: () => {
+                    this.$refs.editSessionModal?.resetSubmitting();
+                },
+            });
+        },
+        highlightEditedSession(sessionId) {
+            if (this.recentlyEditedSessionTimeout) {
+                clearTimeout(this.recentlyEditedSessionTimeout);
+            }
+
+            this.recentlyEditedSessionId = sessionId;
+
+            this.recentlyEditedSessionTimeout = setTimeout(() => {
+                this.recentlyEditedSessionId = null;
+                this.recentlyEditedSessionTimeout = null;
+            }, 6000);
+        },
     },
     created() {
         this._onToggleShowFilters = () => {
@@ -226,6 +278,10 @@ export default {
     },
     beforeUnmount() {
         events.off('toggle-show-filters', this._onToggleShowFilters);
+
+        if (this.recentlyEditedSessionTimeout) {
+            clearTimeout(this.recentlyEditedSessionTimeout);
+        }
     },
 }
 

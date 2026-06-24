@@ -162,13 +162,13 @@
                         <template v-for="(session, sessionIndex) in day.sessions" :key="session.id">
                             <!-- First Row: Task Name -->
                             <tr
-                                :class="[rowClasses(session), 'session-row transition-colors duration-150', { 'bg-gray-50': hoveredSessionId === session.id }]"
+                                :class="[rowClasses(session, 'first'), 'session-row transition-colors duration-1500', { 'bg-gray-50': hoveredSessionId === session.id && !isHighlighted(session) }]"
                                 :data-session-id="session.id"
                                 @mouseenter="hoveredSessionId = session.id"
                                 @mouseleave="hoveredSessionId = null"
                             >
                                 <!-- Checkbox Column -->
-                                <td class="pl-3 pr-4 py-2 transition-colors duration-150 border-l border-transparent" rowspan="2">
+                                <td class="pl-3 pr-4 py-2 transition-colors duration-1500" :class="checkboxCellClasses(session)" rowspan="2">
                                     <input
                                         type="checkbox"
                                         class="block w-4 h-4 shrink-0 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" 
@@ -225,7 +225,7 @@
 
                             <!-- Second Row: Context Links -->
                             <tr 
-                                :class="[rowClasses(session), 'border-b border-gray-200 session-row transition-colors duration-150', { 'bg-gray-50': hoveredSessionId === session.id }]"
+                                :class="[rowClasses(session, 'second'), 'border-b border-gray-200 session-row transition-colors duration-1500', { 'bg-gray-50': hoveredSessionId === session.id && !isHighlighted(session) }]"
                                 :data-session-id="session.id"
                                 @mouseenter="hoveredSessionId = session.id"
                                 @mouseleave="hoveredSessionId = null"
@@ -307,8 +307,7 @@
                         <div 
                             v-for="(session, sessionIndex) in day.sessions" 
                             :key="session.id" 
-                            :class="rowClasses(session)"
-                            class="p-4 hover:bg-gray-50 transition-colors duration-150"
+                            :class="[rowClasses(session, 'card'), 'p-4 hover:bg-gray-50 transition-colors duration-1500']"
                         >
                             <div class="flex items-start justify-between space-x-3">
                                 <!-- Checkbox and Main Content -->
@@ -541,6 +540,8 @@
             'lastPage',
             'onChangeSelectedSessionIds',
             'onSplitSession',
+            'onEditSession',
+            'highlightedSessionId',
         ],
         components: {
             Link,
@@ -706,7 +707,11 @@
             this._onStopSession = (session) => this.stopSession(session);
             this._onContinueSession = (session) => this.continueSession(session);
             this._onSplitSession = (session) => this.splitSession(session);
-            this._onEditSession = (session) => this.$inertia.visit(session.editUrl);
+            this._onEditSession = (session) => {
+                if (this.onEditSession) {
+                    this.onEditSession(session);
+                }
+            };
             this._onConfirmDeleteSession = (session) => {
                 this.sessionToDelete = session;
             };
@@ -778,18 +783,34 @@
                     session.isSelected = event.target.isChecked;
                 });
             },
-            rowClasses(session) {
-                var classes = [];
-
-                if (session.isRunning) {
-                    classes.push('bg-green-50 border-l-4 border-l-green-400');
-                };
-
-                if (session.isSelected) {
-                    classes.push('bg-blue-50 border-l-4 border-l-blue-400');
+            isHighlighted(session) {
+                return this.highlightedSessionId === session.id;
+            },
+            checkboxCellClasses(session) {
+                if (this.isHighlighted(session)) {
+                    return 'border-l-4 border-l-amber-300';
                 }
 
-                return classes.join(' ');
+                return 'border-l border-transparent';
+            },
+            rowClasses(session, rowPart = 'card') {
+                if (this.isHighlighted(session)) {
+                    if (rowPart === 'first' || rowPart === 'second') {
+                        return 'bg-amber-50';
+                    }
+
+                    return 'bg-amber-50 ring-1 ring-inset ring-amber-100';
+                }
+
+                if (session.isRunning) {
+                    return 'bg-green-50 border-l-4 border-l-green-400';
+                }
+
+                if (session.isSelected) {
+                    return 'bg-blue-50 border-l-4 border-l-blue-400';
+                }
+
+                return '';
             },
             continueSession(session) {
                 this.$inertia.post(`session/${session.id}/continue`)

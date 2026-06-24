@@ -401,3 +401,53 @@ it('includes the currently selected task from an archived project when editing a
         expect($taskIds)->toContain($taskFromArchivedProject->id);
     });
 });
+
+it('can load session edit form data as json', function () {
+    $this->actingAsUser();
+
+    $session = Session::factory()->create([
+        'comment' => 'Test comment',
+    ]);
+
+    $response = $this->getJson(route('session.edit-form', ['session' => $session]));
+
+    $response->assertSuccessful();
+    $response->assertJsonPath('session.id', $session->id);
+    $response->assertJsonPath('session.comment', 'Test comment');
+    $response->assertJsonStructure([
+        'session',
+        'tasks',
+        'invoices',
+        'sprints',
+        'sessionCategories',
+    ]);
+});
+
+it('redirects back to the sessions index when updating from the edit modal', function () {
+    $this->usingTestDisplayTimeZone('UTC');
+    $this->withoutExceptionHandling();
+
+    $session = Session::factory()->create([
+        'started_at' => '2018-01-01 00:00:00',
+        'ended_at'   => '2018-01-01 01:00:00',
+        'comment'    => 'Original comment',
+    ]);
+
+    $this->actingAsUser();
+
+    $indexUrl = route('session.index', ['per-page' => 100, 'page' => 2]);
+
+    $response = $this->from($indexUrl)->patch(route('session.update', ['session' => $session]), [
+        'started_at' => '2018-01-01 00:00:00',
+        'ended_at'   => '2018-01-01 01:00:00',
+        'comment'    => 'Updated comment',
+        'from_modal' => true,
+    ]);
+
+    $response->assertRedirect($indexUrl);
+
+    $this->assertDatabaseHas('sessions', [
+        'id'      => $session->id,
+        'comment' => 'Updated comment',
+    ]);
+});
