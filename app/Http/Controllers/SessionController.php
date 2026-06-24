@@ -13,6 +13,7 @@ use App\Models\ThirdPartyApplication;
 use App\Services\SessionSplitter;
 use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -122,6 +123,21 @@ class SessionController extends Controller
     public function edit(Session $session): Response
     {
         return Inertia::render('Session/Edit', [
+            ...$this->sessionEditFormData($session),
+        ]);
+    }
+
+    public function editForm(Session $session): JsonResponse
+    {
+        return response()->json($this->sessionEditFormData($session));
+    }
+
+    /**
+     * @return array{session: Session, tasks: \Illuminate\Database\Eloquent\Collection<int, Task>, invoices: \Illuminate\Database\Eloquent\Collection<int, Invoice>, sprints: \Illuminate\Database\Eloquent\Collection<int, Sprint>, sessionCategories: \Illuminate\Database\Eloquent\Collection<int, SessionCategory>}
+     */
+    private function sessionEditFormData(Session $session): array
+    {
+        return [
             'session'           => $session,
             'tasks'             => $this->sessionFormTasks($session),
             'invoices'          => Invoice::query()->select(['id', 'number'])->orderByDesc('id')->get(),
@@ -133,7 +149,7 @@ class SessionController extends Controller
                 ->orderByDesc('id')
                 ->get(),
             'sessionCategories' => SessionCategory::query()->select(['id', 'name'])->get(),
-        ]);
+        ];
     }
 
     /**
@@ -178,6 +194,12 @@ class SessionController extends Controller
             'comment'               => request('comment') ?: null,
             'is_billable'           => request('is_billable') ?: 0,
         ]);
+
+        if (request()->boolean('from_modal')) {
+            return redirect()
+                ->back()
+                ->with('success', "Session $session->id updated");
+        }
 
         return redirect()
             ->route('session.index')
