@@ -1,32 +1,47 @@
 <template>
-    <div v-if="isVisible" class="rounded shadow mb-8 mt-8 p-8 text-lg" :class="alertClass">
-        {{ alert.message }}
-        <button type="button" class="float-right" @click="closeAlert" aria-label="Close">
-            <span aria-hidden="true" class="text-2xl text-gray-800">&times;</span>
-        </button>
+    <div
+        class="pointer-events-auto w-full max-w-sm rounded-lg border px-4 py-3 shadow-lg"
+        :class="alertClass"
+        role="alert"
+    >
+        <div class="flex items-start justify-between gap-3">
+            <p class="text-sm font-medium leading-5">{{ alert.message }}</p>
+            <button
+                type="button"
+                class="shrink-0 text-lg leading-none opacity-60 transition-opacity hover:opacity-100"
+                aria-label="Close"
+                @click="close"
+            >
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     </div>
 </template>
 
 <script>
     export default {
         props: ['alert'],
-        data() {
-            return {
-                isVisible: true,
-            }
+        emits: ['dismiss'],
+        mounted() {
+            this.timeout = setTimeout(() => {
+                this.close();
+            }, 10000);
+        },
+        beforeUnmount() {
+            clearTimeout(this.timeout);
         },
         methods: {
-            closeAlert() {
-                this.isVisible = false;
+            close() {
+                clearTimeout(this.timeout);
+                this.$emit('dismiss');
             },
         },
         computed: {
             alertClass() {
-                return this.alert.type == 'success' ? 'bg-green-100 text-green-900' : 'bg-red-100 text-red-900';
-            }
+                return this.alert.type === 'success'
+                    ? 'bg-green-50 border-green-200 text-green-900'
+                    : 'bg-red-50 border-red-200 text-red-900';
+            },
         },
-        mounted() {
-            setTimeout(this.closeAlert, 10000);
-        }
     }
 </script>
