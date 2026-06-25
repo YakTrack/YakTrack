@@ -61,7 +61,7 @@ class SessionDateLockService
     }
 
     /**
-     * @param  list<string>  $dates
+     * @param list<string> $dates
      */
     public function lockDates(User $user, array $dates): int
     {
@@ -84,7 +84,7 @@ class SessionDateLockService
     }
 
     /**
-     * @param  list<string>  $dates
+     * @param list<string> $dates
      */
     public function unlockDates(User $user, array $dates): int
     {

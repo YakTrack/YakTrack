@@ -59,9 +59,9 @@ it('prevents updating a session on a locked date', function () {
     ]);
 
     $response = $this->patch(route('session.update', $session), [
-        'started_at' => '2019-01-02 10:00:00',
-        'ended_at'   => '2019-01-02 12:00:00',
-        'comment'    => 'Updated',
+        'started_at'  => '2019-01-02 10:00:00',
+        'ended_at'    => '2019-01-02 12:00:00',
+        'comment'     => 'Updated',
         'is_billable' => 1,
     ]);
 
