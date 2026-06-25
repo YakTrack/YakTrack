@@ -68,6 +68,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('session/{session}/continue', 'SessionController@continue')->name('session.continue');
     Route::post('session/{session}/split', 'SessionController@split')->name('session.split');
     Route::get('session/{session}/edit-form', 'SessionController@editForm')->name('session.edit-form');
+    Route::post('session-dates/{date}/toggle-lock', 'SessionDateLockController@toggle')->name('session-dates.toggle-lock');
+    Route::post('session-dates/lock-many', 'SessionDateLockController@lockMany')->name('session-dates.lock-many');
+    Route::post('session-dates/unlock-many', 'SessionDateLockController@unlockMany')->name('session-dates.unlock-many');
 
     Route::resource('session', 'SessionController');
     Route::patch('sessions', 'SessionsController@update')->name('sessions.update');

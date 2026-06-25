@@ -10,6 +10,7 @@ use App\Models\SessionCategory;
 use App\Models\Sprint;
 use App\Models\Task;
 use App\Models\ThirdPartyApplication;
+use App\Services\SessionDateLockService;
 use App\Services\SessionSplitter;
 use App\Support\DateTimeFormatter;
 use Carbon\Carbon;
@@ -22,11 +23,16 @@ class SessionController extends Controller
 {
     private IndexSessionQuery $indexSessionQuery;
     private DateTimeFormatter $dateTimeFormatter;
+    private SessionDateLockService $sessionDateLockService;
 
-    public function __construct(DateTimeFormatter $dateTimeFormatter, IndexSessionQuery $indexSessionQuery)
-    {
+    public function __construct(
+        DateTimeFormatter $dateTimeFormatter,
+        IndexSessionQuery $indexSessionQuery,
+        SessionDateLockService $sessionDateLockService,
+    ) {
         $this->indexSessionQuery = $indexSessionQuery;
         $this->dateTimeFormatter = $dateTimeFormatter;
+        $this->sessionDateLockService = $sessionDateLockService;
     }
 
     public function index(): RedirectResponse|Response
@@ -49,10 +55,15 @@ class SessionController extends Controller
             return $session->localStartedAt->format('Y-m-d');
         });
 
-        /** @var \Illuminate\Support\Collection<int, array{date: string, sessions: \Illuminate\Support\Collection<int, \App\Models\Session>, totalDurationForHumans: string}> $days */
-        $days = $groupedSessions->map(function (\Illuminate\Support\Collection $sessionsOnDay, string $date): array {
+        $lockedDates = $this->sessionDateLockService
+            ->lockedDatesForUser(auth()->user())
+            ->flip();
+
+        /** @var \Illuminate\Support\Collection<int, array{date: string, is_locked: bool, sessions: \Illuminate\Support\Collection<int, \App\Models\Session>, totalDurationForHumans: string}> $days */
+        $days = $groupedSessions->map(function (\Illuminate\Support\Collection $sessionsOnDay, string $date) use ($lockedDates): array {
             return [
                 'date'                   => $date,
+                'is_locked'              => $lockedDates->has($date),
                 'sessions'               => $sessionsOnDay,
                 'totalDurationForHumans' => $sessionsOnDay->totalDurationForHumans(),
             ];
@@ -122,6 +133,8 @@ class SessionController extends Controller
 
     public function edit(Session $session): Response
     {
+        $this->sessionDateLockService->ensureSessionCanBeEdited($session);
+
         return Inertia::render('Session/Edit', [
             ...$this->sessionEditFormData($session),
         ]);
@@ -129,6 +142,8 @@ class SessionController extends Controller
 
     public function editForm(Session $session): JsonResponse
     {
+        $this->sessionDateLockService->ensureSessionCanBeEdited($session);
+
         return response()->json($this->sessionEditFormData($session));
     }
 
@@ -184,6 +199,8 @@ class SessionController extends Controller
 
     public function update(Session $session): RedirectResponse
     {
+        $this->sessionDateLockService->ensureSessionCanBeEdited($session);
+
         $session->update([
             'started_at'            => request('started_at') ? $this->dateTimeFormatter->utcFormat(request('started_at')) : null,
             'ended_at'              => request('ended_at') ? $this->dateTimeFormatter->utcFormat(request('ended_at')) : null,
@@ -231,6 +248,8 @@ class SessionController extends Controller
 
     public function continue(Session $session): RedirectResponse
     {
+        $this->sessionDateLockService->ensureSessionCanBeEdited($session);
+
         Session::running()->get()->each(function ($session) {
             $session->stop();
         });
@@ -259,6 +278,8 @@ class SessionController extends Controller
 
     public function split(SplitSessionRequest $request, Session $session, SessionSplitter $sessionSplitter): RedirectResponse
     {
+        $this->sessionDateLockService->ensureSessionCanBeEdited($session);
+
         if ($session->isRunning()) {
             return redirect()
                 ->route('session.index')
@@ -296,6 +317,8 @@ class SessionController extends Controller
 
     public function destroy(Session $session): RedirectResponse
     {
+        $this->sessionDateLockService->ensureSessionCanBeEdited($session);
+
         $session->delete();
 
         return redirect()->route('session.index');

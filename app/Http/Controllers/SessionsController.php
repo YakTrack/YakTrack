@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\DestroyManySessionsRequest;
 use App\Models\Session;
+use App\Services\SessionDateLockService;
 use Illuminate\Http\RedirectResponse;
 
 class SessionsController extends Controller
 {
+    public function __construct(private SessionDateLockService $sessionDateLockService) {}
+
     public function update(): RedirectResponse
     {
         $sessionData = request('sessions', []);
@@ -29,9 +32,15 @@ class SessionsController extends Controller
             ->keys()
             ->map(function (string $id) {
                 return Session::find($id);
-            })->each(function ($session) use ($sessionData) {
-                $session->update($sessionData[$session->id]);
             });
+
+        foreach ($sessions as $session) {
+            $this->sessionDateLockService->ensureSessionCanBeEdited($session);
+        }
+
+        $sessions->each(function ($session) use ($sessionData) {
+            $session->update($sessionData[$session->id]);
+        });
 
         return redirect()->back();
     }
@@ -40,6 +49,12 @@ class SessionsController extends Controller
     {
         /** @var array<int, int> $sessionIds */
         $sessionIds = $request->validated('session_ids');
+
+        $sessions = Session::query()->whereIn('id', $sessionIds)->get();
+
+        foreach ($sessions as $session) {
+            $this->sessionDateLockService->ensureSessionCanBeEdited($session);
+        }
 
         $deleted = Session::query()->whereIn('id', $sessionIds)->delete();
 
