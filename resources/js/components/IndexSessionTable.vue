@@ -142,19 +142,31 @@
                     </thead>
                 <tbody v-for="(day, dayIndex) in filteredDays" :key="dayIndex">
                         <!-- Day Header Row -->
-                        <tr class="bg-gray-100 border-b border-gray-300">
-                            <td class="pl-3 pr-4 py-2 text-sm font-medium text-gray-600 uppercase tracking-wide">
-                                <i class="fas fa-calendar-day text-gray-400 ml-0.5"></i>
+                        <tr :class="dayHeaderClasses(day)">
+                            <td class="pl-3 pr-4 py-2 text-sm font-medium uppercase tracking-wide">
+                                <i class="fas fa-calendar-day ml-0.5" :class="day.is_locked ? 'text-gray-300' : 'text-gray-400'"></i>
                             </td>
-                            <td class="pr-5 py-2 text-sm font-medium text-gray-600 uppercase tracking-wide" colspan="7">
+                            <td class="pr-5 py-2 text-sm font-medium uppercase tracking-wide" colspan="7">
                                 <div class="flex items-center justify-between">
                                     <span>{{ day.sessions[0].localStartedAtDateForHumans }}</span>
-                                    <span class="text-sm font-mono font-semibold text-gray-900">
+                                    <span class="text-sm font-mono font-semibold" :class="day.is_locked ? 'text-gray-400' : 'text-gray-900'">
                                         {{ day.totalDurationForHumans }}
                                     </span>
                                 </div>
                             </td>
-                            <td class="pr-5 py-2 text-sm font-medium text-gray-600 uppercase tracking-wide">
+                            <td class="pr-6 py-2 text-right text-sm font-medium uppercase tracking-wide">
+                                <button
+                                    type="button"
+                                    class="rounded p-1 transition-colors duration-150"
+                                    :class="day.is_locked
+                                        ? 'text-gray-500 hover:text-gray-600 hover:bg-gray-200'
+                                        : 'text-gray-400 hover:text-gray-600 hover:bg-gray-200'"
+                                    :title="day.is_locked ? 'Unlock date for editing' : 'Lock date for editing'"
+                                    @click="toggleDayLock(day)"
+                                >
+                                    <i class="fas" :class="day.is_locked ? 'fa-lock' : 'fa-lock-open'" aria-hidden="true"></i>
+                                    <span class="sr-only">{{ day.is_locked ? 'Unlock date' : 'Lock date' }}</span>
+                                </button>
                             </td>
                         </tr>
 
@@ -162,18 +174,19 @@
                         <template v-for="(session, sessionIndex) in day.sessions" :key="session.id">
                             <!-- First Row: Task Name -->
                             <tr
-                                :class="[rowClasses(session, 'first'), 'session-row transition-colors duration-1500', { 'bg-gray-50': hoveredSessionId === session.id && !isHighlighted(session) }]"
+                                :class="[rowClasses(session, day, 'first'), 'session-row transition-colors duration-1500', { 'bg-gray-50': hoveredSessionId === session.id && !isHighlighted(session) && !day.is_locked }]"
                                 :data-session-id="session.id"
                                 @mouseenter="hoveredSessionId = session.id"
                                 @mouseleave="hoveredSessionId = null"
                             >
                                 <!-- Checkbox Column -->
-                                <td class="pl-3 pr-4 py-2 transition-colors duration-1500" :class="checkboxCellClasses(session)" rowspan="2">
+                                <td class="pl-3 pr-4 py-2 transition-colors duration-1500" :class="checkboxCellClasses(session, day)" rowspan="2">
                                     <input
                                         type="checkbox"
-                                        class="block w-4 h-4 shrink-0 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" 
+                                        class="block w-4 h-4 shrink-0 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
                                         v-model="session.isSelected"
                                         :value="session.id"
+                                        :disabled="day.is_locked"
                                     />
                                 </td>
 
@@ -185,10 +198,10 @@
                                             :href="route('task.show', session.task_id)"
                                         >
                                             <div class="flex items-center space-x-2 min-w-0">
-                                                <span class="text-sm font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-150 truncate">
+                                                <span class="text-sm font-semibold truncate transition-colors duration-150" :class="day.is_locked ? 'text-gray-400' : 'text-gray-900 group-hover:text-blue-600'">
                                                     {{ taskPrefix(session.task_name) }}
                                                 </span>
-                                                <span class="text-sm text-gray-600 truncate">
+                                                <span class="text-sm truncate" :class="day.is_locked ? 'text-gray-400' : 'text-gray-600'">
                                                     {{ taskSuffix(session.task_name) }}
                                                 </span>
                                             </div>
@@ -198,7 +211,7 @@
 
                                 <!-- Time Range Column -->
                                 <td class="pr-6 py-2 text-right transition-colors duration-150" rowspan="2">
-                                    <div class="text-sm text-gray-600">
+                                    <div class="text-sm" :class="day.is_locked ? 'text-gray-400' : 'text-gray-600'">
                                         <div class="flex items-center justify-end space-x-2">
                                             <timestamp class="font-mono" :time="session.started_at"></timestamp>
                                             <i class="fas fa-arrow-right text-gray-400 text-xs"></i>
@@ -209,7 +222,7 @@
 
                                 <!-- Duration Column -->
                                 <td class="pr-6 py-2 text-right transition-colors duration-150" rowspan="2">
-                                    <div class="text-sm font-mono font-semibold text-gray-900">
+                                    <div class="text-sm font-mono font-semibold" :class="day.is_locked ? 'text-gray-400' : 'text-gray-900'">
                                         <timer :initial-time="session.durationInSeconds" :is-paused="!session.isRunning"></timer>
                                     </div>
                                 </td>
@@ -217,6 +230,7 @@
                                 <!-- Actions Column -->
                                 <td class="pr-6 py-2 text-right w-16 transition-colors duration-150" rowspan="2">
                                     <actions-dropdown
+                                        v-if="!day.is_locked"
                                         :options="getSessionActions(session)"
                                         direction="left"
                                     ></actions-dropdown>
@@ -225,7 +239,7 @@
 
                             <!-- Second Row: Context Links -->
                             <tr 
-                                :class="[rowClasses(session, 'second'), 'border-b border-gray-200 session-row transition-colors duration-1500', { 'bg-gray-50': hoveredSessionId === session.id && !isHighlighted(session) }]"
+                                :class="[rowClasses(session, day, 'second'), 'border-b border-gray-200 session-row transition-colors duration-1500', { 'bg-gray-50': hoveredSessionId === session.id && !isHighlighted(session) && !day.is_locked }]"
                                 :data-session-id="session.id"
                                 @mouseenter="hoveredSessionId = session.id"
                                 @mouseleave="hoveredSessionId = null"
@@ -234,7 +248,8 @@
                                 <td class="pr-4 py-1 text-xs transition-colors duration-150">
                                     <Link 
                                         v-if="session.client_id != null" 
-                                        class="block text-blue-600 hover:text-blue-800 transition-colors duration-150 truncate" 
+                                        class="block truncate transition-colors duration-150" 
+                                        :class="day.is_locked ? 'text-gray-400' : 'text-blue-600 hover:text-blue-800'"
                                         :href="route('client.show', session.client_id)"
                                     >
                                         {{ session.client_name }}
@@ -245,7 +260,8 @@
                                 <td class="pr-4 py-1 text-xs transition-colors duration-150">
                                     <Link 
                                         v-if="session.project_id != null" 
-                                        class="block text-indigo-600 hover:text-indigo-800 transition-colors duration-150 truncate" 
+                                        class="block truncate transition-colors duration-150" 
+                                        :class="day.is_locked ? 'text-gray-400' : 'text-indigo-600 hover:text-indigo-800'"
                                         :href="route('project.show', session.project_id)"
                                     >
                                         {{ session.project_name }}
@@ -256,7 +272,8 @@
                                 <td class="pr-4 py-1 text-xs transition-colors duration-150">
                                     <Link 
                                         v-if="session.sprint_id != null" 
-                                        class="block text-purple-600 hover:text-purple-800 transition-colors duration-150 truncate" 
+                                        class="block truncate transition-colors duration-150" 
+                                        :class="day.is_locked ? 'text-gray-400' : 'text-purple-600 hover:text-purple-800'"
                                         :href="route('sprint.show', session.sprint_id)"
                                     >
                                         {{ session.sprint_name }}
@@ -267,7 +284,8 @@
                                 <td class="pr-4 py-1 text-xs transition-colors duration-150">
                                     <Link 
                                         v-if="session.invoice_id != null" 
-                                        class="block text-teal-600 hover:text-teal-800 transition-colors duration-150 truncate" 
+                                        class="block truncate transition-colors duration-150" 
+                                        :class="day.is_locked ? 'text-gray-400' : 'text-teal-600 hover:text-teal-800'"
                                         :href="route('invoice.show', session.invoice_id)"
                                     >
                                         {{ session.invoice_number }}
@@ -276,7 +294,7 @@
 
                                 <!-- Billable -->
                                 <td class="pr-4 py-1 text-xs transition-colors duration-150">
-                                    <span v-if="session.is_billable" class="text-green-600">Billable</span>
+                                    <span v-if="session.is_billable" :class="day.is_locked ? 'text-gray-400' : 'text-green-600'">Billable</span>
                                 </td>
                             </tr>
                         </template>
@@ -288,16 +306,30 @@
             <div class="lg:hidden">
                 <div v-for="(day, dayIndex) in filteredDays" :key="dayIndex" class="mb-6">
                     <!-- Day Header -->
-                    <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+                    <div class="px-4 py-3 border-b border-gray-200" :class="day.is_locked ? 'bg-gray-200' : 'bg-gray-50'">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center space-x-2">
-                                <i class="fas fa-calendar-day text-gray-400"></i>
-                                <span class="text-sm font-medium text-gray-600 uppercase tracking-wide">
+                                <i class="fas fa-calendar-day" :class="day.is_locked ? 'text-gray-300' : 'text-gray-400'"></i>
+                                <span class="text-sm font-medium uppercase tracking-wide" :class="day.is_locked ? 'text-gray-400' : 'text-gray-600'">
                                     {{ day.sessions[0].localStartedAtDateForHumans }}
                                 </span>
                             </div>
-                            <div class="text-sm font-mono font-semibold text-gray-900">
-                                {{ day.totalDurationForHumans }}
+                            <div class="flex items-center gap-2">
+                                <div class="text-sm font-mono font-semibold" :class="day.is_locked ? 'text-gray-400' : 'text-gray-900'">
+                                    {{ day.totalDurationForHumans }}
+                                </div>
+                                <button
+                                    type="button"
+                                    class="rounded p-1 transition-colors duration-150"
+                                    :class="day.is_locked
+                                        ? 'text-gray-500 hover:text-gray-600 hover:bg-gray-300'
+                                        : 'text-gray-400 hover:text-gray-600 hover:bg-gray-200'"
+                                    :title="day.is_locked ? 'Unlock date for editing' : 'Lock date for editing'"
+                                    @click="toggleDayLock(day)"
+                                >
+                                    <i class="fas" :class="day.is_locked ? 'fa-lock' : 'fa-lock-open'" aria-hidden="true"></i>
+                                    <span class="sr-only">{{ day.is_locked ? 'Unlock date' : 'Lock date' }}</span>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -307,7 +339,7 @@
                         <div 
                             v-for="(session, sessionIndex) in day.sessions" 
                             :key="session.id" 
-                            :class="[rowClasses(session, 'card'), 'p-4 hover:bg-gray-50 transition-colors duration-1500']"
+                            :class="[rowClasses(session, day, 'card'), 'p-4 transition-colors duration-1500', { 'hover:bg-gray-50': !day.is_locked }]"
                         >
                             <div class="flex items-start justify-between space-x-3">
                                 <!-- Checkbox and Main Content -->
@@ -318,6 +350,7 @@
                                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 focus:ring-2 mt-1 flex-shrink-0" 
                                             v-model="session.isSelected" 
                                             :value="session.id"
+                                            :disabled="day.is_locked"
                                         />
                                         
                                         <div class="flex-1 min-w-0">
@@ -409,6 +442,7 @@
                                 <!-- Actions -->
                                 <div class="flex-shrink-0">
                                     <actions-dropdown
+                                        v-if="!day.is_locked"
                                         :options="getSessionActions(session)"
                                         direction="left"
                                     ></actions-dropdown>
@@ -595,6 +629,9 @@
                     return session.isSelected;
                 });
             },
+            editableSessions() {
+                return this.sessions.filter((session) => !this.isSessionLocked(session));
+            },
             selectedSessionIds() {
                 return this.selectedSessions.map((session) => session.id);
             },
@@ -676,6 +713,14 @@
                         event: 'sessions.mark-as-non-billable',
                     },
                     {
+                        name: 'Lock all',
+                        callback: () => this.bulkLockDates(),
+                    },
+                    {
+                        name: 'Unlock all',
+                        callback: () => this.bulkUnlockDates(),
+                    },
+                    {
                         name: 'Delete selected',
                         callback: () => {
                             if (this.selectedSessions.length === 0) {
@@ -753,10 +798,16 @@
                 this.$inertia.post(route('session.stop', session.id));
             },
             updateSelectedSessions(payload) {
+               const editableSelectedSessions = this.selectedSessions.filter((session) => !this.isSessionLocked(session));
+
+               if (editableSelectedSessions.length === 0) {
+                   return;
+               }
+
                this.$inertia.patch(
                    route('sessions.update'),
                    {
-                        sessions: this.selectedSessions.reduce((sessions, session) => {
+                        sessions: editableSelectedSessions.reduce((sessions, session) => {
                             sessions[session.id] = payload
 
                             return sessions
@@ -786,14 +837,26 @@
             isHighlighted(session) {
                 return this.highlightedSessionId === session.id;
             },
-            checkboxCellClasses(session) {
+            checkboxCellClasses(session, day) {
+                if (day?.is_locked) {
+                    return 'border-l border-transparent';
+                }
+
                 if (this.isHighlighted(session)) {
                     return 'border-l-4 border-l-amber-300';
                 }
 
                 return 'border-l border-transparent';
             },
-            rowClasses(session, rowPart = 'card') {
+            rowClasses(session, day, rowPart = 'card') {
+                if (day?.is_locked) {
+                    if (rowPart === 'first' || rowPart === 'second') {
+                        return 'bg-gray-100 text-gray-400';
+                    }
+
+                    return 'bg-gray-100 text-gray-400';
+                }
+
                 if (this.isHighlighted(session)) {
                     if (rowPart === 'first' || rowPart === 'second') {
                         return 'bg-amber-50';
@@ -913,17 +976,60 @@
             },
             confirmBulkDeleteSessions(sessions) {
                 if (sessions && sessions.length > 0) {
+                    const editableSessions = sessions.filter((session) => !this.isSessionLocked(session));
+
+                    if (editableSessions.length === 0) {
+                        return;
+                    }
+
                     this.$inertia.post(route('sessions.destroy-many'), {
-                        session_ids: sessions.map((session) => session.id),
+                        session_ids: editableSessions.map((session) => session.id),
                     });
                 }
                 events.emit('close-bulk-delete-modal');
+            },
+            dayHeaderClasses(day) {
+                return day.is_locked
+                    ? 'bg-gray-200 border-b border-gray-300 text-gray-400'
+                    : 'bg-gray-100 border-b border-gray-300 text-gray-600';
+            },
+            isSessionLocked(session) {
+                return this.days.some((day) => day.is_locked && day.sessions.some((daySession) => daySession.id === session.id));
+            },
+            toggleDayLock(day) {
+                this.$inertia.post(route('session-dates.toggle-lock', day.date), {}, {
+                    preserveScroll: true,
+                });
+            },
+            bulkLockDates() {
+                const dates = this.filteredDays.map((day) => day.date);
+
+                if (dates.length === 0) {
+                    return;
+                }
+
+                this.$inertia.post(route('session-dates.lock-many'), { dates }, {
+                    preserveScroll: true,
+                });
+            },
+            bulkUnlockDates() {
+                const dates = this.filteredDays.map((day) => day.date);
+
+                if (dates.length === 0) {
+                    return;
+                }
+
+                this.$inertia.post(route('session-dates.unlock-many'), { dates }, {
+                    preserveScroll: true,
+                });
             },
         },
         watch: {
             selectAll(newValue) {
                 this.sessions.forEach((session) => {
-                    session.isSelected = newValue;
+                    if (!this.isSessionLocked(session)) {
+                        session.isSelected = newValue;
+                    }
                 });
             },
             filters: {
