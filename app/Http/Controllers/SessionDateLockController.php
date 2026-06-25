@@ -34,7 +34,7 @@ class SessionDateLockController extends Controller
         $locked = $sessionDateLockService->lockDates(auth()->user(), $dates);
 
         $message = match (true) {
-            $locked === 0 => 'All selected dates are already locked.',
+            $locked === 0  => 'All selected dates are already locked.',
             $locked === 1  => '1 date locked.',
             default        => "{$locked} dates locked.",
         };
@@ -50,7 +50,7 @@ class SessionDateLockController extends Controller
         $unlocked = $sessionDateLockService->unlockDates(auth()->user(), $dates);
 
         $message = match (true) {
-            $unlocked === 0 => 'No selected dates were locked.',
+            $unlocked === 0  => 'No selected dates were locked.',
             $unlocked === 1  => '1 date unlocked.',
             default          => "{$unlocked} dates unlocked.",
         };

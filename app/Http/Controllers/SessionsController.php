@@ -9,7 +9,9 @@ use Illuminate\Http\RedirectResponse;
 
 class SessionsController extends Controller
 {
-    public function __construct(private SessionDateLockService $sessionDateLockService) {}
+    public function __construct(private SessionDateLockService $sessionDateLockService)
+    {
+    }
 
     public function update(): RedirectResponse
     {
