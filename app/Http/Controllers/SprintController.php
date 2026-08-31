@@ -24,7 +24,9 @@ class SprintController extends Controller
         $state = $request->tableState();
         $direction = $state['direction'];
 
-        $query = Sprint::query()->select('sprints.*');
+        $query = Sprint::query()
+            ->select('sprints.*')
+            ->forFocusedClient($request->user()->focusedClientId());
 
         if ($state['q'] !== '') {
             $term = '%'.addcslashes($state['q'], '%_\\').'%';
@@ -131,7 +133,10 @@ class SprintController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Sprint/Edit', ['projects' => Project::notArchived()->orderBy('name')->get()]);
+        return Inertia::render('Sprint/Edit', [
+            'projects'        => Project::notArchived()->orderBy('name')->get(),
+            'focusedClientId' => auth()->user()->focusedClientId(),
+        ]);
     }
 
     /**

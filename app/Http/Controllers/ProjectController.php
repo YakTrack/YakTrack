@@ -23,6 +23,7 @@ class ProjectController extends Controller
 
         $query = Project::query()
             ->notArchived()
+            ->forFocusedClient($request->user()->focusedClientId())
             ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
             ->select('projects.*')
             ->with(['client:id,name'])
@@ -74,7 +75,8 @@ class ProjectController extends Controller
     public function create(): Response
     {
         return Inertia::render('Project/Edit', [
-            'clients' => Client::all(),
+            'clients'         => Client::all(),
+            'focusedClientId' => auth()->user()->focusedClientId(),
         ]);
     }
 
@@ -323,6 +325,7 @@ class ProjectController extends Controller
     {
         return Inertia::render('Project/Archived', [
             'projects' => Project::archived()
+                ->forFocusedClient(auth()->user()->focusedClientId())
                 ->orderBy('archived_at', 'desc')
                 ->with('client')
                 ->get()

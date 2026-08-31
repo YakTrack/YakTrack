@@ -60,6 +60,7 @@
         props: [
             'sprint',
             'projects',
+            'focusedClientId',
         ],
         components: {
             breadcrumbs: breadcrumbs,
@@ -90,8 +91,17 @@
         },
         methods: {
             initialSelectedProjects() {
-                if (!this.sprint || !this.sprint.projects) return [];
-                return this.sprint.projects.map(p => ({ id: p.id, name: p.name }));
+                if (this.sprint && this.sprint.projects) {
+                    return this.sprint.projects.map(p => ({ id: p.id, name: p.name }));
+                }
+
+                if (this.focusedClientId) {
+                    return (this.projects || [])
+                        .filter(p => p.client_id == this.focusedClientId)
+                        .map(p => ({ id: p.id, name: p.name }));
+                }
+
+                return [];
             },
             submit() {
                 const verb = this.isCreateForm ? 'post' : 'patch';

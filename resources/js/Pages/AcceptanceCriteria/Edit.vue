@@ -94,6 +94,7 @@ export default {
         'features',
         'errors',
         'prefill',
+        'focusedClientId',
     ],
     components: {
         Link,
@@ -103,6 +104,10 @@ export default {
         formField: formField,
     },
     data() {
+        const focusedProjectId = this.focusedClientId
+            ? (this.projects.find(project => project.client_id == this.focusedClientId)?.id ?? '')
+            : '';
+
         return {
             form: this.criteria ? {
                 project_id: this.criteria.project_id || '',
@@ -111,7 +116,7 @@ export default {
                 name: this.criteria.name || '',
                 description: this.criteria.description || '',
             } : {
-                project_id: this.prefill?.project_id || '',
+                project_id: this.prefill?.project_id || focusedProjectId,
                 feature_id: this.prefill?.feature_id || '',
                 code: '',
                 name: '',

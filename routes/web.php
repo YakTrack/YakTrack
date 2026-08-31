@@ -39,6 +39,8 @@ Route::group(['middleware' => 'auth'], function () {
         'uses' => 'HomeController@index',
     ]);
 
+    Route::patch('focused-client', 'FocusedClientController@update')->name('focused-client.update');
+
     Route::resource('client', 'ClientController');
     Route::resource('project', 'ProjectController');
     Route::get('project/{project}/kanban', 'ProjectController@kanban')->name('project.kanban');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Client;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -41,7 +42,7 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        return array_merge(parent::share($request), [
+        $shared = array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user() ? [
                     'id'    => $request->user()->id,
@@ -55,5 +56,20 @@ class HandleInertiaRequests extends Middleware
                 ] : null,
             ],
         ]);
+
+        // Focus data is a web-user convenience only; never expose it to client-portal users.
+        // Gate explicitly on the web guard: the auth:client middleware promotes 'client' to the
+        // default guard, so $request->user() would otherwise resolve the client-portal user here.
+        if ($user = $request->user('web')) {
+            $focusedClient = $user->focusedClient;
+
+            $shared['focusableClients'] = Client::orderBy('name')->get(['id', 'name']);
+            $shared['focusedClient'] = $focusedClient ? [
+                'id'   => $focusedClient->id,
+                'name' => $focusedClient->name,
+            ] : null;
+        }
+
+        return $shared;
     }
 }

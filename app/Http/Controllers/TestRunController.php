@@ -17,7 +17,8 @@ class TestRunController extends Controller
 {
     public function index(Request $request): Response
     {
-        $query = TestRun::with(['project', 'executedByUser', 'testResults']);
+        $query = TestRun::with(['project', 'executedByUser', 'testResults'])
+            ->forFocusedClient($request->user()->focusedClientId());
 
         if ($request->has('project_id')) {
             $query->where('project_id', $request->project_id);
@@ -46,6 +47,7 @@ class TestRunController extends Controller
             'projects'          => Project::notArchived()->orderBy('name')->get(),
             'criteria'          => $criteria,
             'selectedProjectId' => $projectId,
+            'focusedClientId'   => auth()->user()->focusedClientId(),
         ]);
     }
 

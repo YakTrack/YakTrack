@@ -161,11 +161,22 @@ const props = defineProps({
     projects: Array,
     criteria: Array,
     selectedProjectId: [String, Number],
+    focusedClientId: [String, Number],
     errors: Object,
 })
 
+const focusedProjectId = () => {
+    if (!props.focusedClientId) {
+        return ''
+    }
+
+    const match = (props.projects || []).find((project) => project.client_id == props.focusedClientId)
+
+    return match ? match.id : ''
+}
+
 const form = useForm({
-    project_id: props.selectedProjectId || '',
+    project_id: props.selectedProjectId || focusedProjectId(),
     name: '',
     description: '',
     executed_at: new Date().toISOString().slice(0, 16),

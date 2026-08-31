@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Collections\ProjectCollection;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -228,6 +229,18 @@ class Project extends Model
     public function scopeNotArchived($query)
     {
         return $query->whereNull('archived_at');
+    }
+
+    /**
+     * Scope to the focused client. No-op when no client is focused.
+     *
+     * @param Builder<\App\Models\Project> $query
+     *
+     * @return Builder<\App\Models\Project>
+     */
+    public function scopeForFocusedClient(Builder $query, ?int $clientId): Builder
+    {
+        return $query->when($clientId, fn (Builder $query): Builder => $query->where('client_id', $clientId));
     }
 
     /**

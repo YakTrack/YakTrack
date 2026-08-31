@@ -5,7 +5,8 @@
                 <logo></logo>
                 <span class="text-2xl tracking-tight text-gray-900 font-thin"> {{ $page.props.app.name }} </span>
             </div>
-            <div class="flex items-center mx-8">
+            <div class="flex items-center gap-x-3 mx-8">
+                <focus-client-menu></focus-client-menu>
                 <user-menu :logout-url="route('logout')"></user-menu>
             </div>
         </nav>
@@ -15,11 +16,13 @@
 <script>
     import Logo from '@/Shared/Logo.vue';
     import UserMenu from '@/Shared/UserMenu.vue';
+    import FocusClientMenu from '@/Shared/FocusClientMenu.vue';
 
     export default {
         components: {
             logo: Logo,
             'user-menu': UserMenu,
+            'focus-client-menu': FocusClientMenu,
         },
     }
 </script>

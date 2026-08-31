@@ -63,10 +63,11 @@
         props: [
             'project',
             'clients',
+            'focusedClientId',
         ],
         data() {
             return {
-                form: this.project || {},
+                form: this.project || { client_id: this.focusedClientId ?? null },
             }
         },
         components: {

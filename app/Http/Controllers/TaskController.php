@@ -28,6 +28,10 @@ class TaskController extends Controller
             ->leftJoin('projects', 'tasks.project_id', '=', 'projects.id')
             ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
             ->leftJoin('task_statuses', 'tasks.status_id', '=', 'task_statuses.id')
+            ->when(
+                $request->user()->focusedClientId(),
+                fn ($q, $clientId) => $q->where('projects.client_id', $clientId),
+            )
             ->with(['project.client', 'taskStatus']);
 
         if ($state['q'] !== '') {
@@ -138,6 +142,7 @@ class TaskController extends Controller
             'projects'           => Project::notArchived()->with(['sprints', 'tasks', 'taskStatuses', 'jiraIntegration'])->orderBy('name')->get(),
             'tasks'              => Task::orderBy('id', 'desc')->get(),
             'prefill_project_id' => $prefillProjectId,
+            'focused_client_id'  => auth()->user()->focusedClientId(),
         ]);
     }
 

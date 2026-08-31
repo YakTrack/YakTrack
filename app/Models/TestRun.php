@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\TestResultStatus;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -47,6 +48,18 @@ class TestRun extends Model
     public function testResults(): HasMany
     {
         return $this->hasMany(TestResult::class);
+    }
+
+    /**
+     * Scope to the focused client via the parent project. No-op when no client is focused.
+     *
+     * @param Builder<\App\Models\TestRun> $query
+     *
+     * @return Builder<\App\Models\TestRun>
+     */
+    public function scopeForFocusedClient(Builder $query, ?int $clientId): Builder
+    {
+        return $query->when($clientId, fn (Builder $query): Builder => $query->whereHas('project', fn (Builder $project): Builder => $project->where('client_id', $clientId)));
     }
 
     public function getSummaryStatistics(): array
