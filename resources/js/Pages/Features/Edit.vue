@@ -82,6 +82,7 @@ export default {
         'feature',
         'projects',
         'errors',
+        'focusedClientId',
     ],
     components: {
         Link,
@@ -91,8 +92,12 @@ export default {
         formField: formField,
     },
     setup(props) {
+        const focusedProjectId = props.focusedClientId
+            ? ((props.projects || []).find((project) => project.client_id == props.focusedClientId)?.id ?? '')
+            : ''
+
         const form = reactive({
-            project_id: props.feature?.project_id || '',
+            project_id: props.feature?.project_id || focusedProjectId,
             code: props.feature?.code || '',
             name: props.feature?.name || '',
             description: props.feature?.description || '',

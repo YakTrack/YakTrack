@@ -23,6 +23,7 @@
                 :projects="projects"
                 :tasks="tasks"
                 :prefill-project-id="prefill_project_id"
+                :focused-client-id="focused_client_id"
             />
         </form-layout>
     </layout>
@@ -46,6 +47,10 @@ defineProps({
         default: () => [],
     },
     prefill_project_id: {
+        type: Number,
+        default: null,
+    },
+    focused_client_id: {
         type: Number,
         default: null,
     },

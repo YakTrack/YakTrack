@@ -47,6 +47,7 @@ class TestRunController extends Controller
             'projects'          => Project::notArchived()->orderBy('name')->get(),
             'criteria'          => $criteria,
             'selectedProjectId' => $projectId,
+            'focusedClientId'   => auth()->user()->focusedClientId(),
         ]);
     }
 

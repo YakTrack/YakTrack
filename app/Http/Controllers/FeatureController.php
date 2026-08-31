@@ -18,7 +18,10 @@ class FeatureController extends Controller
         $query = Feature::with(['project', 'acceptanceCriteria'])
             ->join('projects', 'features.project_id', '=', 'projects.id')
             ->where('features.is_active', true)
-            ->forFocusedClient($request->user()->focusedClientId())
+            ->when(
+                $request->user()->focusedClientId(),
+                fn ($q, $clientId) => $q->where('projects.client_id', $clientId),
+            )
             ->select('features.*');
 
         if ($request->has('project_id')) {
@@ -42,7 +45,8 @@ class FeatureController extends Controller
     public function create(): Response
     {
         return Inertia::render('Features/Edit', [
-            'projects' => Project::notArchived()->orderBy('name')->get(),
+            'projects'        => Project::notArchived()->orderBy('name')->get(),
+            'focusedClientId' => auth()->user()->focusedClientId(),
         ]);
     }
 

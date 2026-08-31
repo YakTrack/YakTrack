@@ -42,7 +42,7 @@ import { ChevronDownIcon } from '@heroicons/vue/20/solid'
 
 const page = usePage()
 
-const clients = computed(() => page.props.clients ?? [])
+const clients = computed(() => page.props.focusableClients ?? [])
 const focusedClient = computed(() => page.props.focusedClient ?? null)
 const focusedLabel = computed(() => focusedClient.value ? focusedClient.value.name : 'All clients')
 

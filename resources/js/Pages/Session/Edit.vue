@@ -88,6 +88,10 @@
             sessionCategorySelect: sessionCategorySelect,
         },
         data() {
+            const focusedTask = this.focusedClientId
+                ? (this.tasks || []).find((task) => task.project && task.project.client_id == this.focusedClientId)
+                : null;
+
             return {
                 form: this.session ? {
                     started_at: dateTime.toDateTimeString(new Date(this.session.localStartedAt)),
@@ -98,7 +102,9 @@
                     comment: this.session.comment,
                     is_billable: Boolean(this.session.is_billable),
                     session_category_id: this.session.session_category_id,
-                } : {}
+                } : {
+                    task_id: focusedTask ? focusedTask.id : null,
+                }
             };
         },
         methods: {

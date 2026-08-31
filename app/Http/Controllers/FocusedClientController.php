@@ -20,7 +20,7 @@ class FocusedClientController extends Controller
         ]);
 
         $message = $clientId
-            ? 'Now focusing on '.Client::findOrFail($clientId)->name.'.'
+            ? 'Now focusing on '.Client::find($clientId)?->name.'.'
             : 'Focus cleared. Showing all clients.';
 
         return redirect()

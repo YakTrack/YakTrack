@@ -105,6 +105,10 @@ const props = defineProps({
         type: Number,
         default: null,
     },
+    focusedClientId: {
+        type: Number,
+        default: null,
+    },
 })
 
 const isCreate = computed(() => props.task == null)
@@ -116,6 +120,10 @@ const findInitialProject = () => {
 
     if (props.prefillProjectId) {
         return props.projects.find((project) => project.id == props.prefillProjectId) ?? null
+    }
+
+    if (props.focusedClientId) {
+        return props.projects.find((project) => project.client_id == props.focusedClientId) ?? null
     }
 
     return null

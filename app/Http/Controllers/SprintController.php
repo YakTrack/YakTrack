@@ -133,7 +133,10 @@ class SprintController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Sprint/Edit', ['projects' => Project::notArchived()->orderBy('name')->get()]);
+        return Inertia::render('Sprint/Edit', [
+            'projects'        => Project::notArchived()->orderBy('name')->get(),
+            'focusedClientId' => auth()->user()->focusedClientId(),
+        ]);
     }
 
     /**
