@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Client;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -41,6 +42,9 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        $user = $request->user();
+        $focusedClient = $user?->focusedClient;
+
         return array_merge(parent::share($request), [
             'auth' => [
                 'user' => $request->user() ? [
@@ -54,6 +58,13 @@ class HandleInertiaRequests extends Middleware
                     'email' => $request->user('client')->email,
                 ] : null,
             ],
+            'clients' => $user
+                ? Client::orderBy('name')->get(['id', 'name'])
+                : [],
+            'focusedClient' => $focusedClient ? [
+                'id'   => $focusedClient->id,
+                'name' => $focusedClient->name,
+            ] : null,
         ]);
     }
 }

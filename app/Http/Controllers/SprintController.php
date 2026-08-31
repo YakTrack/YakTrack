@@ -24,7 +24,9 @@ class SprintController extends Controller
         $state = $request->tableState();
         $direction = $state['direction'];
 
-        $query = Sprint::query()->select('sprints.*');
+        $query = Sprint::query()
+            ->select('sprints.*')
+            ->forFocusedClient($request->user()->focusedClientId());
 
         if ($state['q'] !== '') {
             $term = '%'.addcslashes($state['q'], '%_\\').'%';

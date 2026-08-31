@@ -7,6 +7,7 @@ use App\Models\Session;
 use App\Models\Target;
 use App\Statistics\Sessions;
 use App\Support\DateTimeFormatter;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -29,15 +30,19 @@ class HomeController extends Controller
     /**
      * Show the application dashboard.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        $focusedClientId = $request->user()->focusedClientId();
+
         $currentSession = Session::whereIsRunning()->first();
 
-        $noClientSessions = Session::thisWeek()
-            ->get()
-            ->filter(function ($session) {
-                return $session->hasNoClient();
-            });
+        $noClientSessions = $focusedClientId
+            ? collect()
+            : Session::thisWeek()
+                ->get()
+                ->filter(function ($session) {
+                    return $session->hasNoClient();
+                });
 
         $noClient = [
             'id'        => 0,
@@ -56,6 +61,7 @@ class HomeController extends Controller
         ];
 
         $clients = Client::with(['projects.tasks.sessions'])
+            ->when($focusedClientId, fn ($query) => $query->whereKey($focusedClientId))
             ->get()
             ->filter(function ($client) {
                 $client->append(['openSprints', 'sessionsThisWeek']);
@@ -97,14 +103,14 @@ class HomeController extends Controller
         return Inertia::render('Home', [
             'this_week' => [
                 'billable' => [
-                    'actual' => Session::whereThisWeek()->whereBillable()->get()->totalDurationInSeconds(),
+                    'actual' => Session::whereThisWeek()->whereBillable()->forFocusedClient($focusedClientId)->get()->totalDurationInSeconds(),
                     'target' => Target::whereForThisWeek()->whereBillableOnly()->get()->totalValueInSeconds(),
                 ],
                 'not_billable' => [
-                    'actual' => Session::whereThisWeek()->whereNotBillable()->get()->totalDurationInSeconds(),
+                    'actual' => Session::whereThisWeek()->whereNotBillable()->forFocusedClient($focusedClientId)->get()->totalDurationInSeconds(),
                     'target' => Target::whereForThisWeek()->whereNotBillableOnly()->get()->totalValueInSeconds(),
                 ],
-                'days' => \Illuminate\Support\Collection::make($this->dateTimeFormatter::DAYS_OF_WEEK)->mapWithKeys(function (string $day) use ($currentSession): array {
+                'days' => \Illuminate\Support\Collection::make($this->dateTimeFormatter::DAYS_OF_WEEK)->mapWithKeys(function (string $day) use ($currentSession, $focusedClientId): array {
                     $date = $this->dateTimeFormatter->dayThisWeek(strtolower($day));
 
                     return [
@@ -112,12 +118,12 @@ class HomeController extends Controller
                             'date'     => $date->format('Y-m-d'),
                             'is_today' => $date->isToday(),
                             'billable' => [
-                                'actual'    => Session::whereOnDayThisWeek($day)->whereBillable()->get()->totalDurationInSeconds(),
+                                'actual'    => Session::whereOnDayThisWeek($day)->whereBillable()->forFocusedClient($focusedClientId)->get()->totalDurationInSeconds(),
                                 'target'    => Target::whereForDate($date)->whereBillableOnly()->get()->totalValueInSeconds(),
                                 'is_active' => $currentSession && $currentSession->is_billable && $date->isToday(),
                             ],
                             'not_billable' => [
-                                'actual'    => Session::whereOnDayThisWeek($day)->whereNotBillable()->get()->totalDurationInSeconds(),
+                                'actual'    => Session::whereOnDayThisWeek($day)->whereNotBillable()->forFocusedClient($focusedClientId)->get()->totalDurationInSeconds(),
                                 'target'    => Target::whereForDate($date)->whereNotBillableOnly()->get()->totalValueInSeconds(),
                                 'is_active' => $currentSession && !$currentSession->is_billable && $date->isToday(),
                             ],
@@ -125,7 +131,7 @@ class HomeController extends Controller
                     ];
                 })->toArray(),
             ],
-            'thisWeeksTotal'                           => ($thisWeeksSessions = Session::thisWeek()->get())->totalDurationForHumans(),
+            'thisWeeksTotal'                           => ($thisWeeksSessions = Session::thisWeek()->forFocusedClient($focusedClientId)->get())->totalDurationForHumans(),
             'totalSecondsRemainingForTargetsThisWeek'  => Target::whereForThisWeek()->get()->totalValueInSeconds() - $thisWeeksSessions->totalDurationInSeconds(),
             'clients'                                  => $noClientSessions->count() > 0 ? $clients->push($noClient)->values() : $clients,
             'currentlyWorking'                         => $currentlyWorking = $this->sessions->currentlyWorking(),

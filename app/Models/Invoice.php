@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Concerns\BelongsToClient;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -13,6 +14,18 @@ class Invoice extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    /**
+     * Scope to the focused client. No-op when no client is focused.
+     *
+     * @param Builder<\App\Models\Invoice> $query
+     *
+     * @return Builder<\App\Models\Invoice>
+     */
+    public function scopeForFocusedClient(Builder $query, ?int $clientId): Builder
+    {
+        return $query->when($clientId, fn (Builder $query): Builder => $query->where('client_id', $clientId));
+    }
 
     protected $appends = [
         'amountForHumans',

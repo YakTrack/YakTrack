@@ -18,6 +18,7 @@ class FeatureController extends Controller
         $query = Feature::with(['project', 'acceptanceCriteria'])
             ->join('projects', 'features.project_id', '=', 'projects.id')
             ->where('features.is_active', true)
+            ->forFocusedClient($request->user()->focusedClientId())
             ->select('features.*');
 
         if ($request->has('project_id')) {

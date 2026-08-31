@@ -15,6 +15,8 @@ class IndexSessionQuery
 
     protected ?int $offset = null;
 
+    protected ?int $clientId = null;
+
     /**
      * @return Collection<int, \App\Models\Session>|LengthAwarePaginator<\App\Models\Session>
      */
@@ -75,6 +77,8 @@ class IndexSessionQuery
             $query = $this->{camel_case($filter)}($query, request($filter));
         });
 
+        $query->forFocusedClient($this->clientId);
+
         if ($this->offset) {
             $query->offset($this->offset);
         }
@@ -94,6 +98,13 @@ class IndexSessionQuery
     public function offset(?int $offset = null): self
     {
         $this->offset = $offset;
+
+        return $this;
+    }
+
+    public function forClient(?int $clientId = null): self
+    {
+        $this->clientId = $clientId;
 
         return $this;
     }

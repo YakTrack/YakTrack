@@ -326,6 +326,18 @@ class Session extends Model
     }
 
     /**
+     * Scope to the focused client via task -> project. No-op when no client is focused.
+     *
+     * @param Builder<\App\Models\Session> $query
+     *
+     * @return Builder<\App\Models\Session>
+     */
+    public function scopeForFocusedClient(Builder $query, ?int $clientId): Builder
+    {
+        return $query->when($clientId, fn (Builder $query): Builder => $query->whereHas('task.project', fn (Builder $project): Builder => $project->where('client_id', $clientId)));
+    }
+
+    /**
      * @param Builder<\App\Models\Session> $query
      *
      * @return Builder<\App\Models\Session>

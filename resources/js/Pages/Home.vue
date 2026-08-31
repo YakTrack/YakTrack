@@ -9,6 +9,16 @@
         </template>
         <template #title> Home </template>
 
+        <div
+            v-if="focusedClient"
+            class="mb-4 flex flex-wrap items-center gap-x-2 gap-y-1 rounded-md bg-blue-50 px-4 py-3 text-sm text-blue-800 dark:bg-blue-900/30 dark:text-blue-200"
+        >
+            <span>Focusing on <strong>{{ focusedClient.name }}</strong>.</span>
+            <span class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-800/50 dark:text-blue-100">
+                Targets shown are across all clients
+            </span>
+        </div>
+
         <sessions-summary-table
             :this-week="this_week"
             :total-seconds-remaining-for-targets-this-week="totalSecondsRemainingForTargetsThisWeek"
@@ -49,6 +59,11 @@
                 dayjs: dayjs,
                 billableStatus: 'billable',
             }
+        },
+        computed: {
+            focusedClient() {
+                return this.$page.props.focusedClient ?? null;
+            },
         },
         mounted() {
           document.title = 'YakTrack'

@@ -18,6 +18,7 @@ class InvoiceController extends Controller
     {
         return Inertia::render('Invoice/Index', [
             'invoices' => Invoice::with(['client', 'sessions'])
+                ->forFocusedClient(auth()->user()->focusedClientId())
                 ->orderBy('id', 'desc')
                 ->paginate(15)
                 ->withQueryString()

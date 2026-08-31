@@ -10,6 +10,24 @@
             ></breadcrumbs>
         </template>
         <template #title> {{ client.name }} </template>
+        <template #top-right-toolbar>
+            <button
+                v-if="isFocused"
+                type="button"
+                class="btn btn-white"
+                @click="clearFocus"
+            >
+                Clear focus
+            </button>
+            <button
+                v-else
+                type="button"
+                class="btn btn-blue"
+                @click="focusOnClient"
+            >
+                Focus on this client
+            </button>
+        </template>
         <div class="card box-default">
             <div class="card-body">
                 <div class="row">
@@ -39,7 +57,24 @@
         props: [
             'client',
         ],
+        computed: {
+            isFocused() {
+                const focusedClient = this.$page.props.focusedClient;
+
+                return focusedClient != null && focusedClient.id === this.client.id;
+            },
+        },
         methods: {
+            focusOnClient() {
+                this.$inertia.patch(route('focused-client.update'), { client_id: this.client.id }, {
+                    preserveScroll: true,
+                });
+            },
+            clearFocus() {
+                this.$inertia.patch(route('focused-client.update'), { client_id: null }, {
+                    preserveScroll: true,
+                });
+            },
         }
     }
 

@@ -20,7 +20,8 @@ class AcceptanceCriteriaController extends Controller
     public function index(Request $request): Response
     {
         $query = AcceptanceCriteria::with(['project', 'feature', 'versions', 'tasks'])
-            ->where('is_active', true);
+            ->where('is_active', true)
+            ->forFocusedClient($request->user()->focusedClientId());
 
         if ($request->has('project_id')) {
             $query->where('project_id', $request->project_id);

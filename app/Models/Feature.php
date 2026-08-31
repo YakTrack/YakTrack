@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -38,6 +39,18 @@ class Feature extends Model
     public function acceptanceCriteria(): HasMany
     {
         return $this->hasMany(AcceptanceCriteria::class);
+    }
+
+    /**
+     * Scope to the focused client via the parent project. No-op when no client is focused.
+     *
+     * @param Builder<\App\Models\Feature> $query
+     *
+     * @return Builder<\App\Models\Feature>
+     */
+    public function scopeForFocusedClient(Builder $query, ?int $clientId): Builder
+    {
+        return $query->when($clientId, fn (Builder $query): Builder => $query->whereHas('project', fn (Builder $project): Builder => $project->where('client_id', $clientId)));
     }
 
     /**

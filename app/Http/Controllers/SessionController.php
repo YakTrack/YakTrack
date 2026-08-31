@@ -45,7 +45,10 @@ class SessionController extends Controller
 
         $page = request('page') ?? 1;
 
+        $focusedClientId = auth()->user()->focusedClientId();
+
         $sessions = $this->indexSessionQuery
+            ->forClient($focusedClientId)
             ->offset(request('per-page') * $page)
             ->paginate(request('per-page'))
             ->execute();
@@ -75,7 +78,7 @@ class SessionController extends Controller
             'sprints'                => Sprint::with('projects.client')->orderBy('id', 'desc')->get(),
             'tasks'                  => $this->sessionFormTasks(),
             'days'                   => $days,
-            'total'                  => (int) $total = Session::count(),
+            'total'                  => (int) $total = Session::forFocusedClient($focusedClientId)->count(),
             'perPage'                => (int) request('per-page'),
             'page'                   => (int) $page,
             'lastPage'               => (int) request('per-page') ? ceil($total / request('per-page')) : 1,
@@ -95,6 +98,7 @@ class SessionController extends Controller
                 ->get(),
             'sessionCategories' => SessionCategory::query()->select(['id', 'name'])->get(),
             'tasks'             => $this->sessionFormTasks(),
+            'focusedClientId'   => auth()->user()->focusedClientId(),
         ]);
     }
 

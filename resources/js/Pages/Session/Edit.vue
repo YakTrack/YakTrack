@@ -22,7 +22,7 @@
                 </div>
                 <div class="form-group">
                     <label for="task_id"> Task </label>
-                    <task-select :tasks="tasks" :task="form.task_id" :on-change="selectTask"></task-select>
+                    <task-select :tasks="orderedTasks" :task="form.task_id" :on-change="selectTask"></task-select>
                 </div>
                 <div class="form-group">
                     <label for="sprint_id"> Sprint </label>
@@ -75,8 +75,9 @@
             'session',
             'tasks',
             'invoices',
-            'sprints', 
+            'sprints',
             'sessionCategories',
+            'focusedClientId',
         ],
         components: {
             breadcrumbs: breadcrumbs,
@@ -139,6 +140,25 @@
         computed: {
             isCreateForm() {
                 return this.session == null;
+            },
+            orderedTasks() {
+                // Surface the focused client's tasks first, while keeping every task selectable.
+                if (!this.focusedClientId) {
+                    return this.tasks;
+                }
+
+                const focused = [];
+                const others = [];
+
+                this.tasks.forEach((task) => {
+                    if (task.project && task.project.client_id == this.focusedClientId) {
+                        focused.push(task);
+                    } else {
+                        others.push(task);
+                    }
+                });
+
+                return [...focused, ...others];
             },
             filteredSprints() {
                 // If no task is selected, show all sprints

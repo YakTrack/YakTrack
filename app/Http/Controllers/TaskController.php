@@ -25,6 +25,7 @@ class TaskController extends Controller
 
         $query = Task::query()
             ->select('tasks.*')
+            ->forFocusedClient($request->user()->focusedClientId())
             ->leftJoin('projects', 'tasks.project_id', '=', 'projects.id')
             ->leftJoin('clients', 'projects.client_id', '=', 'clients.id')
             ->leftJoin('task_statuses', 'tasks.status_id', '=', 'task_statuses.id')
