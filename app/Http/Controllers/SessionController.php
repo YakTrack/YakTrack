@@ -10,6 +10,7 @@ use App\Models\SessionCategory;
 use App\Models\Sprint;
 use App\Models\Task;
 use App\Models\ThirdPartyApplication;
+use App\Services\SessionAdjacencyResolver;
 use App\Services\SessionDateLockService;
 use App\Services\SessionSplitter;
 use App\Support\DateTimeFormatter;
@@ -24,15 +25,18 @@ class SessionController extends Controller
     private IndexSessionQuery $indexSessionQuery;
     private DateTimeFormatter $dateTimeFormatter;
     private SessionDateLockService $sessionDateLockService;
+    private SessionAdjacencyResolver $sessionAdjacencyResolver;
 
     public function __construct(
         DateTimeFormatter $dateTimeFormatter,
         IndexSessionQuery $indexSessionQuery,
         SessionDateLockService $sessionDateLockService,
+        SessionAdjacencyResolver $sessionAdjacencyResolver,
     ) {
         $this->indexSessionQuery = $indexSessionQuery;
         $this->dateTimeFormatter = $dateTimeFormatter;
         $this->sessionDateLockService = $sessionDateLockService;
+        $this->sessionAdjacencyResolver = $sessionAdjacencyResolver;
     }
 
     public function index(): RedirectResponse|Response
@@ -62,12 +66,20 @@ class SessionController extends Controller
             ->lockedDatesForUser(auth()->user())
             ->flip();
 
-        /** @var \Illuminate\Support\Collection<int, array{date: string, is_locked: bool, sessions: \Illuminate\Support\Collection<int, \App\Models\Session>, totalDurationForHumans: string}> $days */
-        $days = $groupedSessions->map(function (\Illuminate\Support\Collection $sessionsOnDay, string $date) use ($lockedDates): array {
+        $adjacency = $this->sessionAdjacencyResolver->resolve(
+            $sessions instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator
+                ? $sessions->getCollection()
+                : $sessions
+        );
+
+        /** @var \Illuminate\Support\Collection<int, array{date: string, is_locked: bool, sessions: \Illuminate\Support\Collection<int, array<string, mixed>>, totalDurationForHumans: string}> $days */
+        $days = $groupedSessions->map(function (\Illuminate\Support\Collection $sessionsOnDay, string $date) use ($lockedDates, $adjacency): array {
             return [
                 'date'                   => $date,
                 'is_locked'              => $lockedDates->has($date),
-                'sessions'               => $sessionsOnDay,
+                'sessions'               => $sessionsOnDay->map(function (Session $session) use ($adjacency): array {
+                    return array_merge($session->toArray(), $adjacency[$session->id] ?? []);
+                })->values(),
                 'totalDurationForHumans' => $sessionsOnDay->totalDurationForHumans(),
             ];
         })->values();
@@ -76,6 +88,7 @@ class SessionController extends Controller
             'invoices'               => Invoice::all(),
             'thirdPartyApplications' => ThirdPartyApplication::all(),
             'sprints'                => Sprint::with('projects.client')->orderBy('id', 'desc')->get(),
+            'sessionCategories'      => SessionCategory::query()->select(['id', 'name'])->get(),
             'tasks'                  => $this->sessionFormTasks(),
             'days'                   => $days,
             'total'                  => (int) $total = Session::forFocusedClient($focusedClientId)->count(),

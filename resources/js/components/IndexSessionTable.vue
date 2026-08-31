@@ -575,6 +575,8 @@
             'onChangeSelectedSessionIds',
             'onSplitSession',
             'onEditSession',
+            'onAddSessionBefore',
+            'onAddSessionAfter',
             'highlightedSessionId',
         ],
         components: {
@@ -757,6 +759,16 @@
                     this.onEditSession(session);
                 }
             };
+            this._onAddSessionBefore = (session) => {
+                if (this.onAddSessionBefore) {
+                    this.onAddSessionBefore(session);
+                }
+            };
+            this._onAddSessionAfter = (session) => {
+                if (this.onAddSessionAfter) {
+                    this.onAddSessionAfter(session);
+                }
+            };
             this._onConfirmDeleteSession = (session) => {
                 this.sessionToDelete = session;
             };
@@ -768,6 +780,8 @@
             events.on('continue-session', this._onContinueSession);
             events.on('split-session', this._onSplitSession);
             events.on('edit-session', this._onEditSession);
+            events.on('add-session-before', this._onAddSessionBefore);
+            events.on('add-session-after', this._onAddSessionAfter);
             events.on('confirm-delete-session', this._onConfirmDeleteSession);
         },
         beforeUnmount() {
@@ -778,6 +792,8 @@
             events.off('continue-session', this._onContinueSession);
             events.off('split-session', this._onSplitSession);
             events.off('edit-session', this._onEditSession);
+            events.off('add-session-before', this._onAddSessionBefore);
+            events.off('add-session-after', this._onAddSessionAfter);
             events.off('confirm-delete-session', this._onConfirmDeleteSession);
         },
         methods: {
@@ -949,7 +965,27 @@
                         });
                     }
                 }
-                
+
+                if (session.can_add_session_before) {
+                    actions.push({
+                        name: 'Add Session Before',
+                        event: {
+                            name: 'add-session-before',
+                            args: session
+                        }
+                    });
+                }
+
+                if (session.can_add_session_after) {
+                    actions.push({
+                        name: 'Add Session After',
+                        event: {
+                            name: 'add-session-after',
+                            args: session
+                        }
+                    });
+                }
+
                 actions.push({
                     name: 'Edit Session',
                     event: {
