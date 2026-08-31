@@ -76,6 +76,18 @@
               :on-close="closeEditSessionModal"
               :on-submit="handleEditSession"
           ></edit-session-modal>
+          <add-session-modal
+              ref="addSessionModal"
+              :is-open="showAddSessionModal"
+              :title="addSessionModalTitle"
+              :initial-form="addSessionInitialForm"
+              :tasks="tasks"
+              :sprints="sprints"
+              :invoices="invoices"
+              :session-categories="sessionCategories"
+              :on-close="closeAddSessionModal"
+              :on-submit="handleAddSession"
+          ></add-session-modal>
         </template>
         <template #title> Sessions </template>
         <template #top-right-toolbar>
@@ -104,6 +116,8 @@
             :on-change-selected-session-ids="onChangeSelectedSessionIds"
             :on-split-session="openSplitSessionModal"
             :on-edit-session="openEditSessionModal"
+            :on-add-session-before="openAddSessionBefore"
+            :on-add-session-after="openAddSessionAfter"
             :highlighted-session-id="recentlyEditedSessionId"
         ></index-session-table>
 
@@ -123,6 +137,7 @@ import sprintSelect from '@/Shared/SprintSelect.vue';
 import taskSelect from '@/Shared/TaskSelect.vue';
 import splitSessionModal from '@/components/SplitSessionModal.vue';
 import editSessionModal from '@/components/EditSessionModal.vue';
+import addSessionModal from '@/components/AddSessionModal.vue';
 import modernModal from '@/components/Modal.vue';
 
 export default {
@@ -137,6 +152,9 @@ export default {
             showSplitSessionModal: false,
             sessionToEdit: null,
             showEditSessionModal: false,
+            showAddSessionModal: false,
+            addSessionModalTitle: 'Add Session',
+            addSessionInitialForm: null,
             recentlyEditedSessionId: null,
             recentlyEditedSessionTimeout: null,
         }
@@ -151,6 +169,7 @@ export default {
         taskSelect: taskSelect,
         splitSessionModal: splitSessionModal,
         editSessionModal: editSessionModal,
+        addSessionModal: addSessionModal,
         modernModal: modernModal,
     },
     props: {
@@ -158,6 +177,7 @@ export default {
         invoices: Array,
         tasks: Array,
         sprints: Array,
+        sessionCategories: Array,
         thirdPartyApplications: Array,
         page: Number,
         perPage: Number,
@@ -249,6 +269,41 @@ export default {
                 },
                 onError: () => {
                     this.$refs.editSessionModal?.resetSubmitting();
+                },
+            });
+        },
+        openAddSessionBefore(session) {
+            this.openAddSession(session, 'before');
+        },
+        openAddSessionAfter(session) {
+            this.openAddSession(session, 'after');
+        },
+        openAddSession(session, direction) {
+            this.addSessionModalTitle = direction === 'before' ? 'Add Session Before' : 'Add Session After';
+            this.addSessionInitialForm = {
+                started_at: direction === 'before' ? session.add_before_started_at : session.add_after_started_at,
+                ended_at: direction === 'before' ? session.add_before_ended_at : session.add_after_ended_at,
+                task_id: session.task_id,
+                sprint_id: session.sprint_id,
+                invoice_id: session.invoice_id,
+                session_category_id: session.session_category_id,
+                comment: null,
+                is_billable: Boolean(session.is_billable),
+            };
+            this.showAddSessionModal = true;
+        },
+        closeAddSessionModal() {
+            this.showAddSessionModal = false;
+            this.addSessionInitialForm = null;
+        },
+        handleAddSession(form) {
+            this.$inertia.post(route('session.store'), form, {
+                preserveScroll: true,
+                onSuccess: () => {
+                    this.closeAddSessionModal();
+                },
+                onError: () => {
+                    this.$refs.addSessionModal?.resetSubmitting();
                 },
             });
         },
