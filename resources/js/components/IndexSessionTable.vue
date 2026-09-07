@@ -997,6 +997,14 @@
             getSessionActions(session) {
                 const actions = [];
 
+                actions.push({
+                    name: 'Edit Session',
+                    event: {
+                        name: 'edit-session',
+                        args: session
+                    }
+                });
+
                 if (session.isRunning) {
                     actions.push({
                         name: 'Stop Session',
@@ -1071,14 +1079,6 @@
                     });
                 }
 
-                actions.push({
-                    name: 'Edit Session',
-                    event: {
-                        name: 'edit-session',
-                        args: session
-                    }
-                });
-                
                 actions.push({
                     name: 'Delete Session',
                     event: {
