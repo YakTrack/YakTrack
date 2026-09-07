@@ -229,11 +229,29 @@
 
                                 <!-- Actions Column -->
                                 <td class="pr-6 py-2 text-right w-16 transition-colors duration-150" rowspan="2">
-                                    <actions-dropdown
-                                        v-if="!day.is_locked"
-                                        :options="getSessionActions(session)"
-                                        direction="left"
-                                    ></actions-dropdown>
+                                    <div class="flex items-center justify-end gap-1">
+                                        <button
+                                            v-if="!day.is_locked"
+                                            type="button"
+                                            class="relative rounded p-1 text-gray-400 transition-colors duration-150 hover:bg-gray-200 hover:text-gray-600"
+                                            title="Manage linked tasks"
+                                            @click="managePendingTasks(session)"
+                                        >
+                                            <i class="fas fa-list-check" aria-hidden="true"></i>
+                                            <span
+                                                v-if="pendingTasksCount(session) > 0"
+                                                class="absolute -right-1 -top-1 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-semibold leading-none text-white"
+                                            >
+                                                {{ pendingTasksCount(session) }}
+                                            </span>
+                                            <span class="sr-only">Manage linked tasks</span>
+                                        </button>
+                                        <actions-dropdown
+                                            v-if="!day.is_locked"
+                                            :options="getSessionActions(session)"
+                                            direction="left"
+                                        ></actions-dropdown>
+                                    </div>
                                 </td>
                             </tr>
 
@@ -440,7 +458,23 @@
                                 </div>
                                 
                                 <!-- Actions -->
-                                <div class="flex-shrink-0">
+                                <div class="flex flex-shrink-0 items-center gap-1">
+                                    <button
+                                        v-if="!day.is_locked"
+                                        type="button"
+                                        class="relative rounded p-1 text-gray-400 transition-colors duration-150 hover:bg-gray-200 hover:text-gray-600"
+                                        title="Manage linked tasks"
+                                        @click="managePendingTasks(session)"
+                                    >
+                                        <i class="fas fa-list-check" aria-hidden="true"></i>
+                                        <span
+                                            v-if="pendingTasksCount(session) > 0"
+                                            class="absolute -right-1 -top-1 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-blue-600 px-1 text-[10px] font-semibold leading-none text-white"
+                                        >
+                                            {{ pendingTasksCount(session) }}
+                                        </span>
+                                        <span class="sr-only">Manage linked tasks</span>
+                                    </button>
                                     <actions-dropdown
                                         v-if="!day.is_locked"
                                         :options="getSessionActions(session)"
@@ -577,6 +611,8 @@
             'onEditSession',
             'onAddSessionBefore',
             'onAddSessionAfter',
+            'onManagePendingTasks',
+            'onSplitPendingTasks',
             'highlightedSessionId',
         ],
         components: {
@@ -769,6 +805,16 @@
                     this.onAddSessionAfter(session);
                 }
             };
+            this._onManagePendingTasks = (session) => {
+                if (this.onManagePendingTasks) {
+                    this.onManagePendingTasks(session);
+                }
+            };
+            this._onSplitPendingTasks = (session) => {
+                if (this.onSplitPendingTasks) {
+                    this.onSplitPendingTasks(session);
+                }
+            };
             this._onConfirmDeleteSession = (session) => {
                 this.sessionToDelete = session;
             };
@@ -782,6 +828,8 @@
             events.on('edit-session', this._onEditSession);
             events.on('add-session-before', this._onAddSessionBefore);
             events.on('add-session-after', this._onAddSessionAfter);
+            events.on('manage-pending-tasks', this._onManagePendingTasks);
+            events.on('split-pending-tasks', this._onSplitPendingTasks);
             events.on('confirm-delete-session', this._onConfirmDeleteSession);
         },
         beforeUnmount() {
@@ -794,6 +842,8 @@
             events.off('edit-session', this._onEditSession);
             events.off('add-session-before', this._onAddSessionBefore);
             events.off('add-session-after', this._onAddSessionAfter);
+            events.off('manage-pending-tasks', this._onManagePendingTasks);
+            events.off('split-pending-tasks', this._onSplitPendingTasks);
             events.off('confirm-delete-session', this._onConfirmDeleteSession);
         },
         methods: {
@@ -935,14 +985,39 @@
                     this.onSplitSession(session);
                 }
             },
+            pendingTasksCount(session) {
+                return Array.isArray(session.pending_tasks) ? session.pending_tasks.length : 0;
+            },
+            hasLinkedTasksToSplit(session) {
+                return !session.isRunning && Boolean(session.ended_at) && this.pendingTasksCount(session) >= 2;
+            },
+            managePendingTasks(session) {
+                events.emit('manage-pending-tasks', session);
+            },
             getSessionActions(session) {
                 const actions = [];
-                
+
+                actions.push({
+                    name: 'Edit Session',
+                    event: {
+                        name: 'edit-session',
+                        args: session
+                    }
+                });
+
                 if (session.isRunning) {
                     actions.push({
                         name: 'Stop Session',
                         event: {
                             name: 'stop-session',
+                            args: session
+                        }
+                    });
+
+                    actions.push({
+                        name: 'Manage Linked Tasks',
+                        event: {
+                            name: 'manage-pending-tasks',
                             args: session
                         }
                     });
@@ -954,12 +1029,30 @@
                             args: session
                         }
                     });
-                    
+
+                    actions.push({
+                        name: 'Manage Linked Tasks',
+                        event: {
+                            name: 'manage-pending-tasks',
+                            args: session
+                        }
+                    });
+
                     if (session.ended_at) {
                         actions.push({
                             name: 'Split Session',
                             event: {
                                 name: 'split-session',
+                                args: session
+                            }
+                        });
+                    }
+
+                    if (this.hasLinkedTasksToSplit(session)) {
+                        actions.push({
+                            name: 'Split into linked tasks',
+                            event: {
+                                name: 'split-pending-tasks',
                                 args: session
                             }
                         });
@@ -986,14 +1079,6 @@
                     });
                 }
 
-                actions.push({
-                    name: 'Edit Session',
-                    event: {
-                        name: 'edit-session',
-                        args: session
-                    }
-                });
-                
                 actions.push({
                     name: 'Delete Session',
                     event: {

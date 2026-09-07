@@ -69,6 +69,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('session/stop', 'SessionController@stop')->name('session.stop');
     Route::post('session/{session}/continue', 'SessionController@continue')->name('session.continue');
     Route::post('session/{session}/split', 'SessionController@split')->name('session.split');
+    Route::get('session/{session}/pending-tasks', 'SessionPendingTaskController@index')->name('session.pending-tasks.index');
+    Route::post('session/{session}/pending-tasks', 'SessionPendingTaskController@store')->name('session.pending-tasks.store');
+    Route::delete('session/{session}/pending-tasks/{task}', 'SessionPendingTaskController@destroy')->name('session.pending-tasks.destroy');
     Route::get('session/{session}/edit-form', 'SessionController@editForm')->name('session.edit-form');
     Route::post('session-dates/{date}/toggle-lock', 'SessionDateLockController@toggle')->name('session-dates.toggle-lock');
     Route::post('session-dates/lock-many', 'SessionDateLockController@lockMany')->name('session-dates.lock-many');

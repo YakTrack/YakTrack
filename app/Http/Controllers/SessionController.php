@@ -7,6 +7,7 @@ use App\Models\Invoice;
 use App\Models\Queries\IndexSessionQuery;
 use App\Models\Session;
 use App\Models\SessionCategory;
+use App\Models\SessionPendingTask;
 use App\Models\Sprint;
 use App\Models\Task;
 use App\Models\ThirdPartyApplication;
@@ -57,6 +58,13 @@ class SessionController extends Controller
             ->paginate(request('per-page'))
             ->execute();
 
+        /** @var \Illuminate\Database\Eloquent\Collection<int, \App\Models\Session> $sessionCollection */
+        $sessionCollection = $sessions instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator
+            ? $sessions->getCollection()
+            : $sessions;
+
+        $sessionCollection->load(['pendingTasks:id,session_id,task_id', 'pendingTasks.task:id,name']);
+
         /** @var \Illuminate\Support\Collection<string, \Illuminate\Support\Collection<int, \App\Models\Session>> $groupedSessions */
         $groupedSessions = $sessions->groupBy(function ($session) {
             return $session->localStartedAt->format('Y-m-d');
@@ -66,11 +74,7 @@ class SessionController extends Controller
             ->lockedDatesForUser(auth()->user())
             ->flip();
 
-        $adjacency = $this->sessionAdjacencyResolver->resolve(
-            $sessions instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator
-                ? $sessions->getCollection()
-                : $sessions
-        );
+        $adjacency = $this->sessionAdjacencyResolver->resolve($sessionCollection);
 
         /** @var \Illuminate\Support\Collection<int, array{date: string, is_locked: bool, sessions: \Illuminate\Support\Collection<int, array<string, mixed>>, totalDurationForHumans: string}> $days */
         $days = $groupedSessions->map(function (\Illuminate\Support\Collection $sessionsOnDay, string $date) use ($lockedDates, $adjacency): array {
@@ -78,7 +82,15 @@ class SessionController extends Controller
                 'date'                   => $date,
                 'is_locked'              => $lockedDates->has($date),
                 'sessions'               => $sessionsOnDay->map(function (Session $session) use ($adjacency): array {
-                    return array_merge($session->toArray(), $adjacency[$session->id] ?? []);
+                    /** @var array<string, mixed> $data */
+                    $data = array_merge($session->toArray(), $adjacency[$session->id] ?? [], [
+                        'pending_tasks' => $session->pendingTasks->map(fn (SessionPendingTask $pending): array => [
+                            'task_id'   => $pending->task_id,
+                            'task_name' => $pending->task?->name,
+                        ])->values()->all(),
+                    ]);
+
+                    return $data;
                 })->values(),
                 'totalDurationForHumans' => $sessionsOnDay->totalDurationForHumans(),
             ];
@@ -256,11 +268,37 @@ class SessionController extends Controller
 
     public function stop(): RedirectResponse
     {
-        Session::running()->get()->each(function ($session) {
+        $splitPendingSessionId = null;
+
+        Session::running()->orderBy('started_at')->orderBy('id')->get()->each(function (Session $session) use (&$splitPendingSessionId): void {
             $session->stop();
+
+            $pendingCount = $session->pendingTasks()->count();
+
+            if ($pendingCount === 1) {
+                /** @var SessionPendingTask $pending */
+                $pending = $session->pendingTasks()->first();
+                $session->update(['task_id' => $pending->task_id]);
+                $session->pendingTasks()->delete();
+
+                return;
+            }
+
+            // Flag only the first (earliest-started) multi-task session for the split modal.
+            // Any additional multi-task sessions keep their pending links and remain
+            // resumable via the "Split into linked tasks" row action.
+            if ($pendingCount >= 2 && $splitPendingSessionId === null) {
+                $splitPendingSessionId = $session->id;
+            }
         });
 
-        return redirect(route('session.index'));
+        $redirect = redirect(route('session.index'));
+
+        if ($splitPendingSessionId !== null) {
+            $redirect->with('splitPendingSessionId', $splitPendingSessionId);
+        }
+
+        return $redirect;
     }
 
     public function continue(Session $session): RedirectResponse
@@ -306,8 +344,47 @@ class SessionController extends Controller
         if ($request->has('segments')) {
             /** @var array<int, array{started_at: string, ended_at: string, sprint_id?: int|null, task_id?: int|null}> $segments */
             $segments = $request->input('segments');
+
+            $pendingTaskIds = $session->pendingTasks()->pluck('task_id')
+                ->map(fn ($taskId): int => (int) $taskId);
+
+            $fromPendingTasks = $request->boolean('from_pending_tasks');
+
+            $assignedSegmentTaskIds = collect($segments)
+                ->pluck('task_id')
+                ->reject(fn ($taskId): bool => $taskId === null || $taskId === '')
+                ->map(fn ($taskId): int => (int) $taskId);
+
+            $segmentTaskIds = $assignedSegmentTaskIds->unique()->values();
+
+            // The pending-task flow must assign every part to one of the session's linked
+            // tasks. Guards against a stale / replayed submission, and against the generic
+            // time-split's all-null defaults silently passing a vacuous subset check.
+            if ($fromPendingTasks) {
+                $everySegmentAssigned = $assignedSegmentTaskIds->count() === count($segments);
+
+                if (!$everySegmentAssigned || $segmentTaskIds->diff($pendingTaskIds)->isNotEmpty()) {
+                    return redirect()
+                        ->route('session.index')
+                        ->with('error', 'The split contains tasks that are not linked to this session. Please try again.');
+                }
+            }
+
             $result = $sessionSplitter->split($session, $segments);
             $createdCount = count($result['created']);
+
+            if ($pendingTaskIds->isNotEmpty()) {
+                if ($fromPendingTasks) {
+                    // Consume only the links represented in the submitted segments. Any linked
+                    // task not represented (e.g. truncated because the session was too short for
+                    // that many segments) keeps its link so it stays resumable.
+                    $session->pendingTasks()->whereIn('task_id', $segmentTaskIds)->delete();
+                } else {
+                    // Generic time-split: the timeline changed, so every pending link is now
+                    // stale. Drop them all to avoid dangling links.
+                    $session->pendingTasks()->delete();
+                }
+            }
 
             return redirect()
                 ->route('session.index')
@@ -324,6 +401,9 @@ class SessionController extends Controller
                 'ended_at'   => $session->localEndedAt->format('Y-m-d H:i:s'),
             ],
         ]);
+
+        // The timeline has changed, so any pending links are stale; drop them all.
+        $session->pendingTasks()->delete();
 
         $newSession = $result['created'][0];
 
