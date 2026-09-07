@@ -54,7 +54,7 @@ class SessionSplitter
 
     /**
      * @param array{task_id: int|null, sprint_id: int|null, invoice_id: int|null, session_category_id: int|null, comment: string|null, is_billable: bool|int|null} $defaults
-     * @param array{started_at: string, ended_at: string, sprint_id?: int|null, task_id?: int|null} $segment
+     * @param array{started_at: string, ended_at: string, sprint_id?: int|null, task_id?: int|null}                                                                $segment
      *
      * @return array<string, mixed>
      */
