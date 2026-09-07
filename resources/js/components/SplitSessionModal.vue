@@ -10,6 +10,22 @@
     @close="handleClose"
   >
     <div v-if="session" class="space-y-6">
+      <div
+        v-if="hasTruncatedPendingTasks"
+        class="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-800"
+      >
+        <svg class="mt-0.5 h-5 w-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+        </svg>
+        <div class="text-sm">
+          <p class="font-semibold">Not all linked tasks fit in this split.</p>
+          <p class="mt-1">
+            Only the first {{ maxSegmentCount }} of {{ pendingTaskCount }} linked tasks fit here.
+            The remaining {{ droppedPendingTaskCount }} stay linked to the session and can be split out later.
+          </p>
+        </div>
+      </div>
+
       <div class="rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-4">
         <div class="flex flex-wrap items-start justify-between gap-4">
           <div>
@@ -24,7 +40,7 @@
         </div>
       </div>
 
-      <div class="flex flex-wrap items-center justify-between gap-3">
+      <div v-if="!initialisedFromPendingTasks" class="flex flex-wrap items-center justify-between gap-3">
         <div>
           <p class="text-sm font-medium text-slate-900">Number of parts</p>
           <p class="text-xs text-slate-500">Each part must be at least one minute long.</p>
@@ -259,6 +275,10 @@ const props = defineProps({
     type: Array,
     default: () => [],
   },
+  pendingTasks: {
+    type: Array,
+    default: () => [],
+  },
   onClose: {
     type: Function,
     default: () => {},
@@ -277,6 +297,7 @@ const assignments = ref([])
 const timelineRef = ref(null)
 const isDragging = ref(false)
 const activeHandleIndex = ref(null)
+const initialisedFromPendingTasks = ref(false)
 
 const sessionStartMs = computed(() => (props.session ? parseSessionTime(props.session.started_at) : 0))
 const sessionEndMs = computed(() => (props.session ? parseSessionTime(props.session.ended_at) : 0))
@@ -288,6 +309,12 @@ const maxSegmentCount = computed(() => {
 
   return Math.max(2, Math.min(12, Math.floor(totalDurationMs.value / MIN_SEGMENT_MS)))
 })
+
+const pendingTaskCount = computed(() => (Array.isArray(props.pendingTasks) ? props.pendingTasks.length : 0))
+
+const droppedPendingTaskCount = computed(() => Math.max(0, pendingTaskCount.value - maxSegmentCount.value))
+
+const hasTruncatedPendingTasks = computed(() => droppedPendingTaskCount.value > 0)
 
 const segments = computed(() => buildSegments(
   cutPoints.value,
@@ -316,6 +343,22 @@ function resetState() {
     return
   }
 
+  if (Array.isArray(props.pendingTasks) && props.pendingTasks.length >= 2) {
+    const count = Math.min(props.pendingTasks.length, maxSegmentCount.value)
+
+    initialisedFromPendingTasks.value = true
+    segmentCount.value = count
+    cutPoints.value = distributeEvenly(sessionStartMs.value, sessionEndMs.value, count)
+    assignments.value = props.pendingTasks.slice(0, count).map((pendingTask) => ({
+      sprint_id: props.session?.sprint_id ?? null,
+      task_id: pendingTask.task_id ?? null,
+    }))
+    stopDragging()
+
+    return
+  }
+
+  initialisedFromPendingTasks.value = false
   segmentCount.value = 2
   cutPoints.value = distributeEvenly(sessionStartMs.value, sessionEndMs.value, 2)
   assignments.value = defaultAssignments(2)
@@ -323,7 +366,9 @@ function resetState() {
 }
 
 function increaseSegmentCount() {
-  if (segmentCount.value >= maxSegmentCount.value) {
+  // In the pending-task flow the part count is fixed by the linked tasks, so the
+  // controls are hidden; guard here too so the per-task assignments can't be clobbered.
+  if (initialisedFromPendingTasks.value || segmentCount.value >= maxSegmentCount.value) {
     return
   }
 
@@ -333,7 +378,7 @@ function increaseSegmentCount() {
 }
 
 function decreaseSegmentCount() {
-  if (segmentCount.value <= 2) {
+  if (initialisedFromPendingTasks.value || segmentCount.value <= 2) {
     return
   }
 
@@ -477,8 +522,10 @@ function handleConfirm() {
     task_id: segment.task_id,
   }))
 
-  props.onSubmit(props.session, payload)
-  emit('submit', props.session, payload)
+  const fromPendingTasks = initialisedFromPendingTasks.value
+
+  props.onSubmit(props.session, payload, fromPendingTasks)
+  emit('submit', props.session, payload, fromPendingTasks)
   handleClose()
 }
 

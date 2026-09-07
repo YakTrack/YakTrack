@@ -66,9 +66,17 @@
               :session="sessionToSplit"
               :sprints="sprints"
               :tasks="tasks"
+              :pending-tasks="pendingTasksForSplit"
               :on-close="closeSplitSessionModal"
               :on-submit="handleSplitSession"
           ></split-session-modal>
+          <manage-pending-tasks-modal
+              :is-open="showManagePendingTasksModal"
+              :session="sessionForPendingTasks"
+              :tasks="tasks"
+              :on-close="closeManagePendingTasksModal"
+              @changed="reloadSessions"
+          ></manage-pending-tasks-modal>
           <edit-session-modal
               ref="editSessionModal"
               :is-open="showEditSessionModal"
@@ -118,6 +126,8 @@
             :on-edit-session="openEditSessionModal"
             :on-add-session-before="openAddSessionBefore"
             :on-add-session-after="openAddSessionAfter"
+            :on-manage-pending-tasks="openManagePendingTasksModal"
+            :on-split-pending-tasks="openSplitPendingTasks"
             :highlighted-session-id="recentlyEditedSessionId"
         ></index-session-table>
 
@@ -136,9 +146,16 @@ import invoiceSelect from '@/Shared/InvoiceSelect.vue';
 import sprintSelect from '@/Shared/SprintSelect.vue';
 import taskSelect from '@/Shared/TaskSelect.vue';
 import splitSessionModal from '@/components/SplitSessionModal.vue';
+import managePendingTasksModal from '@/components/ManagePendingTasksModal.vue';
 import editSessionModal from '@/components/EditSessionModal.vue';
 import addSessionModal from '@/components/AddSessionModal.vue';
 import modernModal from '@/components/Modal.vue';
+
+// Tracks split-pending session ids already handled this page-lifetime. Inertia v1
+// restores pages from its history cache (browser Back), remounting this component
+// and re-reading the stale flash.splitPendingSessionId; this guard stops the split
+// modal from re-opening for an id that was already dealt with.
+const handledSplitPendingSessionIds = new Set();
 
 export default {
     data() {
@@ -150,6 +167,9 @@ export default {
             sessionToSplit: null,
             splitTime: null,
             showSplitSessionModal: false,
+            pendingTasksForSplit: [],
+            showManagePendingTasksModal: false,
+            sessionForPendingTasks: null,
             sessionToEdit: null,
             showEditSessionModal: false,
             showAddSessionModal: false,
@@ -168,6 +188,7 @@ export default {
         sprintSelect: sprintSelect,
         taskSelect: taskSelect,
         splitSessionModal: splitSessionModal,
+        managePendingTasksModal: managePendingTasksModal,
         editSessionModal: editSessionModal,
         addSessionModal: addSessionModal,
         modernModal: modernModal,
@@ -233,6 +254,12 @@ export default {
           this.selectedSessionIds = newValue
         },
         openSplitSessionModal(session) {
+            this.pendingTasksForSplit = [];
+            this.sessionToSplit = session;
+            this.showSplitSessionModal = true;
+        },
+        openSplitPendingTasks(session) {
+            this.pendingTasksForSplit = Array.isArray(session.pending_tasks) ? session.pending_tasks : [];
             this.sessionToSplit = session;
             this.showSplitSessionModal = true;
         },
@@ -240,10 +267,46 @@ export default {
             this.showSplitSessionModal = false;
             this.sessionToSplit = null;
             this.splitTime = null;
+            this.pendingTasksForSplit = [];
         },
-        handleSplitSession(session, segments) {
+        openManagePendingTasksModal(session) {
+            this.sessionForPendingTasks = session;
+            this.showManagePendingTasksModal = true;
+        },
+        closeManagePendingTasksModal() {
+            this.showManagePendingTasksModal = false;
+            this.sessionForPendingTasks = null;
+        },
+        reloadSessions() {
+            this.$inertia.reload({ only: ['days'] });
+        },
+        maybeOpenPendingSplit() {
+            const sessionId = this.$page.props.flash?.splitPendingSessionId;
+
+            if (!sessionId || handledSplitPendingSessionIds.has(sessionId)) {
+                return;
+            }
+
+            handledSplitPendingSessionIds.add(sessionId);
+
+            // Consume the local flash value so a history-cache restore (browser Back)
+            // that remounts this page cannot re-trigger from the same stale prop.
+            if (this.$page.props.flash) {
+                this.$page.props.flash.splitPendingSessionId = null;
+            }
+
+            const session = this.days
+                .flatMap((day) => day.sessions)
+                .find((candidate) => candidate.id === sessionId);
+
+            if (session && Array.isArray(session.pending_tasks) && session.pending_tasks.length >= 2) {
+                this.openSplitPendingTasks(session);
+            }
+        },
+        handleSplitSession(session, segments, fromPendingTasks = false) {
             this.$inertia.post(route('session.split', session.id), {
                 segments,
+                from_pending_tasks: fromPendingTasks,
             });
             this.closeSplitSessionModal();
         },
@@ -319,6 +382,9 @@ export default {
                 this.recentlyEditedSessionTimeout = null;
             }, 6000);
         },
+    },
+    mounted() {
+        this.maybeOpenPendingSplit();
     },
     created() {
         this._onToggleShowFilters = () => {
