@@ -37,7 +37,8 @@ class Session extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'is_billable' => 'boolean',
+        'is_billable'             => 'boolean',
+        'pending_tasks_seeded_at' => 'datetime',
     ];
 
     protected $appends = [
@@ -94,6 +95,14 @@ class Session extends Model
     public function thirdPartyApplicationSessions(): HasMany
     {
         return $this->hasMany(ThirdPartyApplicationSession::class);
+    }
+
+    /**
+     * @return HasMany<SessionPendingTask, $this>
+     */
+    public function pendingTasks(): HasMany
+    {
+        return $this->hasMany(SessionPendingTask::class);
     }
 
     public function getStartedAtAttribute(): Carbon
