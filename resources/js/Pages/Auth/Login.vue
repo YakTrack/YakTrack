@@ -78,11 +78,11 @@ export default {
                 email: this.form.email,
                 password: this.form.password,
                 remember: this.form.remember,
-            }).then(
-                (response) => {
+            }, {
+                onFinish: () => {
                     this.sending = false
-                }
-            )
+                },
+            })
         },
     },
 }
