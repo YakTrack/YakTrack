@@ -39,6 +39,8 @@ Route::group(['middleware' => 'auth'], function () {
         'uses' => 'HomeController@index',
     ]);
 
+    Route::get('csrf-token', 'CsrfTokenController@show')->name('csrf-token');
+
     Route::patch('focused-client', 'FocusedClientController@update')->name('focused-client.update');
 
     Route::resource('client', 'ClientController');

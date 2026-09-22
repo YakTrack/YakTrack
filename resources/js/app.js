@@ -8,6 +8,7 @@ import mitt from 'mitt'
 import closeable from './directives/Closeable';
 import dateTime from './filters/DateTime.js';
 import buttonLink from '@/Shared/ButtonLink.vue';
+import { startCsrfRefresh } from './csrfRefresh';
 
 createInertiaApp({
   resolve: (name) =>
@@ -51,5 +52,8 @@ createInertiaApp({
     window.events = emitter
 
     app.mount(el)
+
+    // Keep the CSRF token fresh for the lifetime of the SPA session.
+    startCsrfRefresh()
   },
 })
