@@ -31,7 +31,7 @@
                     </MenuItem>
                     <div class="border-t border-gray-200 dark:border-gray-700"></div>
                     <form method="POST" :action="logoutUrl">
-                        <input type="hidden" name="_token" :value="page.props.csrf_token">
+                        <input type="hidden" name="_token" :value="csrfToken">
                         <MenuItem v-slot="{ active }">
                             <button type="submit" :class="[active ? 'bg-gray-100 text-gray-900 outline-hidden dark:bg-white/5 dark:text-white' : 'text-gray-700 dark:text-gray-300', 'block w-full px-4 py-2 text-left text-sm']">
                                 Sign out
@@ -49,6 +49,7 @@ import { computed } from 'vue'
 import { usePage } from '@inertiajs/vue3'
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'
+import { csrfToken } from '@/csrfRefresh'
 
 const props = defineProps({
     logoutUrl: {

@@ -1,13 +1,7 @@
 <template>
-    <input type="hidden" name="_token" :value="token"/>
+    <input type="hidden" name="_token" :value="csrfToken"/>
 </template>
 
-<script>
-    export default {
-        computed: {
-            token() {
-                return window.token;
-            }
-        }
-    }
+<script setup>
+    import { csrfToken } from '@/csrfRefresh'
 </script>
