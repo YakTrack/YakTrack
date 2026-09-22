@@ -132,3 +132,17 @@ export function applyCutPointTime(cutIndex, inputValue, cutPoints, startMs, endM
 export function segmentStyle(index) {
     return SEGMENT_STYLES[index % SEGMENT_STYLES.length]
 }
+
+export function moveAssignment(assignments, fromIndex, toIndex) {
+    const nextAssignments = [...assignments]
+    const isValidIndex = (index) => Number.isInteger(index) && index >= 0 && index < nextAssignments.length
+
+    if (!isValidIndex(fromIndex) || !isValidIndex(toIndex) || fromIndex === toIndex) {
+        return nextAssignments
+    }
+
+    const [moved] = nextAssignments.splice(fromIndex, 1)
+    nextAssignments.splice(toIndex, 0, moved)
+
+    return nextAssignments
+}

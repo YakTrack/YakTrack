@@ -2,11 +2,11 @@
   <modal
     :is-open="isOpen"
     title="Split Session"
-    description="Divide this session into multiple parts. Drag the handles, edit times or ratios, and optionally assign a sprint and task to each part."
+    description="Divide this session into multiple parts. Drag the handles, edit times or ratios, drag parts to reorder them, and optionally assign a sprint and task to each part."
     max-width="4xl"
     :show-default-footer="false"
-    :close-on-backdrop="!isDragging"
-    :close-on-escape="!isDragging"
+    :close-on-backdrop="!isDragging && !isReordering"
+    :close-on-escape="!isDragging && !isReordering"
     @close="handleClose"
   >
     <div v-if="session" class="space-y-6">
@@ -125,87 +125,117 @@
       </div>
 
       <div class="space-y-3">
-        <p class="text-sm font-medium text-slate-900">Session parts</p>
+        <div class="flex items-center justify-between gap-3">
+          <p class="text-sm font-medium text-slate-900">Session parts</p>
+          <p class="text-xs text-slate-500">Drag a part to reorder. Times stay with the position; task and sprint move with the part.</p>
+        </div>
 
-        <div
-          v-for="(segment, index) in segments"
-          :key="`segment-card-${index}`"
-          class="segment-card overflow-hidden rounded-2xl border bg-white shadow-sm transition"
-          :class="segmentStyle(index).border"
+        <draggable
+          :model-value="assignments"
+          item-key="key"
+          handle=".drag-handle"
+          ghost-class="segment-card-ghost"
+          chosen-class="segment-card-chosen"
+          :animation="150"
+          class="space-y-3"
+          @update:model-value="reorderAssignments"
+          @start="isReordering = true"
+          @end="isReordering = false"
         >
-          <div
-            class="flex items-center gap-3 rounded-t-2xl px-4 py-3"
-            :class="segmentStyle(index).light"
-          >
-            <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white" :class="segmentStyle(index).bg">
-              {{ index + 1 }}
-            </div>
-            <div class="min-w-0 flex-1">
-              <p class="text-sm font-semibold" :class="segmentStyle(index).text">Part {{ index + 1 }}</p>
-              <p class="font-mono text-xs" :class="segmentStyle(index).muted">{{ formatDuration(segment.endMs - segment.startMs) }}</p>
-            </div>
-            <div class="text-right text-xs" :class="segmentStyle(index).muted">
-              <p>{{ formatTimeLabel(segment.startMs) }}</p>
-              <p>{{ formatTimeLabel(segment.endMs) }}</p>
-            </div>
-          </div>
-
-          <div class="grid gap-4 border-t p-4 md:grid-cols-2" :class="segmentStyle(index).border">
-            <div class="flex min-w-0 flex-col gap-4">
-              <div>
-                <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">Ratio</label>
-                <div class="relative">
-                  <input
-                    :value="segment.ratio.toFixed(1)"
-                    type="number"
-                    min="0"
-                    max="100"
-                    step="0.1"
-                    class="split-field w-full pr-8"
-                    @change="updateSegmentRatio(index, $event.target.value)"
-                  />
-                  <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm text-slate-400">%</span>
+          <template #item="{ element: assignment, index }">
+            <div
+              class="segment-card overflow-hidden rounded-2xl border bg-white shadow-sm transition"
+              :class="segmentStyle(index).border"
+              :data-assignment-key="assignment.key"
+            >
+              <div
+                class="flex items-center gap-3 rounded-t-2xl px-4 py-3"
+                :class="segmentStyle(index).light"
+              >
+                <button
+                  type="button"
+                  class="drag-handle flex h-8 w-6 shrink-0 cursor-grab items-center justify-center rounded-md transition hover:bg-white/60 focus:outline-none focus:ring-2 focus:ring-offset-1 active:cursor-grabbing"
+                  :class="[segmentStyle(index).muted, segmentStyle(index).ring]"
+                  :aria-label="`Reorder part ${index + 1}. Use the arrow keys to move it up or down.`"
+                  :title="`Drag to reorder part ${index + 1}`"
+                  @keydown.up.prevent="movePart(index, index - 1)"
+                  @keydown.down.prevent="movePart(index, index + 1)"
+                >
+                  <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <path d="M7 4a1 1 0 100 2 1 1 0 000-2zm6 0a1 1 0 100 2 1 1 0 000-2zM7 9a1 1 0 100 2 1 1 0 000-2zm6 0a1 1 0 100 2 1 1 0 000-2zm-6 5a1 1 0 100 2 1 1 0 000-2zm6 0a1 1 0 100 2 1 1 0 000-2z" />
+                  </svg>
+                </button>
+                <div class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold text-white" :class="segmentStyle(index).bg">
+                  {{ index + 1 }}
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="text-sm font-semibold" :class="segmentStyle(index).text">Part {{ index + 1 }}</p>
+                  <p class="font-mono text-xs" :class="segmentStyle(index).muted">{{ formatDuration(segmentAt(index).endMs - segmentAt(index).startMs) }}</p>
+                </div>
+                <div class="text-right text-xs" :class="segmentStyle(index).muted">
+                  <p>{{ formatTimeLabel(segmentAt(index).startMs) }}</p>
+                  <p>{{ formatTimeLabel(segmentAt(index).endMs) }}</p>
                 </div>
               </div>
 
-              <div v-if="index < segmentCount - 1">
-                <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">Cut at</label>
-                <input
-                  :value="toInputFormat(cutPoints[index])"
-                  type="datetime-local"
-                  class="split-field w-full"
-                  :min="minCutInput(index)"
-                  :max="maxCutInput(index)"
-                  @change="updateCutPointTime(index, $event.target.value)"
-                />
+              <div class="grid gap-4 border-t p-4 md:grid-cols-2" :class="segmentStyle(index).border">
+                <div class="flex min-w-0 flex-col gap-4">
+                  <div>
+                    <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">Ratio</label>
+                    <div class="relative">
+                      <input
+                        :value="segmentAt(index).ratio.toFixed(1)"
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.1"
+                        class="split-field w-full pr-8"
+                        @change="updateSegmentRatio(index, $event.target.value)"
+                      />
+                      <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm text-slate-400">%</span>
+                    </div>
+                  </div>
+
+                  <div v-if="index < segmentCount - 1">
+                    <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">Cut at</label>
+                    <input
+                      :value="toInputFormat(cutPoints[index])"
+                      type="datetime-local"
+                      class="split-field w-full"
+                      :min="minCutInput(index)"
+                      :max="maxCutInput(index)"
+                      @change="updateCutPointTime(index, $event.target.value)"
+                    />
+                  </div>
+                </div>
+
+                <div class="flex min-w-0 flex-col gap-4">
+                  <div>
+                    <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">Sprint</label>
+                    <sprint-select
+                      :sprints="sprints"
+                      :sprint="assignment.sprint_id"
+                      compact
+                      use-teleport
+                      :on-change="(value) => updateSegmentAssignment(index, 'sprint_id', value)"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">Task</label>
+                    <task-select
+                      :tasks="tasks"
+                      :task="assignment.task_id"
+                      compact
+                      use-teleport
+                      :on-change="(value) => updateSegmentAssignment(index, 'task_id', value)"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div class="flex min-w-0 flex-col gap-4">
-              <div>
-                <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">Sprint</label>
-                <sprint-select
-                  :sprints="sprints"
-                  :sprint="segment.sprint_id"
-                  compact
-                  use-teleport
-                  :on-change="(value) => updateSegmentAssignment(index, 'sprint_id', value)"
-                />
-              </div>
-
-              <div>
-                <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">Task</label>
-                <task-select
-                  :tasks="tasks"
-                  :task="segment.task_id"
-                  compact
-                  use-teleport
-                  :on-change="(value) => updateSegmentAssignment(index, 'task_id', value)"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+          </template>
+        </draggable>
       </div>
     </div>
 
@@ -238,6 +268,7 @@
 
 <script setup>
 import { computed, onUnmounted, ref, watch } from 'vue'
+import draggable from 'vuedraggable'
 import Modal from './Modal.vue'
 import SprintSelect from '@/Shared/SprintSelect.vue'
 import TaskSelect from '@/Shared/TaskSelect.vue'
@@ -251,6 +282,7 @@ import {
   formatDateTimeLabel,
   formatDuration,
   formatTimeLabel,
+  moveAssignment,
   parseSessionTime,
   positionToTime,
   segmentStyle,
@@ -296,8 +328,11 @@ const cutPoints = ref([])
 const assignments = ref([])
 const timelineRef = ref(null)
 const isDragging = ref(false)
+const isReordering = ref(false)
 const activeHandleIndex = ref(null)
 const initialisedFromPendingTasks = ref(false)
+
+let nextAssignmentKey = 1
 
 const sessionStartMs = computed(() => (props.session ? parseSessionTime(props.session.started_at) : 0))
 const sessionEndMs = computed(() => (props.session ? parseSessionTime(props.session.ended_at) : 0))
@@ -331,11 +366,16 @@ const canSubmit = computed(() => {
   return segments.value.every((segment) => segment.endMs - segment.startMs >= MIN_SEGMENT_MS)
 })
 
-function defaultAssignments(count) {
-  return Array.from({ length: count }, () => ({
+function createAssignment(taskId) {
+  return {
+    key: nextAssignmentKey++,
     sprint_id: props.session?.sprint_id ?? null,
-    task_id: props.session?.task_id ?? null,
-  }))
+    task_id: taskId ?? null,
+  }
+}
+
+function defaultAssignments(count) {
+  return Array.from({ length: count }, () => createAssignment(props.session?.task_id))
 }
 
 function resetState() {
@@ -349,10 +389,7 @@ function resetState() {
     initialisedFromPendingTasks.value = true
     segmentCount.value = count
     cutPoints.value = distributeEvenly(sessionStartMs.value, sessionEndMs.value, count)
-    assignments.value = props.pendingTasks.slice(0, count).map((pendingTask) => ({
-      sprint_id: props.session?.sprint_id ?? null,
-      task_id: pendingTask.task_id ?? null,
-    }))
+    assignments.value = props.pendingTasks.slice(0, count).map((pendingTask) => createAssignment(pendingTask.task_id))
     stopDragging()
 
     return
@@ -455,6 +492,22 @@ function updateSegmentAssignment(index, field, value) {
   })
 }
 
+function segmentAt(index) {
+  return segments.value[index] ?? { startMs: 0, endMs: 0, ratio: 0 }
+}
+
+function reorderAssignments(nextAssignments) {
+  if (!Array.isArray(nextAssignments) || nextAssignments.length !== assignments.value.length) {
+    return
+  }
+
+  assignments.value = nextAssignments
+}
+
+function movePart(fromIndex, toIndex) {
+  assignments.value = moveAssignment(assignments.value, fromIndex, toIndex)
+}
+
 function startDragging(index, event) {
   isDragging.value = true
   activeHandleIndex.value = index
@@ -547,6 +600,14 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.segment-card-ghost {
+  @apply opacity-40 ring-2 ring-blue-400 ring-offset-2;
+}
+
+.segment-card-chosen {
+  @apply shadow-lg;
+}
+
 .split-field {
   @apply h-12 rounded-lg border border-slate-200 bg-white px-3 text-sm shadow-sm;
   @apply focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20;
