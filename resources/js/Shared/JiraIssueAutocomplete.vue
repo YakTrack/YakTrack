@@ -292,6 +292,7 @@ const onIssueSelected = async (issue) => {
     const preview = await loadPreview(issue.key)
     selectedIssue.value = null
     results.value = []
+    hasSearched.value = false
 
     if (!preview) {
         return

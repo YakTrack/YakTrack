@@ -372,6 +372,7 @@ const onSuggestionSelected = async (issue) => {
 
     query.value = issue.key
     results.value = []
+    hasSearched.value = false
     await loadPreview(issue.key)
 }
 
