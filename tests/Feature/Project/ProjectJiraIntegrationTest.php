@@ -418,3 +418,28 @@ it('does not look up issues directly for free text searches', function () {
 
     Http::assertNotSent(fn (\Illuminate\Http\Client\Request $request) => !str_contains($request->url(), '/issue/picker'));
 });
+
+it('asks the jira picker to include subtasks', function () {
+    Http::fake([
+        'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response(['sections' => []], 200),
+    ]);
+
+    $project = Project::factory()->create();
+
+    ProjectJiraIntegration::factory()->create([
+        'project_id' => $project->id,
+        'site_host'  => 'acme.atlassian.net',
+    ]);
+
+    $this->actingAsUser();
+
+    $this->getJson(route('project.jira.issues.search', $project).'?q=login')->assertSuccessful();
+
+    Http::assertSent(function (\Illuminate\Http\Client\Request $request): bool {
+        parse_str((string) parse_url($request->url(), PHP_URL_QUERY), $query);
+
+        return str_contains($request->url(), '/issue/picker')
+            && ($query['showSubTasks'] ?? null) === 'true'
+            && ($query['showAvatar'] ?? null) === 'true';
+    });
+});

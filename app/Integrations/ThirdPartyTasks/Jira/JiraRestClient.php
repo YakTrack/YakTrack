@@ -125,8 +125,9 @@ final class JiraRestClient
     private function pickerSuggestions(string $query): array
     {
         $response = $this->http()->get('/issue/picker', [
-            'query'      => $query,
-            'showAvatar' => true,
+            'query'        => $query,
+            'showAvatar'   => 'true',
+            'showSubTasks' => 'true',
         ]);
 
         $response->throw();
