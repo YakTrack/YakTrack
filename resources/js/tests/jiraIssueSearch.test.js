@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { createLatestRequestTracker } from '../jiraIssueSearch.js'
+import { createLatestRequestTracker, shouldShowNoResults } from '../jiraIssueSearch.js'
 
 test('only the most recently begun request is considered latest', () => {
     const tracker = createLatestRequestTracker()
@@ -40,4 +40,26 @@ test('a slow earlier response does not overwrite the latest results', async () =
     await Promise.all([slow, fast])
 
     expect(results).toEqual(['KEY-12'])
+})
+
+const completedEmptySearch = {
+    query: 'KEY-1',
+    isSearching: false,
+    hasSearched: true,
+    resultCount: 0,
+    error: '',
+}
+
+test('shows the empty state after a completed search with no matches', () => {
+    expect(shouldShowNoResults(completedEmptySearch)).toBe(true)
+})
+
+test.each([
+    ['the query is too short', { query: 'K' }],
+    ['a search is still running', { isSearching: true }],
+    ['nothing has been searched yet', { hasSearched: false }],
+    ['there are results', { resultCount: 3 }],
+    ['the search failed', { error: 'Could not search Jira issues.' }],
+])('hides the empty state when %s', (_label, overrides) => {
+    expect(shouldShowNoResults({ ...completedEmptySearch, ...overrides })).toBe(false)
 })

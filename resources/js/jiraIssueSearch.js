@@ -19,3 +19,10 @@ export const createLatestRequestTracker = () => {
         },
     }
 }
+
+/**
+ * Whether to tell the user a completed search matched nothing. Errors and
+ * in-flight searches take precedence over the empty state.
+ */
+export const shouldShowNoResults = ({ query, isSearching, hasSearched, resultCount, error }) =>
+    query.trim().length >= 2 && !isSearching && hasSearched && resultCount === 0 && !error

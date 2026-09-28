@@ -110,7 +110,7 @@
                 {{ searchError }}
             </p>
             <p
-                v-else-if="query.length >= 2 && !isSearching && results.length === 0 && hasSearched"
+                v-else-if="showNoResults"
                 class="mt-2 text-sm text-gray-500 dark:text-gray-400"
             >
                 No matching issues found. Try a different key or summary.
@@ -230,7 +230,7 @@ import {
     MagnifyingGlassIcon,
 } from '@heroicons/vue/20/solid'
 import debounce from 'lodash/debounce'
-import { createLatestRequestTracker } from '@/jiraIssueSearch.js'
+import { createLatestRequestTracker, shouldShowNoResults } from '@/jiraIssueSearch.js'
 
 const props = defineProps({
     projectId: {
@@ -261,6 +261,14 @@ const processing = computed(() => page.props.processing ?? false)
 const showResults = computed(() => {
     return query.value.length >= 2 && (results.value.length > 0 || isSearching.value)
 })
+
+const showNoResults = computed(() => shouldShowNoResults({
+    query: query.value,
+    isSearching: isSearching.value,
+    hasSearched: hasSearched.value,
+    resultCount: results.value.length,
+    error: searchError.value,
+}))
 
 const csrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content ?? ''
 
@@ -321,6 +329,7 @@ const onQueryInput = (event) => {
     query.value = event.target.value
     selectedSuggestion.value = null
     previewIssue.value = null
+    hasSearched.value = false
     searchIssues(query.value)
 }
 

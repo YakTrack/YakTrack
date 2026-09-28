@@ -103,6 +103,12 @@
             {{ searchError }}
         </p>
         <p
+            v-else-if="showNoResults"
+            class="mt-2 text-sm text-gray-500 dark:text-gray-400"
+        >
+            No matching Jira issues. You can still use this text as the task name.
+        </p>
+        <p
             v-else
             class="mt-2 text-sm text-gray-500 dark:text-gray-400"
         >
@@ -116,7 +122,7 @@ import { computed, ref, watch } from 'vue'
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/vue'
 import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
 import debounce from 'lodash/debounce'
-import { createLatestRequestTracker } from '@/jiraIssueSearch.js'
+import { createLatestRequestTracker, shouldShowNoResults } from '@/jiraIssueSearch.js'
 
 const props = defineProps({
     projectId: {
@@ -160,6 +166,14 @@ const hasSearched = ref(false)
 const searchRequests = createLatestRequestTracker()
 
 const showResults = computed(() => props.modelValue.length >= 2 && (results.value.length > 0 || isSearching.value))
+
+const showNoResults = computed(() => shouldShowNoResults({
+    query: props.modelValue,
+    isSearching: isSearching.value,
+    hasSearched: hasSearched.value,
+    resultCount: results.value.length,
+    error: searchError.value,
+}))
 
 const csrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content ?? ''
 
@@ -223,6 +237,7 @@ const searchIssues = debounce(async (searchQuery) => {
 const onInput = (event) => {
     emit('update:modelValue', event.target.value)
     selectedIssue.value = null
+    hasSearched.value = false
     searchIssues(event.target.value)
 }
 
