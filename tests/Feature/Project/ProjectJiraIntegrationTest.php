@@ -305,3 +305,116 @@ it('includes jira connection props on the project page', function () {
     expect($response->props()['jira']['connected'])->toBeTrue();
     expect($response->props()['jira']['site_host'])->toBe('acme.atlassian.net');
 });
+
+it('finds an issue by exact key even when the picker returns nothing', function () {
+    Http::fake([
+        'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response(['sections' => []], 200),
+        'https://acme.atlassian.net/rest/api/3/issue/KEY-42*' => Http::response([
+            'key'    => 'KEY-42',
+            'fields' => [
+                'summary'   => 'Hidden from the picker',
+                'issuetype' => [
+                    'name'    => 'Sub-task',
+                    'iconUrl' => 'https://acme.atlassian.net/subtask.png',
+                ],
+            ],
+        ], 200),
+    ]);
+
+    $project = Project::factory()->create();
+
+    ProjectJiraIntegration::factory()->create([
+        'project_id' => $project->id,
+        'site_host'  => 'acme.atlassian.net',
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->getJson(route('project.jira.issues.search', $project).'?q=key-42');
+
+    $response->assertSuccessful();
+    $response->assertJsonCount(1, 'issues');
+    $response->assertJsonPath('issues.0.key', 'KEY-42');
+    $response->assertJsonPath('issues.0.summary', 'Hidden from the picker');
+    $response->assertJsonPath('issues.0.issue_type', 'Sub-task');
+    $response->assertJsonPath('issues.0.avatar_url', 'https://acme.atlassian.net/subtask.png');
+    $response->assertJsonPath('issues.0.already_imported', false);
+});
+
+it('returns no results when an exact key does not exist in jira', function () {
+    Http::fake([
+        'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response(['sections' => []], 200),
+        'https://acme.atlassian.net/rest/api/3/issue/KEY-404*' => Http::response(['errorMessages' => ['Issue does not exist']], 404),
+    ]);
+
+    $project = Project::factory()->create();
+
+    ProjectJiraIntegration::factory()->create([
+        'project_id' => $project->id,
+        'site_host'  => 'acme.atlassian.net',
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->getJson(route('project.jira.issues.search', $project).'?q=KEY-404');
+
+    $response->assertSuccessful();
+    $response->assertJsonCount(0, 'issues');
+});
+
+it('places the exact key match first without duplicating picker results', function () {
+    Http::fake([
+        'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response([
+            'sections' => [
+                [
+                    'id'     => 'cs',
+                    'label'  => 'Current Search',
+                    'issues' => [
+                        ['id' => 10002, 'key' => 'KEY-10', 'summaryText' => 'Tenth issue'],
+                        ['id' => 10001, 'key' => 'KEY-1', 'summaryText' => 'First issue'],
+                    ],
+                ],
+            ],
+        ], 200),
+        'https://acme.atlassian.net/rest/api/3/issue/KEY-1*' => Http::response([
+            'key'    => 'KEY-1',
+            'fields' => ['summary' => 'First issue', 'issuetype' => ['name' => 'Bug']],
+        ], 200),
+    ]);
+
+    $project = Project::factory()->create();
+
+    ProjectJiraIntegration::factory()->create([
+        'project_id' => $project->id,
+        'site_host'  => 'acme.atlassian.net',
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->getJson(route('project.jira.issues.search', $project).'?q=KEY-1');
+
+    $response->assertSuccessful();
+    $response->assertJsonCount(2, 'issues');
+    $response->assertJsonPath('issues.0.key', 'KEY-1');
+    $response->assertJsonPath('issues.0.issue_type', 'Bug');
+    $response->assertJsonPath('issues.1.key', 'KEY-10');
+});
+
+it('does not look up issues directly for free text searches', function () {
+    Http::fake([
+        'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response(['sections' => []], 200),
+    ]);
+
+    $project = Project::factory()->create();
+
+    ProjectJiraIntegration::factory()->create([
+        'project_id' => $project->id,
+        'site_host'  => 'acme.atlassian.net',
+    ]);
+
+    $this->actingAsUser();
+
+    $this->getJson(route('project.jira.issues.search', $project).'?q=login bug')->assertSuccessful();
+
+    Http::assertNotSent(fn (\Illuminate\Http\Client\Request $request) => !str_contains($request->url(), '/issue/picker'));
+});
