@@ -110,7 +110,7 @@
                 {{ searchError }}
             </p>
             <p
-                v-else-if="query.length >= 2 && !isSearching && results.length === 0 && hasSearched"
+                v-else-if="showNoResults"
                 class="mt-2 text-sm text-gray-500 dark:text-gray-400"
             >
                 No matching issues found. Try a different key or summary.
@@ -230,6 +230,7 @@ import {
     MagnifyingGlassIcon,
 } from '@heroicons/vue/20/solid'
 import debounce from 'lodash/debounce'
+import { createLatestRequestTracker, shouldShowNoResults } from '@/jiraIssueSearch.js'
 
 const props = defineProps({
     projectId: {
@@ -253,6 +254,7 @@ const isSearching = ref(false)
 const isLoadingPreview = ref(false)
 const searchError = ref('')
 const hasSearched = ref(false)
+const searchRequests = createLatestRequestTracker()
 
 const processing = computed(() => page.props.processing ?? false)
 
@@ -260,16 +262,27 @@ const showResults = computed(() => {
     return query.value.length >= 2 && (results.value.length > 0 || isSearching.value)
 })
 
+const showNoResults = computed(() => shouldShowNoResults({
+    query: query.value,
+    isSearching: isSearching.value,
+    hasSearched: hasSearched.value,
+    resultCount: results.value.length,
+    error: searchError.value,
+}))
+
 const csrfToken = () => document.querySelector('meta[name="csrf-token"]')?.content ?? ''
 
 const searchIssues = debounce(async (searchQuery) => {
     if (searchQuery.length < 2) {
+        searchRequests.invalidate()
         results.value = []
         hasSearched.value = false
         searchError.value = ''
+        isSearching.value = false
         return
     }
 
+    const requestId = searchRequests.begin()
     isSearching.value = true
     searchError.value = ''
 
@@ -286,6 +299,10 @@ const searchIssues = debounce(async (searchQuery) => {
 
         const data = await response.json()
 
+        if (!searchRequests.isLatest(requestId)) {
+            return
+        }
+
         if (!response.ok) {
             searchError.value = data.message ?? 'Could not search Jira issues.'
             results.value = []
@@ -295,10 +312,16 @@ const searchIssues = debounce(async (searchQuery) => {
         results.value = data.issues ?? []
         hasSearched.value = true
     } catch {
+        if (!searchRequests.isLatest(requestId)) {
+            return
+        }
+
         searchError.value = 'Network error while searching Jira issues.'
         results.value = []
     } finally {
-        isSearching.value = false
+        if (searchRequests.isLatest(requestId)) {
+            isSearching.value = false
+        }
     }
 }, 300)
 
@@ -306,6 +329,7 @@ const onQueryInput = (event) => {
     query.value = event.target.value
     selectedSuggestion.value = null
     previewIssue.value = null
+    hasSearched.value = false
     searchIssues(query.value)
 }
 
@@ -348,6 +372,7 @@ const onSuggestionSelected = async (issue) => {
 
     query.value = issue.key
     results.value = []
+    hasSearched.value = false
     await loadPreview(issue.key)
 }
 
