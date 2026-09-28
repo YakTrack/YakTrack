@@ -3,6 +3,7 @@
 namespace App\Integrations\ThirdPartyTasks\Jira;
 
 use App\Models\ProjectJiraIntegration;
+use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
@@ -25,6 +26,9 @@ final class JiraRestClient
         $response->throw();
     }
 
+    /**
+     * Whether the query is shaped like a Jira issue key, such as ABC-123.
+     */
     public static function looksLikeIssueKey(string $query): bool
     {
         return preg_match(self::ISSUE_KEY_PATTERN, trim($query)) === 1;
@@ -77,19 +81,28 @@ final class JiraRestClient
     }
 
     /**
+     * The direct lookup supplements the picker, so a failure here is reported
+     * but never discards suggestions that already succeeded.
+     *
      * @return array{key: string, summary: string, issue_type: ?string, avatar_url: ?string}|null
      */
-    public function findIssueByKey(string $issueKey): ?array
+    private function findIssueByKey(string $issueKey): ?array
     {
-        $response = $this->http()->get('/issue/'.Str::upper($issueKey), [
-            'fields' => 'summary,issuetype',
-        ]);
+        try {
+            $response = $this->http()->get('/issue/'.Str::upper($issueKey), [
+                'fields' => 'summary,issuetype',
+            ]);
 
-        if ($response->status() === 404) {
+            if ($response->status() === 404) {
+                return null;
+            }
+
+            $response->throw();
+        } catch (HttpClientException $e) {
+            report($e);
+
             return null;
         }
-
-        $response->throw();
 
         /** @var array<string, mixed> $issue */
         $issue = $response->json();

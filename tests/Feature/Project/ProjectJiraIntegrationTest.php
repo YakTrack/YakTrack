@@ -445,3 +445,64 @@ it('asks the jira picker to include subtasks', function () {
             && ($query['showAvatar'] ?? null) === 'true';
     });
 });
+
+it('keeps picker results when the direct key lookup fails', function () {
+    \Illuminate\Support\Facades\Exceptions::fake();
+
+    Http::fake([
+        'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response([
+            'sections' => [
+                [
+                    'id'     => 'cs',
+                    'label'  => 'Current Search',
+                    'issues' => [
+                        ['id' => 10002, 'key' => 'KEY-10', 'summaryText' => 'Tenth issue'],
+                    ],
+                ],
+            ],
+        ], 200),
+        'https://acme.atlassian.net/rest/api/3/issue/KEY-1*' => Http::response(['errorMessages' => ['Boom']], 500),
+    ]);
+
+    $project = Project::factory()->create();
+
+    ProjectJiraIntegration::factory()->create([
+        'project_id' => $project->id,
+        'site_host'  => 'acme.atlassian.net',
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->getJson(route('project.jira.issues.search', $project).'?q=KEY-1');
+
+    $response->assertSuccessful();
+    $response->assertJsonCount(1, 'issues');
+    $response->assertJsonPath('issues.0.key', 'KEY-10');
+
+    \Illuminate\Support\Facades\Exceptions::assertReported(\Illuminate\Http\Client\RequestException::class);
+});
+
+it('keeps picker results when jira cannot be reached for the direct key lookup', function () {
+    \Illuminate\Support\Facades\Exceptions::fake();
+
+    Http::fake([
+        'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response(['sections' => []], 200),
+        'https://acme.atlassian.net/rest/api/3/issue/KEY-1*' => fn () => throw new \Illuminate\Http\Client\ConnectionException('Timed out'),
+    ]);
+
+    $project = Project::factory()->create();
+
+    ProjectJiraIntegration::factory()->create([
+        'project_id' => $project->id,
+        'site_host'  => 'acme.atlassian.net',
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->getJson(route('project.jira.issues.search', $project).'?q=KEY-1');
+
+    $response->assertSuccessful();
+    $response->assertJsonCount(0, 'issues');
+
+    \Illuminate\Support\Facades\Exceptions::assertReported(\Illuminate\Http\Client\ConnectionException::class);
+});
