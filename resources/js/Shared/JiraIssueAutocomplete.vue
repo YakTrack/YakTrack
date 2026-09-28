@@ -118,7 +118,7 @@
 </template>
 
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/vue'
 import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
 import debounce from 'lodash/debounce'
@@ -308,6 +308,7 @@ const onIssueSelected = async (issue) => {
 watch(
     () => props.projectId,
     () => {
+        searchIssues.cancel()
         searchRequests.invalidate()
         results.value = []
         selectedIssue.value = null
@@ -316,4 +317,9 @@ watch(
         isSearching.value = false
     },
 )
+
+onBeforeUnmount(() => {
+    searchIssues.cancel()
+    searchRequests.invalidate()
+})
 </script>
