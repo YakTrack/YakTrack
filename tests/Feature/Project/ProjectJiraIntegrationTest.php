@@ -364,7 +364,7 @@ it('returns no results when an exact key does not exist in jira', function () {
     $response->assertJsonCount(0, 'issues');
 });
 
-it('places the exact key match first without duplicating picker results', function () {
+it('promotes the picker result for an exact key without a direct lookup', function () {
     Http::fake([
         'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response([
             'sections' => [
@@ -377,10 +377,6 @@ it('places the exact key match first without duplicating picker results', functi
                     ],
                 ],
             ],
-        ], 200),
-        'https://acme.atlassian.net/rest/api/3/issue/KEY-1*' => Http::response([
-            'key'    => 'KEY-1',
-            'fields' => ['summary' => 'First issue', 'issuetype' => ['name' => 'Bug']],
         ], 200),
     ]);
 
@@ -398,8 +394,10 @@ it('places the exact key match first without duplicating picker results', functi
     $response->assertSuccessful();
     $response->assertJsonCount(2, 'issues');
     $response->assertJsonPath('issues.0.key', 'KEY-1');
-    $response->assertJsonPath('issues.0.issue_type', 'Bug');
+    $response->assertJsonPath('issues.0.summary', 'First issue');
     $response->assertJsonPath('issues.1.key', 'KEY-10');
+
+    Http::assertSentCount(1);
 });
 
 it('does not look up issues directly for free text searches', function () {

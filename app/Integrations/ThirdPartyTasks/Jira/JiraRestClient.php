@@ -64,20 +64,34 @@ final class JiraRestClient
             return $issues;
         }
 
-        $exactMatch = $this->findIssueByKey(trim($query));
+        $normalizedKey = Str::upper(trim($query));
+        $pickerIndex = array_search($normalizedKey, array_column($issues, 'key'), true);
+
+        if ($pickerIndex !== false) {
+            return self::promote($issues, $pickerIndex);
+        }
+
+        $exactMatch = $this->findIssueByKey($normalizedKey);
 
         if ($exactMatch === null) {
             return $issues;
         }
 
-        $issues = array_values(array_filter(
-            $issues,
-            fn (array $issue): bool => $issue['key'] !== $exactMatch['key']
-        ));
-
         array_unshift($issues, $exactMatch);
 
         return $issues;
+    }
+
+    /**
+     * @param  list<array{key: string, summary: string, issue_type: ?string, avatar_url: ?string}>  $issues
+     * @return list<array{key: string, summary: string, issue_type: ?string, avatar_url: ?string}>
+     */
+    private static function promote(array $issues, int $index): array
+    {
+        $match = $issues[$index];
+        unset($issues[$index]);
+
+        return [$match, ...array_values($issues)];
     }
 
     /**
