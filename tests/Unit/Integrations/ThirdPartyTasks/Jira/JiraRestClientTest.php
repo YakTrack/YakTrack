@@ -5,10 +5,10 @@ use App\Integrations\ThirdPartyTasks\Jira\JiraRestClient;
 it('recognises queries shaped like jira issue keys', function (string $query) {
     expect(JiraRestClient::looksLikeIssueKey($query))->toBeTrue();
 })->with([
-    'uppercase'            => 'KEY-1',
-    'lowercase'            => 'key-1',
-    'underscore in project' => 'MY_PROJ-12',
-    'digits in project'    => 'AB2-7',
+    'uppercase'              => 'KEY-1',
+    'lowercase'              => 'key-1',
+    'underscore in project'  => 'MY_PROJ-12',
+    'digits in project'      => 'AB2-7',
     'surrounding whitespace' => '  KEY-1  ',
 ]);
 
