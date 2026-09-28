@@ -83,7 +83,8 @@ final class JiraRestClient
     }
 
     /**
-     * @param  list<array{key: string, summary: string, issue_type: ?string, avatar_url: ?string}>  $issues
+     * @param list<array{key: string, summary: string, issue_type: ?string, avatar_url: ?string}> $issues
+     *
      * @return list<array{key: string, summary: string, issue_type: ?string, avatar_url: ?string}>
      */
     private static function promote(array $issues, int $index): array

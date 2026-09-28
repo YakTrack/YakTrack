@@ -345,7 +345,7 @@ it('finds an issue by exact key even when the picker returns nothing', function 
 
 it('returns no results when an exact key does not exist in jira', function () {
     Http::fake([
-        'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response(['sections' => []], 200),
+        'https://acme.atlassian.net/rest/api/3/issue/picker*'  => Http::response(['sections' => []], 200),
         'https://acme.atlassian.net/rest/api/3/issue/KEY-404*' => Http::response(['errorMessages' => ['Issue does not exist']], 404),
     ]);
 
@@ -485,7 +485,7 @@ it('keeps picker results when jira cannot be reached for the direct key lookup',
 
     Http::fake([
         'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response(['sections' => []], 200),
-        'https://acme.atlassian.net/rest/api/3/issue/KEY-1*' => fn () => throw new \Illuminate\Http\Client\ConnectionException('Timed out'),
+        'https://acme.atlassian.net/rest/api/3/issue/KEY-1*'  => fn () => throw new \Illuminate\Http\Client\ConnectionException('Timed out'),
     ]);
 
     $project = Project::factory()->create();
