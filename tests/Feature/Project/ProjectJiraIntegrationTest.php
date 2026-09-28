@@ -144,15 +144,16 @@ it('searches jira issues for autocomplete', function () {
                             'key'         => 'KEY-1',
                             'summary'     => 'Fix the bug',
                             'summaryText' => 'Fix the bug',
-                            'issueType'   => ['name' => 'Bug'],
-                            'avatarUrl'   => 'https://acme.atlassian.net/icon.png',
+                            'keyHtml'     => '<b>KEY</b>-1',
+                            'img'         => 'https://acme.atlassian.net/icon.png',
                         ],
                         [
                             'id'          => 10002,
                             'key'         => 'KEY-2',
                             'summary'     => 'Already done',
                             'summaryText' => 'Already done',
-                            'issueType'   => ['name' => 'Task'],
+                            'keyHtml'     => '<b>KEY</b>-2',
+                            'img'         => 'https://acme.atlassian.net/task.png',
                         ],
                     ],
                 ],
@@ -181,7 +182,8 @@ it('searches jira issues for autocomplete', function () {
     $response->assertSuccessful();
     $response->assertJsonPath('issues.0.key', 'KEY-1');
     $response->assertJsonPath('issues.0.summary', 'Fix the bug');
-    $response->assertJsonPath('issues.0.issue_type', 'Bug');
+    $response->assertJsonPath('issues.0.issue_type', null);
+    $response->assertJsonPath('issues.0.avatar_url', 'https://acme.atlassian.net/icon.png');
     $response->assertJsonPath('issues.0.already_imported', false);
     $response->assertJsonPath('issues.1.key', 'KEY-2');
     $response->assertJsonPath('issues.1.already_imported', true);

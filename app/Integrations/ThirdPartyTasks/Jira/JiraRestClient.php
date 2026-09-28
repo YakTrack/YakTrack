@@ -120,6 +120,9 @@ final class JiraRestClient
     }
 
     /**
+     * Picker suggestions carry the issue type icon as `img` and no issue type name,
+     * so `issue_type` is only populated by the direct lookup.
+     *
      * @return list<array{key: string, summary: string, issue_type: ?string, avatar_url: ?string}>
      */
     private function pickerSuggestions(string $query): array
@@ -159,18 +162,11 @@ final class JiraRestClient
                     ? $issue['summaryText']
                     : (is_string($issue['summary'] ?? null) ? $issue['summary'] : '');
 
-                $issueType = null;
-                if (is_array($issue['issueType'] ?? null) && is_string($issue['issueType']['name'] ?? null)) {
-                    $issueType = $issue['issueType']['name'];
-                }
-
-                $avatarUrl = is_string($issue['avatarUrl'] ?? null) ? $issue['avatarUrl'] : null;
-
                 $issues[] = [
                     'key'        => $key,
                     'summary'    => $summary,
-                    'issue_type' => $issueType,
-                    'avatar_url' => $avatarUrl,
+                    'issue_type' => null,
+                    'avatar_url' => is_string($issue['img'] ?? null) ? $issue['img'] : null,
                 ];
             }
         }
