@@ -49,6 +49,7 @@
 
 import LoadingButton from '@/Shared/LoadingButton.vue'
 import Logo from '@/Shared/Logo.vue'
+import { refreshCsrfToken } from '@/csrfRefresh'
 
 export default {
     components: {
@@ -79,6 +80,12 @@ export default {
                 password: this.form.password,
                 remember: this.form.remember,
             }, {
+                onSuccess: () => {
+                    // Login regenerates the session and CSRF token server-side, but the
+                    // SPA never reloads app.blade.php, so the csrf-token meta tag would
+                    // otherwise stay stale until the next periodic refresh.
+                    refreshCsrfToken()
+                },
                 onFinish: () => {
                     this.sending = false
                 },
