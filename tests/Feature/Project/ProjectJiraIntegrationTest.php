@@ -1,5 +1,6 @@
 <?php
 
+use App\Integrations\ThirdPartyTasks\Jira\JiraAuthenticationException;
 use App\Models\Project;
 use App\Models\ProjectJiraIntegration;
 use App\Models\Task;
@@ -347,6 +348,7 @@ it('returns no results when an exact key does not exist in jira', function () {
     Http::fake([
         'https://acme.atlassian.net/rest/api/3/issue/picker*'  => Http::response(['sections' => []], 200),
         'https://acme.atlassian.net/rest/api/3/issue/KEY-404*' => Http::response(['errorMessages' => ['Issue does not exist']], 404),
+        'https://acme.atlassian.net/rest/api/3/myself'         => Http::response(['displayName' => 'Dev'], 200),
     ]);
 
     $project = Project::factory()->create();
@@ -403,6 +405,7 @@ it('promotes the picker result for an exact key without a direct lookup', functi
 it('does not look up issues directly for free text searches', function () {
     Http::fake([
         'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response(['sections' => []], 200),
+        'https://acme.atlassian.net/rest/api/3/myself'        => Http::response(['displayName' => 'Dev'], 200),
     ]);
 
     $project = Project::factory()->create();
@@ -416,12 +419,14 @@ it('does not look up issues directly for free text searches', function () {
 
     $this->getJson(route('project.jira.issues.search', $project).'?q=login bug')->assertSuccessful();
 
-    Http::assertNotSent(fn (\Illuminate\Http\Client\Request $request) => !str_contains($request->url(), '/issue/picker'));
+    Http::assertNotSent(fn (\Illuminate\Http\Client\Request $request) => str_contains($request->url(), '/rest/api/3/issue/')
+        && !str_contains($request->url(), '/issue/picker'));
 });
 
 it('asks the jira picker to include subtasks', function () {
     Http::fake([
         'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response(['sections' => []], 200),
+        'https://acme.atlassian.net/rest/api/3/myself'        => Http::response(['displayName' => 'Dev'], 200),
     ]);
 
     $project = Project::factory()->create();
@@ -486,6 +491,7 @@ it('keeps picker results when jira cannot be reached for the direct key lookup',
     Http::fake([
         'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response(['sections' => []], 200),
         'https://acme.atlassian.net/rest/api/3/issue/KEY-1*'  => fn () => throw new \Illuminate\Http\Client\ConnectionException('Timed out'),
+        'https://acme.atlassian.net/rest/api/3/myself'        => Http::response(['displayName' => 'Dev'], 200),
     ]);
 
     $project = Project::factory()->create();
@@ -498,6 +504,139 @@ it('keeps picker results when jira cannot be reached for the direct key lookup',
     $this->actingAsUser();
 
     $response = $this->getJson(route('project.jira.issues.search', $project).'?q=KEY-1');
+
+    $response->assertSuccessful();
+    $response->assertJsonCount(0, 'issues');
+
+    \Illuminate\Support\Facades\Exceptions::assertReported(\Illuminate\Http\Client\ConnectionException::class);
+});
+
+it('reports expired credentials instead of an empty result set for an exact key', function () {
+    \Illuminate\Support\Facades\Exceptions::fake();
+
+    Http::fake([
+        'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response(['sections' => []], 200),
+        'https://acme.atlassian.net/rest/api/3/issue/KEY-1*'  => Http::response([
+            'errorMessages' => ['Issue does not exist or you do not have permission to see it.'],
+        ], 404),
+        'https://acme.atlassian.net/rest/api/3/myself' => Http::response(null, 401),
+    ]);
+
+    $project = Project::factory()->create();
+
+    ProjectJiraIntegration::factory()->create([
+        'project_id' => $project->id,
+        'site_host'  => 'acme.atlassian.net',
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->getJson(route('project.jira.issues.search', $project).'?q=KEY-1');
+
+    $response->assertUnprocessable();
+    $response->assertJsonPath('reconnect_required', true);
+    $response->assertJsonPath(
+        'message',
+        'Your Jira connection has expired. Reconnect Jira to this project to search issues.'
+    );
+
+    \Illuminate\Support\Facades\Exceptions::assertReported(JiraAuthenticationException::class);
+});
+
+it('reports expired credentials when a free text search returns nothing', function () {
+    \Illuminate\Support\Facades\Exceptions::fake();
+
+    Http::fake([
+        'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response(['sections' => []], 200),
+        'https://acme.atlassian.net/rest/api/3/myself'        => Http::response(null, 401),
+    ]);
+
+    $project = Project::factory()->create();
+
+    ProjectJiraIntegration::factory()->create([
+        'project_id' => $project->id,
+        'site_host'  => 'acme.atlassian.net',
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->getJson(route('project.jira.issues.search', $project).'?q=login bug');
+
+    $response->assertUnprocessable();
+    $response->assertJsonPath('reconnect_required', true);
+});
+
+it('reports expired credentials when the picker itself rejects them', function (int $status) {
+    \Illuminate\Support\Facades\Exceptions::fake();
+
+    Http::fake([
+        'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response(null, $status),
+    ]);
+
+    $project = Project::factory()->create();
+
+    ProjectJiraIntegration::factory()->create([
+        'project_id' => $project->id,
+        'site_host'  => 'acme.atlassian.net',
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->getJson(route('project.jira.issues.search', $project).'?q=login');
+
+    $response->assertUnprocessable();
+    $response->assertJsonPath('reconnect_required', true);
+
+    Http::assertSentCount(1);
+})->with([
+    'unauthorised' => 401,
+    'forbidden'    => 403,
+]);
+
+it('does not spend a credential check when the search returns results', function () {
+    Http::fake([
+        'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response([
+            'sections' => [
+                [
+                    'id'     => 'cs',
+                    'issues' => [['id' => 10001, 'key' => 'KEY-1', 'summaryText' => 'First issue']],
+                ],
+            ],
+        ], 200),
+    ]);
+
+    $project = Project::factory()->create();
+
+    ProjectJiraIntegration::factory()->create([
+        'project_id' => $project->id,
+        'site_host'  => 'acme.atlassian.net',
+    ]);
+
+    $this->actingAsUser();
+
+    $this->getJson(route('project.jira.issues.search', $project).'?q=login')->assertSuccessful();
+
+    Http::assertNotSent(fn (\Illuminate\Http\Client\Request $request) => str_contains($request->url(), '/myself'));
+});
+
+it('does not mistake an unreachable jira for expired credentials', function () {
+    \Illuminate\Support\Facades\Exceptions::fake();
+
+    Http::fake([
+        'https://acme.atlassian.net/rest/api/3/issue/picker*' => Http::response(['sections' => []], 200),
+        'https://acme.atlassian.net/rest/api/3/myself'        => fn () => throw new \Illuminate\Http\Client\ConnectionException('Timed out'),
+    ]);
+
+    $project = Project::factory()->create();
+
+    ProjectJiraIntegration::factory()->create([
+        'project_id' => $project->id,
+        'site_host'  => 'acme.atlassian.net',
+    ]);
+
+    $this->actingAsUser();
+
+    $response = $this->getJson(route('project.jira.issues.search', $project).'?q=login');
 
     $response->assertSuccessful();
     $response->assertJsonCount(0, 'issues');

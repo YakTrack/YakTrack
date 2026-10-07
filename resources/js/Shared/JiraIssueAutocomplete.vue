@@ -101,6 +101,13 @@
             class="mt-2 text-sm text-red-600 dark:text-red-400"
         >
             {{ searchError }}
+            <Link
+                v-if="reconnectUrl"
+                :href="reconnectUrl"
+                class="font-medium underline"
+            >
+                Reconnect Jira
+            </Link>
         </p>
         <p
             v-else-if="showNoResults"
@@ -120,6 +127,7 @@
 <script setup>
 import { computed, onBeforeUnmount, ref, watch } from 'vue'
 import { Combobox, ComboboxInput, ComboboxOption, ComboboxOptions } from '@headlessui/vue'
+import { Link } from '@inertiajs/vue3'
 import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid'
 import debounce from 'lodash/debounce'
 import { createLatestRequestTracker, shouldShowNoResults } from '@/jiraIssueSearch.js'
@@ -162,6 +170,7 @@ const selectedIssue = ref(null)
 const isSearching = ref(false)
 const isLoadingPreview = ref(false)
 const searchError = ref('')
+const reconnectUrl = ref('')
 const hasSearched = ref(false)
 const searchRequests = createLatestRequestTracker()
 
@@ -183,6 +192,7 @@ const searchIssues = debounce(async (searchQuery) => {
         results.value = []
         hasSearched.value = false
         searchError.value = ''
+        reconnectUrl.value = ''
         isSearching.value = false
         return
     }
@@ -190,6 +200,7 @@ const searchIssues = debounce(async (searchQuery) => {
     const requestId = searchRequests.begin()
     isSearching.value = true
     searchError.value = ''
+    reconnectUrl.value = ''
 
     try {
         const url = new URL(route('project.jira.issues.search', props.projectId), window.location.origin)
@@ -214,6 +225,9 @@ const searchIssues = debounce(async (searchQuery) => {
 
         if (!response.ok) {
             searchError.value = data.message ?? 'Could not search Jira issues.'
+            reconnectUrl.value = data.reconnect_required
+                ? `${route('project.show', props.projectId)}?tab=integrations`
+                : ''
             results.value = []
             return
         }
@@ -313,6 +327,7 @@ watch(
         results.value = []
         selectedIssue.value = null
         searchError.value = ''
+        reconnectUrl.value = ''
         hasSearched.value = false
         isSearching.value = false
     },
