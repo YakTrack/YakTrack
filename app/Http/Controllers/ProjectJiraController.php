@@ -7,6 +7,7 @@ use App\Http\Requests\SearchJiraIssuesRequest;
 use App\Http\Requests\StoreProjectJiraIntegrationRequest;
 use App\Integrations\ThirdPartyTasks\ExternalTaskDriver;
 use App\Integrations\ThirdPartyTasks\ExternalTaskIntegrationManager;
+use App\Integrations\ThirdPartyTasks\Jira\JiraAuthenticationException;
 use App\Integrations\ThirdPartyTasks\Jira\JiraRestClient;
 use App\Models\Project;
 use App\Models\ProjectJiraIntegration;
@@ -80,6 +81,13 @@ class ProjectJiraController extends Controller
         try {
             $client = new JiraRestClient($integration);
             $issues = $client->searchIssues($request->validated('q'));
+        } catch (JiraAuthenticationException $e) {
+            report($e);
+
+            return response()->json([
+                'message'            => 'Your Jira connection has expired. Reconnect Jira to this project to search issues.',
+                'reconnect_required' => true,
+            ], 422);
         } catch (RequestException $e) {
             report($e);
 

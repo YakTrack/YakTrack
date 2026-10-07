@@ -5,12 +5,16 @@ namespace App\Integrations\ThirdPartyTasks\Jira;
 use App\Models\ProjectJiraIntegration;
 use Illuminate\Http\Client\HttpClientException;
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 final class JiraRestClient
 {
     private const ISSUE_KEY_PATTERN = '/^[A-Z][A-Z0-9_]*-\d+$/i';
+
+    /** @var list<int> */
+    private const AUTHENTICATION_FAILURE_STATUSES = [401, 403];
 
     public function __construct(
         private ProjectJiraIntegration $integration
@@ -54,6 +58,8 @@ final class JiraRestClient
      * issue is also looked up directly, because the picker endpoint only suggests
      * issues from the connected account's recent history and can miss exact keys.
      *
+     * @throws JiraAuthenticationException
+     *
      * @return list<array{key: string, summary: string, issue_type: ?string, avatar_url: ?string}>
      */
     public function searchIssues(string $query): array
@@ -61,7 +67,7 @@ final class JiraRestClient
         $issues = $this->pickerSuggestions($query);
 
         if (!self::looksLikeIssueKey($query)) {
-            return $issues;
+            return $this->guardEmptyResults($issues);
         }
 
         $normalizedKey = Str::upper(trim($query));
@@ -74,12 +80,61 @@ final class JiraRestClient
         $exactMatch = $this->findIssueByKey($normalizedKey);
 
         if ($exactMatch === null) {
-            return $issues;
+            return $this->guardEmptyResults($issues);
         }
 
         array_unshift($issues, $exactMatch);
 
         return $issues;
+    }
+
+    /**
+     * Jira answers an unauthenticated picker search with an empty 200 and an
+     * unauthenticated issue read with a 404, so expired credentials are otherwise
+     * indistinguishable from a genuine miss. Only an empty result set is worth the
+     * extra round trip needed to tell the two apart.
+     *
+     * @param list<array{key: string, summary: string, issue_type: ?string, avatar_url: ?string}> $issues
+     *
+     * @throws JiraAuthenticationException
+     *
+     * @return list<array{key: string, summary: string, issue_type: ?string, avatar_url: ?string}>
+     */
+    private function guardEmptyResults(array $issues): array
+    {
+        if ($issues !== []) {
+            return $issues;
+        }
+
+        $this->assertCredentialsAreAccepted();
+
+        return $issues;
+    }
+
+    /**
+     * A transport failure here is reported rather than raised, so an unreachable
+     * Jira is never misreported to the user as expired credentials.
+     *
+     * @throws JiraAuthenticationException
+     */
+    private function assertCredentialsAreAccepted(): void
+    {
+        try {
+            $response = $this->http()->get('/myself');
+        } catch (HttpClientException $e) {
+            report($e);
+
+            return;
+        }
+
+        if (self::isAuthenticationFailure($response)) {
+            throw new JiraAuthenticationException('Jira rejected the stored credentials.');
+        }
+    }
+
+    private static function isAuthenticationFailure(Response $response): bool
+    {
+        return in_array($response->status(), self::AUTHENTICATION_FAILURE_STATUSES, true);
     }
 
     /**
@@ -97,7 +152,10 @@ final class JiraRestClient
 
     /**
      * The direct lookup supplements the picker, so a failure here is reported
-     * but never discards suggestions that already succeeded.
+     * but never discards suggestions that already succeeded. Rejected credentials
+     * are the exception: they are raised, because every later result would be empty.
+     *
+     * @throws JiraAuthenticationException
      *
      * @return array{key: string, summary: string, issue_type: ?string, avatar_url: ?string}|null
      */
@@ -107,6 +165,10 @@ final class JiraRestClient
             $response = $this->http()->get('/issue/'.Str::upper($issueKey), [
                 'fields' => 'summary,issuetype',
             ]);
+
+            if (self::isAuthenticationFailure($response)) {
+                throw new JiraAuthenticationException('Jira rejected the stored credentials.');
+            }
 
             if ($response->status() === 404) {
                 return null;
@@ -151,6 +213,8 @@ final class JiraRestClient
      * Picker suggestions carry the issue type icon as `img` and no issue type name,
      * so `issue_type` is only populated by the direct lookup.
      *
+     * @throws JiraAuthenticationException
+     *
      * @return list<array{key: string, summary: string, issue_type: ?string, avatar_url: ?string}>
      */
     private function pickerSuggestions(string $query): array
@@ -160,6 +224,10 @@ final class JiraRestClient
             'showAvatar'   => 'true',
             'showSubTasks' => 'true',
         ]);
+
+        if (self::isAuthenticationFailure($response)) {
+            throw new JiraAuthenticationException('Jira rejected the stored credentials.');
+        }
 
         $response->throw();
 
