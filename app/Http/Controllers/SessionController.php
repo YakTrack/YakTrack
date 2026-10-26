@@ -130,11 +130,11 @@ class SessionController extends Controller
     public function store(): RedirectResponse
     {
         request()->validate([
-            'started_at' => 'date|required',
-            'ended_at'   => 'nullable|date|after:started_at',
-            'sprint_id'  => 'nullable|exists:sprints,id',
-            'task_id'    => 'nullable|exists:tasks,id',
-            'invoice_id' => 'nullable|exists:invoices,id',
+            'started_at'          => 'date|required',
+            'ended_at'            => 'nullable|date|after:started_at',
+            'sprint_id'           => 'nullable|exists:sprints,id',
+            'task_id'             => 'nullable|exists:tasks,id',
+            'invoice_id'          => 'nullable|exists:invoices,id',
             'session_category_id' => 'nullable|exists:session_categories,id',
         ]);
 
