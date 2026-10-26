@@ -131,10 +131,11 @@ class SessionController extends Controller
     {
         request()->validate([
             'started_at' => 'date|required',
-            'ended_at'   => 'date|after:started_at',
-            'sprint_id'  => 'exists:sprints,id',
-            'task_id'    => 'exists:tasks,id',
-            'invoice_id' => 'exists:invoices,id',
+            'ended_at'   => 'nullable|date|after:started_at',
+            'sprint_id'  => 'nullable|exists:sprints,id',
+            'task_id'    => 'nullable|exists:tasks,id',
+            'invoice_id' => 'nullable|exists:invoices,id',
+            'session_category_id' => 'nullable|exists:session_categories,id',
         ]);
 
         // If the new session has no end time, we want to stop any running sessions
