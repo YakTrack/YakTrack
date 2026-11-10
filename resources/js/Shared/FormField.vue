@@ -65,7 +65,7 @@
                     @change="$emit('update:modelValue', $event.target.checked)"
                     :required="required"
                     :disabled="disabled"
-                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                    class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded dark:border-gray-600 dark:bg-gray-900"
                 />
                 <label v-if="checkboxLabel" :for="fieldId" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                     {{ checkboxLabel }}

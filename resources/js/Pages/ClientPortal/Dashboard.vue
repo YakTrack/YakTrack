@@ -2,13 +2,13 @@
     <client-portal-layout>
         <!-- Welcome section -->
         <div class="mb-8">
-            <h1 class="text-3xl font-bold text-gray-900">Welcome to your Client Portal</h1>
-            <p class="mt-2 text-gray-600">View your projects, tasks, and work sessions.</p>
+            <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Welcome to your Client Portal</h1>
+            <p class="mt-2 text-gray-600 dark:text-gray-300">View your projects, tasks, and work sessions.</p>
         </div>
 
         <!-- Stats cards -->
         <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 mb-8">
-            <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="bg-white overflow-hidden shadow rounded-lg dark:bg-gray-800">
                 <div class="p-5">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
@@ -20,15 +20,15 @@
                         </div>
                         <div class="ml-5 w-0 flex-1">
                             <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Total Projects</dt>
-                                <dd class="text-lg font-medium text-gray-900">{{ projects.length }}</dd>
+                                <dt class="text-sm font-medium text-gray-500 truncate dark:text-gray-400">Total Projects</dt>
+                                <dd class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ projects.length }}</dd>
                             </dl>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="bg-white overflow-hidden shadow rounded-lg dark:bg-gray-800">
                 <div class="p-5">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
@@ -40,15 +40,15 @@
                         </div>
                         <div class="ml-5 w-0 flex-1">
                             <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Total Tasks</dt>
-                                <dd class="text-lg font-medium text-gray-900">{{ totalTasks }}</dd>
+                                <dt class="text-sm font-medium text-gray-500 truncate dark:text-gray-400">Total Tasks</dt>
+                                <dd class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ totalTasks }}</dd>
                             </dl>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="bg-white overflow-hidden shadow rounded-lg dark:bg-gray-800">
                 <div class="p-5">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
@@ -60,15 +60,15 @@
                         </div>
                         <div class="ml-5 w-0 flex-1">
                             <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Total Hours</dt>
-                                <dd class="text-lg font-medium text-gray-900">{{ totalBillableHours }}h</dd>
+                                <dt class="text-sm font-medium text-gray-500 truncate dark:text-gray-400">Total Hours</dt>
+                                <dd class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ totalBillableHours }}h</dd>
                             </dl>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="bg-white overflow-hidden shadow rounded-lg dark:bg-gray-800">
                 <div class="p-5">
                     <div class="flex items-center">
                         <div class="flex-shrink-0">
@@ -80,8 +80,8 @@
                         </div>
                         <div class="ml-5 w-0 flex-1">
                             <dl>
-                                <dt class="text-sm font-medium text-gray-500 truncate">Recent Sessions</dt>
-                                <dd class="text-lg font-medium text-gray-900">{{ recentSessions.length }}</dd>
+                                <dt class="text-sm font-medium text-gray-500 truncate dark:text-gray-400">Recent Sessions</dt>
+                                <dd class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ recentSessions.length }}</dd>
                             </dl>
                         </div>
                     </div>
@@ -90,38 +90,38 @@
         </div>
 
         <!-- Recent sessions -->
-        <div class="bg-white shadow overflow-hidden sm:rounded-md">
+        <div class="bg-white shadow overflow-hidden sm:rounded-md dark:bg-gray-800">
             <div class="px-4 py-5 sm:px-6">
-                <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Sessions</h3>
-                <p class="mt-1 max-w-2xl text-sm text-gray-500">Your most recent work sessions</p>
+                <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Recent Sessions</h3>
+                <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">Your most recent work sessions</p>
             </div>
-            <ul class="divide-y divide-gray-200">
+            <ul class="divide-y divide-gray-200 dark:divide-gray-700">
                 <li v-for="session in recentSessions" :key="session.id" class="px-4 py-4 sm:px-6">
                     <div class="flex items-center justify-between">
                         <div class="flex-1 min-w-0">
-                            <p class="text-sm font-medium text-indigo-600 truncate">
+                            <p class="text-sm font-medium text-indigo-600 truncate dark:text-indigo-400">
                                 {{ session.task.name }}
                             </p>
-                            <p class="text-sm text-gray-500 truncate">
+                            <p class="text-sm text-gray-500 truncate dark:text-gray-400">
                                 {{ session.task.project.name }}
                             </p>
-                            <p class="text-sm text-gray-500">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
                                 {{ formatDate(session.started_at) }} - {{ formatDate(session.ended_at) }}
                             </p>
                         </div>
-                        <div class="flex-shrink-0 text-sm text-gray-500 pr-4">
-                            <span v-if="session.session_category" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                        <div class="flex-shrink-0 text-sm text-gray-500 pr-4 dark:text-gray-400">
+                            <span v-if="session.session_category" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
                                 {{ session.session_category.name }}
                             </span>
                         </div>
-                        <div class="flex-shrink-0 text-sm text-gray-500">
-                            <div class="text-sm text-gray-600 font-mono">
+                        <div class="flex-shrink-0 text-sm text-gray-500 dark:text-gray-400">
+                            <div class="text-sm text-gray-600 font-mono dark:text-gray-300">
                                 {{ session.durationForHumans }}
                             </div>
                         </div>
                     </div>
                     <div v-if="session.comment" class="mt-2">
-                        <p class="text-sm text-gray-600">{{ session.comment }}</p>
+                        <p class="text-sm text-gray-600 dark:text-gray-300">{{ session.comment }}</p>
                     </div>
                 </li>
             </ul>

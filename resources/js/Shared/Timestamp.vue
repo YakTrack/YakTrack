@@ -1,7 +1,7 @@
 <template>
-    <span class="font-mono text-gray-600">
-        <span :class="!time ? 'text-gray-400' : ''">{{ parseInt(hours) < 10 ? '&nbsp;' : '' }}{{ hours }}:{{ minutes }}</span><span :class="time ? 'text-gray-600' : 'text-gray-400'">:</span><span :class="time ? 'text-gray-600' : 'text-gray-400'">{{ seconds }}</span>
-        <span :class="time ? 'text-gray-500' : 'text-gray-400'">{{ amOrPm }}</span>
+    <span class="font-mono text-gray-600 dark:text-gray-300">
+        <span :class="!time ? 'text-gray-400 dark:text-gray-500' : ''">{{ parseInt(hours) < 10 ? '&nbsp;' : '' }}{{ hours }}:{{ minutes }}</span><span :class="time ? 'text-gray-600 dark:text-gray-300' : 'text-gray-400 dark:text-gray-500'">:</span><span :class="time ? 'text-gray-600 dark:text-gray-300' : 'text-gray-400 dark:text-gray-500'">{{ seconds }}</span>
+        <span :class="time ? 'text-gray-500 dark:text-gray-400' : 'text-gray-400 dark:text-gray-500'">{{ amOrPm }}</span>
     </span>
 </template>
 

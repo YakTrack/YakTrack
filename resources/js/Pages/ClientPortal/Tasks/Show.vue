@@ -5,15 +5,15 @@
                     <div class="flex items-center justify-between">
                         <div>
                             <div class="flex items-center space-x-3">
-                                <h1 class="text-3xl font-bold text-gray-900">{{ task.name }}</h1>
+                                <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">{{ task.name }}</h1>
                                 <span v-if="task.task_status" class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium" :style="{ backgroundColor: task.task_status.color + '20', color: task.task_status.color }">
                                     {{ task.task_status.name }}
                                 </span>
                             </div>
-                            <p class="mt-2 text-gray-600">Project: {{ task.project.name }}</p>
+                            <p class="mt-2 text-gray-600 dark:text-gray-300">Project: {{ task.project.name }}</p>
                         </div>
                         <div class="flex space-x-3">
-                            <a :href="route('client-portal.tasks.index')" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <a :href="route('client-portal.tasks.index')" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:border-gray-700 dark:text-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700/50 dark:focus:ring-offset-gray-900">
                                 Back to Tasks
                             </a>
                         </div>
@@ -22,7 +22,7 @@
 
                 <!-- Task stats -->
                 <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 mb-8">
-                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="bg-white overflow-hidden shadow rounded-lg dark:bg-gray-800">
                         <div class="p-5">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
@@ -34,15 +34,15 @@
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt class="text-sm font-medium text-gray-500 truncate"> Hours </dt>
-                                        <dd class="text-lg font-medium text-gray-900">{{ getTaskBillableHours() }}h</dd>
+                                        <dt class="text-sm font-medium text-gray-500 truncate dark:text-gray-400"> Hours </dt>
+                                        <dd class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ getTaskBillableHours() }}h</dd>
                                     </dl>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="bg-white overflow-hidden shadow rounded-lg dark:bg-gray-800">
                         <div class="p-5">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
@@ -54,8 +54,8 @@
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt class="text-sm font-medium text-gray-500 truncate">Total Sessions</dt>
-                                        <dd class="text-lg font-medium text-gray-900">{{ task.sessions.length }}</dd>
+                                        <dt class="text-sm font-medium text-gray-500 truncate dark:text-gray-400">Total Sessions</dt>
+                                        <dd class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ task.sessions.length }}</dd>
                                     </dl>
                                 </div>
                             </div>
@@ -64,31 +64,31 @@
                 </div>
 
                 <!-- Sessions -->
-                <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                <div class="bg-white shadow overflow-hidden sm:rounded-md dark:bg-gray-800">
                     <div class="px-4 py-5 sm:px-6">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">Work Sessions</h3>
-                        <p class="mt-1 max-w-2xl text-sm text-gray-500">All work sessions for this task</p>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Work Sessions</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">All work sessions for this task</p>
                     </div>
-                    <ul class="divide-y divide-gray-200">
+                    <ul class="divide-y divide-gray-200 dark:divide-gray-700">
                         <li v-for="session in task.sessions" :key="session.id" class="px-4 py-4 sm:px-6">
                             <div class="flex items-center justify-between">
                                 <div class="flex-1 min-w-0">
                                     <div class="flex items-center">
-                                        <div class="text-sm font-medium text-gray-700 flex">
+                                        <div class="text-sm font-medium text-gray-700 flex dark:text-gray-300">
                                             <div>{{ formatDate(session.started_at) }}</div>
                                             <div class="px-2"> - </div>
                                             <div>{{ session.ended_at ? formatDate(session.ended_at) : 'Now' }}</div>
                                         </div>
-                                        <span v-if="session.session_category" class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                        <span v-if="session.session_category" class="ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
                                             {{ session.session_category.name }}
                                         </span>
                                     </div>
-                                    <p v-if="session.comment" class="mt-2 text-sm text-gray-600">
+                                    <p v-if="session.comment" class="mt-2 text-sm text-gray-600 dark:text-gray-300">
                                         {{ session.comment }}
                                     </p>
                                 </div>
                                 <div class="flex-shrink-0 px-4">
-                                    <p class="text-sm text-gray-500">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">
                                         {{ session.durationForHumans }}
                                     </p>
                                 </div>
@@ -104,11 +104,11 @@
 
                 <!-- Empty state -->
                 <div v-if="task.sessions.length === 0" class="text-center py-12">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No sessions</h3>
-                    <p class="mt-1 text-sm text-gray-500">This task doesn't have any sessions yet.</p>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No sessions</h3>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">This task doesn't have any sessions yet.</p>
                 </div>
     </client-portal-layout>
 </template>

@@ -10,7 +10,9 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1a202c" media="(prefers-color-scheme: dark)">
+    <meta name="color-scheme" content="light dark">
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -23,7 +25,7 @@
     @inertiaHead
 </head>
 
-<body class="h-full font-source-sans font-normal leading-normal bg-gray-100 text-gray-700">
+<body class="h-full font-source-sans font-normal leading-normal bg-gray-100 text-gray-700 dark:bg-gray-900 dark:text-gray-300">
 
     @inertia
 

@@ -15,15 +15,15 @@
             <!-- Instructions -->
             <div class="card mb-6">
                 <div class="card-body">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">How to Import</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4 dark:text-gray-100">How to Import</h3>
                     <div class="prose prose-sm max-w-none">
-                        <p class="text-gray-600 mb-4">
+                        <p class="text-gray-600 mb-4 dark:text-gray-300">
                             Upload a Gherkin feature file (.feature or .txt) to automatically create acceptance criteria. 
                             Each scenario in your feature file will become a separate acceptance criterion.
                         </p>
                         
-                        <h4 class="text-md font-medium text-gray-900 mb-2">Supported Gherkin Format:</h4>
-                        <pre class="bg-gray-100 p-4 rounded text-sm overflow-x-auto"><code>Feature: User Authentication
+                        <h4 class="text-md font-medium text-gray-900 mb-2 dark:text-gray-100">Supported Gherkin Format:</h4>
+                        <pre class="bg-gray-100 p-4 rounded text-sm overflow-x-auto dark:bg-gray-700"><code>Feature: User Authentication
   As a user
   I want to be able to log in
   So that I can access my account
@@ -46,13 +46,13 @@
                 <div class="card-body">
                     <!-- Project Selection -->
                     <div class="mb-6">
-                        <label for="project_id" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="project_id" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
                             Project <span class="text-red-500">*</span>
                         </label>
                         <select
                             id="project_id"
                             v-model="form.project_id"
-                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                             :class="{ 'border-red-500': errors.project_id }"
                         >
                             <option value="">Select a project</option>
@@ -67,17 +67,17 @@
 
                     <!-- File Upload -->
                     <div class="mb-6">
-                        <label for="file" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="file" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
                             Gherkin File <span class="text-red-500">*</span>
                         </label>
-                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-gray-400 transition-colors"
+                        <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-gray-400 transition-colors dark:border-gray-700 dark:hover:border-gray-500"
                              :class="{ 'border-red-500': errors.file }">
                             <div class="space-y-1 text-center">
-                                <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" stroke="currentColor" fill="none" viewBox="0 0 48 48">
                                     <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
-                                <div class="flex text-sm text-gray-600">
-                                    <label for="file" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500">
+                                <div class="flex text-sm text-gray-600 dark:text-gray-300">
+                                    <label for="file" class="relative cursor-pointer bg-white rounded-md font-medium text-indigo-600 hover:text-indigo-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-indigo-500 dark:bg-gray-800 dark:text-indigo-400">
                                         <span>Upload a file</span>
                                         <input 
                                             id="file" 
@@ -90,12 +90,12 @@
                                     </label>
                                     <p class="pl-1">or drag and drop</p>
                                 </div>
-                                <p class="text-xs text-gray-500">
+                                <p class="text-xs text-gray-500 dark:text-gray-400">
                                     .feature or .txt files up to 10MB
                                 </p>
                             </div>
                         </div>
-                        <div v-if="selectedFile" class="mt-2 text-sm text-gray-600">
+                        <div v-if="selectedFile" class="mt-2 text-sm text-gray-600 dark:text-gray-300">
                             Selected: {{ selectedFile.name }}
                         </div>
                         <div v-if="errors.file" class="mt-1 text-sm text-red-600">
@@ -105,7 +105,7 @@
 
                     <!-- Feature Codes Mapping -->
                     <div class="mb-6">
-                        <label for="feature_codes" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="feature_codes" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
                             Feature Codes (Optional)
                         </label>
                         <textarea
@@ -113,11 +113,11 @@
                             v-model="form.feature_codes"
                             rows="4"
                             placeholder="User Authentication: FEAT-001&#10;Dashboard: FEAT-002&#10;Task Management: FEAT-003"
-                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                             :class="{ 'border-red-500': errors.feature_codes }"
                         ></textarea>
-                        <p class="mt-1 text-xs text-gray-500">
-                            Enter feature names and their codes, one per line, in the format: <code class="bg-gray-100 px-1 rounded">Feature Name: CODE</code>
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                            Enter feature names and their codes, one per line, in the format: <code class="bg-gray-100 px-1 rounded dark:bg-gray-700">Feature Name: CODE</code>
                         </p>
                         <div v-if="errors.feature_codes" class="mt-1 text-sm text-red-600">
                             {{ errors.feature_codes }}
@@ -131,13 +131,13 @@
                                 id="overwrite_existing"
                                 v-model="form.overwrite_existing"
                                 type="checkbox"
-                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:text-indigo-400 dark:border-gray-700"
                             />
-                            <label for="overwrite_existing" class="ml-2 block text-sm text-gray-900">
+                            <label for="overwrite_existing" class="ml-2 block text-sm text-gray-900 dark:text-gray-100">
                                 Overwrite existing acceptance criteria with the same code
                             </label>
                         </div>
-                        <p class="mt-1 text-xs text-gray-500">
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">
                             If unchecked, existing criteria will be skipped during import.
                         </p>
                     </div>

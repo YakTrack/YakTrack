@@ -27,7 +27,7 @@
                             v-if="isSearching"
                             class="pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2"
                         >
-                            <i class="fa fa-spinner fa-spin text-gray-400" aria-hidden="true"></i>
+                            <i class="fa fa-spinner fa-spin text-gray-400 dark:text-gray-500" aria-hidden="true"></i>
                         </div>
                     </div>
 

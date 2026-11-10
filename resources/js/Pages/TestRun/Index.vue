@@ -21,13 +21,13 @@
             <div class="card-body">
                 <form @submit.prevent="filterTestRuns" class="flex gap-4 items-end">
                     <div class="flex-1">
-                        <label for="project_id" class="block text-sm font-medium text-gray-700 mb-1">
+                        <label for="project_id" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">
                             Project
                         </label>
                         <select
                             id="project_id"
                             v-model="filters.project_id"
-                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                         >
                             <option value="">All Projects</option>
                             <option v-for="project in projects" :key="project.id" :value="project.id">
@@ -79,12 +79,12 @@
                         <td>
                             <div>
                                 <div>{{ formatDate(testRun.executed_at) }}</div>
-                                <div class="text-xs text-gray-500">by {{ testRun.executed_by_user.name }}</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400">by {{ testRun.executed_by_user.name }}</div>
                             </div>
                         </td>
                         <td>
                             <div class="flex items-center">
-                                <div class="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                                <div class="w-16 bg-gray-200 rounded-full h-2 mr-2 dark:bg-gray-700">
                                     <div
                                         class="bg-green-600 h-2 rounded-full"
                                         :style="{ width: testRun.pass_rate + '%' }"
@@ -95,7 +95,7 @@
                         </td>
                         <td>
                             <div class="flex items-center">
-                                <div class="w-16 bg-gray-200 rounded-full h-2 mr-2">
+                                <div class="w-16 bg-gray-200 rounded-full h-2 mr-2 dark:bg-gray-700">
                                     <div
                                         class="bg-blue-600 h-2 rounded-full"
                                         :style="{ width: testRun.completion_rate + '%' }"

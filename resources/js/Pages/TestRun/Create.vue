@@ -16,14 +16,14 @@
                 <div class="card-body">
                     <!-- Project Selection -->
                     <div class="mb-4">
-                        <label for="project_id" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="project_id" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
                             Project <span class="text-red-500">*</span>
                         </label>
                         <select
                             id="project_id"
                             v-model="form.project_id"
                             @change="loadCriteria"
-                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                             :class="{ 'border-red-500': errors.project_id }"
                         >
                             <option value="">Select a project</option>
@@ -38,7 +38,7 @@
 
                     <!-- Test Run Name -->
                     <div class="mb-4">
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
                             Test Run Name <span class="text-red-500">*</span>
                         </label>
                         <input
@@ -46,7 +46,7 @@
                             v-model="form.name"
                             type="text"
                             placeholder="Enter test run name"
-                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                             :class="{ 'border-red-500': errors.name }"
                         />
                         <div v-if="errors.name" class="mt-1 text-sm text-red-600">
@@ -56,7 +56,7 @@
 
                     <!-- Description -->
                     <div class="mb-4">
-                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="description" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
                             Description
                         </label>
                         <textarea
@@ -64,7 +64,7 @@
                             v-model="form.description"
                             rows="3"
                             placeholder="Enter test run description"
-                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                             :class="{ 'border-red-500': errors.description }"
                         ></textarea>
                         <div v-if="errors.description" class="mt-1 text-sm text-red-600">
@@ -74,14 +74,14 @@
 
                     <!-- Execution Date -->
                     <div class="mb-4">
-                        <label for="executed_at" class="block text-sm font-medium text-gray-700 mb-2">
+                        <label for="executed_at" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
                             Execution Date <span class="text-red-500">*</span>
                         </label>
                         <input
                             id="executed_at"
                             v-model="form.executed_at"
                             type="datetime-local"
-                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                             :class="{ 'border-red-500': errors.executed_at }"
                         />
                         <div v-if="errors.executed_at" class="mt-1 text-sm text-red-600">
@@ -91,33 +91,33 @@
 
                     <!-- Acceptance Criteria Selection -->
                     <div class="mb-4">
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">
                             Acceptance Criteria <span class="text-red-500">*</span>
                         </label>
-                        <div v-if="criteria.length === 0" class="text-gray-500 italic">
+                        <div v-if="criteria.length === 0" class="text-gray-500 italic dark:text-gray-400">
                             Select a project to see available criteria
                         </div>
-                        <div v-else class="space-y-2 max-h-64 overflow-y-auto border border-gray-300 rounded-md p-4">
+                        <div v-else class="space-y-2 max-h-64 overflow-y-auto border border-gray-300 rounded-md p-4 dark:border-gray-700">
                             <label
                                 v-for="criterion in criteria"
                                 :key="criterion.id"
-                                class="flex items-start space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded"
+                                class="flex items-start space-x-3 cursor-pointer hover:bg-gray-50 p-2 rounded dark:hover:bg-gray-700/50"
                             >
                                 <input
                                     :id="`criteria_${criterion.id}`"
                                     v-model="form.acceptance_criteria_ids"
                                     :value="criterion.id"
                                     type="checkbox"
-                                    class="mt-1 h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                                    class="mt-1 h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:text-indigo-400 dark:border-gray-700"
                                 />
                                 <div class="flex-1">
-                                    <div class="text-sm font-medium text-gray-900">
+                                    <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
                                         {{ criterion.name }}
                                     </div>
-                                    <div v-if="criterion.code" class="text-xs text-gray-500 font-mono">
+                                    <div v-if="criterion.code" class="text-xs text-gray-500 font-mono dark:text-gray-400">
                                         {{ criterion.code }}
                                     </div>
-                                    <div v-if="criterion.description" class="text-xs text-gray-600 mt-1">
+                                    <div v-if="criterion.description" class="text-xs text-gray-600 mt-1 dark:text-gray-300">
                                         {{ criterion.description.substring(0, 100) }}{{ criterion.description.length > 100 ? '...' : '' }}
                                     </div>
                                 </div>

@@ -25,7 +25,7 @@
                         v-if="$slots.title || $slots['top-right-toolbar']"
                     >
                         <div class="flex-1" v-if="$slots.title">
-                            <h1 class="text-3xl font-normal"><slot name="title"></slot></h1>
+                            <h1 class="text-3xl font-normal dark:text-gray-100"><slot name="title"></slot></h1>
                         </div>
                         <div class="btn-toolbar mb-2 mb-md-0 flex-1 flex justify-end items-center" v-if="$slots['top-right-toolbar']">
                             <slot name="top-right-toolbar"></slot>

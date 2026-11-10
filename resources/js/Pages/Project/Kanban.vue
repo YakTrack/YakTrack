@@ -13,7 +13,7 @@
         <div class="card">
             <h1 class="font-medium text-gray-dark">{{ project.name }}</h1>
             <div class="p4 mt-4">
-                <i class="fa fa-user text-2xl text-gray-300 mr-2"></i>
+                <i class="fa fa-user text-2xl text-gray-300 mr-2 dark:text-gray-600"></i>
                 <span class="text-2xl font-light">{{ project.client.name }}</span>
             </div>
             <p class="mt-4">
@@ -38,7 +38,7 @@
             </div>
 
             <!-- Empty state if no statuses -->
-            <div v-if="!project.task_statuses || project.task_statuses.length === 0" class="text-center py-8 text-gray-500">
+            <div v-if="!project.task_statuses || project.task_statuses.length === 0" class="text-center py-8 text-gray-500 dark:text-gray-400">
                 <i class="fa fa-tasks text-4xl mb-4"></i>
                 <p class="text-lg mb-2">No task statuses yet</p>
                 <p class="mb-4">Create task statuses to organize your project's workflow.</p>
@@ -59,7 +59,7 @@
                     class="flex-shrink-0 w-80"
                 >
                     <!-- Column Header -->
-                    <div class="bg-gray-50 rounded-t-lg p-4 border border-b-0">
+                    <div class="bg-gray-50 rounded-t-lg p-4 border border-b-0 dark:bg-gray-800/60 dark:border-gray-700">
                         <div class="flex items-center justify-between">
                             <div class="flex items-center">
                                 <div
@@ -68,14 +68,14 @@
                                 ></div>
                                 <h3 class="font-medium text-gray-dark">{{ status.name }}</h3>
                             </div>
-                            <span class="text-sm text-gray-500">
+                            <span class="text-sm text-gray-500 dark:text-gray-400">
                                 {{ tasksByStatus(status.id).length }}
                             </span>
                         </div>
                     </div>
 
                     <!-- Column Body (Draggable Area) -->
-                    <div class="border border-t-0 rounded-b-lg bg-gray-50 p-2 min-h-[200px]"
+                    <div class="border border-t-0 rounded-b-lg bg-gray-50 p-2 min-h-[200px] dark:bg-gray-800/60 dark:border-gray-700"
                          :style="{ maxHeight: 'calc(100vh - 400px)', overflowY: 'auto' }">
                         <draggable
                             :list="tasksByStatus(status.id)"
@@ -91,7 +91,7 @@
                         </draggable>
 
                         <!-- Empty state for column -->
-                        <div v-if="tasksByStatus(status.id).length === 0" class="text-center py-8 text-gray-400">
+                        <div v-if="tasksByStatus(status.id).length === 0" class="text-center py-8 text-gray-400 dark:text-gray-500">
                             <i class="fa fa-inbox text-3xl mb-2"></i>
                             <p class="text-sm">No tasks</p>
                         </div>

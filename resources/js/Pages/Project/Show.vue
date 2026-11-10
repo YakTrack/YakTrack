@@ -10,7 +10,7 @@
         <div class="card">
             <h1 class="font-medium text-gray-dark"> {{ project.name }} </h1>
             <div class="p4 mt-4">
-                <i class="fa fa-user text-2xl text-gray-300 mr-2"></i>
+                <i class="fa fa-user text-2xl text-gray-300 mr-2 dark:text-gray-600"></i>
                 <span class="text-2xl font-light"> {{ project.client.name }} </span>
             </div>
             <p class="mt-4">
@@ -62,14 +62,14 @@
                                 <div class="flex space-x-1">
                                     <span
                                         v-if="status.is_default"
-                                        class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full"
+                                        class="px-2 py-1 text-xs bg-blue-100 text-blue-800 rounded-full dark:bg-blue-500/10 dark:text-blue-400"
                                         title="Default status for new tasks"
                                     >
                                         Default
                                     </span>
                                     <span
                                         v-if="status.is_completed"
-                                        class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full"
+                                        class="px-2 py-1 text-xs bg-green-100 text-green-800 rounded-full dark:bg-green-500/10 dark:text-green-400"
                                         title="Completed status"
                                     >
                                         Completed
@@ -77,7 +77,7 @@
                                 </div>
                             </div>
 
-                            <div class="flex items-center justify-between text-sm text-gray-600">
+                            <div class="flex items-center justify-between text-sm text-gray-600 dark:text-gray-300">
                                 <span>
                                     {{ status.tasks_count }} task{{ status.tasks_count !== 1 ? 's' : '' }}
                                 </span>
@@ -85,7 +85,7 @@
                                     <button-link
                                         :href="route('task-status.edit', status.id)"
                                         size="xs"
-                                        class="text-gray-500 hover:text-gray-700"
+                                        class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                                     >
                                         <i class="fa fa-edit"></i>
                                     </button-link>
@@ -94,7 +94,7 @@
                                         :disabled="status.tasks_count > 0"
                                         :title="status.tasks_count > 0 ? 'Cannot delete status with assigned tasks' : 'Delete status'"
                                         size="xs"
-                                        class="text-gray-500 hover:text-red-600"
+                                        class="text-gray-500 hover:text-red-600 dark:text-gray-400"
                                     >
                                         <i class="fa fa-trash"></i>
                                     </delete-button>
@@ -104,7 +104,7 @@
                     </div>
                 </div>
 
-                <div v-else class="text-center py-8 text-gray-500">
+                <div v-else class="text-center py-8 text-gray-500 dark:text-gray-400">
                     <i class="fa fa-tasks text-4xl mb-4"></i>
                     <p class="text-lg mb-2">No task statuses yet</p>
                     <p class="mb-4">Create task statuses to organize and track your project's workflow.</p>
@@ -145,24 +145,24 @@
 
                 <div v-if="tasks.data && tasks.data.length > 0">
                     <div class="overflow-x-auto">
-                        <table class="min-w-full divide-y divide-gray-200">
-                            <thead class="bg-gray-50">
+                        <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                            <thead class="bg-gray-50 dark:bg-gray-800/60">
                                 <tr>
-                                    <th class="pl-0 pr-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th class="pl-0 pr-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
                                         Name
                                     </th>
-                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
                                         Status
                                     </th>
-                                    <th class="pl-6 pr-0 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    <th class="pl-6 pr-0 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider dark:text-gray-400">
                                         Actions
                                     </th>
                                 </tr>
                             </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                <tr v-for="task in tasks.data" :key="task.id" class="hover:bg-gray-50">
+                            <tbody class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
+                                <tr v-for="task in tasks.data" :key="task.id" class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                                     <td class="pr-6 py-1 whitespace-nowrap">
-                                        <a :href="route('task.show', task.id)" class="text-blue-600 hover:text-blue-900 text-sm font-medium">
+                                        <a :href="route('task.show', task.id)" class="text-blue-600 hover:text-blue-900 text-sm font-medium dark:text-blue-400 dark:hover:text-blue-300">
                                             {{ task.name }}
                                         </a>
                                     </td>
@@ -172,20 +172,20 @@
                                               :style="{ backgroundColor: task.task_status.color + '20', color: task.task_status.color }">
                                             {{ task.task_status.name }}
                                         </span>
-                                        <span v-else class="text-gray-400">-</span>
+                                        <span v-else class="text-gray-400 dark:text-gray-500">-</span>
                                     </td>
                                     <td class="pl-6 py-1 whitespace-nowrap text-right text-sm font-medium flex items-center justify-end">
                                         <button-link
                                             :href="route('task.edit', task.id)"
                                             size="xs"
-                                            class="text-gray-500 hover:text-gray-700 mr-2"
+                                            class="text-gray-500 hover:text-gray-700 mr-2 dark:text-gray-400 dark:hover:text-gray-200"
                                         >
                                             <i class="fa fa-edit"></i>
                                         </button-link>
                                         <delete-button
                                             :url="route('task.destroy', task.id)"
                                             size="xs"
-                                            class="text-gray-500 hover:text-red-600"
+                                            class="text-gray-500 hover:text-red-600 dark:text-gray-400"
                                         >
                                             <i class="fa fa-trash"></i>
                                         </delete-button>
@@ -198,16 +198,16 @@
                     <div v-if="tasks.links" class="mt-6">
                         <nav class="flex items-center justify-between">
                             <div class="flex-1 flex justify-between sm:hidden">
-                                <a v-if="tasks.prev_page_url" :href="tasks.prev_page_url" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                <a v-if="tasks.prev_page_url" :href="tasks.prev_page_url" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700/50">
                                     Previous
                                 </a>
-                                <a v-if="tasks.next_page_url" :href="tasks.next_page_url" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                                <a v-if="tasks.next_page_url" :href="tasks.next_page_url" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700/50">
                                     Next
                                 </a>
                             </div>
                             <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                                 <div>
-                                    <p class="text-sm text-gray-700">
+                                    <p class="text-sm text-gray-700 dark:text-gray-300">
                                         Showing
                                         <span class="font-medium">{{ tasks.from }}</span>
                                         to
@@ -219,10 +219,10 @@
                                 </div>
                                 <div>
                                     <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                        <a v-if="tasks.prev_page_url" :href="tasks.prev_page_url" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                        <a v-if="tasks.prev_page_url" :href="tasks.prev_page_url" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700/50">
                                             Previous
                                         </a>
-                                        <a v-if="tasks.next_page_url" :href="tasks.next_page_url" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                        <a v-if="tasks.next_page_url" :href="tasks.next_page_url" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700/50">
                                             Next
                                         </a>
                                     </nav>
@@ -232,7 +232,7 @@
                     </div>
                 </div>
 
-                <div v-else class="text-center py-8 text-gray-500">
+                <div v-else class="text-center py-8 text-gray-500 dark:text-gray-400">
                     <i class="fa fa-tasks text-4xl mb-4"></i>
                     <p class="text-lg mb-2">No tasks yet</p>
                     <p class="mb-4">Tasks will appear here as they are created for this project.</p>

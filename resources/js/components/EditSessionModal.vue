@@ -9,7 +9,7 @@
     @close="handleClose"
   >
     <div v-if="isLoading" class="flex justify-center py-12">
-      <i class="fa fa-spinner fa-spin text-2xl text-gray-400" aria-hidden="true"></i>
+      <i class="fa fa-spinner fa-spin text-2xl text-gray-400 dark:text-gray-500" aria-hidden="true"></i>
     </div>
 
     <form v-else-if="form" class="space-y-4" @submit.prevent="handleSubmit">
@@ -104,7 +104,7 @@
       <div class="flex justify-end gap-3">
         <button
           type="button"
-          class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:opacity-50"
+          class="rounded-lg border border-slate-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-slate-700 dark:text-gray-300 transition hover:bg-slate-50 dark:hover:bg-gray-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:cursor-not-allowed disabled:opacity-50"
           :disabled="isSubmitting"
           @click="handleClose"
         >

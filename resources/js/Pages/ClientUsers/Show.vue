@@ -42,7 +42,7 @@
                                 <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">Status</dt>
                                 <dd class="mt-1">
                                     <span 
-                                        :class="clientUser.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'"
+                                        :class="clientUser.is_active ? 'bg-green-100 text-green-800 dark:bg-green-500/10 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-500/10 dark:text-red-300'"
                                         class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
                                     >
                                         {{ clientUser.is_active ? 'Active' : 'Inactive' }}
@@ -101,7 +101,7 @@
                                             </td>
                                             <td class="px-6 py-4 whitespace-nowrap">
                                                 <span 
-                                                    :class="session.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'"
+                                                    :class="session.is_active ? 'bg-green-100 text-green-800 dark:bg-green-500/10 dark:text-green-300' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'"
                                                     class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
                                                 >
                                                     {{ session.is_active ? 'Active' : 'Ended' }}
@@ -116,8 +116,8 @@
                             </div>
                         </div>
                         <div v-else class="text-center py-8">
-                            <i class="fas fa-sign-in-alt text-gray-400 text-4xl mb-4"></i>
-                            <p class="text-gray-500">No login sessions found</p>
+                            <i class="fas fa-sign-in-alt text-gray-400 text-4xl mb-4 dark:text-gray-500"></i>
+                            <p class="text-gray-500 dark:text-gray-400">No login sessions found</p>
                         </div>
                     </div>
                 </div>

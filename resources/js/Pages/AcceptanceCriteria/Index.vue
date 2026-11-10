@@ -27,14 +27,14 @@
             <div class="card-body">
                 <form @submit.prevent="filterCriteria" class="flex gap-4 items-end">
                     <div class="flex-1">
-                        <label for="project_id" class="block text-sm font-medium text-gray-700 mb-1">
+                        <label for="project_id" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">
                             Project
                         </label>
                         <select
                             id="project_id"
                             v-model="filters.project_id"
                             @change="onProjectChange"
-                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                         >
                             <option value="">All Projects</option>
                             <option v-for="project in projects" :key="project.id" :value="project.id">
@@ -43,13 +43,13 @@
                         </select>
                     </div>
                     <div class="flex-1" v-if="availableFeatures.length > 0">
-                        <label for="feature_id" class="block text-sm font-medium text-gray-700 mb-1">
+                        <label for="feature_id" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">
                             Feature
                         </label>
                         <select
                             id="feature_id"
                             v-model="filters.feature_id"
-                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                         >
                             <option value="">All Features</option>
                             <option v-for="feature in availableFeatures" :key="feature.id" :value="feature.id">
@@ -91,10 +91,10 @@
                 <tbody>
                     <tr v-for="criterion in criteria.data" :key="criterion.id" class="item-container">
                         <td>
-                            <span v-if="criterion.code" class="font-mono bg-gray-100 px-2 py-1 rounded text-xs">
+                            <span v-if="criterion.code" class="font-mono bg-gray-100 px-2 py-1 rounded text-xs dark:bg-gray-700">
                                 {{ criterion.code }}
                             </span>
-                            <span v-else class="text-gray-400 italic">No code</span>
+                            <span v-else class="text-gray-400 italic dark:text-gray-500">No code</span>
                         </td>
                         <td>
                             <Link :href="route('acceptance-criteria.show', criterion.id)">
@@ -105,13 +105,13 @@
                             <div v-if="criterion.description" class="max-w-md">
                                 <GherkinText :text="criterion.description" size="xs" />
                             </div>
-                            <span v-else class="text-gray-400 italic">No description</span>
+                            <span v-else class="text-gray-400 italic dark:text-gray-500">No description</span>
                         </td>
                         <td>
-                            <span v-if="criterion.feature" class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
+                            <span v-if="criterion.feature" class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-500/10 dark:text-green-400">
                                 {{ criterion.feature.name }}
                             </span>
-                            <span v-else class="text-gray-400 italic">No feature</span>
+                            <span v-else class="text-gray-400 italic dark:text-gray-500">No feature</span>
                         </td>
                         <td>
                             <Link :href="route('project.show', criterion.project)" v-if="criterion.project">
@@ -119,12 +119,12 @@
                             </Link>
                         </td>
                         <td>
-                            <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
+                            <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-500/10 dark:text-blue-400">
                                 {{ criterion.version_count }}
                             </span>
                         </td>
                         <td>
-                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800">
+                            <span class="px-2 py-1 text-xs rounded-full bg-green-100 text-green-800 dark:bg-green-500/10 dark:text-green-400">
                                 {{ criterion.linked_tasks_count }}
                             </span>
                         </td>

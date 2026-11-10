@@ -2,13 +2,13 @@
     <client-portal-layout>
                 <!-- Header -->
                 <div class="mb-8">
-                    <h1 class="text-3xl font-bold text-gray-900">Your Tasks</h1>
-                    <p class="mt-2 text-gray-600">View all your tasks and their work sessions.</p>
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Your Tasks</h1>
+                    <p class="mt-2 text-gray-600 dark:text-gray-300">View all your tasks and their work sessions.</p>
                 </div>
 
                 <!-- Tasks list -->
-                <div class="bg-white shadow overflow-hidden sm:rounded-md">
-                    <ul class="divide-y divide-gray-200">
+                <div class="bg-white shadow overflow-hidden sm:rounded-md dark:bg-gray-800">
+                    <ul class="divide-y divide-gray-200 dark:divide-gray-700">
                         <li v-for="task in tasks" :key="task.id" class="px-4 py-4 sm:px-6">
                             <div class="flex items-center justify-between">
                                 <div class="flex-1 min-w-0">
@@ -24,10 +24,10 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <p class="text-sm text-gray-500 truncate">
+                                    <p class="text-sm text-gray-500 truncate dark:text-gray-400">
                                         {{ task.project.name }}
                                     </p>
-                                    <p class="text-sm text-gray-500">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">
                                         {{ task.sessions.length }} sessions • {{ getTaskBillableHours(task) }}h total
                                     </p>
                                 </div>
@@ -35,25 +35,25 @@
 
                             <!-- Recent sessions for this task -->
                             <div v-if="task.sessions.length > 0" class="mt-3">
-                                <div class="text-xs text-gray-500 mb-2">Recent sessions:</div>
+                                <div class="text-xs text-gray-500 mb-2 dark:text-gray-400">Recent sessions:</div>
                                 <div class="space-y-2">
-                                    <div v-for="session in task.sessions.slice(0, 2)" :key="session.id" class="bg-gray-50 rounded-md p-3">
+                                    <div v-for="session in task.sessions.slice(0, 2)" :key="session.id" class="bg-gray-50 rounded-md p-3 dark:bg-gray-700/50">
                                         <div class="flex items-center justify-between">
                                             <div class="flex-1 min-w-0">
-                                                <div class="text-sm font-medium text-gray-700 flex">
+                                                <div class="text-sm font-medium text-gray-700 flex dark:text-gray-300">
                                                     <div>{{ formatDate(session.started_at) }}</div>
                                                     <div class="px-2"> - </div>
                                                     <div>{{ session.ended_at ? formatDate(session.ended_at) : 'Now' }}</div>
                                                 </div>
-                                                <p v-if="session.comment" class="text-sm text-gray-600 mt-1">{{ session.comment }}</p>
+                                                <p v-if="session.comment" class="text-sm text-gray-600 mt-1 dark:text-gray-300">{{ session.comment }}</p>
                                             </div>
                                             <div class="flex-shrink-0">
-                                                <span v-if="session.session_category" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                <span v-if="session.session_category" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
                                                     {{ session.session_category.name }}
                                                 </span>
                                             </div>
                                             <div class="flex-shrink-0 px-4">
-                                                <p class="text-sm text-gray-500">
+                                                <p class="text-sm text-gray-500 dark:text-gray-400">
                                                     {{ session.durationForHumans }}
                                                 </p>
                                             </div>
@@ -67,11 +67,11 @@
 
                 <!-- Empty state -->
                 <div v-if="tasks.length === 0" class="text-center py-12">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No tasks</h3>
-                    <p class="mt-1 text-sm text-gray-500">You don't have any tasks yet.</p>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No tasks</h3>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">You don't have any tasks yet.</p>
                 </div>
     </client-portal-layout>
 </template>

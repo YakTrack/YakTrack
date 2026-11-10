@@ -9,7 +9,7 @@
         >
             <template slot="option" slot-scope="slot" v-if="slot.option">
                 {{ slot.option.name }}
-                <span class="text-gray-600 ml-2" v-if="projectNames(slot.option)">{{ projectNames(slot.option) }}</span>
+                <span class="text-gray-600 dark:text-gray-300 ml-2" v-if="projectNames(slot.option)">{{ projectNames(slot.option) }}</span>
             </template>
             <template slot="singleLabel" slot-scope="slot" v-if="slot.option">
                 <span v-if="compact" class="block truncate" :title="customLabel(slot.option)">
@@ -17,7 +17,7 @@
                 </span>
                 <template v-else>
                     {{ slot.option.name }}
-                    <span class="text-gray-600 ml-2" v-if="projectNames(slot.option)">{{ projectNames(slot.option) }}</span>
+                    <span class="text-gray-600 dark:text-gray-300 ml-2" v-if="projectNames(slot.option)">{{ projectNames(slot.option) }}</span>
                 </template>
             </template>
         </multi-select>

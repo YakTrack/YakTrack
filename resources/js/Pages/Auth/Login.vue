@@ -2,11 +2,11 @@
     <div class="w-full max-w-md mt-10 mx-auto px-6">
         <div class="max-w-xl">
             <div class="text-center">
-                <a :href="route('home')" class="text-4xl no-underline text-gray-900">
+                <a :href="route('home')" class="text-4xl no-underline text-gray-900 dark:text-gray-100">
                     <b>Y</b>ak<b>T</b>rack
                 </a>
             </div>
-            <div class="text-center mt-4 text-gray-700">Log in to start your session</div>
+            <div class="text-center mt-4 text-gray-700 dark:text-gray-300">Log in to start your session</div>
             <div class="card mt-8 bg-grey-100">
                 <div class="card-body">
 

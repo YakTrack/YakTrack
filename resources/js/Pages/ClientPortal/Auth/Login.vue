@@ -1,28 +1,28 @@
 <template>
-    <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 dark:bg-gray-900">
         <div class="sm:mx-auto sm:w-full sm:max-w-md">
             <div class="text-center">
-                <a :href="route('client-portal.login')" class="text-4xl no-underline text-gray-900">
-                    <b>Y</b>ak<b>T</b>rack <span class="text-sm text-gray-600">Client Portal</span>
+                <a :href="route('client-portal.login')" class="text-4xl no-underline text-gray-900 dark:text-gray-100">
+                    <b>Y</b>ak<b>T</b>rack <span class="text-sm text-gray-600 dark:text-gray-300">Client Portal</span>
                 </a>
             </div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-gray-100">
                 Sign in to your account
             </h2>
-            <p class="mt-2 text-center text-sm text-gray-600">
+            <p class="mt-2 text-center text-sm text-gray-600 dark:text-gray-300">
                 Access your projects, tasks, and billing information
             </p>
         </div>
 
         <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-            <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+            <div class="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 dark:bg-gray-800">
                 <form class="space-y-6" @submit.prevent="submit">
                     <div v-if="Object.keys(errors).length > 0" class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
                         <span v-for="(error, index) in errors" :key="index" class="block">{{ error }}</span>
                     </div>
 
                     <div>
-                        <label for="email" class="block text-sm font-medium text-gray-700">
+                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                             Email address
                         </label>
                         <div class="mt-1">
@@ -33,14 +33,14 @@
                                 autocomplete="email"
                                 required
                                 v-model="form.email"
-                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:border-gray-700"
                                 placeholder="Enter your email"
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label for="password" class="block text-sm font-medium text-gray-700">
+                        <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                             Password
                         </label>
                         <div class="mt-1">
@@ -51,7 +51,7 @@
                                 autocomplete="current-password"
                                 required
                                 v-model="form.password"
-                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm dark:border-gray-700"
                                 placeholder="Enter your password"
                             />
                         </div>
@@ -64,9 +64,9 @@
                                 name="remember-me"
                                 type="checkbox"
                                 v-model="form.remember"
-                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:text-indigo-400 dark:border-gray-700"
                             />
-                            <label for="remember-me" class="ml-2 block text-sm text-gray-900">
+                            <label for="remember-me" class="ml-2 block text-sm text-gray-900 dark:text-gray-100">
                                 Remember me
                             </label>
                         </div>

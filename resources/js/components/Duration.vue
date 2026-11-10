@@ -33,10 +33,10 @@
             },
             textColor() {
                 return {
-                    blue: 'text-blue-700',
-                    green: 'text-green-700',
-                    gray: 'text-gray-700',
-                    'light-gray': 'text-gray-600',
+                    blue: 'text-blue-700 dark:text-blue-300',
+                    green: 'text-green-700 dark:text-green-300',
+                    gray: 'text-gray-700 dark:text-gray-300',
+                    'light-gray': 'text-gray-600 dark:text-gray-300',
                 }[this.color]
             },
             fontSizeClasses() {

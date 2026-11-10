@@ -122,8 +122,8 @@
             </div>
             <div class="card-body">
                 <div v-if="topActiveUsers.length === 0" class="text-center py-8">
-                    <i class="fas fa-users text-gray-400 text-4xl mb-4"></i>
-                    <p class="text-gray-500">No activity data available</p>
+                    <i class="fas fa-users text-gray-400 text-4xl mb-4 dark:text-gray-500"></i>
+                    <p class="text-gray-500 dark:text-gray-400">No activity data available</p>
                 </div>
                 <div v-else>
                     <div class="overflow-hidden">

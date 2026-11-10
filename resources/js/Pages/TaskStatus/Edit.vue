@@ -37,7 +37,7 @@
                     placeholder="Select a project"
                     :disabled="!isCreateForm && taskStatus"
                 ></multi-select>
-                <small class="text-gray-500" v-if="!isCreateForm && taskStatus">
+                <small class="text-gray-500 dark:text-gray-400" v-if="!isCreateForm && taskStatus">
                     Project cannot be changed after creation
                 </small>
             </div>
@@ -48,7 +48,7 @@
                     <input 
                         type="color" 
                         name="color" 
-                        class="form-control w-16 h-10 border-gray-300 rounded"
+                        class="form-control w-16 h-10 border-gray-300 rounded dark:border-gray-700"
                         v-model="form.color"
                     />
                     <input 
@@ -64,7 +64,7 @@
                             v-for="color in presetColors"
                             :key="color"
                             :style="{ backgroundColor: color }"
-                            class="w-6 h-6 rounded border border-gray-300 cursor-pointer"
+                            class="w-6 h-6 rounded border border-gray-300 cursor-pointer dark:border-gray-700"
                             @click="form.color = color"
                             :title="color"
                         ></button>
@@ -82,7 +82,7 @@
                     v-model="form.sort_order"
                     min="0"
                 />
-                <small class="text-gray-500">Lower numbers appear first. Leave empty to add at the end.</small>
+                <small class="text-gray-500 dark:text-gray-400">Lower numbers appear first. Leave empty to add at the end.</small>
             </div>
 
             <div class="form-group">
@@ -96,7 +96,7 @@
                         />
                         Default Status
                     </label>
-                    <small class="text-gray-500">New tasks will automatically get this status</small>
+                    <small class="text-gray-500 dark:text-gray-400">New tasks will automatically get this status</small>
                 </div>
             </div>
 
@@ -111,7 +111,7 @@
                         />
                         Completed Status
                     </label>
-                    <small class="text-gray-500">Tasks with this status are considered completed</small>
+                    <small class="text-gray-500 dark:text-gray-400">Tasks with this status are considered completed</small>
                 </div>
             </div>
 
@@ -126,7 +126,7 @@
                         />
                         Closed Status
                     </label>
-                    <small class="text-gray-500">Tasks with this status will be hidden from the kanban board and session task selects</small>
+                    <small class="text-gray-500 dark:text-gray-400">Tasks with this status will be hidden from the kanban board and session task selects</small>
                 </div>
             </div>
 
@@ -139,7 +139,7 @@
                     >
                         {{ form.name || 'Status Name' }}
                     </span>
-                    <span class="text-gray-500">← This is how the status will appear</span>
+                    <span class="text-gray-500 dark:text-gray-400">← This is how the status will appear</span>
                 </div>
             </div>
 

@@ -1,6 +1,6 @@
 <template>
     <Menu as="div" class="relative inline-block">
-        <MenuButton class="p-2 text-gray-400 hover:text-gray-600 transition-colors duration-150">
+        <MenuButton class="p-2 text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300 transition-colors duration-150">
             <i class="fas fa-ellipsis-v"></i>
         </MenuButton>
 
