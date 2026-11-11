@@ -37,12 +37,12 @@
                             </Link>
                         </td>
                         <td>
-                            <span class="text-gray-600">
+                            <span class="text-gray-600 dark:text-gray-300">
                                 {{ sessionCategory.description || 'No description' }}
                             </span>
                         </td>
                         <td>
-                            <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 inline-block">
+                            <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 inline-block dark:bg-blue-500/10 dark:text-blue-400">
                                 {{ sessionCategory.sessions_count }} sessions
                             </span>
                         </td>
@@ -57,7 +57,7 @@
         </div>
         <div class="card-body" v-else>
             You have not created any session categories yet.
-            <Link :href="route('session-category.create')" class="text-blue-600 hover:text-blue-800 underline ml-1">
+            <Link :href="route('session-category.create')" class="text-blue-600 hover:text-blue-800 underline ml-1 dark:text-blue-400 dark:hover:text-blue-300">
                 Create your first session category
             </Link>
         </div>

@@ -10,6 +10,20 @@
 /* Utilities */
 @import "tailwindcss/utilities";
 
+@layer base {
+    @media (prefers-color-scheme: dark) {
+        [type='text'], [type='email'], [type='url'], [type='password'], [type='number'],
+        [type='date'], [type='datetime-local'], [type='month'], [type='search'], [type='tel'],
+        [type='time'], [type='week'], textarea, select {
+            @apply border-gray-600 bg-gray-900 text-gray-100;
+        }
+
+        [type='checkbox'], [type='radio'] {
+            @apply border-gray-600 bg-gray-900;
+        }
+    }
+}
+
 /* Color input styling for better UX in TaskStatus forms */
 input[type="color"] {
     -webkit-appearance: none;
@@ -39,7 +53,7 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 .btn-default {
-    @apply bg-white text-gray-700;
+    @apply bg-white text-gray-700 dark:bg-gray-800 dark:text-gray-300;
 }
 
 .btn-group {
@@ -51,7 +65,7 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 .btn-default:hover {
-    @apply bg-gray-100;
+    @apply bg-gray-100 dark:bg-gray-700;
 }
 
 .btn-red {
@@ -71,7 +85,7 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 .btn-gray-300 {
-    @apply bg-gray-300;
+    @apply bg-gray-300 dark:bg-gray-600 dark:text-gray-100;
 }
 
 .btn-blue:hover {
@@ -79,11 +93,11 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 .btn-disabled {
-    @apply text-gray-400 cursor-not-allowed;
+    @apply text-gray-400 cursor-not-allowed dark:text-gray-500;
 }
 
 .btn-disabled:hover {
-    @apply bg-white;
+    @apply bg-white dark:bg-gray-800;
 }
 
 .btn-green {
@@ -111,11 +125,11 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 .form-group label {
-    @apply text-gray-700 font-light mb-1 block;
+    @apply text-gray-700 font-light mb-1 block dark:text-gray-300;
 }
 
 input.form-control, textarea.form-control, select.form-control, .form-group textarea {
-    @apply rounded bg-white shadow h-12 w-full py-2 px-4 btn-height;
+    @apply rounded bg-white shadow h-12 w-full py-2 px-4 btn-height dark:bg-gray-800 dark:text-gray-100;
 }
 
 .form-group textarea {
@@ -123,7 +137,7 @@ input.form-control, textarea.form-control, select.form-control, .form-group text
 }
 
 .form-checkbox {
-    @apply w-5 h-5;
+    @apply w-5 h-5 dark:border-gray-600 dark:bg-gray-900;
 }
 
 /* .table, .table tbody, .table thead, .table tr {
@@ -140,7 +154,7 @@ input.form-control, textarea.form-control, select.form-control, .form-group text
 }
 
 .card {
-    @apply bg-white rounded shadow p-4 sm:p-6;
+    @apply bg-white rounded shadow p-4 sm:p-6 dark:bg-gray-800;
 }
 
 .card .card-header {
@@ -162,7 +176,7 @@ input.form-control, textarea.form-control, select.form-control, .form-group text
     @apply w-full;
 }
 .card .card-body a {
-    @apply no-underline text-gray-900;
+    @apply no-underline text-gray-900 dark:text-gray-100;
 }
 
 .card .card-body td, .card .card-body, th {
@@ -294,7 +308,7 @@ fieldset[disabled] .multiselect {
 
 .multiselect__input,
 .multiselect__single {
-    @apply relative inline-block h-10 leading-normal border-none rounded bg-white pt-0 pr-0 pb-0 pr-1 w-full mb-2 align-top;
+    @apply relative inline-block h-10 leading-normal border-none rounded bg-white dark:bg-gray-800 dark:text-gray-100 pt-0 pr-0 pb-0 pr-1 w-full mb-2 align-top;
 }
 .multiselect__input,
 .multiselect__single {
@@ -344,7 +358,7 @@ fieldset[disabled] .multiselect {
 }
 
 .multiselect__tags {
-    @apply block h-12 pt-2 pr-10 pb-0 pl-2 rounded border-none shadow bg-white;
+    @apply block h-12 pt-2 pr-10 pb-0 pl-2 rounded border-none shadow bg-white dark:bg-gray-800;
 }
 .multiselect__tags-wrap {
     @apply inline;
@@ -448,7 +462,7 @@ fieldset[disabled] .multiselect {
     display: none
 }
 .multiselect__content-wrapper {
-    @apply absolute block bg-white w-full border-none shadow;
+    @apply absolute block bg-white w-full border-none shadow dark:bg-gray-800;
 }
 
 .multiselect__content-wrapper {
@@ -679,4 +693,46 @@ li:focus .parent-focus\:text-white {
 
 span.multiselect__single {
     padding-top: 0.30rem;
+}
+
+@media (prefers-color-scheme: dark) {
+    .multiselect,
+    .multiselect__input::placeholder {
+        color: #e2e8f0;
+    }
+
+    .multiselect__option--group {
+        background: #1a202c;
+        color: #e2e8f0;
+    }
+
+    .multiselect__spinner {
+        background: #2d3748;
+    }
+
+    .multiselect__placeholder {
+        color: #a0aec0;
+    }
+
+    .multiselect__option--selected {
+        background: #4a5568;
+        color: #f7fafc;
+    }
+
+    .multiselect--disabled,
+    .multiselect--disabled .multiselect__current,
+    .multiselect--disabled .multiselect__select,
+    .multiselect__option--disabled {
+        background: #1a202c;
+        color: #718096;
+    }
+
+    .multiselect__option--disabled {
+        background: #1a202c!important;
+        color: #718096!important;
+    }
+
+    .multiselect--above .multiselect__content-wrapper {
+        border-top-color: #4a5568;
+    }
 }

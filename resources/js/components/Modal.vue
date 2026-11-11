@@ -30,7 +30,7 @@
           >
             <div
               v-if="isOpen"
-              class="relative bg-white rounded-xl shadow-2xl w-full flex flex-col"
+              class="relative bg-white dark:bg-gray-800 rounded-xl shadow-2xl w-full flex flex-col"
               :class="[
                 maxWidthClass,
                 scrollBehavior === 'body' ? 'max-h-[90vh] overflow-hidden' : '',
@@ -41,10 +41,10 @@
               :aria-describedby="descriptionId"
             >
             <!-- Header -->
-            <div v-if="$slots.header || title" class="px-6 py-4 border-b border-gray-200">
+            <div v-if="$slots.header || title" class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
               <div class="flex items-center justify-between">
                 <div>
-                  <h3 v-if="title" :id="titleId" class="text-lg font-semibold text-gray-900">
+                  <h3 v-if="title" :id="titleId" class="text-lg font-semibold text-gray-900 dark:text-gray-100">
                     {{ title }}
                   </h3>
                   <slot name="header" />
@@ -54,7 +54,7 @@
                   type="button"
                   :disabled="confirmLoading"
                   @click="close"
-                  class="text-gray-400 hover:text-gray-600 transition-colors duration-200 p-1 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
+                  class="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors duration-200 p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/50 disabled:opacity-50 disabled:pointer-events-none"
                   aria-label="Close modal"
                 >
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,14 +69,14 @@
               class="px-6 py-4"
               :class="scrollBehavior === 'body' ? 'overflow-y-auto max-h-[60vh]' : ''"
             >
-              <div v-if="description" :id="descriptionId" class="text-sm text-gray-600 mb-4">
+              <div v-if="description" :id="descriptionId" class="text-sm text-gray-600 dark:text-gray-300 mb-4">
                 {{ description }}
               </div>
               <slot />
             </div>
 
             <!-- Footer -->
-            <div v-if="$slots.footer || showDefaultFooter" class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+            <div v-if="$slots.footer || showDefaultFooter" class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
               <div class="flex justify-end space-x-3">
                 <slot name="footer">
                   <button
@@ -84,7 +84,7 @@
                     type="button"
                     :disabled="confirmLoading"
                     @click="close"
-                    class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:pointer-events-none"
+                    class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:pointer-events-none"
                   >
                     {{ cancelText }}
                   </button>

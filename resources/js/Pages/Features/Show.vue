@@ -8,7 +8,7 @@
             ]"></breadcrumbs>
         </template>
         <template #title>
-            <span v-if="feature.code" class="font-mono bg-gray-100 px-2 py-1 rounded text-sm mr-2">
+            <span v-if="feature.code" class="font-mono bg-gray-100 px-2 py-1 rounded text-sm mr-2 dark:bg-gray-700">
                 {{ feature.code }}
             </span>
             {{ feature.name }}
@@ -23,7 +23,7 @@
         <div class="card">
             <div class="card-body">
                 <div v-if="feature.project" class="mb-4">
-                    <i class="fa fa-briefcase text-2xl text-gray-300 mr-2"></i>
+                    <i class="fa fa-briefcase text-2xl text-gray-300 mr-2 dark:text-gray-600"></i>
                     <Link :href="route('project.show', feature.project)" class="text-2xl font-light">
                         {{ feature.project.name }}
                     </Link>
@@ -40,7 +40,7 @@
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-medium text-gray-dark">Acceptance Criteria</h2>
                     <div class="flex items-center gap-3">
-                        <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
+                        <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-500/10 dark:text-blue-400">
                             {{ feature.acceptance_criteria.length }} criteria
                         </span>
                         <button-link
@@ -58,29 +58,29 @@
                     <div
                         v-for="criteria in feature.acceptance_criteria"
                         :key="criteria.id"
-                        class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50"
+                        class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700/50"
                     >
                         <div class="flex justify-between items-start">
                             <div class="flex-1">
                                 <div class="flex items-center gap-2 mb-2">
-                                    <span v-if="criteria.code" class="font-mono bg-gray-100 px-2 py-1 rounded text-xs">
+                                    <span v-if="criteria.code" class="font-mono bg-gray-100 px-2 py-1 rounded text-xs dark:bg-gray-700">
                                         {{ criteria.code }}
                                     </span>
                                     <Link
                                         :href="route('acceptance-criteria.show', criteria.id)"
-                                        class="text-lg font-medium text-gray-900 hover:text-blue-600"
+                                        class="text-lg font-medium text-gray-900 hover:text-blue-600 dark:text-gray-100"
                                     >
                                         {{ criteria.name }}
                                     </Link>
                                 </div>
-                                <p v-if="criteria.description" class="text-gray-600 text-sm">
+                                <p v-if="criteria.description" class="text-gray-600 text-sm dark:text-gray-300">
                                     {{ criteria.description }}
                                 </p>
                             </div>
                             <div class="flex gap-2 ml-4">
                                 <button-link
                                     :href="route('acceptance-criteria.edit', criteria.id)"
-                                    class="text-gray-500 hover:text-gray-700"
+                                    class="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                                 >
                                     <i class="fa fa-edit"></i>
                                 </button-link>
@@ -88,7 +88,7 @@
                         </div>
                     </div>
                 </div>
-                <div v-else class="text-center py-8 text-gray-500">
+                <div v-else class="text-center py-8 text-gray-500 dark:text-gray-400">
                     <i class="fa fa-clipboard-list text-4xl mb-4"></i>
                     <p class="text-lg mb-2">No acceptance criteria found for this feature.</p>
                     <button-link

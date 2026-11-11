@@ -2,27 +2,27 @@
     <client-portal-layout>
                 <!-- Header -->
                 <div class="mb-8">
-                    <h1 class="text-3xl font-bold text-gray-900">Your Projects</h1>
-                    <p class="mt-2 text-gray-600">View all your projects and their associated tasks and sessions.</p>
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">Your Projects</h1>
+                    <p class="mt-2 text-gray-600 dark:text-gray-300">View all your projects and their associated tasks and sessions.</p>
                 </div>
 
                 <!-- Projects grid -->
                 <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                    <div v-for="project in projects" :key="project.id" class="bg-white overflow-hidden shadow rounded-lg">
+                    <div v-for="project in projects" :key="project.id" class="bg-white overflow-hidden shadow rounded-lg dark:bg-gray-800">
                         <div class="p-6">
                             <div class="flex items-center justify-between">
                                 <div class="flex-1 min-w-0">
-                                    <h3 class="text-lg font-medium text-gray-900 truncate">
+                                    <h3 class="text-lg font-medium text-gray-900 truncate dark:text-gray-100">
                                         {{ project.name }}
                                     </h3>
-                                    <p v-if="project.description" class="mt-1 text-sm text-gray-500 truncate">
+                                    <p v-if="project.description" class="mt-1 text-sm text-gray-500 truncate dark:text-gray-400">
                                         {{ project.description }}
                                     </p>
                                 </div>
                             </div>
 
                             <div class="mt-4">
-                                <div class="flex items-center justify-between text-sm text-gray-500">
+                                <div class="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
                                     <span>{{ project.tasks.length }} tasks</span>
                                     <span>{{ getTotalBillableHours(project) }}h</span>
                                 </div>
@@ -39,11 +39,11 @@
 
                 <!-- Empty state -->
                 <div v-if="projects.length === 0" class="text-center py-12">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
                     </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No projects</h3>
-                    <p class="mt-1 text-sm text-gray-500">You don't have any projects yet.</p>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No projects</h3>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">You don't have any projects yet.</p>
                 </div>
     </client-portal-layout>
 </template>

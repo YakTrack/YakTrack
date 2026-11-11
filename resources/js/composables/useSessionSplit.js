@@ -3,13 +3,13 @@ import dayjs from 'dayjs'
 export const MIN_SEGMENT_MS = 60 * 1000
 
 export const SEGMENT_STYLES = [
-    { bg: 'bg-indigo-500', light: 'bg-indigo-50', border: 'border-indigo-300', ring: 'ring-indigo-400', text: 'text-indigo-700', handle: 'border-indigo-500', muted: 'text-indigo-600/70' },
-    { bg: 'bg-teal-500', light: 'bg-teal-50', border: 'border-teal-300', ring: 'ring-teal-400', text: 'text-teal-700', handle: 'border-teal-500', muted: 'text-teal-600/70' },
-    { bg: 'bg-violet-500', light: 'bg-violet-50', border: 'border-violet-300', ring: 'ring-violet-400', text: 'text-violet-700', handle: 'border-violet-500', muted: 'text-violet-600/70' },
-    { bg: 'bg-amber-500', light: 'bg-amber-50', border: 'border-amber-300', ring: 'ring-amber-400', text: 'text-amber-700', handle: 'border-amber-500', muted: 'text-amber-600/70' },
-    { bg: 'bg-rose-500', light: 'bg-rose-50', border: 'border-rose-300', ring: 'ring-rose-400', text: 'text-rose-700', handle: 'border-rose-500', muted: 'text-rose-600/70' },
-    { bg: 'bg-emerald-500', light: 'bg-emerald-50', border: 'border-emerald-300', ring: 'ring-emerald-400', text: 'text-emerald-700', handle: 'border-emerald-500', muted: 'text-emerald-600/70' },
-    { bg: 'bg-sky-500', light: 'bg-sky-50', border: 'border-sky-300', ring: 'ring-sky-400', text: 'text-sky-700', handle: 'border-sky-500', muted: 'text-sky-600/70' },
+    { bg: 'bg-indigo-500', light: 'bg-indigo-50 dark:bg-indigo-500/10', border: 'border-indigo-300 dark:border-indigo-500/40', ring: 'ring-indigo-400', text: 'text-indigo-700 dark:text-indigo-300', handle: 'border-indigo-500', muted: 'text-indigo-600/70' },
+    { bg: 'bg-teal-500', light: 'bg-teal-50 dark:bg-teal-500/10', border: 'border-teal-300 dark:border-teal-500/40', ring: 'ring-teal-400', text: 'text-teal-700 dark:text-teal-300', handle: 'border-teal-500', muted: 'text-teal-600/70' },
+    { bg: 'bg-violet-500', light: 'bg-violet-50 dark:bg-violet-500/10', border: 'border-violet-300 dark:border-violet-500/40', ring: 'ring-violet-400', text: 'text-violet-700 dark:text-violet-300', handle: 'border-violet-500', muted: 'text-violet-600/70' },
+    { bg: 'bg-amber-500', light: 'bg-amber-50 dark:bg-amber-500/10', border: 'border-amber-300 dark:border-amber-500/40', ring: 'ring-amber-400', text: 'text-amber-700 dark:text-amber-300', handle: 'border-amber-500', muted: 'text-amber-600/70' },
+    { bg: 'bg-rose-500', light: 'bg-rose-50 dark:bg-rose-500/10', border: 'border-rose-300 dark:border-rose-500/40', ring: 'ring-rose-400', text: 'text-rose-700 dark:text-rose-300', handle: 'border-rose-500', muted: 'text-rose-600/70' },
+    { bg: 'bg-emerald-500', light: 'bg-emerald-50 dark:bg-emerald-500/10', border: 'border-emerald-300 dark:border-emerald-500/40', ring: 'ring-emerald-400', text: 'text-emerald-700 dark:text-emerald-300', handle: 'border-emerald-500', muted: 'text-emerald-600/70' },
+    { bg: 'bg-sky-500', light: 'bg-sky-50 dark:bg-sky-500/10', border: 'border-sky-300 dark:border-sky-500/40', ring: 'ring-sky-400', text: 'text-sky-700 dark:text-sky-300', handle: 'border-sky-500', muted: 'text-sky-600/70' },
 ]
 
 export function parseSessionTime(value) {

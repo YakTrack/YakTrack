@@ -21,14 +21,14 @@
             <div class="card-body">
                 <form @submit.prevent="filterFeatures" class="flex gap-4 items-end">
                     <div class="flex-1">
-                        <label for="project_id" class="block text-sm font-medium text-gray-700 mb-1">
+                        <label for="project_id" class="block text-sm font-medium text-gray-700 mb-1 dark:text-gray-300">
                             Project
                         </label>
                         <select
                             id="project_id"
                             v-model="filters.project_id"
                             @change="onProjectChange"
-                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100"
                         >
                             <option value="">All Projects</option>
                             <option v-for="project in projects" :key="project.id" :value="project.id">
@@ -73,10 +73,10 @@
                             </Link>
                         </td>
                         <td>
-                            <span v-if="feature.code" class="font-mono bg-gray-100 px-2 py-1 rounded text-xs">
+                            <span v-if="feature.code" class="font-mono bg-gray-100 px-2 py-1 rounded text-xs dark:bg-gray-700">
                                 {{ feature.code }}
                             </span>
-                            <span v-else class="text-gray-400 italic">—</span>
+                            <span v-else class="text-gray-400 italic dark:text-gray-500">—</span>
                         </td>
                         <td>
                             <Link :href="route('features.show', feature.id)">
@@ -84,13 +84,13 @@
                             </Link>
                         </td>
                         <td>
-                            <span v-if="feature.description" class="text-gray-600">
+                            <span v-if="feature.description" class="text-gray-600 dark:text-gray-300">
                                 {{ feature.description }}
                             </span>
-                            <span v-else class="text-gray-400 italic">No description</span>
+                            <span v-else class="text-gray-400 italic dark:text-gray-500">No description</span>
                         </td>
                         <td>
-                            <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800">
+                            <span class="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-500/10 dark:text-blue-400">
                                 {{ feature.acceptance_criteria_count }}
                             </span>
                         </td>

@@ -24,12 +24,12 @@
                         <h3 class="text-lg font-semibold mb-3">Category Details</h3>
                         <div class="space-y-3">
                             <div>
-                                <label class="text-sm font-medium text-gray-600">Name</label>
-                                <p class="text-gray-900">{{ sessionCategory.name }}</p>
+                                <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Name</label>
+                                <p class="text-gray-900 dark:text-gray-100">{{ sessionCategory.name }}</p>
                             </div>
                             <div>
-                                <label class="text-sm font-medium text-gray-600">Description</label>
-                                <p class="text-gray-900">
+                                <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Description</label>
+                                <p class="text-gray-900 dark:text-gray-100">
                                     {{ sessionCategory.description || 'No description provided' }}
                                 </p>
                             </div>
@@ -40,8 +40,8 @@
                         <h3 class="text-lg font-semibold mb-3">Statistics</h3>
                         <div class="space-y-3">
                             <div>
-                                <label class="text-sm font-medium text-gray-600">Total Sessions</label>
-                                <p class="text-2xl font-bold text-blue-600">{{ sessionCategory.sessions_count }}</p>
+                                <label class="text-sm font-medium text-gray-600 dark:text-gray-300">Total Sessions</label>
+                                <p class="text-2xl font-bold text-blue-600 dark:text-blue-400">{{ sessionCategory.sessions_count }}</p>
                             </div>
                         </div>
                     </div>
@@ -55,10 +55,10 @@
                     <h3 class="text-lg font-semibold">Sessions in this Category</h3>
                 </div>
                 <div class="card-body">
-                    <p class="text-gray-600">
+                    <p class="text-gray-600 dark:text-gray-300">
                         This category has {{ sessionCategory.sessions_count }} associated session(s).
                         <Link :href="route('session.index', { session_category_id: sessionCategory.id })"
-                                      class="text-blue-600 hover:text-blue-800 underline ml-1">
+                                      class="text-blue-600 hover:text-blue-800 underline ml-1 dark:text-blue-400 dark:hover:text-blue-300">
                             View all sessions in this category
                         </Link>
                     </p>

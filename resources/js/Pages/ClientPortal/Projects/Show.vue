@@ -4,8 +4,8 @@
                 <div class="mb-8">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h1 class="text-3xl font-bold text-gray-900">{{ project.name }}</h1>
-                            <p v-if="project.description" class="mt-2 text-gray-600">{{ project.description }}</p>
+                            <h1 class="text-3xl font-bold text-gray-900 dark:text-gray-100">{{ project.name }}</h1>
+                            <p v-if="project.description" class="mt-2 text-gray-600 dark:text-gray-300">{{ project.description }}</p>
                         </div>
                         <div class="flex space-x-3">
                             <a :href="route('client-portal.projects.report.view', project.id)" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
@@ -21,7 +21,7 @@
                                 </svg>
                                 Download PDF
                             </a>
-                            <a :href="route('client-portal.projects.index')" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                            <a :href="route('client-portal.projects.index')" class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:border-gray-700 dark:text-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700/50 dark:focus:ring-offset-gray-900">
                                 Back to Projects
                             </a>
                         </div>
@@ -30,7 +30,7 @@
 
                 <!-- Project stats -->
                 <div class="grid grid-cols-1 gap-5 sm:grid-cols-3 mb-8">
-                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="bg-white overflow-hidden shadow rounded-lg dark:bg-gray-800">
                         <div class="p-5">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
@@ -42,15 +42,15 @@
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt class="text-sm font-medium text-gray-500 truncate">Total Tasks</dt>
-                                        <dd class="text-lg font-medium text-gray-900">{{ project.tasks.length }}</dd>
+                                        <dt class="text-sm font-medium text-gray-500 truncate dark:text-gray-400">Total Tasks</dt>
+                                        <dd class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ project.tasks.length }}</dd>
                                     </dl>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="bg-white overflow-hidden shadow rounded-lg dark:bg-gray-800">
                         <div class="p-5">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
@@ -62,15 +62,15 @@
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt class="text-sm font-medium text-gray-500 truncate">Hours</dt>
-                                        <dd class="text-lg font-medium text-gray-900">{{ getTotalBillableHours() }}h</dd>
+                                        <dt class="text-sm font-medium text-gray-500 truncate dark:text-gray-400">Hours</dt>
+                                        <dd class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ getTotalBillableHours() }}h</dd>
                                     </dl>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="bg-white overflow-hidden shadow rounded-lg">
+                    <div class="bg-white overflow-hidden shadow rounded-lg dark:bg-gray-800">
                         <div class="p-5">
                             <div class="flex items-center">
                                 <div class="flex-shrink-0">
@@ -82,8 +82,8 @@
                                 </div>
                                 <div class="ml-5 w-0 flex-1">
                                     <dl>
-                                        <dt class="text-sm font-medium text-gray-500 truncate">Total Sessions</dt>
-                                        <dd class="text-lg font-medium text-gray-900">{{ getTotalSessions() }}</dd>
+                                        <dt class="text-sm font-medium text-gray-500 truncate dark:text-gray-400">Total Sessions</dt>
+                                        <dd class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ getTotalSessions() }}</dd>
                                     </dl>
                                 </div>
                             </div>
@@ -92,12 +92,12 @@
                 </div>
 
                 <!-- Tasks -->
-                <div class="bg-white shadow overflow-hidden sm:rounded-md">
+                <div class="bg-white shadow overflow-hidden sm:rounded-md dark:bg-gray-800">
                     <div class="px-4 py-5 sm:px-6">
-                        <h3 class="text-lg leading-6 font-medium text-gray-900">Tasks</h3>
-                        <p class="mt-1 max-w-2xl text-sm text-gray-500">All tasks in this project with their work sessions</p>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100">Tasks</h3>
+                        <p class="mt-1 max-w-2xl text-sm text-gray-500 dark:text-gray-400">All tasks in this project with their work sessions</p>
                     </div>
-                    <ul class="divide-y divide-gray-200">
+                    <ul class="divide-y divide-gray-200 dark:divide-gray-700">
                         <li v-for="task in project.tasks" :key="task.id" class="px-4 py-4 sm:px-6">
                             <div class="flex items-center justify-between">
                                 <div class="flex-1 min-w-0">
@@ -105,7 +105,7 @@
                                         <div class="flex-1">
                                             <a
                                                 :href="route('client-portal.tasks.show', task.id)"
-                                                class="text-sm font-medium text-blue-800 hover:underline truncate"
+                                                class="text-sm font-medium text-blue-800 hover:underline truncate dark:text-blue-300"
                                             >
                                                 {{ task.name }}
                                             </a>
@@ -116,7 +116,7 @@
                                             </span>
                                         </div>
                                     </div>
-                                    <p class="text-sm text-gray-500">
+                                    <p class="text-sm text-gray-500 dark:text-gray-400">
                                         {{ task.sessions.length }} sessions • {{ getTaskBillableHours(task) }}h total
                                     </p>
                                 </div>
@@ -124,28 +124,28 @@
 
                             <!-- Recent sessions for this task -->
                             <div v-if="task.sessions.length > 0" class="mt-3">
-                                <div class="text-xs text-gray-500 mb-2">Recent sessions:</div>
+                                <div class="text-xs text-gray-500 mb-2 dark:text-gray-400">Recent sessions:</div>
                                 <div class="space-y-2">
-                                    <div v-for="session in task.sessions.slice(0, 3)" :key="session.id" class="bg-gray-50 rounded-md p-3">
+                                    <div v-for="session in task.sessions.slice(0, 3)" :key="session.id" class="bg-gray-50 rounded-md p-3 dark:bg-gray-700/50">
                                         <div class="flex items-center justify-between">
                                             <div class="flex-1 min-w-0">
                                                 <div class="flex">
-                                                    <div class="text-sm text-gray-900 flex flex-1">
+                                                    <div class="text-sm text-gray-900 flex flex-1 dark:text-gray-100">
                                                         <div>{{ formatDate(session.started_at) }}</div>
                                                         <div class="px-2"> - </div>
                                                         <div>{{ session.ended_at ? formatDate(session.ended_at) : 'Now' }}</div>
                                                     </div>
                                                 </div>
-                                                <p v-if="session.comment" class="text-sm text-gray-600 mt-1">{{ session.comment }}</p>
+                                                <p v-if="session.comment" class="text-sm text-gray-600 mt-1 dark:text-gray-300">{{ session.comment }}</p>
                                             </div>
                                             <div class="flex-shrink-0 pr-4">
-                                                <span v-if="session.session_category" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                                <span v-if="session.session_category" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200">
                                                     {{ session.session_category.name }}
                                                 </span>
                                             </div>
                                             <div class="flex-shrink-0">
                                                 <div>
-                                                    <p class="text-sm text-gray-500">{{ session.durationForHumans }}</p>
+                                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ session.durationForHumans }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -158,11 +158,11 @@
 
                 <!-- Empty state -->
                 <div v-if="project.tasks.length === 0" class="text-center py-12">
-                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
                     </svg>
-                    <h3 class="mt-2 text-sm font-medium text-gray-900">No tasks</h3>
-                    <p class="mt-1 text-sm text-gray-500">This project doesn't have any tasks yet.</p>
+                    <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No tasks</h3>
+                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">This project doesn't have any tasks yet.</p>
                 </div>
     </client-portal-layout>
 </template>

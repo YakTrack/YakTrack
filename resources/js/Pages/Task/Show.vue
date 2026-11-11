@@ -33,18 +33,18 @@
                 </div>
             </div>
 
-            <p v-if="task.description" class="mt-4 text-gray-600">
+            <p v-if="task.description" class="mt-4 text-gray-600 dark:text-gray-300">
                 {{ task.description }}
             </p>
-            <p v-else class="mt-4 text-gray-400 italic">
+            <p v-else class="mt-4 text-gray-400 italic dark:text-gray-500">
                 No description provided
             </p>
 
             <!-- Metadata Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 pt-6 border-t border-gray-200">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                 <!-- Status -->
                 <div v-if="task.project && task.project.task_statuses && task.project.task_statuses.length > 0">
-                    <label class="block text-sm font-medium text-gray-500 mb-2">
+                    <label class="block text-sm font-medium text-gray-500 mb-2 dark:text-gray-400">
                         <i class="fa fa-flag mr-2"></i>Status
                     </label>
                     <Menu as="div" class="relative inline-block text-left">
@@ -101,38 +101,38 @@
 
                 <!-- Project -->
                 <div v-if="task.project">
-                    <label class="block text-sm font-medium text-gray-500 mb-2">
+                    <label class="block text-sm font-medium text-gray-500 mb-2 dark:text-gray-400">
                         <i class="fa fa-briefcase mr-2"></i>Project
                     </label>
-                    <a :href="route('project.show', task.project.id)" class="text-blue-600 hover:text-blue-900 text-base font-medium">
+                    <a :href="route('project.show', task.project.id)" class="text-blue-600 hover:text-blue-900 text-base font-medium dark:text-blue-400 dark:hover:text-blue-300">
                         {{ task.project.name }}
                     </a>
                 </div>
 
                 <!-- Client -->
                 <div v-if="task.project && task.project.client">
-                    <label class="block text-sm font-medium text-gray-500 mb-2">
+                    <label class="block text-sm font-medium text-gray-500 mb-2 dark:text-gray-400">
                         <i class="fa fa-users mr-2"></i>Client
                     </label>
-                    <a :href="route('client.show', task.project.client.id)" class="text-blue-600 hover:text-blue-900 text-base font-medium">
+                    <a :href="route('client.show', task.project.client.id)" class="text-blue-600 hover:text-blue-900 text-base font-medium dark:text-blue-400 dark:hover:text-blue-300">
                         {{ task.project.client.name }}
                     </a>
                 </div>
 
                 <!-- Total Time -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-500 mb-2">
+                    <label class="block text-sm font-medium text-gray-500 mb-2 dark:text-gray-400">
                         <i class="fa fa-clock mr-2"></i>Total Time Tracked
                     </label>
-                    <div class="font-mono text-lg text-gray-900"> {{ totalDurationForHumans }} </div>
+                    <div class="font-mono text-lg text-gray-900 dark:text-gray-100"> {{ totalDurationForHumans }} </div>
                 </div>
 
                 <!-- Sessions Count -->
                 <div>
-                    <label class="block text-sm font-medium text-gray-500 mb-2">
+                    <label class="block text-sm font-medium text-gray-500 mb-2 dark:text-gray-400">
                         <i class="fa fa-list mr-2"></i>Sessions
                     </label>
-                    <div class="text-lg text-gray-900"> {{ task.sessions.length }} session{{ task.sessions.length !== 1 ? 's' : '' }} </div>
+                    <div class="text-lg text-gray-900 dark:text-gray-100"> {{ task.sessions.length }} session{{ task.sessions.length !== 1 ? 's' : '' }} </div>
                 </div>
             </div>
         </div>
@@ -151,7 +151,7 @@
 
         <!-- Empty State for Sessions -->
         <div class="card mt-4" v-else>
-            <div class="text-center py-8 text-gray-500">
+            <div class="text-center py-8 text-gray-500 dark:text-gray-400">
                 <i class="fa fa-clock text-4xl mb-4"></i>
                 <p class="text-lg mb-2">No sessions yet</p>
                 <p class="mb-4">Time tracking sessions for this task will appear here.</p>

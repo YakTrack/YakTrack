@@ -9,17 +9,17 @@
   >
     <div class="space-y-5">
       <div>
-        <p class="mb-2 text-xs font-medium uppercase tracking-wide text-slate-500">Linked tasks</p>
+        <p class="mb-2 text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-gray-400">Linked tasks</p>
 
-        <p v-if="isLoading" class="text-sm text-slate-500">
+        <p v-if="isLoading" class="text-sm text-slate-500 dark:text-gray-400">
           <i class="fa fa-spinner fa-spin mr-2" aria-hidden="true"></i>Loading…
         </p>
 
         <template v-else-if="pendingTasks.length === 0">
-          <p class="text-sm text-slate-500">
+          <p class="text-sm text-slate-500 dark:text-gray-400">
             No tasks linked yet. Add one below.
           </p>
-          <p v-if="hasCurrentTask" class="mt-1 text-xs text-slate-500">
+          <p v-if="hasCurrentTask" class="mt-1 text-xs text-slate-500 dark:text-gray-400">
             This session’s current task is included automatically as a part when you split.
           </p>
         </template>
@@ -28,17 +28,17 @@
           <li
             v-for="pendingTask in pendingTasks"
             :key="pendingTask.task_id"
-            class="flex items-center justify-between gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2 shadow-sm"
+            class="flex items-center justify-between gap-3 rounded-lg border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 shadow-sm"
           >
             <div class="min-w-0">
-              <p class="truncate text-sm font-medium text-slate-900">{{ pendingTask.task_name }}</p>
-              <p v-if="pendingTask.client_name || pendingTask.project_name" class="truncate text-xs text-slate-500">
+              <p class="truncate text-sm font-medium text-slate-900 dark:text-gray-100">{{ pendingTask.task_name }}</p>
+              <p v-if="pendingTask.client_name || pendingTask.project_name" class="truncate text-xs text-slate-500 dark:text-gray-400">
                 {{ [pendingTask.client_name, pendingTask.project_name].filter(Boolean).join(' · ') }}
               </p>
             </div>
             <button
               type="button"
-              class="shrink-0 rounded-md p-1.5 text-slate-400 transition hover:bg-red-50 hover:text-red-600 disabled:cursor-not-allowed disabled:opacity-50"
+              class="shrink-0 rounded-md p-1.5 text-slate-400 dark:text-gray-500 transition hover:bg-red-50 dark:hover:bg-red-500/10 hover:text-red-600 dark:hover:text-red-400 disabled:cursor-not-allowed disabled:opacity-50"
               :disabled="isSaving"
               :aria-label="`Remove ${pendingTask.task_name}`"
               @click="removeTask(pendingTask.task_id)"
@@ -52,7 +52,7 @@
       </div>
 
       <div>
-        <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">Add a task</label>
+        <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-gray-400">Add a task</label>
         <div class="flex items-end gap-2">
           <div class="min-w-0 flex-1">
             <task-select
@@ -74,18 +74,18 @@
           </button>
         </div>
 
-        <p v-if="errorMessage" class="mt-2 text-sm text-red-600">{{ errorMessage }}</p>
+        <p v-if="errorMessage" class="mt-2 text-sm text-red-600 dark:text-red-400">{{ errorMessage }}</p>
       </div>
     </div>
 
     <template #footer>
       <div class="flex items-center justify-between gap-3">
-        <p class="text-xs text-slate-500">
+        <p class="text-xs text-slate-500 dark:text-gray-400">
           {{ pendingTasks.length }} task{{ pendingTasks.length === 1 ? '' : 's' }} linked.
         </p>
         <button
           type="button"
-          class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+          class="rounded-lg border border-slate-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-slate-700 dark:text-gray-300 transition hover:bg-slate-50 dark:hover:bg-gray-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
           @click="handleClose"
         >
           Done

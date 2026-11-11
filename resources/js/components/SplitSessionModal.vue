@@ -12,7 +12,7 @@
     <div v-if="session" class="space-y-6">
       <div
         v-if="hasTruncatedPendingTasks"
-        class="flex items-start gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-800"
+        class="flex items-start gap-3 rounded-xl border border-amber-200 dark:border-amber-500/30 bg-amber-50 dark:bg-amber-500/10 p-4 text-amber-800 dark:text-amber-300"
       >
         <svg class="mt-0.5 h-5 w-5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
@@ -26,29 +26,29 @@
         </div>
       </div>
 
-      <div class="rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-4">
+      <div class="rounded-xl border border-slate-200 dark:border-gray-700 bg-gradient-to-br from-slate-50 to-white p-4 dark:from-gray-800 dark:to-gray-800">
         <div class="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Original session</p>
-            <p v-if="session.task_name" class="mt-1 text-sm font-medium text-slate-900">{{ session.task_name }}</p>
-            <p class="mt-1 text-sm text-slate-600">{{ formatDateTimeLabel(sessionStartMs) }} → {{ formatDateTimeLabel(sessionEndMs) }}</p>
+            <p class="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-gray-400">Original session</p>
+            <p v-if="session.task_name" class="mt-1 text-sm font-medium text-slate-900 dark:text-gray-100">{{ session.task_name }}</p>
+            <p class="mt-1 text-sm text-slate-600 dark:text-gray-300">{{ formatDateTimeLabel(sessionStartMs) }} → {{ formatDateTimeLabel(sessionEndMs) }}</p>
           </div>
-          <div class="rounded-lg bg-white px-3 py-2 text-right shadow-sm ring-1 ring-slate-200">
-            <p class="text-xs font-medium uppercase tracking-wide text-slate-500">Total duration</p>
-            <p class="font-mono text-lg font-semibold text-slate-900">{{ formatDuration(totalDurationMs) }}</p>
+          <div class="rounded-lg bg-white dark:bg-gray-800 px-3 py-2 text-right shadow-sm ring-1 ring-slate-200 dark:ring-gray-700">
+            <p class="text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-gray-400">Total duration</p>
+            <p class="font-mono text-lg font-semibold text-slate-900 dark:text-gray-100">{{ formatDuration(totalDurationMs) }}</p>
           </div>
         </div>
       </div>
 
       <div v-if="!initialisedFromPendingTasks" class="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <p class="text-sm font-medium text-slate-900">Number of parts</p>
-          <p class="text-xs text-slate-500">Each part must be at least one minute long.</p>
+          <p class="text-sm font-medium text-slate-900 dark:text-gray-100">Number of parts</p>
+          <p class="text-xs text-slate-500 dark:text-gray-400">Each part must be at least one minute long.</p>
         </div>
-        <div class="inline-flex items-center rounded-xl border border-slate-200 bg-white p-1 shadow-sm">
+        <div class="inline-flex items-center rounded-xl border border-slate-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-1 shadow-sm">
           <button
             type="button"
-            class="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+            class="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 dark:text-gray-300 transition hover:bg-slate-100 dark:hover:bg-gray-700/50 disabled:cursor-not-allowed disabled:opacity-40"
             :disabled="segmentCount <= 2"
             @click="decreaseSegmentCount"
           >
@@ -56,10 +56,10 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4" />
             </svg>
           </button>
-          <span class="min-w-[2.5rem] text-center font-mono text-sm font-semibold text-slate-900">{{ segmentCount }}</span>
+          <span class="min-w-[2.5rem] text-center font-mono text-sm font-semibold text-slate-900 dark:text-gray-100">{{ segmentCount }}</span>
           <button
             type="button"
-            class="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+            class="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 dark:text-gray-300 transition hover:bg-slate-100 dark:hover:bg-gray-700/50 disabled:cursor-not-allowed disabled:opacity-40"
             :disabled="segmentCount >= maxSegmentCount"
             @click="increaseSegmentCount"
           >
@@ -71,14 +71,14 @@
       </div>
 
       <div class="space-y-3">
-        <div class="flex items-center justify-between text-xs font-medium uppercase tracking-wide text-slate-500">
+        <div class="flex items-center justify-between text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-gray-400">
           <span>Timeline</span>
           <span>Drag handles to adjust cut points</span>
         </div>
 
         <div
           ref="timelineRef"
-          class="relative h-16 select-none overflow-hidden rounded-2xl bg-slate-100 shadow-inner ring-1 ring-slate-200"
+          class="relative h-16 select-none overflow-hidden rounded-2xl bg-slate-100 dark:bg-gray-700/50 shadow-inner ring-1 ring-slate-200 dark:ring-gray-700"
         >
           <div
             v-for="(segment, index) in segments"
@@ -103,7 +103,7 @@
             v-for="(cutPoint, index) in cutPoints"
             :key="`cut-point-${index}`"
             type="button"
-            class="absolute top-1/2 z-10 h-10 w-4 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize rounded-full border-2 bg-white shadow-lg transition hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2"
+            class="absolute top-1/2 z-10 h-10 w-4 -translate-x-1/2 -translate-y-1/2 cursor-ew-resize rounded-full border-2 bg-white dark:bg-gray-800 shadow-lg transition hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2"
             :class="[
               segmentStyle(index).handle,
               activeHandleIndex === index ? segmentStyle(index).ring : '',
@@ -118,7 +118,7 @@
           </button>
         </div>
 
-        <div class="flex justify-between text-xs text-slate-500">
+        <div class="flex justify-between text-xs text-slate-500 dark:text-gray-400">
           <span>{{ formatTimeLabel(sessionStartMs) }}</span>
           <span>{{ formatTimeLabel(sessionEndMs) }}</span>
         </div>
@@ -126,8 +126,8 @@
 
       <div class="space-y-3">
         <div class="flex items-center justify-between gap-3">
-          <p class="text-sm font-medium text-slate-900">Session parts</p>
-          <p class="text-xs text-slate-500">Drag a part to reorder. Times stay with the position; task and sprint move with the part.</p>
+          <p class="text-sm font-medium text-slate-900 dark:text-gray-100">Session parts</p>
+          <p class="text-xs text-slate-500 dark:text-gray-400">Drag a part to reorder. Times stay with the position; task and sprint move with the part.</p>
         </div>
 
         <draggable
@@ -144,7 +144,7 @@
         >
           <template #item="{ element: assignment, index }">
             <div
-              class="segment-card overflow-hidden rounded-2xl border bg-white shadow-sm transition"
+              class="segment-card overflow-hidden rounded-2xl border bg-white dark:bg-gray-800 shadow-sm transition"
               :class="segmentStyle(index).border"
               :data-assignment-key="assignment.key"
             >
@@ -154,7 +154,7 @@
               >
                 <button
                   type="button"
-                  class="drag-handle flex h-8 w-6 shrink-0 cursor-grab items-center justify-center rounded-md transition hover:bg-white/60 focus:outline-none focus:ring-2 focus:ring-offset-1 active:cursor-grabbing"
+                  class="drag-handle flex h-8 w-6 shrink-0 cursor-grab items-center justify-center rounded-md transition hover:bg-white/60 dark:hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-offset-1 active:cursor-grabbing"
                   :class="[segmentStyle(index).muted, segmentStyle(index).ring]"
                   :aria-label="`Reorder part ${index + 1}. Use the arrow keys to move it up or down.`"
                   :title="`Drag to reorder part ${index + 1}`"
@@ -181,7 +181,7 @@
               <div class="grid gap-4 border-t p-4 md:grid-cols-2" :class="segmentStyle(index).border">
                 <div class="flex min-w-0 flex-col gap-4">
                   <div>
-                    <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">Ratio</label>
+                    <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-gray-400">Ratio</label>
                     <div class="relative">
                       <input
                         :value="segmentAt(index).ratio.toFixed(1)"
@@ -192,12 +192,12 @@
                         class="split-field w-full pr-8"
                         @change="updateSegmentRatio(index, $event.target.value)"
                       />
-                      <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm text-slate-400">%</span>
+                      <span class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-sm text-slate-400 dark:text-gray-500">%</span>
                     </div>
                   </div>
 
                   <div v-if="index < segmentCount - 1">
-                    <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">Cut at</label>
+                    <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-gray-400">Cut at</label>
                     <input
                       :value="toInputFormat(cutPoints[index])"
                       type="datetime-local"
@@ -211,7 +211,7 @@
 
                 <div class="flex min-w-0 flex-col gap-4">
                   <div>
-                    <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">Sprint</label>
+                    <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-gray-400">Sprint</label>
                     <sprint-select
                       :sprints="sprints"
                       :sprint="assignment.sprint_id"
@@ -222,7 +222,7 @@
                   </div>
 
                   <div>
-                    <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500">Task</label>
+                    <label class="mb-1.5 block text-xs font-medium uppercase tracking-wide text-slate-500 dark:text-gray-400">Task</label>
                     <task-select
                       :tasks="tasks"
                       :task="assignment.task_id"
@@ -241,13 +241,13 @@
 
     <template #footer>
       <div class="flex items-center justify-between gap-3">
-        <p class="text-xs text-slate-500">
+        <p class="text-xs text-slate-500 dark:text-gray-400">
           {{ segmentCount }} sessions will be created from this split.
         </p>
         <div class="flex gap-3">
           <button
             type="button"
-            class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+            class="rounded-lg border border-slate-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-2 text-sm font-medium text-slate-700 dark:text-gray-300 transition hover:bg-slate-50 dark:hover:bg-gray-700/50 focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             @click="handleClose"
           >
             Cancel
@@ -609,7 +609,7 @@ onUnmounted(() => {
 }
 
 .split-field {
-  @apply h-12 rounded-lg border border-slate-200 bg-white px-3 text-sm shadow-sm;
+  @apply h-12 rounded-lg border border-slate-200 bg-white px-3 text-sm shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100;
   @apply focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20;
 }
 </style>

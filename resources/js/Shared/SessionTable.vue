@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class="p-4 bg-white rounded shadow" v-if="sessions.length">
-            <table class="table table-hover bg-white">
+        <div class="p-4 bg-white dark:bg-gray-800 rounded shadow" v-if="sessions.length">
+            <table class="table table-hover bg-white dark:bg-gray-800">
                 <thead>
                     <tr>
                         <th class="pl-0"> <input type="checkbox" class="form-checkbox"/> </th>
@@ -73,11 +73,11 @@
         >
             <template #default="{ payload }">
                 <div v-if="payload" class="mb-4">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Delete Session</h3>
-                    <p class="text-sm text-gray-500 mb-4">
+                    <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Delete Session</h3>
+                    <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
                         Are you sure you want to delete this session? This action cannot be undone.
                     </p>
-                    <div class="bg-gray-50 p-3 rounded text-sm">
+                    <div class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded text-sm">
                         <div v-if="payload.task_name" class="mb-2">
                             <strong>Task:</strong> {{ payload.task_name }}
                         </div>

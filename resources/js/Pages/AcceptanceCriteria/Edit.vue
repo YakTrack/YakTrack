@@ -41,7 +41,7 @@
                 :disabled="!form.project_id"
             >
                 <template #help>
-                    <p v-if="!form.project_id" class="mt-1 text-sm text-gray-500">
+                    <p v-if="!form.project_id" class="mt-1 text-sm text-gray-500 dark:text-gray-400">
                         Please select a project first to see available features.
                     </p>
                 </template>

@@ -24,7 +24,7 @@
                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                             Client User
                         </label>
-                        <select v-model="filters.client_user_id" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                        <select v-model="filters.client_user_id" class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm dark:border-gray-700">
                             <option value="">All Users</option>
                             <option v-for="user in clientUsers" :key="user.id" :value="user.id">
                                 {{ user.name }} ({{ user.client.name }})
@@ -39,7 +39,7 @@
                         <input 
                             v-model="filters.date_from" 
                             type="date" 
-                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm dark:border-gray-700"
                         />
                     </div>
                     
@@ -50,7 +50,7 @@
                         <input 
                             v-model="filters.date_to" 
                             type="date" 
-                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
+                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm dark:border-gray-700"
                         />
                     </div>
                     
@@ -59,7 +59,7 @@
                             <input 
                                 v-model="filters.active_only" 
                                 type="checkbox" 
-                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                                class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded dark:text-indigo-400 dark:border-gray-700"
                             />
                             <label class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                                 Active Sessions Only
@@ -71,7 +71,7 @@
                         <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                             Apply Filters
                         </button>
-                        <button type="button" @click="clearFilters" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2">
+                        <button type="button" @click="clearFilters" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:bg-gray-700 dark:text-gray-300">
                             Clear Filters
                         </button>
                     </div>
@@ -82,9 +82,9 @@
         <div class="card">
             <div class="card-body">
                 <div v-if="sessions.data.length === 0" class="text-center py-8">
-                    <i class="fas fa-sign-in-alt text-gray-400 text-6xl mb-4"></i>
-                    <h3 class="text-lg font-medium text-gray-900 mb-2">No login sessions found</h3>
-                    <p class="text-gray-500">No sessions match your current filters.</p>
+                    <i class="fas fa-sign-in-alt text-gray-400 text-6xl mb-4 dark:text-gray-500"></i>
+                    <h3 class="text-lg font-medium text-gray-900 mb-2 dark:text-gray-100">No login sessions found</h3>
+                    <p class="text-gray-500 dark:text-gray-400">No sessions match your current filters.</p>
                 </div>
 
                 <div v-else>
@@ -140,7 +140,7 @@
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span 
-                                        :class="session.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'"
+                                        :class="session.is_active ? 'bg-green-100 text-green-800 dark:bg-green-500/10 dark:text-green-300' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200'"
                                         class="inline-flex px-2 py-1 text-xs font-semibold rounded-full"
                                     >
                                         {{ session.is_active ? 'Active' : 'Ended' }}
@@ -166,14 +166,14 @@
                                 <Link 
                                     v-if="sessions.prev_page_url" 
                                     :href="sessions.prev_page_url"
-                                    class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                                    class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700/50"
                                 >
                                     Previous
                                 </Link>
                                 <Link 
                                     v-if="sessions.next_page_url" 
                                     :href="sessions.next_page_url"
-                                    class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                                    class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 dark:border-gray-700 dark:text-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700/50"
                                 >
                                     Next
                                 </Link>
@@ -200,8 +200,8 @@
                                             :class="[
                                                 'relative inline-flex items-center px-4 py-2 border text-sm font-medium',
                                                 link.active 
-                                                    ? 'z-10 bg-blue-50 border-blue-500 text-blue-600' 
-                                                    : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50',
+                                                    ? 'z-10 bg-blue-50 border-blue-500 text-blue-600 dark:bg-blue-500/10 dark:text-blue-400' 
+                                                    : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700/50',
                                                 link.url === null ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
                                             ]"
                                         />
