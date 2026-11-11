@@ -171,9 +171,9 @@ class SprintController extends Controller
 
                 if ($task === null) {
                     return [
-                        'id'                            => null,
-                        'name'                          => 'No task',
-                        'project'                       => null,
+                        'id'                             => null,
+                        'name'                           => 'No task',
+                        'project'                        => null,
                         'totalDurationInSprintForHumans' => $sessionsForTask->totalDurationForHumans(),
                     ];
                 }
