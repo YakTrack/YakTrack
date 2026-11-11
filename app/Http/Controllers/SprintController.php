@@ -169,6 +169,15 @@ class SprintController extends Controller
             'tasks'  => $sprint->sessions->groupBy('task_id')->map(function ($sessionsForTask) {
                 $task = $sessionsForTask->first()->task;
 
+                if ($task === null) {
+                    return [
+                        'id'                             => null,
+                        'name'                           => 'No task',
+                        'project'                        => null,
+                        'totalDurationInSprintForHumans' => $sessionsForTask->totalDurationForHumans(),
+                    ];
+                }
+
                 $task->totalDurationInSprintForHumans = $sessionsForTask->totalDurationForHumans();
 
                 return $task;

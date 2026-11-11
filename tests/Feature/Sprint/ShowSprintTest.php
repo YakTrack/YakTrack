@@ -97,3 +97,39 @@ it('can view a single sprint', function () {
             )
     );
 });
+
+it('can view a sprint with sessions that have no task', function () {
+    $this->withoutExceptionHandling();
+
+    $project = Project::factory()->create();
+    $sprint = Sprint::factory()->afterCreating(fn (Sprint $s) => $s->projects()->sync([$project->id]))->create();
+    $task = Task::factory()->create(['project_id' => $project->id]);
+
+    Session::factory()->create([
+        'sprint_id'  => $sprint->id,
+        'task_id'    => $task->id,
+        'started_at' => '2019-01-01 00:00:00',
+        'ended_at'   => '2019-01-01 00:01:00',
+    ]);
+    Session::factory()->create([
+        'sprint_id'  => $sprint->id,
+        'task_id'    => null,
+        'started_at' => '2019-01-01 00:01:00',
+        'ended_at'   => '2019-01-01 00:01:30',
+    ]);
+
+    $this->actingAsUser();
+
+    $this->get(route('sprint.show', ['sprint' => $sprint]))
+        ->assertSuccessful()
+        ->assertInertia(
+            fn (Assert $page) => $page
+                ->component('Sprint/Show')
+                ->where('totalDurationForHumans', '0:01:30')
+                ->has('tasks', 2)
+                ->where("tasks.{$task->id}.totalDurationInSprintForHumans", '0:01:00')
+                ->where('tasks..name', 'No task')
+                ->where('tasks..project', null)
+                ->where('tasks..totalDurationInSprintForHumans', '0:00:30')
+        );
+});
