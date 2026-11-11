@@ -22,7 +22,7 @@ it('renders guest pages with a dark background in dark mode', function (string $
     expect($page->script('getComputedStyle(document.body).backgroundColor'))->toBe('rgb(26, 32, 44)')
         ->and($page->script(WHITE_BACKGROUND_ELEMENTS_SCRIPT))->toBe([]);
 })->with([
-    'login'              => '/login',
+    'login'               => '/login',
     'client portal login' => '/client-portal/login',
 ]);
 
